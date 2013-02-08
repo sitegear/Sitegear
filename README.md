@@ -1,9 +1,11 @@
 Sitegear
 ========
 
-Sitegear is an extensible, configurable and modular website management application.  It is aimed primarily at websites
-based on owner-driven driven content.  One of the primary driving goals is to reduce development time for these types
-of websites specifically.  For more dynamic, user-driven websites, please consider an MVC framework.
+Sitegear is an extensible, configurable and modular website management application.
+
+Sitegear consists of a website framework and a set of integrated content management tools.  It is aimed primarily at
+websites based on owner-driven driven content.  One of the primary driving goals is to reduce development time for
+these types of websites specifically.  For more dynamic, user-driven websites, please consider an MVC framework.
 
 Modules
 -------
