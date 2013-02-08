@@ -1,0 +1,25 @@
+/*!
+ * sitegear.products-manager.css
+ * Sitegear Widget - Products Manager - Stylesheet
+ * Product management widget
+ *
+ * Sitegear (c) Ben New, Leftclick.com.au
+ * See LICENSE file in main directory for information, or visit:
+ * http://sitegear.org/
+ */
+
+#sitegear-products-manager-dialog { overflow: hidden; }
+
+#sitegear-products-manager-dialog .jstree { overflow-y: auto; overflow-x: auto; overflow: auto; }
+
+#sitegear-products-manager-dialog .sitegear-products-manager-details-panel-wrapper { overflow-y: auto; overflow-x: auto; overflow: auto; }
+
+#sitegear-products-manager-dialog .sitegear-products-manager-details-panel { padding: 1em; }
+#sitegear-products-manager-dialog .sitegear-products-manager-details-panel h2 { margin-top: 0; }
+#sitegear-products-manager-dialog .sitegear-products-manager-details-panel table { font-size: smaller; margin: 0 -8px; border: none; border-collapse: collapse; }
+#sitegear-products-manager-dialog .sitegear-products-manager-details-panel table th { padding: 2px 8px; text-align: left; }
+#sitegear-products-manager-dialog .sitegear-products-manager-details-panel table td { padding: 2px 8px; }
+#sitegear-products-manager-dialog .sitegear-products-manager-details-panel a { cursor: pointer; }
+#sitegear-products-manager-dialog .sitegear-products-manager-details-panel span.inactive-marker { font-size: small; font-style: italic; }
+
+#sitegear-products-manager-data-editor input, #sitegear-products-manager-data-editor select, #sitegear-products-manager-data-editor textarea { width: 100%; }

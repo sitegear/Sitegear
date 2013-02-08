@@ -1,0 +1,10 @@
+/**
+ * stylesheet.css
+ * Used for unit testing only
+ */
+
+html, body { margin: 0; padding: 0; }
+img { border: none; }
+a { text-decoration: underline; color: blue; }
+
+/* etc... */

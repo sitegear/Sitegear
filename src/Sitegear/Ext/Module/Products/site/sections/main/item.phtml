@@ -1,0 +1,78 @@
+<?php
+// TODO Editable product name and specifications
+// TODO Add to trolley form (integration with Base\Customer module)
+/** @var \Sitegear\Core\View\View $view */
+$view->getStringsManager()->prepend('title', $view['title']);
+/** @var \Sitegear\Ext\Module\Products\Entities\Item $item  */
+$item = $view['item'];
+$view->getStringsManager()->prepend('title', $item->getName());
+?>
+<h1><?php echo $item->getName(); ?></h1>
+<?php
+// ITEM DESCRIPTION
+echo $view->products('editable')->item(sprintf('%s/%s', $view['item-path'], $item->getUrlPath()));
+
+// ITEM SPECIFICATIONS
+if (sizeof($item->getSpecifications()) > 0) {
+?>
+<div class="product-specifications">
+	<h2>Specifications</h2>
+	<table>
+<?php
+	$odd = true;
+	foreach ($item->getSpecifications() as $specification) { /** @var \Sitegear\Ext\Module\Products\Entities\Specification $specification */
+?>
+		<tr class="<?php echo $odd ? 'odd' : 'even'; ?>">
+			<td class="label">
+				<?php echo $specification->getLabel(); ?>
+			</td>
+			<td class="value">
+				<?php echo $specification->getValue(); ?>
+			</td>
+		</tr>
+<?php
+		$odd = !$odd;
+	}
+?>
+	</table>
+</div>
+<?php
+}
+
+// RELATED ITEMS
+if (sizeof($item->getRelationships()) > 0) {
+?>
+<div class="product-relationships">
+	<h2>Related Items</h2>
+	<ul>
+<?php
+	foreach ($item->getRelationships() as $relationship) { /** @var \Sitegear\Ext\Module\Products\Entities\Relationship $relationship */
+		$linkUrl = sprintf('%s/%s/%s', $view['root-url'], $view['item-url'], $relationship->getRelatedItem()->getUrlPath());
+?>
+		<li><a href="<?php echo $linkUrl; ?>"><?php echo $relationship->getRelatedItem()->getName(); ?></a></li>
+<?php
+	}
+?>
+	</ul>
+</div>
+<?php
+}
+
+// CATEGORY ASSIGNMENTS
+if (sizeof($item->getCategoryAssignments()) > 0) {
+?>
+<div class="product-category-assignments">
+	<h2>Related Categories</h2>
+	<ul>
+<?php
+	foreach ($item->getCategoryAssignments() as $categoryAssignment) { /** @var \Sitegear\Ext\Module\Products\Entities\CategoryAssignment $categoryAssignment */
+		$linkUrl = sprintf('%s/%s/%s', $view['root-url'], $view['category-url'], $categoryAssignment->getCategory()->getUrlPath());
+?>
+		<li><a href="<?php echo $linkUrl; ?>"><?php echo $categoryAssignment->getCategory()->getName(); ?></a></li>
+<?php
+	}
+?>
+	</ul>
+</div>
+<?php
+}

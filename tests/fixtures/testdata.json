@@ -1,0 +1,38 @@
+{
+	"name": "testdata",
+	"description": "Test data for formatJson, including as many variations of data structures and combinations as possible.",
+	"integer-value": 42,
+	"flat-array": [
+		"first element",
+		"second element",
+		"third element"
+	],
+	"nested-structure": {
+		"array-value": [
+			{
+				"name": "first object element of nested array",
+				"value": 123
+			},
+			{
+				"name": "second object element of nested array",
+				"value": 255
+			},
+			{
+				"name": "third object element of nested array",
+				"value": 300
+			},
+			"mixed value in array",
+			161
+		],
+		"object-value": {
+			"deeply": {
+				"nested": {
+					"object": {
+						"value": "value"
+					}
+				}
+			}
+		},
+		"string-value": "foobar"
+	}
+}

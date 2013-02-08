@@ -1,0 +1,55 @@
+<?php
+/** @var \Sitegear\Core\View\View $view */
+$attributes = array_merge($view['attributes'], array(
+	'id' => isset($view['form-id']) ? $view['form-id'] : sprintf('%s%s', $view['form-id-prefix'], $view['form-name']),
+	'name' => $view['form-name'],
+	'action' => $view['action-url'],
+	'method' => 'post'
+));
+// TODO Merge "class" attributes properly
+?>
+<form<?php echo \Sitegear\Util\HtmlUtilities::attributes($attributes); ?>>
+	<input type="hidden" name="form-url" value="<?php echo $view['form-url']; ?>" />
+<?php
+foreach ($view['page']['fieldsets'] as $fieldset) {
+	$fieldsetAttributes = array_merge($view['fieldset-attributes'], $fieldset['attributes']);
+?>
+	<fieldset<?php echo \Sitegear\Util\HtmlUtilities::attributes($fieldsetAttributes); ?>>
+<?php
+	foreach ($fieldset['fields'] as $fieldSpec) {
+		$fieldName = $fieldSpec['field'];
+		$fieldDefinition = $view['fields'][$fieldName];
+		$component = \Sitegear\Util\NameUtilities::convertToCamelCase($fieldDefinition['component']);
+		$fieldError = $view->getEngine()->forms()->extractFieldSessionData($view['form-name'], '['.$fieldName.']', 'violation');
+		$fieldValue = $view->getEngine()->forms()->extractFieldSessionData($view['form-name'], $fieldName, 'value', $fieldDefinition['default']);
+		$labelMaskKey = isset($fieldSpec['label-mask']) ? $fieldSpec['label-mask'] : '_default';
+?>
+		<div<?php echo \Sitegear\Util\HtmlUtilities::attributes(array_merge($view['field-attributes'], isset($fieldDefinition['field-attributes']) ? $fieldDefinition['field-attributes'] : array())); ?>>
+            <label for="<?php echo $fieldName; ?>"><?php echo $fieldDefinition['label']; ?></label>
+<?php
+		if (!empty($fieldError)) {
+?>
+			<span class="error-message"><?php echo $fieldError; ?></span>
+<?php
+		}
+?>
+			<?php echo $fieldSpec['mode'] === 'display' ? $fieldValue : $view->forms()->$component($fieldName, $fieldDefinition, $fieldValue); ?>
+		</div>
+<?php
+	}
+?>
+    </fieldset>
+<?php
+}
+?>
+	<div<?php echo \Sitegear\Util\HtmlUtilities::attributes($view['buttons-attributes']); ?>>
+		<input type="submit"<?php echo isset($view['submit-button']) ? sprintf(' value="%s"', $view['submit-button']) : '' ?> />
+<?php
+if ($view['reset-button'] !== false) {
+?>
+	    <input type="reset"<?php echo isset($view['reset-button']) ? sprintf(' value="%s"', $view['reset-button']) : '' ?> />
+<?php
+}
+?>
+	</div>
+</form>

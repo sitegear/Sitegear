@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<config>
+	<name>XML config file (not supported)</name>
+	<description>THis is an XML "configuration file", but actually, it's just a dummy file because XML is not supported by Config</description>
+</config>

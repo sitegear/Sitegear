@@ -1,0 +1,11 @@
+{
+	"name": "JSON test file",
+	"description": "This is a JSON configuration file for testing the Sitegear Config component.",
+	"data": {
+		"without-token": "plain string value",
+		"with-token": "%config:more-data.key%"
+	},
+	"more-data": {
+		"key": "value"
+	}
+}

@@ -1,0 +1,12 @@
+{
+	"name": "JSON test file",
+	"description": "This is a JSON configuration file for testing the Sitegear Config component.",
+	"any": {
+		"key": "value"
+	},
+	"anotherKey": [
+		"a value",
+		"another value"
+	],
+	"string-array-conversion": "initial string value"
+}

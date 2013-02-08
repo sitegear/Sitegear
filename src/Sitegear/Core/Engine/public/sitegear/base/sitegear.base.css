@@ -1,0 +1,26 @@
+/*!
+ * sitegear.management.css
+ * Common Sitegear stylesheet elements.
+ * 
+ * Sitegear (c) Ben New, Leftclick.com.au
+ * See LICENSE file in main directory for information, or visit:
+ * http://sitegear.org/
+ */
+
+.sitegear-publish-changes-details { max-height: 300px; overflow-x: hidden; overflow-y: auto; }
+.sitegear-publish-changes-details dl { margin: 1em; padding: 0; }
+.sitegear-publish-changes-details dt { font-weight: bold; }
+.sitegear-publish-changes-details ul { list-style: none; padding-left: 0; }
+
+.sitegear-revert-changes-details { max-height: 300px; overflow-x: hidden; overflow-y: auto; }
+.sitegear-revert-changes-details dl { margin: 1em; padding: 0; }
+.sitegear-revert-changes-details dt { font-weight: bold; }
+.sitegear-revert-changes-details ul { list-style: none; padding-left: 0; }
+
+.editable { min-height: 32px; }
+.preview { background: url(../images/preview-mode.png) no-repeat top right; min-height: 32px; outline: 1px dotted #f00; }
+
+.ui-effects-transfer { outline: 2px dotted #ef9c31; }
+
+.droppable { background-color: #ffe; }
+.droppable.hover { outline: 1px solid #ef9c31; }

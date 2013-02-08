@@ -1,0 +1,8 @@
+<?php
+/** @var \Sitegear\Core\View\View $view */
+$view->getStringsManager()->prepend('title', 'Page Not Found');
+?>
+<h1>Page Not Found</h1>
+<p>
+<?php echo isset($view['exception']) ? $view['exception']->getMessage() : 'Sorry, the page you are looking for was not found.'; ?>
+</p>

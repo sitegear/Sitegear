@@ -1,0 +1,22 @@
+<?php
+/** @var \Sitegear\Core\View\View $view */
+$trail = array();
+foreach (array_slice($view['trail'], 0, -1) as $crumb) {
+	$trail[] = sprintf($view['formats']['link'], $crumb['url'], $view['classes']['link'], $crumb['label']);
+}
+$currentPageCrumb = $view['trail'][max(0, sizeof($view['trail']) - 1)];
+switch ($view['current-page-style']) {
+	case 'label':
+		$trail[] = sprintf($view['formats']['label'], $view['classes']['current-page'], $currentPageCrumb['label']);
+		break;
+	case 'link':
+		$trail[] = sprintf($view['formats']['link'], $currentPageCrumb['url'], $view['classes']['link'] . ' ' . $view['classes']['current-page'], $currentPageCrumb['label']);
+		break;
+	case false:
+		// Don't display the trailing separator.
+		break;
+	default:
+		// Display the trailing separator.
+		$trail[] = '';
+}
+echo implode($view['separator'], $trail), PHP_EOL;

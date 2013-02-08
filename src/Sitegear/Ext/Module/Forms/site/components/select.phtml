@@ -1,0 +1,26 @@
+<?php
+/** @var \Sitegear\Core\View\View $view */
+$field = $view['field'];
+$attributes = array_merge(
+	$field['attributes'],
+	array(
+		'name' => $field['name'],
+		'value' => $view['value']
+	)
+);
+if (!isset($attributes['id'])) {
+	$attributes['id'] = sprintf('%s%s', $view['form-id-prefix'], $view['name']);
+}
+?>
+<select<?php echo \Sitegear\Util\HtmlUtilities::attributes($attributes); ?>>
+<?php
+foreach ($field['values'] as $value => $label) {
+	$labelText = is_array($label) ? $label['label'] : $label;
+	$attributes = (is_array($label) && isset($label['attributes'])) ? $label['attributes'] : array();
+	$attributes['value'] = $value;
+?>
+	<option<?php echo \Sitegear\Util\HtmlUtilities::attributes($attributes); ?>><?php echo $labelText; ?></option>
+<?php
+}
+?>
+</select>

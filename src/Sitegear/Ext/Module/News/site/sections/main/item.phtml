@@ -1,0 +1,10 @@
+<?php
+/** @var \Sitegear\Core\View\View $view */
+/** @var \Sitegear\Ext\Module\News\Entities\Item $item */
+$item = $view['item'];
+$view->getStringsManager()->prepend('title', $view['title'])->prepend('title', $item->getHeadline());
+?>
+<h1><?php echo $item->getHeadline() ?></h1>
+<?php echo $view->news()->item('items/' . $item->getUrlPath()); ?>
+<p><?php echo sprintf($view['published'], $item->getDatePublished()->format($view['date-format'])); ?></p>
+<p><?php echo sprintf($view['back-link'], $view['root-url']); ?></p>

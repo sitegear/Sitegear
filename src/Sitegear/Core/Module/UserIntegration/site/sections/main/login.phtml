@@ -1,0 +1,29 @@
+<?php
+/** @var \Sitegear\Core\View\View $view */
+$view->getStringsManager()->prepend('Login', 'title');
+$view->getResourcesManager()->activate('styles:sitegear:utilities');
+?>
+<h1>Login</h1>
+<form action="<?php echo $view['form-url']; ?>" method="post">
+	<input type="hidden" name="return-url" value="<?php echo $view['return-url']; ?>" />
+<?php
+if (isset($view['error-message'])) {
+?>
+	<div class="sitegear-error"><?php echo $view['error-message']; ?></div>
+<?php
+}
+?>
+	<fieldset>
+        <div class="field">
+            <label for="auth-email">Email:</label>
+            <input id="auth-email" name="email" />
+        </div>
+        <div class="field">
+            <label for="auth-password">Password:</label>
+            <input id="auth-password" name="password" type="password" />
+        </div>
+	</fieldset>
+    <div class="buttons">
+        <input type="submit" id="auth-submit" />
+    </div>
+</form>

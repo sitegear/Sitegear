@@ -1,0 +1,14 @@
+{
+	"name": "JSON test file, with 'testing' environment overrides",
+	"any": {
+		"key": "overridden"
+	},
+	"anotherKey": [
+		"additional value"
+	],
+	"string-array-conversion": [
+		"array head",
+		"array middle",
+		"array tail"
+	]
+}

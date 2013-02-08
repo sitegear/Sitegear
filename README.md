@@ -1,5 +1,8 @@
 Sitegear
 ========
 
-Sitegear is a website development and management application written using PHP 5.3 and based on Symfony Components,
-Doctrine and other goodness.
+Sitegear is a website framework and integrated content management system.
+
+For more information, see the website: http://sitegear.org/
+
+Available under free (MIT) and commercial licenses.  See the LICENSE for details.

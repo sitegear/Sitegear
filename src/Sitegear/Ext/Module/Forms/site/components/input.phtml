@@ -1,0 +1,18 @@
+<?php
+/** @var \Sitegear\Core\View\View $view */
+$field = $view['field'];
+$attributes = array_merge(
+	array(
+		'type' => 'text'
+	),
+	isset($field['attributes']) ? $field['attributes'] : array(),
+	array(
+		'name' => $view['name'],
+		'value' => $view['value']
+	)
+);
+if (!isset($attributes['id'])) {
+	$attributes['id'] = sprintf('%s%s', $view['form-id-prefix'], $view['name']);
+}
+?>
+<input<?php echo \Sitegear\Util\HtmlUtilities::attributes($attributes); ?> />

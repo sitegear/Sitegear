@@ -1,0 +1,59 @@
+<?php
+/** @var \Sitegear\Core\View\View $view */
+?>
+<script>//<![CDATA[
+// Google Analytics
+var _gaq = _gaq || [];
+<?php
+/** @var \Sitegear\Core\View\View $view */
+// Parse the 'additional-calls' context-data.
+$additionalCalls = $view['additional-calls'];
+if (is_array($additionalCalls) && !empty($additionalCalls)) {
+	if (array_key_exists('before', $additionalCalls) || array_key_exists('after', $additionalCalls)) {
+		$additionalCallsBeforePageview = array_key_exists('before', $additionalCalls) ? $additionalCalls['before'] : array();
+		$additionalCallsAfterPageview = array_key_exists('after', $additionalCalls) ? $additionalCalls['after'] : array();
+	} else {
+		$additionalCallsBeforePageview = $additionalCalls;
+		$additionalCallsAfterPageview = array();
+	}
+} else {
+	$additionalCallsBeforePageview = array();
+	$additionalCallsAfterPageview = array();
+}
+
+// Put it all together
+$calls = array_merge(
+	array( array( '_setAccount', $view['api-key'] ) ),
+	$additionalCallsBeforePageview,
+	array( array( '_trackPageview' ) ),
+	$additionalCallsAfterPageview
+);
+
+if (!empty($calls)) {
+// TODO FIXME
+//	foreach ($calls as $index => $call) {
+//		if (is_string($call)) {
+//			array_splice($calls, $index, 1, $engine->$call());
+//		}
+//	}
+	foreach ($calls as $index => $call) {
+		if (is_array($call)) {
+			$pushParams = array();
+			foreach ($call as $param) {
+				$pushParams[] = is_numeric($param) || is_bool($param) ? $param : "'$param'";
+			}
+			if (!empty($pushParams)) {
+?>
+_gaq.push([ <?php echo implode(', ', $pushParams); ?> ]);
+<?php
+			}
+		}
+	}
+}
+?>
+(function() {
+	var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+	ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+	var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+})();
+//]]></script>

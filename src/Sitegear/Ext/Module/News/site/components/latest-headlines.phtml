@@ -1,0 +1,31 @@
+<?php
+/** @var \Sitegear\Core\View\View $view */
+if (empty($view['items'])) {
+	echo $view->news()->noHeadlines();
+} else {
+	foreach ($view['items'] as $item) { /** @var \Sitegear\Ext\Module\News\Entities\Item $item */
+		$linkUrl = sprintf('%s/%s', $view['root-url'], $item->getUrlPath());
+?>
+<section class="news-item-preview">
+<?php
+if ($view['date-format']) {
+?>
+	<div class="date-published"><?php echo sprintf($view['published'], $item->getDatePublished()->format($view['date-format'])); ?></div>
+<?php
+}
+?>
+	<div class="headline"><a href="<?php echo $linkUrl ?>"><?php echo $item->getHeadline(); ?></a></div>
+	<div class="text">
+<?php echo $view->news()->item('items/' . $item->getUrlPath())->applyDecorators(sprintf('excerpt(%d, "%s")', $view['excerpt-length'], 'Article content not found.')); ?>
+	</div>
+<?php
+		if (isset($view['read-more'])) {
+?>
+	<div class="read-more"><a href="<?php echo $linkUrl ?>"><?php echo $view['read-more']; ?></a></div>
+<?php
+		}
+?>
+</section>
+<?php
+	}
+}

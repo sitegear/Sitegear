@@ -1,0 +1,13 @@
+# This is a 'mime.types' file used for unit testing.
+# It contains a simplified set of data including a cross-section of the types of records found in real files.
+
+text/css					css
+text/csv					csv
+text/enriched
+text/plain					txt
+application/xml					xml xsl xsd
+application/vnd.fdf
+application/vnd.ms-excel							xls xlb xlt
+
+# The following ensures that commented-out records are not processed:
+# image/png					png

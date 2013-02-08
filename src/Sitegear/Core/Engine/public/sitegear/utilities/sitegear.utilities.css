@@ -1,0 +1,24 @@
+/*!
+ * sitegear.utilities.css
+ * Stylesheet for Sitegear utilities.
+ * 
+ * Sitegear (c) Ben New, Leftclick.com.au
+ * See LICENSE file in main directory for information, or visit:
+ * http://sitegear.org/
+ */
+
+.sitegear-loading-overlay { position: fixed; z-index: 19999; }
+.sitegear-loading { background: transparent url(images/loading.gif) center no-repeat; min-width: 100px; min-height: 100px; z-index: 20000; }
+.sitegear-loading-modal { background: #fff url(images/loading.gif) no-repeat; width: 100px; height: 100px; position: absolute; top: 50%; left: 50%; margin-left: -50px; margin-top: -50px; z-index: 20001; }
+.sitegear-error { color: #f00; background-color: #eee; padding: .25em; }
+
+.sitegear-about-dialog p { text-align: center; }
+.sitegear-about-dialog p.title a { display: block; margin: 0 auto; width: 278px; height: 64px; background: transparent url(images/sitegear/sitegear-logo-medium.png) center no-repeat; text-indent: -9999px; outline: none; font-weight: bold; }
+.sitegear-about-dialog p.release { font-family: monospace; }
+.sitegear-about-dialog p.website-url { font-family: monospace; font-size: larger; }
+.sitegear-about-dialog p.website-url a { text-decoration: underline; }
+
+.sitegear-options-dialog-option-button { width: 100%; margin-bottom: 4px; }
+
+.sitegear-flash-tip { padding: 8px; font-size: smaller; }
+.sitegear-flash-tip .sitegear-flash-tip-icon { float: left; margin-right: 4px; }

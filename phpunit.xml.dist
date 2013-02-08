@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit convertErrorsToExceptions="true" convertNoticesToExceptions="true" convertWarningsToExceptions="true" colors="true" bootstrap="tests/bootstrap.php">
+	<testsuites>
+		<testsuite name="Sitegear Configuration Test Suite">
+			<directory>./tests/Sitegear</directory>
+		</testsuite>
+	</testsuites>
+	<filter>
+		<whitelist processUncoveredFilesFromWhitelist="false">
+			<directory suffix=".php">./src/Sitegear</directory>
+		</whitelist>
+	</filter>
+</phpunit>

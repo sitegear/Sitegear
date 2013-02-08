@@ -1,0 +1,44 @@
+<?php
+/** @var \Sitegear\Core\View\View $view */
+$field = $view['field'];
+$attributes = array_merge(
+	array(
+		'type' => 'text'
+	),
+	isset($field['attributes']) ? $field['attributes'] : array(),
+	array(
+		'name' => $view['name'],
+		'value' => $view['value']
+	)
+);
+if (!isset($attributes['id'])) {
+	$attributes['id'] = sprintf('%s%s', $view['form-id-prefix'], $view['name']);
+}
+?>
+<span id="<?php echo $attributes['id']; ?>" class="ui-helper-clearfix">
+	<input type="hidden" name="<?php echo $view['name'] ?>" value="" />
+<?php
+foreach ($field['values'] as $valueIndex => $valueSpec) {
+	$elementAttributes = array_merge(
+		$attributes,
+		array(
+			'id' => sprintf('%s-checkbox-%s', $attributes['id'], $valueIndex),
+			'type' => 'checkbox', // TODO Allow radio buttons
+			'value' => $valueSpec['value']
+		)
+	);
+	// TODO move class names into config - 'checkbox' and 'checkbox-label' (below)
+	if (!isset($elementAttributes['class'])) {
+		$elementAttributes['class'] = 'checkbox';
+	} else {
+		$elementAttributes['class'] .= ' checkbox';
+	}
+	if ($valueSpec['value'] === $view['value']) {
+		$elementAttributes['checked'] = 'checked';
+	}
+?>
+	<input<?php echo \Sitegear\Util\HtmlUtilities::attributes($elementAttributes); ?> /><label class="checkbox-label" for="<?php echo $elementAttributes['id']; ?>"><?php echo $valueSpec['label']; ?></label>
+<?php
+}
+?>
+</span>

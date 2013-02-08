@@ -1,0 +1,13 @@
+/*!
+ * sitegear.data-editor.css
+ * Sitegear Widget - Associative Data Editor - Stylesheet
+ * Provides a generic interface for editing key-value data such as that contained in a relational database.
+ * 
+ * Sitegear (c) Ben New, Leftclick.com.au
+ * See LICENSE file in main directory for information, or visit:
+ * http://sitegear.org/
+ */
+
+.sitegear-data-editor { padding: 8px; }
+.sitegear-data-editor label { display: block; margin-top: 4px; }
+.sitegear-data-editor input { margin-bottom: 4px; }

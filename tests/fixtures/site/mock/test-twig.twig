@@ -1,0 +1,92 @@
+<h1>This is a Twig template</h1>
+<p>
+It is here for testing that the output, ignoring whitespace, is not modified by HtmlFormatter::formatPhtml().
+</p>
+<ul>
+    <li>
+        This
+    </li>
+    <li>
+        is
+    </li>
+    <li>
+        a
+    </li>
+    <li>
+        list
+    </li>
+</ul>
+<table>
+    <thead>
+    <tr>
+        <th>
+            This is a
+        </th>
+        <th>
+            table
+        </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>
+            First row
+        </td>
+        <td>
+            foo
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Second row with <strong>strong emphasis</strong>
+        </td>
+        <td>
+            bar
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Third row
+        </td>
+        <td>
+            baz
+        </td>
+    </tr>
+    </tbody>
+</table>
+<p>
+Below here is some generated stuff.  This stuff should always be the same:
+</p>
+<ul>
+{% for n in 2..1000 %}
+    {% set factors = 0 %}
+    {% for i in 2..n %}
+        {% if n is divisibleby(i) %}
+            {% set factors = factors + 1 %}
+        {% endif %}
+    {% endfor %}
+    {% if factors == 0 %}
+        <li>{{ n }}</li>
+    {% endif %}
+{% endfor %}
+</ul>
+<hr/>
+<p>
+This next part will be different whenever the page is loaded:
+</p>
+<ul>
+    <li>
+        {{ "now"|date('Y-m-d H:i:s.u') }}
+    </li>
+</ul>
+<p>
+This is a test of preformatted text:
+</p>
+<pre>
+A                   I                   !
+     S         I         A         T
+          C                   R
+</pre>
+<p>
+This bit is after the preformatted text.
+</p>
