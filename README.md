@@ -21,8 +21,10 @@ Each module may serve one or more specific purposes:
 Customisation
 -------------
 
-Sitegear is highly configurable directly via a config file mechanism.  This means that much of the application's
-behaviour can be modified by changing some (well-documented!) settings.
+Sitegear is highly configurable, directly via a config file mechanism.  This means that much of the application's
+behaviour can be modified by changing some (well-documented!) settings.  Configuration can also be applied on a
+per-environment basis.  This is useful, for example, to test and demonstrate a mail form without spamming the "real"
+target email address, while knowing that in production, the correct email address will be used.
 
 View scripts provided by modules can also be very easily overridden, by providing a site-specific view script with the
 relevant filename (and path).  This allows for further customisation as the entire markup can be modified.
