@@ -409,7 +409,7 @@ class FormsModule extends AbstractUrlMountableModule {
 	 * @param array $processor Processor specification.
 	 * @param array $data Data for replacements.
 	 *
-	 * @throws \RuntimeException
+	 * @throws \RuntimeException If any processor fails.
 	 */
 	protected function executeProcessor(array $processor, array $data) {
 		// TODO Processor conditions
@@ -420,7 +420,7 @@ class FormsModule extends AbstractUrlMountableModule {
 		if (is_null($module)) {
 			throw new \RuntimeException(sprintf('FormsModule encountered invalid processor with unknown module "%s", method "%s"', $moduleName, $methodName));
 		}
-		$method = new \ReflectionMethod($module, $methodName);
+		$method = new \ReflectionMethod($module, NameUtilities::convertToCamelCase($methodName));
 
 		// Determine arguments to pass to the processor method.
 		$arguments = $this->compileProcessorArguments($processor['arguments'], $data);
