@@ -14,6 +14,8 @@ use Sitegear\Util\TypeUtilities;
 use Sitegear\Util\NameUtilities;
 use Sitegear\Util\LoggerRegistry;
 
+use Symfony\Component\HttpFoundation\Request;
+
 /**
  * Send mails using the Swiftmailer library and Sitegear's template rendering engine.
  */
@@ -106,6 +108,7 @@ class SwiftMailerModule extends AbstractConfigurableModule {
 	/**
 	 * Send an email based on a template and supplied data.
 	 *
+	 * @param \Symfony\Component\HttpFoundation\Request $request
 	 * @param string $subject Subject line for the message.
 	 * @param array[] $addresses Map of recipients as required by the `send()` method.
 	 * @param string $template Template name.
@@ -115,9 +118,15 @@ class SwiftMailerModule extends AbstractConfigurableModule {
 	 *
 	 * @return boolean
 	 */
-	public function sendTemplate($subject, $addresses, $template, $data, $contentType=null, $charset=null) {
+	public function sendTemplate(Request $request, $subject, $addresses, $template, $data, $contentType=null, $charset=null) {
 		LoggerRegistry::debug(sprintf('SwiftMailerModule sending email from template %s', $template));
-		$body = '<html><head></head><body><h1>Test Message</h1><p>Initial test of SwiftMailer...</p></body></html>'; // TODO Generate proper templated body
+		/** @var \Sitegear\Core\View\View $view */
+		$view = $this->getEngine()->getViewFactory()->buildView($request);
+		// TODO Should there be a `mergeData()` method on ViewInterface to do this?  Is it being done elsewhere??
+		foreach ($data as $key => $value) {
+			$view[$key] = $value;
+		}
+		$body = $view->template()->$template();
 		return $this->send($subject, $addresses, $body, $contentType, $charset);
 	}
 
