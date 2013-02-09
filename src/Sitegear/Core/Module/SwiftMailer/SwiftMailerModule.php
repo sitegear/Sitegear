@@ -12,6 +12,7 @@ use Sitegear\Base\Module\AbstractConfigurableModule;
 use Sitegear\Util\ArrayUtilities;
 use Sitegear\Util\TypeUtilities;
 use Sitegear\Util\NameUtilities;
+use Sitegear\Util\LoggerRegistry;
 
 /**
  * Send mails using the Swiftmailer library and Sitegear's template rendering engine.
@@ -38,6 +39,7 @@ class SwiftMailerModule extends AbstractConfigurableModule {
 	 * {@inheritDoc}
 	 */
 	public function start() {
+		LoggerRegistry::debug('SwiftMailerModule starting');
 		// The transport name cannot be converted due to old-school class names in SwiftMailer with underscores
 		$transportName = $this->config('transport');
 		$transportClass = new \ReflectionClass($transportName);
@@ -65,6 +67,7 @@ class SwiftMailerModule extends AbstractConfigurableModule {
 	 * @throws \InvalidArgumentException
 	 */
 	public function send($subject, $addresses, $body, $contentType=null, $charset=null) {
+		LoggerRegistry::debug(sprintf('SwiftMailerModule sending email with subject "%s" and body of length %d characters', $subject, strlen($body)));
 		$message = \Swift_Message::newInstance($subject);
 		if (!isset($addresses['sender']) && (!isset($addresses['from']) || !is_array($addresses['from']) || empty($addresses['from']))) {
 			throw new \DomainException('SwiftMailer module cannot send without specifying a sender or from address.');
@@ -113,6 +116,7 @@ class SwiftMailerModule extends AbstractConfigurableModule {
 	 * @return boolean
 	 */
 	public function sendTemplate($subject, $addresses, $template, $data, $contentType=null, $charset=null) {
+		LoggerRegistry::debug(sprintf('SwiftMailerModule sending email from template %s', $template));
 		$body = '<html><head></head><body><h1>Test Message</h1><p>Initial test of SwiftMailer...</p></body></html>'; // TODO Generate proper templated body
 		return $this->send($subject, $addresses, $body, $contentType, $charset);
 	}
@@ -131,6 +135,7 @@ class SwiftMailerModule extends AbstractConfigurableModule {
 	 * @return boolean
 	 */
 	public function sendTextNotification($subject, $addresses, $data, $intro=null, $outro=null, $charset=null) {
+		LoggerRegistry::debug('SwiftMailerModule sending text notification email.');
 		$nl = "\r\n";
 		$body = sprintf('** %s **', $subject) . $nl . $nl;
 		$body .= ($intro ?: 'The following data was submitted:') . $nl . $nl;
