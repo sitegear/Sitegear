@@ -58,6 +58,14 @@ The content management tools operate in the web browser, and are based on:
  * (some wysiwyg editor, unsure which one yet)
  * (some file browser, unsure which one yet)
 
+Unit Tests
+----------
+
+Unit test coverage is in progress, but all tests should pass.  To run the tests:
+
+    composer install --dev
+    phpunit
+
 Further Information
 -------------------
 
