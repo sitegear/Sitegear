@@ -9,8 +9,9 @@
 namespace Sitegear\Base\Config\Processor;
 
 /**
- * Allows tokens to be replaced by a single value from a data array passed to its constructor, using the token as the
- * key from which to retrieve its replacement.  The special token "*" is replaced with the entire array.
+ * Allows tokens to be replaced by values from a data array passed to its constructor, using the token as the key from
+ * which to retrieve its replacement.  For example, the token "foo" will be replaced by the value associated with the
+ * key "foo" in the data array.  The special token "*" is replaced with the entire array.
  */
 class ArrayTokenProcessor extends AbstractPrefixedTokenProcessor {
 
