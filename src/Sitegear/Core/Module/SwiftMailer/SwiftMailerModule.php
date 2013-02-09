@@ -34,7 +34,7 @@ class SwiftMailerModule extends AbstractConfigurableModule {
 	 * {@inheritDoc}
 	 */
 	public function getDisplayName() {
-		return 'Mail Processor';
+		return 'SwiftMailer Integration';
 	}
 
 	/**
