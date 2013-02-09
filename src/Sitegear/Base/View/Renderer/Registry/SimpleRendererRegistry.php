@@ -36,7 +36,7 @@ class SimpleRendererRegistry implements RendererRegistryInterface {
 		}
 		foreach ($renderers as $renderer) {
 			if (!$this->isRegistered($renderer)) {
-				$this->registry[TypeUtilities::className($renderer)] = TypeUtilities::typeCheckedObject(
+				$this->registry[TypeUtilities::getClassName($renderer)] = TypeUtilities::buildTypeCheckedObject(
 					$renderer,
 					'content renderer',
 					null,
@@ -56,7 +56,7 @@ class SimpleRendererRegistry implements RendererRegistryInterface {
 		}
 		foreach ($renderers as $renderer) {
 			if ($this->isRegistered($renderer)) {
-				unset($this->registry[TypeUtilities::className($renderer)]);
+				unset($this->registry[TypeUtilities::getClassName($renderer)]);
 			}
 		}
 	}
@@ -65,7 +65,7 @@ class SimpleRendererRegistry implements RendererRegistryInterface {
 	 * {@inheritDoc}
 	 */
 	public function isRegistered($renderer) {
-		return array_key_exists(TypeUtilities::className($renderer), $this->registry);
+		return array_key_exists(TypeUtilities::getClassName($renderer), $this->registry);
 	}
 
 	/**

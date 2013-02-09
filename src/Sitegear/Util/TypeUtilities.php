@@ -55,7 +55,7 @@ class TypeUtilities {
 	 *   more of the given interface names.
 	 * @throws \InvalidArgumentException If the given argument is not a string, ReflectionClass instance or object.
 	 */
-	public static function typeCheckedObject($arg, $label, $baseClass=null, $interfaces=array(), array $args=array()) {
+	public static function buildTypeCheckedObject($arg, $label, $baseClass=null, $interfaces=array(), array $args=array()) {
 		// Make sure $interfaces is an array
 		if (!is_array($interfaces)) {
 			$interfaces = array( $interfaces );
@@ -125,7 +125,7 @@ class TypeUtilities {
 	 * @throws \InvalidArgumentException If $arg is not a string or object.
 	 * @throws \DomainException If $arg is a string that is not a valid class name.
 	 */
-	public static function className($arg) {
+	public static function getClassName($arg) {
 		$result = null;
 		if (is_string($arg)) {
 			if (!class_exists($arg)) {
@@ -147,16 +147,20 @@ class TypeUtilities {
 	 *
 	 * Code borrowed from \Symfony\Component\HttpKernel\ControllerResolver.
 	 *
-	 * @param $callable
+	 * @param callable|\ReflectionMethod|\Closure|object|string $callable
 	 *
 	 * @return \ReflectionParameter[]
 	 */
-	public static function parameters($callable) {
-		if (is_array($callable)) {
+	public static function getParameters($callable) {
+		if (is_object($callable) && !$callable instanceof \Closure) {
+			if ($callable instanceof \ReflectionFunctionAbstract) {
+				$r = $callable;
+			} else {
+				$obj = new \ReflectionObject($callable);
+				$r = $obj->getMethod('__invoke');
+			}
+		} elseif (is_array($callable)) {
 			$r = new \ReflectionMethod($callable[0], $callable[1]);
-		} elseif (is_object($callable) && !$callable instanceof \Closure) {
-			$r = new \ReflectionObject($callable);
-			$r = $r->getMethod('__invoke');
 		} else {
 			$r = new \ReflectionFunction($callable);
 		}
@@ -181,7 +185,8 @@ class TypeUtilities {
 	 * If any parameter has no matching typed arguments, and there are no fixed values or remaining values left to
 	 * process, and does not have a default value, then a runtime exception is issued.
 	 *
-	 * @param callable $callable Method or function reference, name or reflection object.
+	 * @param callable|\ReflectionMethod|\Closure|object|string $callable Method or function reference, name or
+	 *   reflection.
 	 * @param array|null $fixedValues Values that are required at the start of the argument list.  These will be used
 	 *   before any other values in determining the argument list.  If there are more elements than the number of
 	 *   arguments specified by the callable, then not all elements will be used.
@@ -194,9 +199,9 @@ class TypeUtilities {
 	 *
 	 * @throws \RuntimeException If there are insufficient matching values provided to pass for all required arguments.
 	 */
-	public static function getArguments(callable $callable, array $fixedValues=null, array $typedValues=null, array $remainingValues=null) {
+	public static function getArguments($callable, array $fixedValues=null, array $typedValues=null, array $remainingValues=null) {
 		$arguments = array();
-		foreach ($parameters = self::parameters($callable) as $parameterIndex => $parameter) {
+		foreach ($parameters = self::getParameters($callable) as $parameterIndex => $parameter) {
 			if (sizeof($fixedValues) > 0) {
 				$arguments[] = array_shift($fixedValues);
 			} else {
@@ -239,7 +244,7 @@ class TypeUtilities {
 	 *
 	 * @throws \RuntimeException If there are insufficient matching values provided to pass for all required arguments.
 	 */
-	public static function invokeCallable(callable $callable, array $fixedValues=null, array $typedValues=null, array $remainingValues=null) {
+	public static function invokeCallable($callable, array $fixedValues=null, array $typedValues=null, array $remainingValues=null) {
 		return call_user_func_array($callable, TypeUtilities::getArguments($callable, $fixedValues, $typedValues, $remainingValues));
 	}
 

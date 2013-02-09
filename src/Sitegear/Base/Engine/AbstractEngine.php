@@ -297,7 +297,7 @@ abstract class AbstractEngine implements EngineInterface {
 	protected function createModule($name) {
 		LoggerRegistry::debug(sprintf('AbstractEngine creating module "%s"', $name));
 		try {
-			return TypeUtilities::typeCheckedObject(
+			return TypeUtilities::buildTypeCheckedObject(
 				$this->getModuleClassName($name) ?: '',
 				'module',
 				null,

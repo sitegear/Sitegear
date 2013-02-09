@@ -21,7 +21,7 @@ class TypeUtilitiesTest extends AbstractSitegearTestCase {
 
 	public function testTypeCheckedObjectString() {
 		$className = '\\Sitegear\\Util\\TestClass';
-		$this->assertInstanceOf('\\Sitegear\\Util\\TestClass', TypeUtilities::typeCheckedObject($className, '[test]', '\\Sitegear\\Util\\BaseClass', '\\Sitegear\Util\\SomeInterface'));
+		$this->assertInstanceOf('\\Sitegear\\Util\\TestClass', TypeUtilities::buildTypeCheckedObject($className, '[test]', '\\Sitegear\\Util\\BaseClass', '\\Sitegear\Util\\SomeInterface'));
 	}
 
 	/**
@@ -29,7 +29,7 @@ class TypeUtilitiesTest extends AbstractSitegearTestCase {
 	 */
 	public function testTypeCheckedObjectStringInvalidBaseClass() {
 		$className = '\\Sitegear\\Util\\TestClass';
-		TypeUtilities::typeCheckedObject($className, '[test]', '\\Exception'); // TestClass does not extend \Exception
+		TypeUtilities::buildTypeCheckedObject($className, '[test]', '\\Exception'); // TestClass does not extend \Exception
 	}
 
 	/**
@@ -37,7 +37,7 @@ class TypeUtilitiesTest extends AbstractSitegearTestCase {
 	 */
 	public function testTypeCheckedObjectStringInvalidInterface() {
 		$className = '\\Sitegear\\Util\\TestClass';
-		TypeUtilities::typeCheckedObject($className, '[test]', null, '\\ArrayAccess'); // TestClass does not implement \ArrayAccess
+		TypeUtilities::buildTypeCheckedObject($className, '[test]', null, '\\ArrayAccess'); // TestClass does not implement \ArrayAccess
 	}
 
 	/**
@@ -45,13 +45,13 @@ class TypeUtilitiesTest extends AbstractSitegearTestCase {
 	 */
 	public function testTypeCheckedObjectStringClassNotExist() {
 		$className = '\\Sitegear\\Foo\\Bar'; // Does not exist
-		TypeUtilities::typeCheckedObject($className, '[test]');
+		TypeUtilities::buildTypeCheckedObject($className, '[test]');
 	}
 
 
 	public function testTypeCheckedObjectReflectionClass() {
 		$refClass = new \ReflectionClass('\\Sitegear\\Util\\TestClass');
-		$this->assertInstanceOf('\\Sitegear\\Util\\TestClass', TypeUtilities::typeCheckedObject($refClass, '[test]', '\\Sitegear\\Util\\BaseClass', '\\Sitegear\Util\\SomeInterface'));
+		$this->assertInstanceOf('\\Sitegear\\Util\\TestClass', TypeUtilities::buildTypeCheckedObject($refClass, '[test]', '\\Sitegear\\Util\\BaseClass', '\\Sitegear\Util\\SomeInterface'));
 	}
 
 	/**
@@ -59,7 +59,7 @@ class TypeUtilitiesTest extends AbstractSitegearTestCase {
 	 */
 	public function testTypeCheckedObjectReflectionClassInvalidBaseClass() {
 		$refClass = new \ReflectionClass('\\Sitegear\\Util\\TestClass');
-		TypeUtilities::typeCheckedObject($refClass, '[test]', '\\Exception'); // TestClass does not extend \Exception
+		TypeUtilities::buildTypeCheckedObject($refClass, '[test]', '\\Exception'); // TestClass does not extend \Exception
 	}
 
 	/**
@@ -67,13 +67,13 @@ class TypeUtilitiesTest extends AbstractSitegearTestCase {
 	 */
 	public function testTypeCheckedObjectReflectionClassInvalidInterface() {
 		$refClass = new \ReflectionClass('\\Sitegear\\Util\\TestClass');
-		TypeUtilities::typeCheckedObject($refClass, '[test]', null, '\\ArrayAccess'); // TestClass does not implement \ArrayAccess
+		TypeUtilities::buildTypeCheckedObject($refClass, '[test]', null, '\\ArrayAccess'); // TestClass does not implement \ArrayAccess
 	}
 
 
 	public function testTypeCheckedObjectObject() {
 		$object = new TestClass();
-		$this->assertSame($object, TypeUtilities::typeCheckedObject($object, '[test]'), '\\Sitegear\\Util\\BaseClass', '\\Sitegear\Util\\SomeInterface');
+		$this->assertSame($object, TypeUtilities::buildTypeCheckedObject($object, '[test]'), '\\Sitegear\\Util\\BaseClass', '\\Sitegear\Util\\SomeInterface');
 	}
 
 	/**
@@ -81,7 +81,7 @@ class TypeUtilitiesTest extends AbstractSitegearTestCase {
 	 */
 	public function testTypeCheckedObjectObjectInvalidBaseClass() {
 		$object = new TestClass();
-		TypeUtilities::typeCheckedObject($object, '[test]', '\\Exception'); // TestClass does not extend \Exception
+		TypeUtilities::buildTypeCheckedObject($object, '[test]', '\\Exception'); // TestClass does not extend \Exception
 	}
 
 	/**
@@ -89,7 +89,7 @@ class TypeUtilitiesTest extends AbstractSitegearTestCase {
 	 */
 	public function testTypeCheckedObjectObjectInvalidInterface() {
 		$object = new TestClass();
-		TypeUtilities::typeCheckedObject($object, '[test]', null, '\\ArrayAccess'); // TestClass does not implement \ArrayAccess
+		TypeUtilities::buildTypeCheckedObject($object, '[test]', null, '\\ArrayAccess'); // TestClass does not implement \ArrayAccess
 	}
 
 
@@ -97,41 +97,41 @@ class TypeUtilitiesTest extends AbstractSitegearTestCase {
 	 * @expectedException \InvalidArgumentException
 	 */
 	public function testTypeCheckedObjectInvalidArgument() {
-		TypeUtilities::typeCheckedObject(42, '[test]');
+		TypeUtilities::buildTypeCheckedObject(42, '[test]');
 	}
 
 
 	public function testClassNameString() {
 		$className = '\\Sitegear\\Util\\TestClass';
-		$this->assertEquals($className, TypeUtilities::className($className));
+		$this->assertEquals($className, TypeUtilities::getClassName($className));
 	}
 
 	/**
 	 * @expectedException \DomainException
 	 */
 	public function testClassNameStringClassNotExist() {
-		TypeUtilities::className('\\Sitegear\\Foo\\Bar'); // Does not exist
+		TypeUtilities::getClassName('\\Sitegear\\Foo\\Bar'); // Does not exist
 	}
 
 	public function testClassNameReflectionClass() {
 		$refClass = new \ReflectionClass('\\Sitegear\\Util\\TestClass');
-		$this->assertEquals('Sitegear\\Util\\TestClass', TypeUtilities::className($refClass));
+		$this->assertEquals('Sitegear\\Util\\TestClass', TypeUtilities::getClassName($refClass));
 	}
 
 	public function testClassNameObject() {
 		$object = new TestClass();
-		$this->assertEquals('Sitegear\\Util\\TestClass', TypeUtilities::className($object));
+		$this->assertEquals('Sitegear\\Util\\TestClass', TypeUtilities::getClassName($object));
 	}
 
 	/**
 	 * @expectedException \InvalidArgumentException
 	 */
 	public function testClassNameInvalidArgument() {
-		TypeUtilities::className(42);
+		TypeUtilities::getClassName(42);
 	}
 
 	public function testParametersArray() {
-		$params = TypeUtilities::parameters(array( new TestClass(), 'testMethod' ));
+		$params = TypeUtilities::getParameters(array( new TestClass(), 'testMethod' ));
 		$this->assertEquals(3, sizeof($params));
 		$this->assertFalse($params[0]->isOptional());
 		$this->assertEquals('x', $params[1]->getDefaultValue());
@@ -139,7 +139,7 @@ class TypeUtilitiesTest extends AbstractSitegearTestCase {
 	}
 
 	public function testParametersCallableObject() {
-		$params = TypeUtilities::parameters(new TestCallable());
+		$params = TypeUtilities::getParameters(new TestCallable());
 		$this->assertEquals(3, sizeof($params));
 		$this->assertFalse($params[0]->isOptional());
 		$this->assertEquals('x', $params[1]->getDefaultValue());
@@ -150,7 +150,7 @@ class TypeUtilitiesTest extends AbstractSitegearTestCase {
 		$closure = function($a, $b='x', $c=null) {
 			// Test only
 		};
-		$params = TypeUtilities::parameters($closure);
+		$params = TypeUtilities::getParameters($closure);
 		$this->assertEquals(3, sizeof($params));
 		$this->assertFalse($params[0]->isOptional());
 		$this->assertEquals('x', $params[1]->getDefaultValue());
@@ -158,7 +158,7 @@ class TypeUtilitiesTest extends AbstractSitegearTestCase {
 	}
 
 	public function testParametersString() {
-		$params = TypeUtilities::parameters('\\Sitegear\\Util\\test_function');
+		$params = TypeUtilities::getParameters('\\Sitegear\\Util\\test_function');
 		$this->assertEquals(3, sizeof($params));
 		$this->assertFalse($params[0]->isOptional());
 		$this->assertEquals('x', $params[1]->getDefaultValue());
@@ -169,21 +169,21 @@ class TypeUtilitiesTest extends AbstractSitegearTestCase {
 	 * @expectedException \ReflectionException
 	 */
 	public function testParametersInvalidArray() {
-		TypeUtilities::parameters(array(1, 2, 3));
+		TypeUtilities::getParameters(array(1, 2, 3));
 	}
 
 	/**
 	 * @expectedException \ReflectionException
 	 */
 	public function testParametersNonCallableObject() {
-		TypeUtilities::parameters(new TestClass());
+		TypeUtilities::getParameters(new TestClass());
 	}
 
 	/**
 	 * @expectedException \ReflectionException
 	 */
 	public function testParametersInvalidType() {
-		TypeUtilities::parameters(42);
+		TypeUtilities::getParameters(42);
 	}
 
 }

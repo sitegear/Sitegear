@@ -34,7 +34,7 @@ class SimpleDecoratorRegistry implements DecoratorRegistryInterface {
 		if ($this->isRegistered($key)) {
 			throw new \LogicException(sprintf('The given decorator key "%s" cannot be registered because it already exists.', $key));
 		}
-		$this->decorators[$key] = TypeUtilities::typeCheckedObject(
+		$this->decorators[$key] = TypeUtilities::buildTypeCheckedObject(
 			$decorator,
 			'decorator',
 			null,

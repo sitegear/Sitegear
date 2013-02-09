@@ -101,7 +101,7 @@ class FormsModule extends AbstractUrlMountableModule {
 			// Execute configured processors
 			if (isset($page['processors'])) {
 				foreach ($page['processors'] as $processor) {
-					$this->executeProcessor($processor, $data);
+					$this->executeProcessor($processor, $data, $request);
 				}
 			}
 		} else {
@@ -353,7 +353,7 @@ class FormsModule extends AbstractUrlMountableModule {
 							$this->config('constraints.class-map'),
 							$this->config('constraints.namespaces')
 						);
-						$fieldConstraints[] = TypeUtilities::typeCheckedObject(
+						$fieldConstraints[] = TypeUtilities::buildTypeCheckedObject(
 							$constraintClass,
 							'constraint',
 							'\\Symfony\\Component\\Validator\\Constraint'
@@ -408,10 +408,11 @@ class FormsModule extends AbstractUrlMountableModule {
 	 *
 	 * @param array $processor Processor specification.
 	 * @param array $data Data for replacements.
+	 * @param Request $request
 	 *
 	 * @throws \RuntimeException If any processor fails.
 	 */
-	protected function executeProcessor(array $processor, array $data) {
+	protected function executeProcessor(array $processor, array $data, Request $request) {
 		// TODO Processor conditions
 		// Determine the module and method to call.
 		$moduleName = $processor['module'];
@@ -423,7 +424,12 @@ class FormsModule extends AbstractUrlMountableModule {
 		$method = new \ReflectionMethod($module, NameUtilities::convertToCamelCase($methodName));
 
 		// Determine arguments to pass to the processor method.
-		$arguments = $this->compileProcessorArguments($processor['arguments'], $data);
+		$arguments = TypeUtilities::getArguments(
+			$method,
+			null,
+			array( $request ),
+			$this->compileProcessorArguments($processor['arguments'], $data)
+		);
 
 		// Run the processors.
 		if ($method->invokeArgs($module, $arguments) === false) {

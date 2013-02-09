@@ -62,7 +62,7 @@ class ConfigLoader {
 	 */
 	public function registerFileLoader($fileLoader) {
 		LoggerRegistry::debug(sprintf('ConfigLoader registering config file loader [%s]', TypeUtilities::describe($fileLoader)));
-		$this->fileLoaders[TypeUtilities::className($fileLoader)] = TypeUtilities::typeCheckedObject(
+		$this->fileLoaders[TypeUtilities::getClassName($fileLoader)] = TypeUtilities::buildTypeCheckedObject(
 			$fileLoader,
 			'config file loader',
 			null,
@@ -78,7 +78,7 @@ class ConfigLoader {
 	 */
 	public function deregisterFileLoader($fileLoader) {
 		LoggerRegistry::debug(sprintf('ConfigLoader deregistering config file loader [%s]', TypeUtilities::describe($fileLoader)));
-		unset($this->fileLoaders[TypeUtilities::className($fileLoader)]);
+		unset($this->fileLoaders[TypeUtilities::getClassName($fileLoader)]);
 	}
 
 	/**
@@ -90,7 +90,7 @@ class ConfigLoader {
 	 * @return boolean Whether or not the given file loader is registered with the ConfigLoader.
 	 */
 	public function hasFileLoader($fileLoader) {
-		return isset($this->fileLoaders[TypeUtilities::className($fileLoader)]);
+		return isset($this->fileLoaders[TypeUtilities::getClassName($fileLoader)]);
 	}
 
 	//-- Data Retrieval Methods --------------------
