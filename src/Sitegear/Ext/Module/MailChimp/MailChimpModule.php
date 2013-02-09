@@ -10,6 +10,9 @@ namespace Sitegear\Ext\Module\MailChimp;
 
 use Sitegear\Base\Module\AbstractConfigurableModule;
 
+/**
+ * MailChimp integration module.
+ */
 class MailChimpModule extends AbstractConfigurableModule {
 
 	//-- ModuleInterface Methods --------------------
