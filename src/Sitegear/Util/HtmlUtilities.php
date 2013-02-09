@@ -110,7 +110,6 @@ final class HtmlUtilities {
 		echo '<h1>Error</h1>', PHP_EOL;
 		echo '<p><strong>', $exception->getMessage(), '</strong></p>', PHP_EOL;
 		echo '<p>Error occurred at ', date('Y-m-d H:i:s'), ', code: ', $exception->getCode(), ', ', TypeUtilities::describe($exception), '</p>', PHP_EOL;
-		echo '<p>File: ', $exception->getFile(), ', Line: ', $exception->getLine(), '</p>', PHP_EOL;
 		echo '<p>Please contact your system administrator for assistance.</p>'. PHP_EOL;
 		if (!empty($adminName) || !empty($adminEmail)) {
 			echo '<ul>', PHP_EOL;
