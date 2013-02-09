@@ -91,13 +91,20 @@ class FormsModule extends AbstractUrlMountableModule {
 		// TODO Multiple pages
 		$currentPage = 0;
 		$page = $form['pages'][$currentPage];
+		$data = $request->request->all();
 
 		// Perform validation, only continue if no errors
 		$validator = Validation::createValidator();
 		$constraints = $this->getConstraints($page['fieldsets'], $form['fields']);
-		$violations = $validator->validateValue($request->request->all(), $constraints);
-		$valid = $violations->count() === 0;
-		if (!$valid) {
+		$violations = $validator->validateValue($data, $constraints);
+		if ($valid = ($violations->count() === 0)) {
+			// Execute configured processors
+			if (isset($page['processors'])) {
+				foreach ($page['processors'] as $processor) {
+					$this->executeProcessor($processor, $data);
+				}
+			}
+		} else {
 			// An error occurred.
 			$session = $this->getEngine()->getSession();
 
@@ -117,13 +124,6 @@ class FormsModule extends AbstractUrlMountableModule {
 				$field = $violation->getPropertyPath();
 				$session->set($this->getSessionKey($formKey, $field, 'violation'), $violation->getMessage());
 				LoggerRegistry::debug(sprintf('Set validation violation for field "%s" to "%s"', $field, $violation->getMessage()));
-			}
-		} else {
-			// Execute configured processors
-			if (isset($page['processors'])) {
-				foreach ($page['processors'] as $processor) {
-					$this->executeProcessor($processor);
-				}
 			}
 		}
 
@@ -406,26 +406,72 @@ class FormsModule extends AbstractUrlMountableModule {
 	/**
 	 * Execute a single processor with the given specification.
 	 *
-	 * @param array $processor Processor specification
+	 * @param array $processor Processor specification.
+	 * @param array $data Data for replacements.
 	 *
 	 * @throws \RuntimeException
 	 */
-	protected function executeProcessor($processor) {
+	protected function executeProcessor(array $processor, array $data) {
 		// TODO Processor conditions
+		// Determine the module and method to call.
 		$moduleName = $processor['module'];
 		$methodName = $processor['method'];
 		$module = $this->getEngine()->getModule($moduleName);
 		if (is_null($module)) {
 			throw new \RuntimeException(sprintf('FormsModule encountered invalid processor with unknown module "%s", method "%s"', $moduleName, $methodName));
 		}
-		if (!method_exists($module, $methodName)) {
-			throw new \RuntimeException(sprintf('FormsModule encountered invalid processor with module "%s", unknown method "%s"',$moduleName, $methodName));
+		$method = new \ReflectionMethod($module, $methodName);
+
+		// Determine arguments to pass to the processor method.
+		$arguments = $this->compileProcessorArguments($processor['arguments'], $data);
+
+		// Run the processors.
+		if ($method->invokeArgs($module, $arguments) === false) {
+			// A processor failed, throw an exception.
+			throw new \RuntimeException(sprintf('FormsModule ran processor module "%s", method "%s", which indicated failure', $moduleName, $methodName));
 		}
-		// TODO Processor method parameters
-		if ($module->$methodName() === false) {
-			// A processor failed
-			throw new \RuntimeException(sprintf('FormsModule encountered invalid processor with module "%s", method "%s" indicating failure', $moduleName, $methodName));
+	}
+
+	protected function compileProcessorArguments(array $arguments, array $data) {
+		$compiled = array();
+		foreach ($arguments as $key => $value) {
+			if (is_string($key)) {
+				$key = $this->performReplacements($key, $data);
+			}
+			if (is_string($value)) {
+				$value = $this->performReplacements($value, $data);
+			} elseif (is_array($value)) {
+				$value = $this->compileProcessorArguments($value, $data);
+			}
+			$compiled[$key] = $value;
 		}
+		return $compiled;
+	}
+
+	/**
+	 * TODO Use config package instead of this, it does the same thing.
+	 *
+	 * @param $value
+	 * @param $data
+	 *
+	 * @return mixed
+	 * @throws \DomainException
+	 */
+	protected function performReplacements($value, $data) {
+		return (trim($value) === '{{ data }}') ?
+				$data :
+				preg_replace_callback('/\\{\\{ ([\w\\-]+)\\:([\S]+?) \\}\\}/', function($matches) use ($data) {
+					switch ($matches[1]) {
+						case 'data':
+							return isset($data[$matches[2]]) ? $data[$matches[2]] : '';
+						case 'config':
+							return $this->config($matches[2]);
+						case 'engine-config':
+							return $this->getEngine()->config($matches[2]);
+						default:
+							throw new \DomainException(sprintf('FormsModule encountered unknown replacement prefix "%s" in processor arguments', $matches[1]));
+					}
+				}, $value);
 	}
 
 }
