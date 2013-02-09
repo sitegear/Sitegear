@@ -52,11 +52,11 @@ interface ViewFactoryInterface {
 	 * factory.
 	 *
 	 * @param \Symfony\Component\HttpFoundation\Request $request
-	 * @param \Sitegear\Base\View\ViewInterface $parent Parent for the given instance; not null.
+	 * @param \Sitegear\Base\View\ViewInterface $parent Parent for the given instance.
 	 *
 	 * @return \Sitegear\Base\View\ViewInterface New instance.
 	 */
-	public function buildView(Request $request, ViewInterface $parent);
+	public function buildView(Request $request, ViewInterface $parent=null);
 
 	//-- Accessor Methods --------------------
 

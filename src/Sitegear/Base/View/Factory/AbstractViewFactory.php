@@ -118,7 +118,7 @@ abstract class AbstractViewFactory implements ViewFactoryInterface {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function buildView(Request $request, ViewInterface $parent) {
+	public function buildView(Request $request, ViewInterface $parent=null) {
 		return $this->buildViewImpl($request, $parent);
 	}
 
