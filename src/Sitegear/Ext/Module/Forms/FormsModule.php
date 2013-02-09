@@ -9,10 +9,10 @@
 namespace Sitegear\Ext\Module\Forms;
 
 use Sitegear\Base\Module\AbstractUrlMountableModule;
-use Sitegear\Util\NameUtilities;
 use Sitegear\Base\View\ViewInterface;
 use Sitegear\Base\View\Resources\ResourceLocations;
 use Sitegear\Base\Engine\EngineInterface;
+use Sitegear\Util\NameUtilities;
 use Sitegear\Util\TypeUtilities;
 use Sitegear\Util\LoggerRegistry;
 
@@ -96,7 +96,8 @@ class FormsModule extends AbstractUrlMountableModule {
 		$validator = Validation::createValidator();
 		$constraints = $this->getConstraints($page['fieldsets'], $form['fields']);
 		$violations = $validator->validateValue($request->request->all(), $constraints);
-		if (!empty($violations)) {
+		$valid = $violations->count() === 0;
+		if (!$valid) {
 			// An error occurred.
 			$session = $this->getEngine()->getSession();
 
@@ -127,7 +128,7 @@ class FormsModule extends AbstractUrlMountableModule {
 		}
 
 		// Redirect to the target page
-		$targetUrl = (empty($violations) && isset($form['target-url']) && (++$page >= sizeof($form['pages']))) ?
+		$targetUrl = ($valid && isset($form['target-url']) && (++$page >= sizeof($form['pages']))) ?
 				$form['target-url'] :
 				$request->request->get('form-url', $request->getBaseUrl());
 		return new RedirectResponse($request->getUriForPath('/' . $targetUrl));

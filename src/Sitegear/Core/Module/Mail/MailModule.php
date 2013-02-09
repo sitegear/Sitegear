@@ -10,6 +10,9 @@ namespace Sitegear\Core\Module\Mail;
 
 use Sitegear\Base\Module\AbstractConfigurableModule;
 
+/**
+ * Send mails using the Swiftmailer library and Sitegear's template rendering engine.
+ */
 class MailModule extends AbstractConfigurableModule {
 
 	//-- ModuleInterface Methods --------------------
