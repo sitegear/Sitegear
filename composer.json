@@ -23,6 +23,7 @@
 		"doctrine/orm": "2.*",
 		"gedmo/doctrine-extensions": "*",
 		"swiftmailer/swiftmailer": "4.*",
+		"rezzza/mailchimp": "*",
 		"psr/log": "1.*"
 	},
 	"require-dev": {
