@@ -68,7 +68,9 @@ class EngineExceptionListener extends AbstractEngineKernelListener {
 
 			// Perform standard rendering using a proxy event.
 			$renderer = new EngineRendererListener($this->getEngine());
-			$renderEvent = new GetResponseForControllerResultEvent($event->getKernel(), $event->getRequest(), HttpKernelInterface::SUB_REQUEST, sprintf('error-%3d', $statusCode));
+			$viewScript = sprintf('error-%3d', $statusCode);
+			// TODO Handle view scripts that don't exist, default back to 500 or 404
+			$renderEvent = new GetResponseForControllerResultEvent($event->getKernel(), $event->getRequest(), HttpKernelInterface::SUB_REQUEST, $viewScript);
 			$renderer->onKernelView($renderEvent);
 
 			// Copy the response from the proxy event back to the event being handled.
@@ -76,7 +78,7 @@ class EngineExceptionListener extends AbstractEngineKernelListener {
 		} catch (\Exception $e) {
 			try {
 				// If there is an error above, try to display the fallback error page, i.e. black-and-white error message
-				$event->setResponse(Response::create(HtmlUtilities::exception($event->getException())));
+				$event->setResponse(Response::create(HtmlUtilities::exception($exception)));
 			} catch (\Exception $e2) {
 				// If another error occurs, the best thing to do is throw the original error.
 				throw $exception;
