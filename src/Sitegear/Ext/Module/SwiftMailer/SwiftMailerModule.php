@@ -6,7 +6,7 @@
  * http://sitegear.org/
  */
 
-namespace Sitegear\Core\Module\SwiftMailer;
+namespace Sitegear\Ext\Module\SwiftMailer;
 
 use Sitegear\Base\Module\AbstractConfigurableModule;
 use Sitegear\Util\ArrayUtilities;

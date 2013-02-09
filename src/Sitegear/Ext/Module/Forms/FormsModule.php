@@ -111,7 +111,7 @@ class FormsModule extends AbstractUrlMountableModule {
 			// An error occurred.
 			$session = $this->getEngine()->getSession();
 
-			// Set the values into the session so they can be displayed after redirecting
+			// Set the values into the session so they can be displayed after redirecting.
 			foreach ($page['fieldsets'] as $fieldset) {
 				foreach ($fieldset['fields'] as $fieldSpec) {
 					if ($fieldSpec['mode'] === 'field') {
@@ -122,7 +122,7 @@ class FormsModule extends AbstractUrlMountableModule {
 				}
 			}
 
-			// Set the error messages into the session so they can be displayed after redirecting
+			// Set the error messages into the session so they can be displayed after redirecting.
 			foreach ($violations as $violation) { /** @var \Symfony\Component\Validator\ConstraintViolationInterface $violation */
 				$field = $violation->getPropertyPath();
 				$session->set($this->getSessionKey($formKey, $field, 'violation'), $violation->getMessage());
@@ -130,10 +130,10 @@ class FormsModule extends AbstractUrlMountableModule {
 			}
 		}
 
-		// Redirect to the target page
-		$targetUrl = ($valid && isset($form['target-url']) && (++$page >= sizeof($form['pages']))) ?
-				$form['target-url'] :
-				$request->request->get('form-url', $request->getBaseUrl());
+		// Redirect to the target page, which is either the actual target-url, if the form is finished and there is one
+		// set, or the form-url, if one is set (which it should be!), or to the home page as a fallback.
+		$finished = ($valid && isset($form['target-url']) && (++$page >= sizeof($form['pages'])));
+		$targetUrl = $finished ? $form['target-url'] : $request->request->get('form-url', $request->getBaseUrl());
 		return new RedirectResponse($request->getUriForPath('/' . $targetUrl));
 	}
 
@@ -441,11 +441,8 @@ class FormsModule extends AbstractUrlMountableModule {
 			$argumentsContainer->get('', array())
 		);
 
-		// Run the processors.
-		if ($method->invokeArgs($module, $arguments) === false) {
-			// A processor failed, throw an exception.
-			throw new \RuntimeException(sprintf('FormsModule ran processor module "%s", method "%s", which indicated failure', $moduleName, $methodName));
-		}
+		// Run the processor.  This might throw an exception to indicate failure; any return value is ignored.
+		$method->invokeArgs($module, $arguments);
 	}
 
 }

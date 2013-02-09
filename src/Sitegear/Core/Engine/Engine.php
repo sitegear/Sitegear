@@ -40,7 +40,6 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
  * @method \Sitegear\Core\Module\File\FileModule file()
  * @method \Sitegear\Core\Module\Navigation\NavigationModule navigation()
  * @method \Sitegear\Core\Module\ResourcesIntegration\ResourcesIntegrationModule resourcesIntegration()
- * @method \Sitegear\Core\Module\SwiftMailer\SwiftMailerModule swiftMailer()
  * @method \Sitegear\Core\Module\UserIntegration\UserIntegrationModule userIntegration()
  * @method \Sitegear\Core\Module\Version\VersionModule version()
  *
@@ -52,6 +51,7 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
  * @method \Sitegear\Ext\Module\MailChimp\MailChimpModule mailChimp()
  * @method \Sitegear\Ext\Module\News\NewsModule news()
  * @method \Sitegear\Ext\Module\Products\ProductsModule products()
+ * @method \Sitegear\Ext\Module\SwiftMailer\SwiftMailerModule swiftMailer()
  */
 class Engine extends AbstractConfigurableEngine {
 
