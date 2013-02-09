@@ -40,6 +40,7 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
  * @method \Sitegear\Core\Module\File\FileModule file()
  * @method \Sitegear\Core\Module\Navigation\NavigationModule navigation()
  * @method \Sitegear\Core\Module\ResourcesIntegration\ResourcesIntegrationModule resourcesIntegration()
+ * @method \Sitegear\Core\Module\Swiftmailer\SwiftmailerModule swiftmailer()
  * @method \Sitegear\Core\Module\UserIntegration\UserIntegrationModule userIntegration()
  * @method \Sitegear\Core\Module\Version\VersionModule version()
  *

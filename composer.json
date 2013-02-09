@@ -22,6 +22,7 @@
 		"symfony/console": "2.*",
 		"doctrine/orm": "2.*",
 		"gedmo/doctrine-extensions": "*",
+		"swiftmailer/swiftmailer": "4.*",
 		"psr/log": "1.*"
 	},
 	"require-dev": {
