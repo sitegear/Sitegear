@@ -10,13 +10,14 @@ namespace Sitegear\Base\Module;
 
 use Sitegear\Base\Config\ConfigurableInterface;
 use Sitegear\Base\Config\Processor\IncludeTokenProcessor;
-use Sitegear\Base\View\ViewInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Sitegear\Base\Config\Processor\EngineTokenProcessor;
 use Sitegear\Base\Config\Processor\ConfigTokenProcessor;
 use Sitegear\Base\Config\ConfigLoader;
 use Sitegear\Base\Config\Container\SimpleConfigContainer;
+use Sitegear\Base\View\ViewInterface;
 use Sitegear\Util\TypeUtilities;
+
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Extends the AbstractModule class so that it is also configurable.  This is still an abstract module, because it does
@@ -34,6 +35,11 @@ abstract class AbstractConfigurableModule extends AbstractModule implements Conf
 	//-- Attributes --------------------
 
 	/**
+	 * @var \Sitegear\Base\Config\ConfigLoader
+	 */
+	private $configLoader;
+
+	/**
 	 * @var \Sitegear\Base\Config\Container\ConfigContainerInterface
 	 */
 	private $config;
@@ -48,18 +54,21 @@ abstract class AbstractConfigurableModule extends AbstractModule implements Conf
 	 * This implementation automatically adds a ConfigTokenProcessor and an EngineTokenProcessor.
 	 */
 	public function configure($config=null, ConfigLoader $loader=null, array $additionalProcessors=null) {
-		$loader = $loader ?: new ConfigLoader($this->getEngine()->getEnvironmentInfo());
-		$this->config = new SimpleConfigContainer($loader);
+		$this->configLoader = $loader ?: new ConfigLoader($this->getEngine()->getEnvironmentInfo());
+		$this->config = new SimpleConfigContainer($this->configLoader);
 		$this->config->addProcessor(new EngineTokenProcessor($this->getEngine(), 'engine'));
-		$this->config->addProcessor(new ConfigTokenProcessor($this->config, 'config'));
-		$this->config->addProcessor(new ConfigTokenProcessor($this->config, 'engine-config'));
+		$this->config->addProcessor(new ConfigTokenProcessor($this, 'config'));
+		$engine = $this->getEngine();
+		if ($engine instanceof ConfigurableInterface) {
+			$this->config->addProcessor(new ConfigTokenProcessor($engine, 'engine-config'));
+		}
 		$roots = array(
 			'site' => $this->getEngine()->getSiteInfo()->getSiteRoot(),
 			'sitegear' => $this->getEngine()->getSitegearInfo()->getSitegearRoot(),
 			'engine' => $this->getEngine()->getEngineRoot(),
 			'module' => $this->getModuleRoot()
 		);
-		$this->config->addProcessor(new IncludeTokenProcessor($roots, $loader, 'include'));
+		$this->config->addProcessor(new IncludeTokenProcessor($roots, $this->configLoader, 'include'));
 		foreach ($additionalProcessors ?: array() as $processor) {
 			$this->config->addProcessor($processor);
 		}
@@ -90,6 +99,13 @@ abstract class AbstractConfigurableModule extends AbstractModule implements Conf
 	}
 
 	//-- Internal Methods --------------------
+
+	/**
+	 * @return \Sitegear\Base\Config\ConfigLoader
+	 */
+	protected function getConfigLoader() {
+		return $this->configLoader;
+	}
 
 	/**
 	 * Get the default configuration for this module.

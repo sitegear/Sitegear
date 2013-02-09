@@ -39,7 +39,7 @@ abstract class AbstractConfigurableEngine extends AbstractEngine implements Conf
 	/**
 	 * @var \Sitegear\Base\Config\ConfigLoader Configuration loader, stored for use when constructing modules.
 	 */
-	private $loader;
+	private $configLoader;
 
 	/**
 	 * @var \Sitegear\Base\Config\Container\ConfigContainerInterface Configuration object.
@@ -59,16 +59,16 @@ abstract class AbstractConfigurableEngine extends AbstractEngine implements Conf
 	 */
 	public function configure($config=null, ConfigLoader $loader=null, array $additionalProcessors=null) {
 		LoggerRegistry::debug('AbstractConfigurableEngine receiving configuration');
-		$this->loader = $loader ?: new ConfigLoader($this->getEnvironmentInfo());
-		$this->config = new SimpleConfigContainer($this->loader);
+		$this->configLoader = $loader ?: new ConfigLoader($this->getEnvironmentInfo());
+		$this->config = new SimpleConfigContainer($this->configLoader);
 		$this->config->addProcessor(new EngineTokenProcessor($this, 'engine'));
-		$this->config->addProcessor(new ConfigTokenProcessor($this->config, 'config'));
+		$this->config->addProcessor(new ConfigTokenProcessor($this, 'config'));
 		$roots = array(
 			'site' => $this->getSiteInfo()->getSiteRoot(),
 			'sitegear' => $this->getSitegearInfo()->getSitegearRoot(),
 			'engine' => $this->getEngineRoot()
 		);
-		$this->config->addProcessor(new IncludeTokenProcessor($roots, $this->loader, 'include'));
+		$this->config->addProcessor(new IncludeTokenProcessor($roots, $this->configLoader, 'include'));
 		foreach ($additionalProcessors ?: array() as $processor) {
 			$this->config->addProcessor($processor);
 		}
@@ -101,12 +101,19 @@ abstract class AbstractConfigurableEngine extends AbstractEngine implements Conf
 		$module = parent::createModule($name);
 		if ($module instanceof ConfigurableInterface) {
 			$moduleConfigKey = sprintf('%s.%s', $this->getRootModuleOverrideConfigKey(), NameUtilities::convertToDashedLower($name));
-			$module->configure($this->config($moduleConfigKey, array()), $this->loader);
+			$module->configure($this->config($moduleConfigKey, array()), $this->getConfigLoader());
 		}
 		return $module;
 	}
 
 	//-- Internal Methods --------------------
+
+	/**
+	 * @return \Sitegear\Base\Config\ConfigLoader
+	 */
+	protected function getConfigLoader() {
+		return $this->configLoader;
+	}
 
 	/**
 	 * Get the default configuration for this engine.

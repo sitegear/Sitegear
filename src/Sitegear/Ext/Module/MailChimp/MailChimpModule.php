@@ -6,11 +6,11 @@
  * http://sitegear.org/
  */
 
-namespace Sitegear\Ext\Module\Mailchimp;
+namespace Sitegear\Ext\Module\MailChimp;
 
 use Sitegear\Base\Module\AbstractConfigurableModule;
 
-class MailchimpModule extends AbstractConfigurableModule {
+class MailChimpModule extends AbstractConfigurableModule {
 
 	//-- ModuleInterface Methods --------------------
 
@@ -18,14 +18,12 @@ class MailchimpModule extends AbstractConfigurableModule {
 	 * {@inheritDoc}
 	 */
 	public function getDisplayName() {
-		return 'Mailchimp Integration';
+		return 'MailChimp Integration';
 	}
 
 	//-- Public Methods --------------------
 
 	public function subscribe() {
-		// TODO
-		return true;
 	}
 
 }

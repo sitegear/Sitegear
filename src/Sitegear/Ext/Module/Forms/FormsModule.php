@@ -9,6 +9,9 @@
 namespace Sitegear\Ext\Module\Forms;
 
 use Sitegear\Base\Module\AbstractUrlMountableModule;
+use Sitegear\Base\Config\Processor\ArrayTokenProcessor;
+use Sitegear\Base\Config\Processor\ConfigTokenProcessor;
+use Sitegear\Base\Config\Container\SimpleConfigContainer;
 use Sitegear\Base\View\ViewInterface;
 use Sitegear\Base\View\Resources\ResourceLocations;
 use Sitegear\Base\Engine\EngineInterface;
@@ -423,12 +426,19 @@ class FormsModule extends AbstractUrlMountableModule {
 		}
 		$method = new \ReflectionMethod($module, NameUtilities::convertToCamelCase($methodName));
 
+		// Use the configuration library to process tokens in the processor arguments data.
+		$argumentsContainer = new SimpleConfigContainer($this->getConfigLoader());
+		$argumentsContainer->addProcessor(new ConfigTokenProcessor($this, 'config'));
+		$argumentsContainer->addProcessor(new ConfigTokenProcessor($this->getEngine(), 'engine-config'));
+		$argumentsContainer->addProcessor(new ArrayTokenProcessor($data, 'data'));
+		$argumentsContainer->merge($processor['arguments']);
+
 		// Determine arguments to pass to the processor method.
 		$arguments = TypeUtilities::getArguments(
 			$method,
 			null,
 			array( $request ),
-			$this->compileProcessorArguments($processor['arguments'], $data)
+			$argumentsContainer->get('', array())
 		);
 
 		// Run the processors.
@@ -436,48 +446,6 @@ class FormsModule extends AbstractUrlMountableModule {
 			// A processor failed, throw an exception.
 			throw new \RuntimeException(sprintf('FormsModule ran processor module "%s", method "%s", which indicated failure', $moduleName, $methodName));
 		}
-	}
-
-	protected function compileProcessorArguments(array $arguments, array $data) {
-		$compiled = array();
-		foreach ($arguments as $key => $value) {
-			if (is_string($key)) {
-				$key = $this->performReplacements($key, $data);
-			}
-			if (is_string($value)) {
-				$value = $this->performReplacements($value, $data);
-			} elseif (is_array($value)) {
-				$value = $this->compileProcessorArguments($value, $data);
-			}
-			$compiled[$key] = $value;
-		}
-		return $compiled;
-	}
-
-	/**
-	 * TODO Use config package instead of this, it does the same thing.
-	 *
-	 * @param $value
-	 * @param $data
-	 *
-	 * @return mixed
-	 * @throws \DomainException
-	 */
-	protected function performReplacements($value, $data) {
-		return (trim($value) === '{{ data }}') ?
-				$data :
-				preg_replace_callback('/\\{\\{ ([\w\\-]+)\\:([\S]+?) \\}\\}/', function($matches) use ($data) {
-					switch ($matches[1]) {
-						case 'data':
-							return isset($data[$matches[2]]) ? $data[$matches[2]] : '';
-						case 'config':
-							return $this->config($matches[2]);
-						case 'engine-config':
-							return $this->getEngine()->config($matches[2]);
-						default:
-							throw new \DomainException(sprintf('FormsModule encountered unknown replacement prefix "%s" in processor arguments', $matches[1]));
-					}
-				}, $value);
 	}
 
 }

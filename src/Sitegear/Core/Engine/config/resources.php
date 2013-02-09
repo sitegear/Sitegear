@@ -17,7 +17,7 @@ return array(
 	 */
 	'script:vendor:jquery' => array(
 		'type' => 'script',
-		'url' => '${config:system.command-url.root}/${config:system.command-url.resources}/engine/jquery/jquery-1.8.3.js'
+		'url' => '{{ config:system.command-url.root }}/{{ config:system.command-url.resources }}/engine/jquery/jquery-1.8.3.js'
 	),
 
 	/**
@@ -25,7 +25,7 @@ return array(
 	 */
 	'script:vendor:jquery-ui' => array(
 		'type' => 'script',
-		'url' => '${config:system.command-url.root}/${config:system.command-url.resources}/engine/jquery/ui/jquery-ui-1.9.2.custom.js',
+		'url' => '{{ config:system.command-url.root }}/{{ config:system.command-url.resources }}/engine/jquery/ui/jquery-ui-1.9.2.custom.js',
 		'requires' => array(
 			'script:vendor:jquery',
 			'styles:vendor:jquery-ui'
@@ -37,7 +37,7 @@ return array(
 	 */
 	'styles:vendor:jquery-ui' => array(
 		'type' => 'styles',
-		'url' => '${config:system.command-url.root}/${config:system.command-url.resources}/engine/jquery/ui/jquery-ui-1.9.2.custom.css'
+		'url' => '{{ config:system.command-url.root }}/{{ config:system.command-url.resources }}/engine/jquery/ui/jquery-ui-1.9.2.custom.css'
 	),
 
 	/**
@@ -45,7 +45,7 @@ return array(
 	 */
 	'script:vendor:cookie' => array(
 		'type' => 'script',
-		'url' => '${config:system.command-url.root}/${config:system.command-url.resources}/engine/jquery/cookie/jquery.cookie.js',
+		'url' => '{{ config:system.command-url.root }}/{{ config:system.command-url.resources }}/engine/jquery/cookie/jquery.cookie.js',
 		'requires' => array(
 			'script:vendor:jquery'
 		)
@@ -56,7 +56,7 @@ return array(
 	 */
 	'script:vendor:fileupload' => array(
 		'type' => 'script',
-		'url' => '${config:system.command-url.root}/${config:system.command-url.resources}/engine/jquery/fileupload/jquery.fileupload.js',
+		'url' => '{{ config:system.command-url.root }}/{{ config:system.command-url.resources }}/engine/jquery/fileupload/jquery.fileupload.js',
 		'requires' => array(
 			'script:vendor:jquery-ui'
 		)
@@ -67,7 +67,7 @@ return array(
 	 */
 	'script:vendor:iframe-transport' => array(
 		'type' => 'script',
-		'url' => '${config:system.command-url.root}/${config:system.command-url.resources}/engine/jquery/iframe-transport/jquery.iframe-transport.js',
+		'url' => '{{ config:system.command-url.root }}/{{ config:system.command-url.resources }}/engine/jquery/iframe-transport/jquery.iframe-transport.js',
 		'requires' => array(
 			'script:vendor:jquery'
 		)
@@ -78,7 +78,7 @@ return array(
 	 */
 	'script:vendor:jstree' => array(
 		'type' => 'script',
-		'url' => '${config:system.command-url.root}/${config:system.command-url.resources}/engine/jquery/jstree/jquery.jstree.js',
+		'url' => '{{ config:system.command-url.root }}/{{ config:system.command-url.resources }}/engine/jquery/jstree/jquery.jstree.js',
 		'requires' => array(
 			'script:vendor:jquery-ui'
 		)
@@ -89,7 +89,7 @@ return array(
 	 */
 	'script:vendor:splitter' => array(
 		'type' => 'script',
-		'url' => '${config:system.command-url.root}/${config:system.command-url.resources}/engine/jquery/splitter/jquery.splitter.js',
+		'url' => '{{ config:system.command-url.root }}/{{ config:system.command-url.resources }}/engine/jquery/splitter/jquery.splitter.js',
 		'requires' => array(
 			'script:vendor:jquery-ui',
 			'styles:vendor:splitter'
@@ -101,7 +101,7 @@ return array(
 	 */
 	'styles:vendor:splitter' => array(
 		'type' => 'styles',
-		'url' => '${config:system.command-url.root}/${config:system.command-url.resources}/engine/jquery/splitter/jquery.splitter.css',
+		'url' => '{{ config:system.command-url.root }}/{{ config:system.command-url.resources }}/engine/jquery/splitter/jquery.splitter.css',
 		'requires' => array(
 			'styles:vendor:jquery-ui'
 		)
@@ -112,7 +112,7 @@ return array(
 	 */
 	'script:vendor:toolbar' => array(
 		'type' => 'script',
-		'url' => '${config:system.command-url.root}/${config:system.command-url.resources}/engine/jquery/toolbar/jquery.ui.toolbar.js',
+		'url' => '{{ config:system.command-url.root }}/{{ config:system.command-url.resources }}/engine/jquery/toolbar/jquery.ui.toolbar.js',
 		'requires' => array(
 			'script:vendor:jquery-ui',
 			'styles:vendor:toolbar'
@@ -124,7 +124,7 @@ return array(
 	 */
 	'styles:vendor:toolbar' => array(
 		'type' => 'styles',
-		'url' => '${config:system.command-url.root}/${config:system.command-url.resources}/engine/jquery/toolbar/jquery.ui.toolbar.css',
+		'url' => '{{ config:system.command-url.root }}/{{ config:system.command-url.resources }}/engine/jquery/toolbar/jquery.ui.toolbar.css',
 		'requires' => array(
 			'styles:vendor:jquery-ui'
 		)
@@ -135,7 +135,7 @@ return array(
 	 */
 	'script:sitegear:utilities' => array(
 		'type' => 'script',
-		'url' => '${config:system.command-url.root}/${config:system.command-url.resources}/engine/sitegear/utilities/sitegear.utilities.js',
+		'url' => '{{ config:system.command-url.root }}/{{ config:system.command-url.resources }}/engine/sitegear/utilities/sitegear.utilities.js',
 		'requires' => array(
 			'script:vendor:jquery-ui',
 			'styles:sitegear:utilities'
@@ -147,7 +147,7 @@ return array(
 	 */
 	'styles:sitegear:utilities' => array(
 		'type' => 'styles',
-		'url' => '${config:system.command-url.root}/${config:system.command-url.resources}/engine/sitegear/utilities/sitegear.utilities.css',
+		'url' => '{{ config:system.command-url.root }}/{{ config:system.command-url.resources }}/engine/sitegear/utilities/sitegear.utilities.css',
 		array(
 			'styles:vendor:jquery-ui'
 		)
@@ -158,7 +158,7 @@ return array(
 	 */
 	'script:sitegear:base' => array(
 		'type' => 'script',
-		'url' => '${config:system.command-url.root}/${config:system.command-url.resources}/engine/sitegear/base/sitegear.base.js',
+		'url' => '{{ config:system.command-url.root }}/{{ config:system.command-url.resources }}/engine/sitegear/base/sitegear.base.js',
 		'requires' => array(
 			'script:sitegear:utilities',
 			'styles:sitegear:base'
@@ -170,7 +170,7 @@ return array(
 	 */
 	'styles:sitegear:base' => array(
 		'type' => 'styles',
-		'url' => '${config:system.command-url.root}/${config:system.command-url.resources}/engine/sitegear/base/sitegear.base.css',
+		'url' => '{{ config:system.command-url.root }}/{{ config:system.command-url.resources }}/engine/sitegear/base/sitegear.base.css',
 		array(
 			'styles:sitegear:utilities'
 		)
@@ -181,7 +181,7 @@ return array(
 	 */
 	'script:sitegear:cookie-dialog' => array(
 		'type' => 'script',
-		'url' => '${config:system.command-url.root}/${config:system.command-url.resources}/engine/sitegear/cookie-dialog/sitegear.cookie-dialog.js',
+		'url' => '{{ config:system.command-url.root }}/{{ config:system.command-url.resources }}/engine/sitegear/cookie-dialog/sitegear.cookie-dialog.js',
 		'requires' => array(
 			'script:vendor:jquery-ui',
 			'script:vendor:cookie'
@@ -193,7 +193,7 @@ return array(
 	 */
 	'script:sitegear:tree-panel-dialog' => array(
 		'type' => 'styles',
-		'url' => '${config:system.command-url.root}/${config:system.command-url.resources}/engine/sitegear/tree-panel-dialog/sitegear.tree-panel-dialog.js',
+		'url' => '{{ config:system.command-url.root }}/{{ config:system.command-url.resources }}/engine/sitegear/tree-panel-dialog/sitegear.tree-panel-dialog.js',
 		'requires' => array(
 			'script:vendor:cookie-dialog',
 			'script:vendor:splitter',
@@ -206,7 +206,7 @@ return array(
 	 */
 	'script:sitegear:data-editor' => array(
 		'type' => 'script',
-		'url' => '${config:system.command-url.root}/${config:system.command-url.resources}/engine/sitegear/data-editor/sitegear.data-editor.js',
+		'url' => '{{ config:system.command-url.root }}/{{ config:system.command-url.resources }}/engine/sitegear/data-editor/sitegear.data-editor.js',
 		'requires' => array(
 			'script:sitegear:base',
 			'styles:sitegear:data-editor'
@@ -218,7 +218,7 @@ return array(
 	 */
 	'styles:sitegear:data-editor' => array(
 		'type' => 'styles',
-		'url' => '${config:system.command-url.root}/${config:system.command-url.resources}/engine/sitegear/data-editor/sitegear.data-editor.css',
+		'url' => '{{ config:system.command-url.root }}/{{ config:system.command-url.resources }}/engine/sitegear/data-editor/sitegear.data-editor.css',
 		'requires' => array(
 			'styles:vendor:jquery-ui'
 		)
@@ -229,7 +229,7 @@ return array(
 	 */
 	'script:sitegear:command-dialog' => array(
 		'type' => 'script',
-		'url' => '${config:system.command-url.root}/${config:system.command-url.resources}/engine/sitegear/command-dialog/sitegear.command-dialog.js',
+		'url' => '{{ config:system.command-url.root }}/{{ config:system.command-url.resources }}/engine/sitegear/command-dialog/sitegear.command-dialog.js',
 		'requires' => array(
 			'script:vendor:cookie-dialog',
 			'script:sitegear:base'
@@ -241,7 +241,7 @@ return array(
 	 */
 	'script:sitegear:content-editor' => array(
 		'type' => 'script',
-		'url' => '${config:system.command-url.root}/${config:system.command-url.resources}/engine/sitegear/content-editor/sitegear.content-editor.js',
+		'url' => '{{ config:system.command-url.root }}/{{ config:system.command-url.resources }}/engine/sitegear/content-editor/sitegear.content-editor.js',
 		'requires' => array(
 			'script:vendor:toolbar'
 		)
@@ -252,7 +252,7 @@ return array(
 	 */
 	'script:sitegear:file-manager' => array(
 		'type' => 'script',
-		'url' => '${config:system.command-url.root}/${config:system.command-url.resources}/engine/sitegear/file-manager/sitegear.file-manager.js',
+		'url' => '{{ config:system.command-url.root }}/{{ config:system.command-url.resources }}/engine/sitegear/file-manager/sitegear.file-manager.js',
 		'requires' => array(
 			'script:vendor:tree-panel-dialog',
 			'script:sitegear:base'
@@ -264,7 +264,7 @@ return array(
 	 */
 	'script:sitegear:upload-manager' => array(
 		'type' => 'script',
-		'url' => '${config:system.command-url.root}/${config:system.command-url.resources}/engine/sitegear/upload-manager/sitegear.upload-manager.js',
+		'url' => '{{ config:system.command-url.root }}/{{ config:system.command-url.resources }}/engine/sitegear/upload-manager/sitegear.upload-manager.js',
 		'requires' => array(
 			'script:vendor:jquery',
 			'script:vendor:jquery-ui',

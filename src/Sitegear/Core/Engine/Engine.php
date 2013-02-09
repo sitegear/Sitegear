@@ -49,6 +49,7 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
  * @method \Sitegear\Ext\Module\Customer\CustomerModule customer()
  * @method \Sitegear\Ext\Module\Forms\FormsModule forms()
  * @method \Sitegear\Ext\Module\Google\GoogleModule google()
+ * @method \Sitegear\Ext\Module\MailChimp\MailChimpModule mailChimp()
  * @method \Sitegear\Ext\Module\News\NewsModule news()
  * @method \Sitegear\Ext\Module\Products\ProductsModule products()
  */
@@ -136,13 +137,13 @@ class Engine extends AbstractConfigurableEngine {
 	 */
 	public function instrumentResponse(Response $response) {
 		LoggerRegistry::debug('Engine instrumenting response');
-//		if (!$response->headers->has('Content-Type')) {
-//			$contentType = $this->config('view.page.content-type');
-//			if (is_string($contentType) && strlen($contentType) > 0) {
-//				$response->headers->set('Content-Type', $contentType);
-//			}
-//		}
-//		$response->headers->set('X-Powered-By', $this->getSitegearInfo()->getSitegearVersionIdentifier());
+		if (!$response->headers->has('Content-Type')) {
+			$contentType = $this->config('view.page.content-type');
+			if (is_string($contentType) && strlen($contentType) > 0) {
+				$response->headers->set('Content-Type', $contentType);
+			}
+		}
+		$response->headers->set('X-Powered-By', $this->getSitegearInfo()->getSitegearVersionIdentifier());
 		return $response;
 	}
 
@@ -197,8 +198,6 @@ class Engine extends AbstractConfigurableEngine {
 
 	/**
 	 * {@inheritDoc}
-	 *
-	 * TODO Put this into TypeUtilities similar to above.
 	 */
 	public function getModuleName($module) {
 		$r = is_string($module) ? new \ReflectionClass($module) : new \ReflectionObject($module);

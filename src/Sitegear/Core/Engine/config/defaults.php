@@ -361,7 +361,7 @@ return array(
 	/**
 	 * Resources to register.
 	 */
-	'resources' => '${include:$engine/config/resources.php}',
+	'resources' => '{{ include:$engine/config/resources.php }}',
 
 	/**
 	 * Module overrides.  Sub-keys should be module keys, and values should be config arrays.  The default for each

@@ -8,29 +8,28 @@
 
 namespace Sitegear\Base\Config\Processor;
 
-use Sitegear\Base\Config\ConfigurableInterface;
-
 /**
- * Token processor that allows substitution of values from a specified configuration container.
+ * Allows tokens to be replaced by a single value from a data array passed to its constructor, using the token as the
+ * key from which to retrieve its replacement.  The special token "*" is replaced with the entire array.
  */
-class ConfigTokenProcessor extends AbstractPrefixedTokenProcessor {
+class ArrayTokenProcessor extends AbstractPrefixedTokenProcessor {
 
 	//-- Attributes --------------------
 
 	/**
-	 * @var \Sitegear\Base\Config\Container\ConfigContainerInterface
+	 * @var array
 	 */
-	private $object;
+	private $array;
 
 	//-- Constructor --------------------
 
 	/**
-	 * @param \Sitegear\Base\Config\ConfigurableInterface $object
+	 * @param array $array
 	 * @param string $prefix
 	 */
-	public function __construct(ConfigurableInterface $object, $prefix) {
+	public function __construct(array $array, $prefix) {
 		parent::__construct($prefix);
-		$this->object = $object;
+		$this->array = $array;
 	}
 
 	//-- AbstractPrefixedTokenProcessor Methods --------------------
@@ -39,7 +38,11 @@ class ConfigTokenProcessor extends AbstractPrefixedTokenProcessor {
 	 * {@inheritDoc}
 	 */
 	protected function getTokenResultReplacement($token) {
-		return $this->object->config($token);
+		if ($token === '*') {
+			return $this->array;
+		} else {
+			return isset($this->array[$token]) ? $this->array[$token] : null;
+		}
 	}
 
 }

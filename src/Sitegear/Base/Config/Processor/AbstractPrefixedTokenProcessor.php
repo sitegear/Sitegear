@@ -9,8 +9,8 @@
 namespace Sitegear\Base\Config\Processor;
 
 /**
- * Abstract processor implementation which detects tokens like "${ token }" and provides a standard method which should
- * return the replacement value.
+ * Extends AbstractTokenProcessor by detecting tokens with a form like "prefix:token", checking for a prefix matching
+ * the processor's configured prefix (as passed to the constructor), and replacing any matching tokens.
  */
 abstract class AbstractPrefixedTokenProcessor extends AbstractTokenProcessor {
 

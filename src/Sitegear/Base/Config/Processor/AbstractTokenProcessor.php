@@ -9,8 +9,8 @@
 namespace Sitegear\Base\Config\Processor;
 
 /**
- * Abstract processor implementation which detects tokens like "${ token }" and provides a standard method which should
- * return the replacement value.
+ * Abstract processor implementation which detects tokens like "{{ token }}" and provides a standard method which
+ * should return the replacement value.
  */
 abstract class AbstractTokenProcessor implements ProcessorInterface {
 
@@ -19,20 +19,20 @@ abstract class AbstractTokenProcessor implements ProcessorInterface {
 	/**
 	 * Regular expression to detect a single token for an entire value (also allowing for padding whitespace).
 	 */
-	const REGEX_TOKEN_COMPLETE = '/^\\s*\\$\\{\\s*(.+?)\\s*\\}\\s*$/';
+	const REGEX_TOKEN_COMPLETE = '/^\\s*\\{\\{\\s*([^\\{\\}]+?)\\s*\\}\\}\\s*$/';
 
 	/**
 	 * Regular expression used to detect tokens within string values.  It strips the token delimiters and provides
 	 * three matches: the content before the token, the token itself (between the delimiters), and the content after
 	 * the token.
 	 */
-	const REGEX_TOKEN_INLINE = '/^(.*?)\\$\\{\\s*(.+?)\\s*\\}(.*)?$/';
+	const REGEX_TOKEN_INLINE = '/^(.*?)\\{\\{\\s*([^\\{\\}]+?)\\s*\\}\\}(.*)?$/';
 
 	/**
 	 * Mask passed to sprintf() to regenerate a token.  This needs to restore the token delimiters, which are stripped
 	 * by the REGEX_TOKEN.
 	 */
-	const MASK_TOKEN_RESTORE = '${%s}';
+	const MASK_TOKEN_RESTORE = '{{ %s }}';
 
 	//-- ProcessorInterface Methods --------------------
 
@@ -74,7 +74,8 @@ abstract class AbstractTokenProcessor implements ProcessorInterface {
 	 *
 	 * @param string $token Token to process.
 	 *
-	 * @return string|integer|boolean|array|null Replacement value, or null if it cannot be handled by this processor class.
+	 * @return string|integer|boolean|array|null Replacement value, or null if it cannot be handled by this processor
+	 *   class.
 	 */
 	protected abstract function replaceToken($token);
 
