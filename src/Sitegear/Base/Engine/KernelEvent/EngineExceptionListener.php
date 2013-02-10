@@ -77,8 +77,13 @@ class EngineExceptionListener extends AbstractEngineKernelListener {
 			$event->setResponse($renderEvent->getResponse());
 		} catch (\Exception $e) {
 			try {
-				// If there is an error above, try to display the fallback error page, i.e. black-and-white error message
-				$event->setResponse(Response::create(HtmlUtilities::exception($exception)));
+				// If there is an error above, try to display the fallback error page, i.e. black-and-white error
+				// message.
+				$event->setResponse(Response::create(HtmlUtilities::exception(
+					$exception,
+					$this->getEngine()->getSiteInfo()->getAdministratorName(),
+					$this->getEngine()->getSiteInfo()->getAdministratorEmail()
+				)));
 			} catch (\Exception $e2) {
 				// If another error occurs, the best thing to do is throw the original error.
 				throw $exception;

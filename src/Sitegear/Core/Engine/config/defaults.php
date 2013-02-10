@@ -34,15 +34,17 @@ return array(
 		'logo-url' => null,
 
 		/**
-		 * Site administrator name.
+		 * Site administrator name and email address.
 		 */
-		'administrator' => null,
+		'administrator' => array(
+			'name' => null,
+			'email' => null
+		),
 
 		/**
 		 * Site email addresses -- associative array.
 		 */
-		'email-addresses' => array()
-
+		'email' => array()
 	),
 
 	/**

@@ -1,8 +1,9 @@
 <?php
 /** @var \Sitegear\Core\View\View $view */
 $view->getStringsManager()->prepend('title', 'Internal Server Error');
-?>
-<h1>Internal Server Error</h1>
-<p>
-<?php echo isset($view['exception']) ? $view['exception']->getMessage() : 'Sorry, a server processing error has occurred and your request could not be handled.'; ?>
-</p>
+echo \Sitegear\Util\HtmlUtilities::exception(
+	$view['exception'],
+	$view->getEngine()->getSiteInfo()->getAdministratorName(),
+	$view->getEngine()->getSiteInfo()->getAdministratorEmail(),
+	'<h1>Internal Server Error</h1>'
+);

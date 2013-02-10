@@ -98,16 +98,17 @@ final class HtmlUtilities {
 	/**
 	 * Retrieve a textual description of the given Exception, or FlattenException (as passed by Symfony HttpKernel).
 	 *
+	 * @param string $heading
 	 * @param \Symfony\Component\HttpKernel\Exception\FlattenException|\Exception $exception
 	 * @param string|null $adminName
 	 * @param string|null $adminEmail
 	 *
 	 * @return string
 	 */
-	public static function exception($exception, $adminName=null, $adminEmail=null) {
+	public static function exception($exception, $adminName=null, $adminEmail=null, $heading=null, $stackTraceHeading=null) {
 		// Generate the error message.
 		ob_start();
-		echo '<h1>Error</h1>', PHP_EOL;
+		echo ($heading ?: '<h1>Error</h1>'), PHP_EOL;
 		echo '<p><strong>', $exception->getMessage(), '</strong></p>', PHP_EOL;
 		echo '<p>Error occurred at ', date('Y-m-d H:i:s'), ', code: ', $exception->getCode(), ', ', TypeUtilities::describe($exception), '</p>', PHP_EOL;
 		echo '<p>Please contact your system administrator for assistance.</p>'. PHP_EOL;
@@ -122,7 +123,7 @@ final class HtmlUtilities {
 			echo '</ul>', PHP_EOL;
 		}
 		echo '<hr/>', PHP_EOL;
-		echo '<h2>Stack Trace</h2>', PHP_EOL;
+		echo ($stackTraceHeading ?: '<h2>Stack Trace</h2>'), PHP_EOL;
 		echo '<ol>', PHP_EOL;
 		foreach (array_reverse($exception->getTrace()) as $traceItem) {
 			$file = isset($traceItem['file']) ? $traceItem['file'] : '';

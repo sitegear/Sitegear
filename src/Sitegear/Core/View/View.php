@@ -370,11 +370,19 @@ class View extends AbstractView {
 		try {
 			// Delegate to the render() method.
 			return $this->render();
-		} catch (\Exception $e) {
+		} catch (\Exception $exception) {
 			// Throwing any Exception from __toString() is a fatal error (bravo, php, bra-vo) so we have no other
 			// choice but to catch any exception here and do something with it.  In development environments, it is
 			// probably useful to see the error message, but in other environments we should hide it.
-			return $this->getEngine()->getEnvironmentInfo()->isDevMode() ? HtmlUtilities::exception($e) : '';
+			if ($this->getEngine()->getEnvironmentInfo()->isDevMode()) {
+				return HtmlUtilities::exception(
+					$exception,
+					$this->getEngine()->getSiteInfo()->getAdministratorName(),
+					$this->getEngine()->getSiteInfo()->getAdministratorEmail()
+				);
+			} else {
+				return '';
+			}
 		}
 	}
 

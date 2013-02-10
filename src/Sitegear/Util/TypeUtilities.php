@@ -39,7 +39,7 @@ class TypeUtilities {
 	 *
 	 * All class and interface names must be fully namespaced with a leading backslash ("\").
 	 *
-	 * @param string|\ReflectionClass|object $arg Namespaced class name to check, or an instance of ReflectionClass,
+	 * @param string|\ReflectionClass|object $type Namespaced class name to check, or an instance of ReflectionClass,
 	 *   or an object (to perform the type checks only).
 	 * @param string $label Label to use in exception message.
 	 * @param string|null $baseClass Base class name that must be extended by the specified argument, or null (the
@@ -55,33 +55,35 @@ class TypeUtilities {
 	 *   more of the given interface names.
 	 * @throws \InvalidArgumentException If the given argument is not a string, ReflectionClass instance or object.
 	 */
-	public static function buildTypeCheckedObject($arg, $label, $baseClass=null, $interfaces=array(), array $args=array()) {
+	public static function buildTypeCheckedObject($type, $label, $baseClass=null, $interfaces=null, array $args=null) {
 		// Make sure $interfaces is an array
-		if (!is_array($interfaces)) {
+		if (is_null($interfaces)) {
+			$interfaces = array();
+		} elseif (!is_array($interfaces)) {
 			$interfaces = array( $interfaces );
 		}
 
 		// Get the ReflectionClass object for $arg, null if it's already an object
-		if (is_string($arg)) {
-			if (!class_exists($arg)) {
-				throw new \DomainException(sprintf('TypeUtilities cannot create %s of class "%s", does not exist.', $label, $arg));
+		if (is_string($type)) {
+			if (!class_exists($type)) {
+				throw new \DomainException(sprintf('TypeUtilities cannot create %s of class "%s", does not exist.', $label, $type));
 			}
-			$class = new \ReflectionClass($arg);
-			$className = $arg;
-		} elseif ($arg instanceof \ReflectionClass) {
-			$class = $arg;
-			$className = $arg->getName();
-		} elseif (is_object($arg)) {
+			$class = new \ReflectionClass($type);
+			$className = $type;
+		} elseif ($type instanceof \ReflectionClass) {
+			$class = $type;
+			$className = $type->getName();
+		} elseif (is_object($type)) {
 			$class = null;
-			$className = get_class($arg);
+			$className = get_class($type);
 		} else {
-			throw new \InvalidArgumentException(sprintf('TypeUtilities cannot type check argument that is not a class name or object [%s]', self::describe($arg)));
+			throw new \InvalidArgumentException(sprintf('TypeUtilities cannot type check argument that is not a class name or object [%s]', self::describe($type)));
 		}
 
 		// Check the interfaces and return the appropriate object
 		if (is_null($class)) {
 			// It's an object, so use instanceof operator to do type checks
-			$object = $arg;
+			$object = $type;
 			if (!is_null($baseClass) && !$object instanceof $baseClass) {
 				throw new \DomainException(sprintf('TypeUtilities cannot confirm %s object of class "%s", does not extend base class "%s".', $label, $className, $baseClass));
 			}
@@ -103,7 +105,7 @@ class TypeUtilities {
 				}
 			}
 			// All checks passed, so return a new instance
-			return $class->newInstanceArgs($args);
+			return $class->newInstanceArgs($args ?: array());
 		}
 	}
 

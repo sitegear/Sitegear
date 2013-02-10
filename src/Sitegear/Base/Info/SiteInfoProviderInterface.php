@@ -29,9 +29,14 @@ interface SiteInfoProviderInterface {
 	public function getLogoUrl();
 
 	/**
-	 * @return string The site administrator's name.
+	 * @return string The site administrator's name, for display on error pages.
 	 */
-	public function getAdministrator();
+	public function getAdministratorName();
+
+	/**
+	 * @return string The site administrator's email address, for display on error pages.
+	 */
+	public function getAdministratorEmail();
 
 	/**
 	 * @param string $key The email address name to lookup.  Usually a role like 'admin' or 'contact'.
