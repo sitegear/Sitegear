@@ -77,6 +77,7 @@ class LocationsModule extends AbstractUrlMountableModule {
 		$data = $this->buildNavigationDataImpl($mode, intval($this->config('navigation.max-depth')));
 		if ($mode === self::NAVIGATION_DATA_MODE_EXPANDED) {
 			foreach ($this->getRepository('Item')->findByActive(true) as $item) {
+				/** @var \Sitegear\Ext\Module\Locations\Model\Item $item */
 				$data[] = array(
 					'url' => sprintf('%s/%s/%s', $this->getMountedUrl(), $this->config('routes.item'), $item->getUrlPath()),
 					'label' => $item->getName()
