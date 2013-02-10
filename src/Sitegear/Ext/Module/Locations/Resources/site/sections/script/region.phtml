@@ -1,7 +1,9 @@
 <?php
-/** @var \Sitegear\Core\View\View $view */
-/** @var \Sitegear\Ext\Module\Locations\Model\Region $region */
-/** @var \Sitegear\Ext\Module\Locations\Model\Item $item */
+/**
+ * @var \Sitegear\Core\View\View $view
+ * @var \Sitegear\Ext\Module\Locations\Model\Region $region
+ * @var \Sitegear\Ext\Module\Locations\Model\Item $item
+ */
 $region = $view['region'];
 $locations = array();
 foreach ($region->getItems() as $item) {

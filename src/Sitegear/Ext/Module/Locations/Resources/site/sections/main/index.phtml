@@ -1,6 +1,8 @@
 <?php
-/** @var \Sitegear\Core\View\View $view */
-/** @var \Sitegear\Ext\Module\Locations\Model\Region $region */
+/**
+ * @var \Sitegear\Core\View\View $view
+ * @var \Sitegear\Ext\Module\Locations\Model\Region $region
+ */
 $view->getStringsManager()->prepend('title', $view['title']);
 $regionDecorator = sprintf('excerpt(%d, "%s")', $view['excerpt-length'], 'Region description not found.');
 ?>
