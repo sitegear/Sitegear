@@ -7,6 +7,7 @@
  */
 
 namespace Sitegear\Ext\Module\Products\Entities;
+
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
