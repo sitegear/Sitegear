@@ -2,10 +2,9 @@
 // TODO Editable product name and specifications
 // TODO Add to trolley form (integration with Base\Customer module)
 /** @var \Sitegear\Core\View\View $view */
-$view->getStringsManager()->prepend('title', $view['title']);
 /** @var \Sitegear\Ext\Module\Products\Model\Item $item  */
 $item = $view['item'];
-$view->getStringsManager()->prepend('title', $item->getName());
+$view->getStringsManager()->prepend('title', $view['title'])->prepend('title', $item->getName());
 ?>
 <h1><?php echo $item->getName(); ?></h1>
 <?php
