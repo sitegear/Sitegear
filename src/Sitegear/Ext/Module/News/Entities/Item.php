@@ -9,7 +9,7 @@
 namespace Sitegear\Ext\Module\News\Entities;
 
 /**
- * @Entity
+ * @Entity(repositoryClass="Sitegear\Ext\Module\News\NewsRepository")
  * @Table("news_item")
  */
 class Item {

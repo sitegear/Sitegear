@@ -56,8 +56,8 @@ class NewsModule extends AbstractUrlMountableModule {
 	public function indexController(ViewInterface $view, Request $request) {
 		LoggerRegistry::debug('NewsModule::indexController');
 		$this->applyConfigToView('page.index', $view);
-		$itemCount = $this->getItemCount();
-		$view['items'] = $this->selectLatestItems($request->query->has('more') ? 0 : intval($this->config('page.index.item-limit')));
+		$itemCount = $this->getRepository()->getItemCount();
+		$view['items'] = $this->getRepository()->selectLatestItems($request->query->has('more') ? 0 : intval($this->config('page.index.item-limit')));
 		$view['item-count'] = $itemCount;
 		$view['more'] = $request->query->has('more');
 		$view['item-path'] = trim($this->config('item-path'), '/');
@@ -82,7 +82,7 @@ class NewsModule extends AbstractUrlMountableModule {
 		$view['title'] = $this->config('title');
 		$view['root-url'] = $this->getMountedUrl();
 		try {
-			$view['item'] = $this->selectItemByUrlPath($request->attributes->get('slug'));
+			$view['item'] = $this->getRepository()->selectItemByUrlPath($request->attributes->get('slug'));
 		} catch (NoResultException $e) {
 			throw new NotFoundHttpException('The requested news item is not available.', $e);
 		}
@@ -101,7 +101,7 @@ class NewsModule extends AbstractUrlMountableModule {
 	 */
 	public function latestHeadlinesComponent(ViewInterface $view, $itemLimit=null, $excerptLength=null, $readMore=null) {
 		LoggerRegistry::debug('NewsModule::latestHeadlinesComponent');
-		$view['items'] = $this->selectLatestItems(intval(!is_null($itemLimit) ? $itemLimit : $this->config('component.latest-headlines.item-limit')));
+		$view['items'] = $this->getRepository()->selectLatestItems(intval(!is_null($itemLimit) ? $itemLimit : $this->config('component.latest-headlines.item-limit')));
 		$view['date-format'] = $this->config('component.latest-headlines.date-format');
 		$view['excerpt-length'] = !is_null($excerptLength) ? $excerptLength : $this->config('component.latest-headlines.excerpt-length');
 		$view['read-more'] = $readMore ?: $this->config('component.latest-headlines.read-more');
@@ -126,7 +126,7 @@ class NewsModule extends AbstractUrlMountableModule {
 	protected function buildNavigationData($mode) {
 		$result = array();
 		$itemLimit = intval($this->config('navigation.item-limit'));
-		foreach ($this->selectLatestItems($itemLimit) as $item) { /** @var \Sitegear\Ext\Module\News\Entities\Item $item */
+		foreach ($this->getRepository()->selectLatestItems($itemLimit) as $item) { /** @var \Sitegear\Ext\Module\News\Entities\Item $item */
 			$result[] = array(
 				'url' => sprintf('%s/%s', $this->getMountedUrl(), $item->getUrlPath()),
 				'label' => $item->getHeadline(),
@@ -144,54 +144,11 @@ class NewsModule extends AbstractUrlMountableModule {
 		return $result;
 	}
 
-	//-- Internal Methods --------------------
-	// TODO Move these methods somewhere else
-
 	/**
-	 * Retrieve the total number of headlines currently available.
-	 *
-	 * @return integer
+	 * @return \Sitegear\Ext\Module\News\NewsRepository
 	 */
-	protected function getItemCount() {
-		return intval($this->getEngine()->doctrine()->getEntityManager()->createQueryBuilder()
-				->select('count(ni)')
-				->from('News:Item', 'ni')
-				->getQuery()->getSingleScalarResult());
-	}
-
-	/**
-	 * Retrieve the latest headlines, up to the given limit.
-	 *
-	 * @param integer $itemLimit
-	 *
-	 * @return array
-	 */
-	protected function selectLatestItems($itemLimit) {
-		$query = $this->getEngine()->doctrine()->getEntityManager()->createQueryBuilder()
-				->select('ni')
-				->from('News:Item', 'ni')
-				->orderBy('ni.datePublished', 'desc')
-				->getQuery();
-		if ($itemLimit > 0) {
-			$query->setMaxResults($itemLimit);
-		}
-		return $query->getResult();
-	}
-
-	/**
-	 * Retrieve a single news item from the backend.
-	 *
-	 * @param string $urlPath URL path of the item to retrieve.
-	 *
-	 * @return \Sitegear\Ext\Module\News\Entities\Item News item entity object.
-	 */
-	protected function selectItemByUrlPath($urlPath) {
-		return $this->getEngine()->doctrine()->getEntityManager()->createQueryBuilder()
-				->select('ni')
-				->from('News:Item', 'ni')
-				->where('ni.urlPath = :urlPath')
-				->setParameter('urlPath', $urlPath)
-				->getQuery()->getSingleResult();
+	protected function getRepository() {
+		return $this->getEngine()->doctrine()->getEntityManager()->getRepository('Sitegear\\Ext\\Module\\News\\Entities\\Item');
 	}
 
 }
