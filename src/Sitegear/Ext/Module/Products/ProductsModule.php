@@ -9,8 +9,8 @@
 namespace Sitegear\Ext\Module\Products;
 
 use Sitegear\Base\Module\AbstractUrlMountableModule;
-use Sitegear\Util\LoggerRegistry;
 use Sitegear\Base\View\ViewInterface;
+use Sitegear\Util\LoggerRegistry;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -26,6 +26,10 @@ use Doctrine\ORM\NoResultException;
  */
 class ProductsModule extends AbstractUrlMountableModule {
 
+	//-- Constants --------------------
+
+	const ENTITY_ALIAS = 'Products';
+
 	//-- ModuleInterface Methods --------------------
 
 	/**
@@ -40,7 +44,7 @@ class ProductsModule extends AbstractUrlMountableModule {
 	 */
 	public function start() {
 		LoggerRegistry::debug('ProductsModule starting');
-		$this->getEngine()->doctrine()->getEntityManager()->getConfiguration()->addEntityNamespace('Products', '\\Sitegear\\Ext\\Module\\Products\\Model');
+		$this->getEngine()->doctrine()->getEntityManager()->getConfiguration()->addEntityNamespace(self::ENTITY_ALIAS, '\\Sitegear\\Ext\\Module\\Products\\Model');
 	}
 
 	//-- Page Controller Methods --------------------
@@ -54,7 +58,7 @@ class ProductsModule extends AbstractUrlMountableModule {
 		LoggerRegistry::debug('ProductsModule::indexController');
 		$this->applyViewDefaults($view);
 		$this->applyConfigToView('page.index', $view);
-		$view['categories'] = $this->getCategoryRepository()->findByParent(null);
+		$view['categories'] = $this->getRepository('Category')->findByParent(null);
 	}
 
 	/**
@@ -67,9 +71,9 @@ class ProductsModule extends AbstractUrlMountableModule {
 		LoggerRegistry::debug('ProductsModule::categoryController');
 		$this->applyViewDefaults($view);
 		$this->applyConfigToView('page.category', $view);
-		$view['category'] = $this->getCategoryRepository()->findOneByUrlPath($request->attributes->get('slug'));
-		$view['categories'] = $this->getCategoryRepository()->findByParent($view['category']);
-		$view['items'] = $this->getItemRepository()->getActiveItemsInCategory($view['category']);
+		$view['category'] = $this->getRepository('Category')->findOneByUrlPath($request->attributes->get('slug'));
+		$view['categories'] = $this->getRepository('Category')->findByParent($view['category']);
+		$view['items'] = $this->getRepository('Item')->getActiveItemsInCategory($view['category']);
 	}
 
 	/**
@@ -85,7 +89,7 @@ class ProductsModule extends AbstractUrlMountableModule {
 		$this->applyViewDefaults($view);
 		$this->applyConfigToView('page.item', $view);
 		try {
-			$view['item'] = $this->getItemRepository()->findOneBy(array( 'urlPath' => $request->attributes->get('slug'), 'active' => true ));
+			$view['item'] = $this->getRepository('Item')->findOneBy(array( 'urlPath' => $request->attributes->get('slug'), 'active' => true ));
 		} catch (NoResultException $e) {
 			throw new NotFoundHttpException('The requested product is not available.', $e);
 		}
@@ -110,7 +114,7 @@ class ProductsModule extends AbstractUrlMountableModule {
 	protected function buildNavigationData($mode) {
 		$data = $this->buildNavigationDataImpl($mode, intval($this->config('navigation.max-depth')));
 		if ($mode === self::NAVIGATION_DATA_MODE_EXPANDED) {
-			foreach ($this->getItemRepository()->findByActive(true) as $item) {
+			foreach ($this->getRepository('Item')->findByActive(true) as $item) {
 				$data[] = array(
 					'url' => sprintf('%s/%s/%s', $this->getMountedUrl(), $this->config('routes.item'), $item->getUrlPath()),
 					'label' => $item->getName()
@@ -141,22 +145,24 @@ class ProductsModule extends AbstractUrlMountableModule {
 	 *
 	 * @param int $mode
 	 * @param int $maxDepth
-	 * @param null|int|\Sitegear\Ext\Module\Products\Model\Category $root
+	 * @param null|int|\Sitegear\Ext\Module\Products\Model\Category $parent
 	 *
 	 * @return array
 	 */
-	private function buildNavigationDataImpl($mode, $maxDepth, $root=null) {
+	private function buildNavigationDataImpl($mode, $maxDepth, $parent=null) {
 		$result = array();
-		foreach ($this->getCategoryRepository()->findByParent($root) as $category) {
+		foreach ($this->getRepository('Category')->findByParent($parent) as $category) {
+			/** @var \Sitegear\Ext\Module\Products\Model\Category $category */
 			$categoryResult = array(
 				'url' => sprintf('%s/%s/%s', $this->getMountedUrl(), $this->config('routes.category'), $category->getUrlPath()),
 				'label' => $category->getName(),
+				// TODO Make this configurable
 				'tooltip' => sprintf('Find out about our range of "%s"', $category->getName())
 			);
 			if ($mode === self::NAVIGATION_DATA_MODE_EXPANDED || $maxDepth !== 1) { // >1 means more levels before the limit is reached, <=0 means no limit
-				$subcategories = $this->buildNavigationDataImpl($mode, max(0, $maxDepth - 1), $category);
-				if (!empty($subcategories)) {
-					$categoryResult['children'] = $subcategories;
+				$subCategories = $this->buildNavigationDataImpl($mode, max(0, $maxDepth - 1), $category);
+				if (!empty($subCategories)) {
+					$categoryResult['children'] = $subCategories;
 				}
 			}
 			$result[] = $categoryResult;
@@ -167,17 +173,12 @@ class ProductsModule extends AbstractUrlMountableModule {
 	//-- Internal Methods --------------------
 
 	/**
-	 * @return \Sitegear\Ext\Module\Products\Repository\ItemRepository
+	 * @param string $entity
+	 *
+	 * @return \Doctrine\ORM\EntityRepository
 	 */
-	private function getItemRepository() {
-		return $this->getEngine()->doctrine()->getEntityManager()->getRepository('Products:Item');
-	}
-
-	/**
-	 * @return \Sitegear\Ext\Module\Products\Repository\CategoryRepository
-	 */
-	private function getCategoryRepository() {
-		return $this->getEngine()->doctrine()->getEntityManager()->getRepository('Products:Category');
+	private function getRepository($entity) {
+		return $this->getEngine()->doctrine()->getEntityManager()->getRepository(sprintf('%s:%s', self::ENTITY_ALIAS, $entity));
 	}
 
 }

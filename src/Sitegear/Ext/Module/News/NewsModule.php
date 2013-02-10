@@ -26,6 +26,10 @@ use Doctrine\ORM\NoResultException;
  */
 class NewsModule extends AbstractUrlMountableModule {
 
+	//-- Constants --------------------
+
+	const ENTITY_ALIAS = 'News';
+
 	//-- ModuleInterface Methods --------------------
 
 	/**
@@ -39,7 +43,7 @@ class NewsModule extends AbstractUrlMountableModule {
 	 * {@inheritDoc}
 	 */
 	public function start() {
-		$this->getEngine()->doctrine()->getEntityManager()->getConfiguration()->addEntityNamespace('News', '\\Sitegear\\Ext\\Module\\News\\Model');
+		$this->getEngine()->doctrine()->getEntityManager()->getConfiguration()->addEntityNamespace(self::ENTITY_ALIAS, '\\Sitegear\\Ext\\Module\\News\\Model');
 	}
 
 	//-- Page Controller Methods --------------------
@@ -56,8 +60,8 @@ class NewsModule extends AbstractUrlMountableModule {
 	public function indexController(ViewInterface $view, Request $request) {
 		LoggerRegistry::debug('NewsModule::indexController');
 		$this->applyConfigToView('page.index', $view);
-		$itemCount = $this->getItemRepository()->getItemCount();
-		$view['items'] = $this->getItemRepository()->findLatestItems($request->query->has('more') ? 0 : intval($this->config('page.index.item-limit')));
+		$itemCount = $this->getRepository('Item')->getItemCount();
+		$view['items'] = $this->getRepository('Item')->findLatestItems($request->query->has('more') ? 0 : intval($this->config('page.index.item-limit')));
 		$view['item-count'] = $itemCount;
 		$view['more'] = $request->query->has('more');
 		$view['item-path'] = trim($this->config('item-path'), '/');
@@ -82,7 +86,7 @@ class NewsModule extends AbstractUrlMountableModule {
 		$view['title'] = $this->config('title');
 		$view['root-url'] = $this->getMountedUrl();
 		try {
-			$view['item'] = $this->getItemRepository()->findOneByUrlPath($request->attributes->get('slug'));
+			$view['item'] = $this->getRepository('Item')->findOneByUrlPath($request->attributes->get('slug'));
 		} catch (NoResultException $e) {
 			throw new NotFoundHttpException('The requested news item is not available.', $e);
 		}
@@ -102,7 +106,7 @@ class NewsModule extends AbstractUrlMountableModule {
 	public function latestHeadlinesComponent(ViewInterface $view, $itemLimit=null, $excerptLength=null, $readMore=null) {
 		LoggerRegistry::debug('NewsModule::latestHeadlinesComponent');
 		$itemLimit = intval(!is_null($itemLimit) ? $itemLimit : $this->config('component.latest-headlines.item-limit'));
-		$view['items'] = $this->getItemRepository()->findLatestItems($itemLimit);
+		$view['items'] = $this->getRepository('Item')->findLatestItems($itemLimit);
 		$view['date-format'] = $this->config('component.latest-headlines.date-format');
 		$view['excerpt-length'] = !is_null($excerptLength) ? $excerptLength : $this->config('component.latest-headlines.excerpt-length');
 		$view['read-more'] = $readMore ?: $this->config('component.latest-headlines.read-more');
@@ -127,10 +131,11 @@ class NewsModule extends AbstractUrlMountableModule {
 	protected function buildNavigationData($mode) {
 		$result = array();
 		$itemLimit = intval($this->config('navigation.item-limit'));
-		foreach ($this->getItemRepository()->findLatestItems($itemLimit) as $item) { /** @var \Sitegear\Ext\Module\News\Model\Item $item */
+		foreach ($this->getRepository('Item')->findLatestItems($itemLimit) as $item) { /** @var \Sitegear\Ext\Module\News\Model\Item $item */
 			$result[] = array(
 				'url' => sprintf('%s/%s', $this->getMountedUrl(), $item->getUrlPath()),
 				'label' => $item->getHeadline(),
+				// TODO Make this configurable
 				'tooltip' => sprintf('Read this news item "%s"', $item->getHeadline())
 			);
 		}
@@ -139,6 +144,7 @@ class NewsModule extends AbstractUrlMountableModule {
 			$result[] = array(
 				'url' => sprintf('%s?more=1', $this->getMountedUrl()),
 				'label' => $allNewsLink,
+				// TODO Make this configurable
 				'tooltip' => 'View index of all news items'
 			);
 		}
@@ -148,10 +154,12 @@ class NewsModule extends AbstractUrlMountableModule {
 	//-- Internal Methods --------------------
 
 	/**
-	 * @return \Sitegear\Ext\Module\News\Repository\ItemRepository
+	 * @param string $entity
+	 *
+	 * @return \Doctrine\ORM\EntityRepository
 	 */
-	protected function getItemRepository() {
-		return $this->getEngine()->doctrine()->getEntityManager()->getRepository('News:Item');
+	private function getRepository($entity) {
+		return $this->getEngine()->doctrine()->getEntityManager()->getRepository(sprintf('%s:%s', self::ENTITY_ALIAS, $entity));
 	}
 
 }
