@@ -164,6 +164,8 @@ class ProductsModule extends AbstractUrlMountableModule {
 		return $result;
 	}
 
+	//-- Internal Methods --------------------
+
 	/**
 	 * @return \Sitegear\Ext\Module\Products\ProductsRepository
 	 */
