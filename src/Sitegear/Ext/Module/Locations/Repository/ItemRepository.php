@@ -15,6 +15,17 @@ use Doctrine\ORM\EntityRepository;
  */
 class ItemRepository extends EntityRepository {
 
-
+	/**
+	 * Retrieve the total number of headlines currently available.
+	 *
+	 * @return integer
+	 */
+	public function getItemCount() {
+		return $this->_em->createQueryBuilder()
+				->select('count(li)')
+				->from('Locations:Item', 'li')
+				->getQuery()
+				->getSingleScalarResult();
+	}
 
 }

@@ -57,7 +57,7 @@ class NewsModule extends AbstractUrlMountableModule {
 		LoggerRegistry::debug('NewsModule::indexController');
 		$this->applyConfigToView('page.index', $view);
 		$itemCount = $this->getItemRepository()->getItemCount();
-		$view['items'] = $this->getItemRepository()->selectLatestItems($request->query->has('more') ? 0 : intval($this->config('page.index.item-limit')));
+		$view['items'] = $this->getItemRepository()->findLatestItems($request->query->has('more') ? 0 : intval($this->config('page.index.item-limit')));
 		$view['item-count'] = $itemCount;
 		$view['more'] = $request->query->has('more');
 		$view['item-path'] = trim($this->config('item-path'), '/');
@@ -82,7 +82,7 @@ class NewsModule extends AbstractUrlMountableModule {
 		$view['title'] = $this->config('title');
 		$view['root-url'] = $this->getMountedUrl();
 		try {
-			$view['item'] = $this->getItemRepository()->selectItemByUrlPath($request->attributes->get('slug'));
+			$view['item'] = $this->getItemRepository()->findOneByUrlPath($request->attributes->get('slug'));
 		} catch (NoResultException $e) {
 			throw new NotFoundHttpException('The requested news item is not available.', $e);
 		}
@@ -101,7 +101,8 @@ class NewsModule extends AbstractUrlMountableModule {
 	 */
 	public function latestHeadlinesComponent(ViewInterface $view, $itemLimit=null, $excerptLength=null, $readMore=null) {
 		LoggerRegistry::debug('NewsModule::latestHeadlinesComponent');
-		$view['items'] = $this->getItemRepository()->selectLatestItems(intval(!is_null($itemLimit) ? $itemLimit : $this->config('component.latest-headlines.item-limit')));
+		$itemLimit = intval(!is_null($itemLimit) ? $itemLimit : $this->config('component.latest-headlines.item-limit'));
+		$view['items'] = $this->getItemRepository()->findLatestItems($itemLimit);
 		$view['date-format'] = $this->config('component.latest-headlines.date-format');
 		$view['excerpt-length'] = !is_null($excerptLength) ? $excerptLength : $this->config('component.latest-headlines.excerpt-length');
 		$view['read-more'] = $readMore ?: $this->config('component.latest-headlines.read-more');
@@ -126,7 +127,7 @@ class NewsModule extends AbstractUrlMountableModule {
 	protected function buildNavigationData($mode) {
 		$result = array();
 		$itemLimit = intval($this->config('navigation.item-limit'));
-		foreach ($this->getItemRepository()->selectLatestItems($itemLimit) as $item) { /** @var \Sitegear\Ext\Module\News\Model\Item $item */
+		foreach ($this->getItemRepository()->findLatestItems($itemLimit) as $item) { /** @var \Sitegear\Ext\Module\News\Model\Item $item */
 			$result[] = array(
 				'url' => sprintf('%s/%s', $this->getMountedUrl(), $item->getUrlPath()),
 				'label' => $item->getHeadline(),

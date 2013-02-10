@@ -31,30 +31,4 @@ class ItemRepository extends EntityRepository {
 				->getQuery()->getResult();
 	}
 
-	/**
-	 * @return \Sitegear\Ext\Module\Products\Model\Item[]
-	 */
-	public function getAllActiveItems() {
-		return $this->_em->createQueryBuilder()
-				->select('pi')
-				->from('Products:Item', 'pi')
-				->where('pi.active = true')
-				->getQuery()->getResult();
-	}
-
-	/**
-	 * @param string $urlPath
-	 *
-	 * @return \Sitegear\Ext\Module\Products\Model\Item
-	 */
-	public function selectActiveItemByUrlPath($urlPath) {
-		return $this->_em->createQueryBuilder()
-				->select('pi')
-				->from('Products:Item', 'pi')
-				->where('pi.urlPath = :urlPath')
-				->andWhere('pi.active = true')
-				->setParameter('urlPath', $urlPath)
-				->getQuery()->getSingleResult();
-	}
-
 }

@@ -43,7 +43,15 @@ class LocationsModule extends AbstractUrlMountableModule {
 	//-- Page Controller Methods --------------------
 
 	public function indexController(ViewInterface $view, Request $request) {
-		// TODO
+//		LoggerRegistry::debug('LocationsModule::indexController');
+//		$this->applyConfigToView('page.index', $view);
+//		$itemCount = $this->getItemRepository()->getItemCount();
+//		$view['items'] = $this->getItemRepository()->selectLatestItems($request->query->has('more') ? 0 : intval($this->config('page.index.item-limit')));
+//		$view['item-count'] = $itemCount;
+//		$view['more'] = $request->query->has('more');
+//		$view['item-path'] = trim($this->config('item-path'), '/');
+//		$view['title'] = $this->config('title');
+//		$view['root-url'] = $this->getMountedUrl();
 	}
 
 	public function itemController(ViewInterface $view, Request $request) {

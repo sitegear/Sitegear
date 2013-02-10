@@ -54,7 +54,7 @@ class ProductsModule extends AbstractUrlMountableModule {
 		LoggerRegistry::debug('ProductsModule::indexController');
 		$this->applyViewDefaults($view);
 		$this->applyConfigToView('page.index', $view);
-		$view['categories'] = $this->getCategoryRepository()->getRootCategories();
+		$view['categories'] = $this->getCategoryRepository()->findByParent(null);
 	}
 
 	/**
@@ -67,8 +67,8 @@ class ProductsModule extends AbstractUrlMountableModule {
 		LoggerRegistry::debug('ProductsModule::categoryController');
 		$this->applyViewDefaults($view);
 		$this->applyConfigToView('page.category', $view);
-		$view['category'] = $this->getCategoryRepository()->selectCategoryByUrlPath($request->attributes->get('slug'));
-		$view['categories'] = $this->getCategoryRepository()->getChildCategories($view['category']);
+		$view['category'] = $this->getCategoryRepository()->findOneByUrlPath($request->attributes->get('slug'));
+		$view['categories'] = $this->getCategoryRepository()->findByParent($view['category']);
 		$view['items'] = $this->getItemRepository()->getActiveItemsInCategory($view['category']);
 	}
 
@@ -85,7 +85,7 @@ class ProductsModule extends AbstractUrlMountableModule {
 		$this->applyViewDefaults($view);
 		$this->applyConfigToView('page.item', $view);
 		try {
-			$view['item'] = $this->getItemRepository()->selectActiveItemByUrlPath($request->attributes->get('slug'));
+			$view['item'] = $this->getItemRepository()->findOneBy(array( 'urlPath' => $request->attributes->get('slug'), 'active' => true ));
 		} catch (NoResultException $e) {
 			throw new NotFoundHttpException('The requested product is not available.', $e);
 		}
@@ -110,7 +110,7 @@ class ProductsModule extends AbstractUrlMountableModule {
 	protected function buildNavigationData($mode) {
 		$data = $this->buildNavigationDataImpl($mode, intval($this->config('navigation.max-depth')));
 		if ($mode === self::NAVIGATION_DATA_MODE_EXPANDED) {
-			foreach ($this->getItemRepository()->getAllActiveItems() as $item) {
+			foreach ($this->getItemRepository()->findByActive(true) as $item) {
 				$data[] = array(
 					'url' => sprintf('%s/%s/%s', $this->getMountedUrl(), $this->config('routes.item'), $item->getUrlPath()),
 					'label' => $item->getName()
@@ -147,7 +147,7 @@ class ProductsModule extends AbstractUrlMountableModule {
 	 */
 	private function buildNavigationDataImpl($mode, $maxDepth, $root=null) {
 		$result = array();
-		foreach ((is_null($root) ? $this->getCategoryRepository()->getRootCategories() : $this->getCategoryRepository()->getChildCategories($root)) as $category) {
+		foreach ($this->getCategoryRepository()->findByParent($root) as $category) {
 			$categoryResult = array(
 				'url' => sprintf('%s/%s/%s', $this->getMountedUrl(), $this->config('routes.category'), $category->getUrlPath()),
 				'label' => $category->getName(),

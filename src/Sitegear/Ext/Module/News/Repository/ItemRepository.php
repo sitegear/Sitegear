@@ -21,10 +21,11 @@ class ItemRepository extends EntityRepository {
 	 * @return integer
 	 */
 	public function getItemCount() {
-		return intval($this->_em->createQueryBuilder()
+		return $this->_em->createQueryBuilder()
 				->select('count(ni)')
 				->from('News:Item', 'ni')
-				->getQuery()->getSingleScalarResult());
+				->getQuery()
+				->getSingleScalarResult();
 	}
 
 	/**
@@ -34,33 +35,8 @@ class ItemRepository extends EntityRepository {
 	 *
 	 * @return array
 	 */
-	public function selectLatestItems($itemLimit) {
-		$query = $this->_em->createQueryBuilder()
-				->select('ni')
-				->from('News:Item', 'ni')
-				->orderBy('ni.datePublished', 'desc')
-				->getQuery();
-		if ($itemLimit > 0) {
-			$query->setMaxResults($itemLimit);
-		}
-		return $query->getResult();
-	}
-
-	/**
-	 * Retrieve a single news item from the backend.
-	 *
-	 * @param string $urlPath URL path of the item to retrieve.
-	 *
-	 * @return \Sitegear\Ext\Module\News\Model\Item News item entity object.
-	 */
-	public function selectItemByUrlPath($urlPath) {
-		return $this->findOneBy(array( 'urlPath' => $urlPath ));
-		return $this->_em->createQueryBuilder()
-				->select('ni')
-				->from('News:Item', 'ni')
-				->where('ni.urlPath = :urlPath')
-				->setParameter('urlPath', $urlPath)
-				->getQuery()->getSingleResult();
+	public function findLatestItems($itemLimit) {
+		return $this->findBy(array(), array( 'datePublished' => 'desc' ), $itemLimit > 0 ? $itemLimit : null);
 	}
 
 }
