@@ -109,8 +109,18 @@ class NavigationModule extends AbstractConfigurableModule {
 
 	//-- Public Methods --------------------
 
-	public function isCurrentOrAncestorUrl($url, $markUrl, $data) {
+	/**
+	 * Determine if the given `$url` is equal to or an ancestor of (according to the navigation structure) the given
+	 * `$markUrl`.
+	 *
+	 * @param string $url
+	 * @param string $markUrl
+	 *
+	 * @return boolean
+	 */
+	public function isCurrentOrAncestorUrl($url, $markUrl) {
 		$result = false;
+		$data = $this->getData(MountableModuleInterface::NAVIGATION_DATA_MODE_EXPANDED);
 		$urlPath = $this->getNavigationPath($url, $data);
 		$markUrlPath = $this->getNavigationPath($markUrl, $data);
 		foreach ($markUrlPath ?: array() as $elem) {
