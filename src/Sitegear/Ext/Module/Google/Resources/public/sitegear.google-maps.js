@@ -43,6 +43,7 @@
 					}));
 					content = marker.name ? '<div class="marker-name">' + marker.name + '</div>' : '';
 					content += marker.description ? '<div class="marker-description">' + marker.description + '</div>' : '';
+					content += marker.url ? '<div class="marker-link"><a href="' + marker.url + '">' + (marker.linkText ? marker.linkText : 'Details...') + '</a></div>' : '';
 					marker.infoWindow = new google.maps.InfoWindow($.extend(true, {}, options.infoWindow, {
 						content: content
 					}));
