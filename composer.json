@@ -20,7 +20,6 @@
 		"symfony/routing": "2.*",
 		"symfony/validator": "2.*",
 		"symfony/console": "2.*",
-		"symfony/config": "2.*",
 		"doctrine/orm": "2.*",
 		"gedmo/doctrine-extensions": "*",
 		"swiftmailer/swiftmailer": "4.*",
@@ -37,3 +36,4 @@
 		}
 	}
 }
+
