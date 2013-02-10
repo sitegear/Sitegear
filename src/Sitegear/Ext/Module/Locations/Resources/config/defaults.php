@@ -11,6 +11,10 @@
  */
 return array(
 
-	'title' => 'Locations'
+	'title' => 'Locations',
+
+	'navigation' => array(
+		'max-depth' => 1
+	)
 
 );
