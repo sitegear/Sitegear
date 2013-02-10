@@ -47,15 +47,18 @@ use Symfony\Component\HttpFoundation\Request;
  * @method \Sitegear\Core\View\View navigation()
  * @method \Sitegear\Core\View\View resourcesIntegration()
  * @method \Sitegear\Core\View\View userIntegration()
+ * @method \Sitegear\Core\View\View version()
  *
  * The following magic methods are defined for known extension modules:
  *
  * @method \Sitegear\Core\View\View customer()
  * @method \Sitegear\Core\View\View forms()
  * @method \Sitegear\Core\View\View google()
+ * @method \Sitegear\Core\View\View locations()
+ * @method \Sitegear\Core\View\View mailChimp()
  * @method \Sitegear\Core\View\View news()
  * @method \Sitegear\Core\View\View products()
- * @method \Sitegear\Core\View\View version()
+ * @method \Sitegear\Core\View\View swiftMailer()
  *
  * The following magic methods match the SPECIAL_TARGET_* constants:
  *
