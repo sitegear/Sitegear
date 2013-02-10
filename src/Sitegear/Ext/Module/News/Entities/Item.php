@@ -26,15 +26,15 @@ class Item {
 
 	/**
 	 * @var string
-	 * @Column(type="string", nullable=false)
-	 */
-	private $headline;
-
-	/**
-	 * @var string
 	 * @Column(type="string", unique=true, nullable=false)
 	 */
 	private $urlPath;
+
+	/**
+	 * @var string
+	 * @Column(type="string", nullable=false)
+	 */
+	private $headline;
 
 	/**
 	 * @var \DateTime
