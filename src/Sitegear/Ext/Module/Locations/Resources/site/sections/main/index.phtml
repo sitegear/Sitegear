@@ -1,5 +1,6 @@
 <?php
 /** @var \Sitegear\Core\View\View $view */
+/** @var \Sitegear\Ext\Module\Locations\Model\Region $region */
 $view->getStringsManager()->prepend('title', $view['title']);
 $regionDecorator = sprintf('excerpt(%d, "%s")', $view['excerpt-length'], 'Region description not found.');
 ?>
@@ -13,7 +14,7 @@ if (empty($view['regions'])) {
 ?>
 <h2>Regions</h2>
 <?php
-	foreach ($view['regions'] as $region) { /** @var \Sitegear\Ext\Module\Locations\Model\Region $region */
+	foreach ($view['regions'] as $region) {
 		$linkUrl = sprintf('%s/%s/%s', $view['root-url'], $view['region-url'], $region->getUrlPath());
 		$viewScript = sprintf('%s/%s', $view['region-path'], $region->getUrlPath());
 ?>

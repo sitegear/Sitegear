@@ -72,8 +72,6 @@ class LocationsModule extends AbstractUrlMountableModule {
 		$this->applyViewDefaults($view);
 		$this->applyConfigToView('page.region', $view);
 		$view['region'] = $this->getRepository('Region')->findOneByUrlPath($request->attributes->get('slug'));
-		$view['regions'] = $this->getRepository('Region')->findByParent($view['region']);
-		$view['items'] = $this->getRepository('Item')->findByRegion($view['region']);
 	}
 
 	/**

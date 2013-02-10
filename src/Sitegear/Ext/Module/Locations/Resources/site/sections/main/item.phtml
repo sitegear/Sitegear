@@ -9,8 +9,19 @@ $linkUrl = sprintf('%s/%s/%s', $view['root-url'], $view['region-url'], $item->ge
 <h1><?php echo $item->getName(); ?></h1>
 <?php echo $view->products('editable')->item(sprintf('%s/%s', $view['item-path'], $item->getUrlPath())); ?>
 
-<h2>Map</h2>
-<div id="map"></div>
+<section id="locations-address-container">
+	<h2>Address</h2>
+	<p><?php echo $item->getStreetAddress(); ?></p>
+	<p><?php echo sprintf('%s %s %s', $item->getSuburb(), $item->getStateOrProvince(), $item->getPostcode()); ?></p>
+	<p><?php echo $item->getCountry(); ?></p>
+</section>
 
-<h2>Nearby Locations</h2>
-<p>See other locations in <a href="<?php echo $linkUrl; ?>"><?php echo $item->getRegion()->getName(); ?></a>.</p>
+<section id="locations-map-container">
+	<h2>Map</h2>
+	<div id="map"></div>
+</section>
+
+<section id="locations-nearby-container">
+	<h2>Nearby Locations</h2>
+	<p>See other locations in <a href="<?php echo $linkUrl; ?>"><?php echo $item->getRegion()->getName(); ?></a>.</p>
+</section>
