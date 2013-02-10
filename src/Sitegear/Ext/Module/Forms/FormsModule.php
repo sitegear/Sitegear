@@ -351,15 +351,12 @@ class FormsModule extends AbstractUrlMountableModule {
 					$fieldConstraints = array();
 					//$fieldLabel = isset($fieldDefinition['label']) ? $fieldDefinition['label'] : $fieldDefinition['id'];
 					foreach ($fieldDefinition['validators'] as $validator) {
-						$constraintClass = $this->getConstraintClassName(
-							$validator['constraint'],
-							$this->config('constraints.class-map'),
-							$this->config('constraints.namespaces')
-						);
 						$fieldConstraints[] = TypeUtilities::buildTypeCheckedObject(
-							$constraintClass,
+							$this->getConstraintClassName($validator['constraint']),
 							'constraint',
-							'\\Symfony\\Component\\Validator\\Constraint'
+							'\\Symfony\\Component\\Validator\\Constraint',
+							null,
+							array( isset($validator['options']) ? $validator['options'] : null )
 						);
 					}
 					switch (sizeof($fieldConstraints)) {
