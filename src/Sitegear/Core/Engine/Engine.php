@@ -48,6 +48,7 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
  * @method \Sitegear\Ext\Module\Customer\CustomerModule customer()
  * @method \Sitegear\Ext\Module\Forms\FormsModule forms()
  * @method \Sitegear\Ext\Module\Google\GoogleModule google()
+ * @method \Sitegear\Ext\Module\Locations\LocationsModule locations()
  * @method \Sitegear\Ext\Module\MailChimp\MailChimpModule mailChimp()
  * @method \Sitegear\Ext\Module\News\NewsModule news()
  * @method \Sitegear\Ext\Module\Products\ProductsModule products()

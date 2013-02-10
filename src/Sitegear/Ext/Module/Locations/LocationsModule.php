@@ -57,6 +57,7 @@ class LocationsModule extends AbstractUrlMountableModule {
 	 */
 	protected function buildNavigationData($mode) {
 		// TODO Build navigation data
+		return array();
 	}
 
 }

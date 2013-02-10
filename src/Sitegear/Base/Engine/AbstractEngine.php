@@ -184,7 +184,7 @@ abstract class AbstractEngine implements EngineInterface {
 			foreach ($this->compiledTemplateMap as $index => $entry) {
 				$this->compiledTemplateMap[$index]['compiled-pattern'] = (isset($entry['regex']) && $entry['regex']) ?
 						$entry['pattern'] :
-						UrlUtilities::compileWildcardUrl($entry['pattern']);
+						UrlUtilities::compileWildcardUrl(trim($entry['pattern'], '/'));
 			}
 		}
 		return $this->compiledTemplateMap;
