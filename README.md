@@ -48,9 +48,18 @@ Foundation Technologies
 The Sitegear application is based on:
 
  * PHP 5.3
+ * Composer
  * Symfony Components
  * Doctrine
  * PSR-3 compatible logging interfaces
+ * Unit testing with PhpUnit
+
+The available modules provide integrations with a range of services, including:
+
+ * Google Analytics
+ * Google Maps
+ * SwiftMailer
+ * MailChimp
 
 The content management tools operate in the web browser, and are based on:
 
