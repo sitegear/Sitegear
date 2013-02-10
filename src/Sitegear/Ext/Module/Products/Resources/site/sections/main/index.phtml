@@ -13,7 +13,7 @@ if (empty($view['categories'])) {
 ?>
 	<h2>Categories</h2>
 <?php
-	foreach ($view['categories'] as $category) { /** @var \Sitegear\Ext\Module\Products\Entities\Category $category */
+	foreach ($view['categories'] as $category) { /** @var \Sitegear\Ext\Module\Products\Model\Category $category */
 		$linkUrl = sprintf('%s/%s/%s', $view['root-url'], $view['category-url'], $category->getUrlPath());
 		$viewScript = sprintf('%s/%s', $view['category-path'], $category->getUrlPath());
 ?>

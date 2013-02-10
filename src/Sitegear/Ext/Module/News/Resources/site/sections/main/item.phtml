@@ -1,6 +1,6 @@
 <?php
 /** @var \Sitegear\Core\View\View $view */
-/** @var \Sitegear\Ext\Module\News\Entities\Item $item */
+/** @var \Sitegear\Ext\Module\News\Model\Item $item */
 $item = $view['item'];
 $view->getStringsManager()->prepend('title', $view['title'])->prepend('title', $item->getHeadline());
 ?>

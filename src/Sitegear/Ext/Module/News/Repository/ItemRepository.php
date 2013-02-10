@@ -6,14 +6,14 @@
  * http://sitegear.org/
  */
 
-namespace Sitegear\Ext\Module\News;
+namespace Sitegear\Ext\Module\News\Repository;
 
 use Doctrine\ORM\EntityRepository;
 
 /**
  * Custom entity repository for the News module.
  */
-class NewsRepository extends EntityRepository {
+class ItemRepository extends EntityRepository {
 
 	/**
 	 * Retrieve the total number of headlines currently available.
@@ -51,9 +51,10 @@ class NewsRepository extends EntityRepository {
 	 *
 	 * @param string $urlPath URL path of the item to retrieve.
 	 *
-	 * @return \Sitegear\Ext\Module\News\Entities\Item News item entity object.
+	 * @return \Sitegear\Ext\Module\News\Model\Item News item entity object.
 	 */
 	public function selectItemByUrlPath($urlPath) {
+		return $this->findOneBy(array( 'urlPath' => $urlPath ));
 		return $this->_em->createQueryBuilder()
 				->select('ni')
 				->from('News:Item', 'ni')

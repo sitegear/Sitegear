@@ -6,13 +6,13 @@
  * http://sitegear.org/
  */
 
-namespace Sitegear\Ext\Module\Products\Entities;
+namespace Sitegear\Ext\Module\Products\Model;
 
 /**
- * @Entity(repositoryClass="Sitegear\Ext\Module\Products\ProductsRepository")
- * @Table(name="products_attribute_assignment")
+ * @Entity
+ * @Table(name="products_relationship")
  */
-class AttributeAssignment {
+class Relationship {
 
 	//-- Attributes --------------------
 
@@ -23,6 +23,12 @@ class AttributeAssignment {
 	 * @GeneratedValue
 	 */
 	private $id;
+
+	/**
+	 * @var integer
+	 * @Column(type="integer")
+	 */
+	private $displaySequence;
 
 	/**
 	 * @var \DateTime
@@ -37,18 +43,17 @@ class AttributeAssignment {
 	 * @Timestampable(on="update")
 	 */
 	private $dateModified;
-
 	/**
 	 * @var Item
-	 * @ManyToOne(targetEntity="Item", inversedBy="attributes")
+	 * @ManyToOne(targetEntity="Item", inversedBy="relatedItems")
 	 */
 	private $item;
 
 	/**
-	 * @var Attribute
-	 * @ManyToOne(targetEntity="Attribute", inversedBy="products")
+	 * @var Item
+	 * @ManyToOne(targetEntity="Item", inversedBy="relatedToItems")
 	 */
-	private $attribute;
+	private $relatedItem;
 
 	//-- Accessor Methods --------------------
 
@@ -74,17 +79,31 @@ class AttributeAssignment {
 	}
 
 	/**
-	 * @return int
+	 * @return Item
 	 */
-	public function getAttribute() {
-		return $this->attribute;
+	public function getItem() {
+		return $this->item;
+	}
+
+	/**
+	 * @return Item
+	 */
+	public function getRelatedItem() {
+		return $this->relatedItem;
 	}
 
 	/**
 	 * @return int
 	 */
-	public function getItem() {
-		return $this->item;
+	public function getDisplaySequence() {
+		return $this->displaySequence;
+	}
+
+	/**
+	 * @param int $displaySequence
+	 */
+	public function setDisplaySequence($displaySequence) {
+		$this->displaySequence = $displaySequence;
 	}
 
 }

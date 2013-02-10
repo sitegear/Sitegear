@@ -6,20 +6,20 @@
  * http://sitegear.org/
  */
 
-namespace Sitegear\Ext\Module\Products\Entities;
+namespace Sitegear\Ext\Module\Locations\Model;
 
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * @Entity(repositoryClass="Sitegear\Ext\Module\Products\ProductsRepository")
- * @Table(name="products_attribute")
+ * @Entity
+ * @Table(name="locations_type")
  */
-class Attribute {
+class Type {
 
 	//-- Attributes --------------------
 
 	/**
-	 * @var integer
+	 * @var int
 	 * @Id
 	 * @Column(type="integer")
 	 * @GeneratedValue
@@ -27,16 +27,16 @@ class Attribute {
 	private $id;
 
 	/**
+	 * @var integer
+	 * @Column(type="integer")
+	 */
+	private $displaySequence;
+
+	/**
 	 * @var string
 	 * @Column(type="string", nullable=false)
 	 */
 	private $name;
-
-	/**
-	 * @var boolean
-	 * @Column(type="boolean")
-	 */
-	private $multiple;
 
 	/**
 	 * @var \DateTime
@@ -54,21 +54,14 @@ class Attribute {
 
 	/**
 	 * @var \Doctrine\Common\Collections\Collection
-	 * @OneToMany(targetEntity="AttributeAssignment", mappedBy="attribute")
+	 * @OneToMany(targetEntity="Item", mappedBy="type")
 	 */
-	private $products;
-
-	/**
-	 * @var \Doctrine\Common\Collections\Collection
-	 * @OneToMany(targetEntity="AttributeOption", mappedBy="attribute")
-	 */
-	private $options;
+	private $items;
 
 	//-- Constructor --------------------
 
 	public function __construct() {
-		$this->products = new ArrayCollection();
-		$this->options = new ArrayCollection();
+		$this->items = new ArrayCollection();
 	}
 
 	//-- Accessor Methods --------------------
@@ -95,17 +88,24 @@ class Attribute {
 	}
 
 	/**
-	 * @param boolean $multiple
+	 * @return \Doctrine\Common\Collections\Collection
 	 */
-	public function setMultiple($multiple) {
-		$this->multiple = $multiple;
+	public function getItems() {
+		return $this->items;
 	}
 
 	/**
-	 * @return boolean
+	 * @param int $displaySequence
 	 */
-	public function getMultiple() {
-		return $this->multiple;
+	public function setDisplaySequence($displaySequence) {
+		$this->displaySequence = $displaySequence;
+	}
+
+	/**
+	 * @return int
+	 */
+	public function getDisplaySequence() {
+		return $this->displaySequence;
 	}
 
 	/**
@@ -120,20 +120,6 @@ class Attribute {
 	 */
 	public function getName() {
 		return $this->name;
-	}
-
-	/**
-	 * @return \Doctrine\Common\Collections\Collection
-	 */
-	public function getProducts() {
-		return $this->products;
-	}
-
-	/**
-	 * @return \Doctrine\Common\Collections\Collection
-	 */
-	public function getOptions() {
-		return $this->options;
 	}
 
 }

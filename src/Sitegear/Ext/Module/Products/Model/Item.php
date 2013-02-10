@@ -6,12 +6,12 @@
  * http://sitegear.org/
  */
 
-namespace Sitegear\Ext\Module\Products\Entities;
+namespace Sitegear\Ext\Module\Products\Model;
 
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * @Entity(repositoryClass="Sitegear\Ext\Module\Products\ProductsRepository")
+ * @Entity(repositoryClass="Sitegear\Ext\Module\Products\Repository\ItemRepository")
  * @Table(name="products_item")
  */
 class Item {

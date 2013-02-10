@@ -6,14 +6,14 @@
  * http://sitegear.org/
  */
 
-namespace Sitegear\Ext\Module\Locations;
+namespace Sitegear\Ext\Module\Locations\Repository;
 
 use Doctrine\ORM\EntityRepository;
 
 /**
  * Custom entity repository for the Locations module.
  */
-class LocationsRepository extends EntityRepository {
+class ItemRepository extends EntityRepository {
 
 
 

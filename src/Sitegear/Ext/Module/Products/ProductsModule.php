@@ -40,7 +40,7 @@ class ProductsModule extends AbstractUrlMountableModule {
 	 */
 	public function start() {
 		LoggerRegistry::debug('ProductsModule starting');
-		$this->getEngine()->doctrine()->getEntityManager()->getConfiguration()->addEntityNamespace('Products', '\\Sitegear\\Ext\\Module\\Products\\Entities');
+		$this->getEngine()->doctrine()->getEntityManager()->getConfiguration()->addEntityNamespace('Products', '\\Sitegear\\Ext\\Module\\Products\\Model');
 	}
 
 	//-- Page Controller Methods --------------------
@@ -54,7 +54,7 @@ class ProductsModule extends AbstractUrlMountableModule {
 		LoggerRegistry::debug('ProductsModule::indexController');
 		$this->applyViewDefaults($view);
 		$this->applyConfigToView('page.index', $view);
-		$view['categories'] = $this->getRepository()->getRootCategories();
+		$view['categories'] = $this->getCategoryRepository()->getRootCategories();
 	}
 
 	/**
@@ -67,9 +67,9 @@ class ProductsModule extends AbstractUrlMountableModule {
 		LoggerRegistry::debug('ProductsModule::categoryController');
 		$this->applyViewDefaults($view);
 		$this->applyConfigToView('page.category', $view);
-		$view['category'] = $this->getRepository()->selectCategoryByUrlPath($request->attributes->get('slug'));
-		$view['categories'] = $this->getRepository()->getChildCategories($view['category']);
-		$view['items'] = $this->getRepository()->getActiveItemsInCategory($view['category']);
+		$view['category'] = $this->getCategoryRepository()->selectCategoryByUrlPath($request->attributes->get('slug'));
+		$view['categories'] = $this->getCategoryRepository()->getChildCategories($view['category']);
+		$view['items'] = $this->getItemRepository()->getActiveItemsInCategory($view['category']);
 	}
 
 	/**
@@ -85,7 +85,7 @@ class ProductsModule extends AbstractUrlMountableModule {
 		$this->applyViewDefaults($view);
 		$this->applyConfigToView('page.item', $view);
 		try {
-			$view['item'] = $this->getRepository()->selectActiveItemByUrlPath($request->attributes->get('slug'));
+			$view['item'] = $this->getItemRepository()->selectActiveItemByUrlPath($request->attributes->get('slug'));
 		} catch (NoResultException $e) {
 			throw new NotFoundHttpException('The requested product is not available.', $e);
 		}
@@ -110,7 +110,7 @@ class ProductsModule extends AbstractUrlMountableModule {
 	protected function buildNavigationData($mode) {
 		$data = $this->buildNavigationDataImpl($mode, intval($this->config('navigation.max-depth')));
 		if ($mode === self::NAVIGATION_DATA_MODE_EXPANDED) {
-			foreach ($this->getRepository()->getAllActiveItems() as $item) {
+			foreach ($this->getItemRepository()->getAllActiveItems() as $item) {
 				$data[] = array(
 					'url' => sprintf('%s/%s/%s', $this->getMountedUrl(), $this->config('routes.item'), $item->getUrlPath()),
 					'label' => $item->getName()
@@ -141,13 +141,13 @@ class ProductsModule extends AbstractUrlMountableModule {
 	 *
 	 * @param int $mode
 	 * @param int $maxDepth
-	 * @param null|int|\Sitegear\Ext\Module\Products\Entities\Category $root
+	 * @param null|int|\Sitegear\Ext\Module\Products\Model\Category $root
 	 *
 	 * @return array
 	 */
 	private function buildNavigationDataImpl($mode, $maxDepth, $root=null) {
 		$result = array();
-		foreach ((is_null($root) ? $this->getRepository()->getRootCategories() : $this->getRepository()->getChildCategories($root)) as $category) {
+		foreach ((is_null($root) ? $this->getCategoryRepository()->getRootCategories() : $this->getCategoryRepository()->getChildCategories($root)) as $category) {
 			$categoryResult = array(
 				'url' => sprintf('%s/%s/%s', $this->getMountedUrl(), $this->config('routes.category'), $category->getUrlPath()),
 				'label' => $category->getName(),
@@ -167,10 +167,17 @@ class ProductsModule extends AbstractUrlMountableModule {
 	//-- Internal Methods --------------------
 
 	/**
-	 * @return \Sitegear\Ext\Module\Products\ProductsRepository
+	 * @return \Sitegear\Ext\Module\Products\Repository\ItemRepository
 	 */
-	private function getRepository() {
-		return $this->getEngine()->doctrine()->getEntityManager()->getRepository('Sitegear\\Ext\\Module\\Products\\Entities\\Item');
+	private function getItemRepository() {
+		return $this->getEngine()->doctrine()->getEntityManager()->getRepository('Products:Item');
+	}
+
+	/**
+	 * @return \Sitegear\Ext\Module\Products\Repository\CategoryRepository
+	 */
+	private function getCategoryRepository() {
+		return $this->getEngine()->doctrine()->getEntityManager()->getRepository('Products:Category');
 	}
 
 }

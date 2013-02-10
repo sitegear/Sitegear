@@ -6,12 +6,12 @@
  * http://sitegear.org/
  */
 
-namespace Sitegear\Ext\Module\Locations\Entities;
+namespace Sitegear\Ext\Module\Locations\Model;
 
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * @Entity(repositoryClass="Sitegear\Ext\Module\Locations\LocationsRepository")
+ * @Entity(repositoryClass="Sitegear\Ext\Module\Locations\Repository\ItemRepository")
  * @Table(name="locations_item")
  */
 class Item {
@@ -295,14 +295,14 @@ class Item {
 	}
 
 	/**
-	 * @return \Sitegear\Ext\Module\Locations\Entities\Region
+	 * @return \Sitegear\Ext\Module\Locations\Model\Region
 	 */
 	public function getRegion() {
 		return $this->region;
 	}
 
 	/**
-	 * @return \Sitegear\Ext\Module\Locations\Entities\Type
+	 * @return \Sitegear\Ext\Module\Locations\Model\Type
 	 */
 	public function getType() {
 		return $this->type;

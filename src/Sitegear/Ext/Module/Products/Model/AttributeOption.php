@@ -6,13 +6,13 @@
  * http://sitegear.org/
  */
 
-namespace Sitegear\Ext\Module\Products\Entities;
+namespace Sitegear\Ext\Module\Products\Model;
 
 /**
- * @Entity(repositoryClass="Sitegear\Ext\Module\Products\ProductsRepository")
- * @Table(name="products_relationship")
+ * @Entity
+ * @Table(name="products_attribute_option")
  */
-class Relationship {
+class AttributeOption {
 
 	//-- Attributes --------------------
 
@@ -23,6 +23,18 @@ class Relationship {
 	 * @GeneratedValue
 	 */
 	private $id;
+
+	/**
+	 * @var string
+	 * @Column(type="string", nullable=false)
+	 */
+	private $label;
+
+	/**
+	 * @var string
+	 * @Column(type="string", nullable=false)
+	 */
+	private $value;
 
 	/**
 	 * @var integer
@@ -43,17 +55,12 @@ class Relationship {
 	 * @Timestampable(on="update")
 	 */
 	private $dateModified;
-	/**
-	 * @var Item
-	 * @ManyToOne(targetEntity="Item", inversedBy="relatedItems")
-	 */
-	private $item;
 
 	/**
-	 * @var Item
-	 * @ManyToOne(targetEntity="Item", inversedBy="relatedToItems")
+	 * @var Attribute
+	 * @ManyToOne(targetEntity="Attribute", inversedBy="options")
 	 */
-	private $relatedItem;
+	private $attribute;
 
 	//-- Accessor Methods --------------------
 
@@ -62,6 +69,13 @@ class Relationship {
 	 */
 	public function getId() {
 		return $this->id;
+	}
+
+	/**
+	 * @return int
+	 */
+	public function getAttribute() {
+		return $this->attribute;
 	}
 
 	/**
@@ -79,17 +93,10 @@ class Relationship {
 	}
 
 	/**
-	 * @return Item
+	 * @param int $displaySequence
 	 */
-	public function getItem() {
-		return $this->item;
-	}
-
-	/**
-	 * @return Item
-	 */
-	public function getRelatedItem() {
-		return $this->relatedItem;
+	public function setDisplaySequence($displaySequence) {
+		$this->displaySequence = $displaySequence;
 	}
 
 	/**
@@ -100,10 +107,31 @@ class Relationship {
 	}
 
 	/**
-	 * @param int $displaySequence
+	 * @param string $label
 	 */
-	public function setDisplaySequence($displaySequence) {
-		$this->displaySequence = $displaySequence;
+	public function setLabel($label) {
+		$this->label = $label;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getLabel() {
+		return $this->label;
+	}
+
+	/**
+	 * @param string $value
+	 */
+	public function setValue($value) {
+		$this->value = $value;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getValue() {
+		return $this->value;
 	}
 
 }

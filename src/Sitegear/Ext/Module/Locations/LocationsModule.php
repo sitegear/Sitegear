@@ -10,6 +10,7 @@ namespace Sitegear\Ext\Module\Locations;
 
 use Sitegear\Base\Module\AbstractUrlMountableModule;
 use Sitegear\Base\View\ViewInterface;
+use Sitegear\Util\LoggerRegistry;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
@@ -18,6 +19,8 @@ use Symfony\Component\Routing\RouteCollection;
 /**
  * LocationsModule allows display and management of geographical locations.  By default, it requires GoogleModule for
  * map generation, however this can be overridden using custom view scripts.
+ *
+ * @method \Sitegear\Core\Engine\Engine getEngine()
  */
 class LocationsModule extends AbstractUrlMountableModule {
 
@@ -28,6 +31,13 @@ class LocationsModule extends AbstractUrlMountableModule {
 	 */
 	public function getDisplayName() {
 		return 'Locations Management';
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function start() {
+		$this->getEngine()->doctrine()->getEntityManager()->getConfiguration()->addEntityNamespace('Locations', '\\Sitegear\\Ext\\Module\\Locations\\Model');
 	}
 
 	//-- Page Controller Methods --------------------
@@ -58,6 +68,15 @@ class LocationsModule extends AbstractUrlMountableModule {
 	protected function buildNavigationData($mode) {
 		// TODO Build navigation data
 		return array();
+	}
+
+	//-- Internal Methods --------------------
+
+	/**
+	 * @return \Sitegear\Ext\Module\Locations\Repository\ItemRepository
+	 */
+	protected function getItemRepository() {
+		return $this->getEngine()->doctrine()->getEntityManager()->getRepository('Locations:Item');
 	}
 
 }

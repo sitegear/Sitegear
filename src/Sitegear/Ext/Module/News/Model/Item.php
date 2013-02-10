@@ -6,13 +6,13 @@
  * http://sitegear.org/
  */
 
-namespace Sitegear\Ext\Module\Locations\Entities;
+namespace Sitegear\Ext\Module\News\Model;
 
 /**
- * @Entity(repositoryClass="Sitegear\Ext\Module\Locations\LocationsRepository")
- * @Table(name="locations_detail")
+ * @Entity(repositoryClass="Sitegear\Ext\Module\News\Repository\ItemRepository")
+ * @Table("news_item")
  */
-class Detail {
+class Item {
 
 	//-- Attributes --------------------
 
@@ -25,22 +25,22 @@ class Detail {
 	private $id;
 
 	/**
-	 * @var integer
-	 * @Column(type="integer")
+	 * @var string
+	 * @Column(type="string", unique=true, nullable=false)
 	 */
-	private $displaySequence;
+	private $urlPath;
 
 	/**
 	 * @var string
 	 * @Column(type="string", nullable=false)
 	 */
-	private $label;
+	private $headline;
 
 	/**
-	 * @var string
-	 * @Column(type="string", nullable=false)
+	 * @var \DateTime
+	 * @Column(type="datetime", nullable=true)
 	 */
-	private $detail;
+	private $datePublished;
 
 	/**
 	 * @var \DateTime
@@ -56,12 +56,6 @@ class Detail {
 	 */
 	private $dateModified;
 
-	/**
-	 * @var Item
-	 * @ManyToOne(targetEntity="Item", inversedBy="details")
-	 */
-	private $item;
-
 	//-- Accessor Methods --------------------
 
 	/**
@@ -72,52 +66,45 @@ class Detail {
 	}
 
 	/**
-	 * @return \Sitegear\Ext\Module\Locations\Entities\Item
+	 * @param \DateTime $datePublished
 	 */
-	public function getItem() {
-		return $this->item;
+	public function setDatePublished($datePublished) {
+		$this->datePublished = $datePublished;
 	}
 
 	/**
-	 * @param string $detail
+	 * @return \DateTime
 	 */
-	public function setDetail($detail) {
-		$this->detail = $detail;
+	public function getDatePublished() {
+		return $this->datePublished;
 	}
 
 	/**
-	 * @return string
+	 * @param string $headline
 	 */
-	public function getDetail() {
-		return $this->detail;
-	}
-
-	/**
-	 * @param int $displaySequence
-	 */
-	public function setDisplaySequence($displaySequence) {
-		$this->displaySequence = $displaySequence;
-	}
-
-	/**
-	 * @return int
-	 */
-	public function getDisplaySequence() {
-		return $this->displaySequence;
-	}
-
-	/**
-	 * @param string $label
-	 */
-	public function setLabel($label) {
-		$this->label = $label;
+	public function setHeadline($headline) {
+		$this->headline = $headline;
 	}
 
 	/**
 	 * @return string
 	 */
-	public function getLabel() {
-		return $this->label;
+	public function getHeadline() {
+		return $this->headline;
+	}
+
+	/**
+	 * @param string $urlPath
+	 */
+	public function setUrlPath($urlPath) {
+		$this->urlPath = $urlPath;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getUrlPath() {
+		return $this->urlPath;
 	}
 
 	/**

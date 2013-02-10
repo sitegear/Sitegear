@@ -6,13 +6,13 @@
  * http://sitegear.org/
  */
 
-namespace Sitegear\Ext\Module\Products\Entities;
+namespace Sitegear\Ext\Module\Products\Model;
 
 /**
- * @Entity(repositoryClass="Sitegear\Ext\Module\Products\ProductsRepository")
- * @Table(name="products_category_assignment")
+ * @Entity
+ * @Table(name="products_specification")
  */
-class CategoryAssignment {
+class Specification {
 
 	//-- Attributes --------------------
 
@@ -25,10 +25,16 @@ class CategoryAssignment {
 	private $id;
 
 	/**
-	 * @var integer
-	 * @Column(type="integer")
+	 * @var string
+	 * @Column(type="string", nullable=false)
 	 */
-	private $displaySequence;
+	private $label;
+
+	/**
+	 * @var string
+	 * @Column(type="string", nullable=false)
+	 */
+	private $value;
 
 	/**
 	 * @var \DateTime
@@ -46,15 +52,9 @@ class CategoryAssignment {
 
 	/**
 	 * @var Item
-	 * @ManyToOne(targetEntity="Item", inversedBy="categories")
+	 * @ManyToOne(targetEntity="Item", inversedBy="specifications")
 	 */
 	private $item;
-
-	/**
-	 * @var Category
-	 * @ManyToOne(targetEntity="Category", inversedBy="items")
-	 */
-	private $category;
 
 	//-- Accessor Methods --------------------
 
@@ -80,30 +80,38 @@ class CategoryAssignment {
 	}
 
 	/**
-	 * @param string $displaySequence
+	 * @return Item
 	 */
-	public function setDisplaySequence($displaySequence) {
-		$this->displaySequence = $displaySequence;
+	public function getItem() {
+		return $this->item;
+	}
+
+	/**
+	 * @param string $label
+	 */
+	public function setLabel($label) {
+		$this->label = $label;
 	}
 
 	/**
 	 * @return string
 	 */
-	public function getDisplaySequence() {
-		return $this->displaySequence;
-	}
-	/**
-	 * @return Category
-	 */
-	public function getCategory() {
-		return $this->category;
+	public function getLabel() {
+		return $this->label;
 	}
 
 	/**
-	 * @return int
+	 * @param string $value
 	 */
-	public function getItem() {
-		return $this->item;
+	public function setValue($value) {
+		$this->value = $value;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getValue() {
+		return $this->value;
 	}
 
 }

@@ -39,7 +39,7 @@ class NewsModule extends AbstractUrlMountableModule {
 	 * {@inheritDoc}
 	 */
 	public function start() {
-		$this->getEngine()->doctrine()->getEntityManager()->getConfiguration()->addEntityNamespace('News', '\\Sitegear\\Ext\\Module\\News\\Entities');
+		$this->getEngine()->doctrine()->getEntityManager()->getConfiguration()->addEntityNamespace('News', '\\Sitegear\\Ext\\Module\\News\\Model');
 	}
 
 	//-- Page Controller Methods --------------------
@@ -56,8 +56,8 @@ class NewsModule extends AbstractUrlMountableModule {
 	public function indexController(ViewInterface $view, Request $request) {
 		LoggerRegistry::debug('NewsModule::indexController');
 		$this->applyConfigToView('page.index', $view);
-		$itemCount = $this->getRepository()->getItemCount();
-		$view['items'] = $this->getRepository()->selectLatestItems($request->query->has('more') ? 0 : intval($this->config('page.index.item-limit')));
+		$itemCount = $this->getItemRepository()->getItemCount();
+		$view['items'] = $this->getItemRepository()->selectLatestItems($request->query->has('more') ? 0 : intval($this->config('page.index.item-limit')));
 		$view['item-count'] = $itemCount;
 		$view['more'] = $request->query->has('more');
 		$view['item-path'] = trim($this->config('item-path'), '/');
@@ -82,7 +82,7 @@ class NewsModule extends AbstractUrlMountableModule {
 		$view['title'] = $this->config('title');
 		$view['root-url'] = $this->getMountedUrl();
 		try {
-			$view['item'] = $this->getRepository()->selectItemByUrlPath($request->attributes->get('slug'));
+			$view['item'] = $this->getItemRepository()->selectItemByUrlPath($request->attributes->get('slug'));
 		} catch (NoResultException $e) {
 			throw new NotFoundHttpException('The requested news item is not available.', $e);
 		}
@@ -101,7 +101,7 @@ class NewsModule extends AbstractUrlMountableModule {
 	 */
 	public function latestHeadlinesComponent(ViewInterface $view, $itemLimit=null, $excerptLength=null, $readMore=null) {
 		LoggerRegistry::debug('NewsModule::latestHeadlinesComponent');
-		$view['items'] = $this->getRepository()->selectLatestItems(intval(!is_null($itemLimit) ? $itemLimit : $this->config('component.latest-headlines.item-limit')));
+		$view['items'] = $this->getItemRepository()->selectLatestItems(intval(!is_null($itemLimit) ? $itemLimit : $this->config('component.latest-headlines.item-limit')));
 		$view['date-format'] = $this->config('component.latest-headlines.date-format');
 		$view['excerpt-length'] = !is_null($excerptLength) ? $excerptLength : $this->config('component.latest-headlines.excerpt-length');
 		$view['read-more'] = $readMore ?: $this->config('component.latest-headlines.read-more');
@@ -126,7 +126,7 @@ class NewsModule extends AbstractUrlMountableModule {
 	protected function buildNavigationData($mode) {
 		$result = array();
 		$itemLimit = intval($this->config('navigation.item-limit'));
-		foreach ($this->getRepository()->selectLatestItems($itemLimit) as $item) { /** @var \Sitegear\Ext\Module\News\Entities\Item $item */
+		foreach ($this->getItemRepository()->selectLatestItems($itemLimit) as $item) { /** @var \Sitegear\Ext\Module\News\Model\Item $item */
 			$result[] = array(
 				'url' => sprintf('%s/%s', $this->getMountedUrl(), $item->getUrlPath()),
 				'label' => $item->getHeadline(),
@@ -147,10 +147,10 @@ class NewsModule extends AbstractUrlMountableModule {
 	//-- Internal Methods --------------------
 
 	/**
-	 * @return \Sitegear\Ext\Module\News\NewsRepository
+	 * @return \Sitegear\Ext\Module\News\Repository\ItemRepository
 	 */
-	protected function getRepository() {
-		return $this->getEngine()->doctrine()->getEntityManager()->getRepository('Sitegear\\Ext\\Module\\News\\Entities\\Item');
+	protected function getItemRepository() {
+		return $this->getEngine()->doctrine()->getEntityManager()->getRepository('News:Item');
 	}
 
 }

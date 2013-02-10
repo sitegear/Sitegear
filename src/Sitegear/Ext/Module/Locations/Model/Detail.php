@@ -6,23 +6,29 @@
  * http://sitegear.org/
  */
 
-namespace Sitegear\Ext\Module\Products\Entities;
+namespace Sitegear\Ext\Module\Locations\Model;
 
 /**
- * @Entity(repositoryClass="Sitegear\Ext\Module\Products\ProductsRepository")
- * @Table(name="products_attribute_option")
+ * @Entity
+ * @Table(name="locations_detail")
  */
-class AttributeOption {
+class Detail {
 
 	//-- Attributes --------------------
 
 	/**
-	 * @var integer
+	 * @var int
 	 * @Id
 	 * @Column(type="integer")
 	 * @GeneratedValue
 	 */
 	private $id;
+
+	/**
+	 * @var integer
+	 * @Column(type="integer")
+	 */
+	private $displaySequence;
 
 	/**
 	 * @var string
@@ -34,13 +40,7 @@ class AttributeOption {
 	 * @var string
 	 * @Column(type="string", nullable=false)
 	 */
-	private $value;
-
-	/**
-	 * @var integer
-	 * @Column(type="integer")
-	 */
-	private $displaySequence;
+	private $detail;
 
 	/**
 	 * @var \DateTime
@@ -57,10 +57,10 @@ class AttributeOption {
 	private $dateModified;
 
 	/**
-	 * @var Attribute
-	 * @ManyToOne(targetEntity="Attribute", inversedBy="options")
+	 * @var Item
+	 * @ManyToOne(targetEntity="Item", inversedBy="details")
 	 */
-	private $attribute;
+	private $item;
 
 	//-- Accessor Methods --------------------
 
@@ -72,24 +72,24 @@ class AttributeOption {
 	}
 
 	/**
-	 * @return int
+	 * @return \Sitegear\Ext\Module\Locations\Model\Item
 	 */
-	public function getAttribute() {
-		return $this->attribute;
+	public function getItem() {
+		return $this->item;
 	}
 
 	/**
-	 * @return \DateTime
+	 * @param string $detail
 	 */
-	public function getDateCreated() {
-		return $this->dateCreated;
+	public function setDetail($detail) {
+		$this->detail = $detail;
 	}
 
 	/**
-	 * @return \DateTime
+	 * @return string
 	 */
-	public function getDateModified() {
-		return $this->dateModified;
+	public function getDetail() {
+		return $this->detail;
 	}
 
 	/**
@@ -121,17 +121,17 @@ class AttributeOption {
 	}
 
 	/**
-	 * @param string $value
+	 * @return \DateTime
 	 */
-	public function setValue($value) {
-		$this->value = $value;
+	public function getDateCreated() {
+		return $this->dateCreated;
 	}
 
 	/**
-	 * @return string
+	 * @return \DateTime
 	 */
-	public function getValue() {
-		return $this->value;
+	public function getDateModified() {
+		return $this->dateModified;
 	}
 
 }

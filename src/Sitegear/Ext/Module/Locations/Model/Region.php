@@ -6,20 +6,20 @@
  * http://sitegear.org/
  */
 
-namespace Sitegear\Ext\Module\Products\Entities;
+namespace Sitegear\Ext\Module\Locations\Model;
 
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * @Entity(repositoryClass="Sitegear\Ext\Module\Products\ProductsRepository")
- * @Table(name="products_category")
+ * @Entity
+ * @Table(name="locations_region")
  */
-class Category {
+class Region {
 
 	//-- Attributes --------------------
 
 	/**
-	 * @var integer
+	 * @var int
 	 * @Id
 	 * @Column(type="integer")
 	 * @GeneratedValue
@@ -28,9 +28,21 @@ class Category {
 
 	/**
 	 * @var string
-	 * @Column(type="string", unique=true)
+	 * @Column(type="string", unique=true, nullable=false)
 	 */
 	private $urlPath;
+
+	/**
+	 * @var integer
+	 * @Column(type="integer")
+	 */
+	private $displaySequence;
+
+	/**
+	 * @var boolean
+	 * @Column(type="boolean")
+	 */
+	private $active;
 
 	/**
 	 * @var string
@@ -39,10 +51,10 @@ class Category {
 	private $name;
 
 	/**
-	 * @var string
-	 * @Column(type="string")
+	 * @var array
+	 * @Column(type="array", nullable=false)
 	 */
-	private $displaySequence;
+	private $mapdata;
 
 	/**
 	 * @var \DateTime
@@ -59,28 +71,27 @@ class Category {
 	private $dateModified;
 
 	/**
-	 * @var \Doctrine\Common\Collections\Collection
-	 * @OneToMany(targetEntity="Category", mappedBy="parent")
-	 */
-	private $children;
-
-	/**
-	 * @var Category
-	 * @ManyToOne(targetEntity="Category", inversedBy="children")
+	 * @var Region
+	 * @ManyToOne(targetEntity="Region", inversedBy="children")
 	 */
 	private $parent;
 
 	/**
 	 * @var \Doctrine\Common\Collections\Collection
-	 * @OneToMany(targetEntity="CategoryAssignment", mappedBy="category")
-	 * @OrderBy({"displaySequence"="ASC"})
+	 * @OneToMany(targetEntity="Region", mappedBy="parent")
 	 */
-	private $itemAssignments;
+	private $children;
+
+	/**
+	 * @var \Doctrine\Common\Collections\Collection
+	 * @OneToMany(targetEntity="Item", mappedBy="region")
+	 */
+	private $items;
 
 	//-- Constructor --------------------
 
 	public function __construct() {
-		$this->itemAssignments = new ArrayCollection();
+		$this->items = new ArrayCollection();
 		$this->children = new ArrayCollection();
 	}
 
@@ -108,17 +119,45 @@ class Category {
 	}
 
 	/**
-	 * @param string $displaySequence
+	 * @param boolean $active
+	 */
+	public function setActive($active) {
+		$this->active = $active;
+	}
+
+	/**
+	 * @return boolean
+	 */
+	public function getActive() {
+		return $this->active;
+	}
+
+	/**
+	 * @param int $displaySequence
 	 */
 	public function setDisplaySequence($displaySequence) {
 		$this->displaySequence = $displaySequence;
 	}
 
 	/**
-	 * @return string
+	 * @return int
 	 */
 	public function getDisplaySequence() {
 		return $this->displaySequence;
+	}
+
+	/**
+	 * @param array $mapdata
+	 */
+	public function setMapdata($mapdata) {
+		$this->mapdata = $mapdata;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getMapdata() {
+		return $this->mapdata;
 	}
 
 	/**
@@ -133,20 +172,6 @@ class Category {
 	 */
 	public function getName() {
 		return $this->name;
-	}
-
-	/**
-	 * @param Category $parent
-	 */
-	public function setParent($parent) {
-		$this->parent = $parent;
-	}
-
-	/**
-	 * @return Category
-	 */
-	public function getParent() {
-		return $this->parent;
 	}
 
 	/**
@@ -166,8 +191,22 @@ class Category {
 	/**
 	 * @return \Doctrine\Common\Collections\Collection
 	 */
-	public function getItemAssignments() {
-		return $this->itemAssignments;
+	public function getChildren() {
+		return $this->children;
+	}
+
+	/**
+	 * @return \Doctrine\Common\Collections\Collection
+	 */
+	public function getItems() {
+		return $this->items;
+	}
+
+	/**
+	 * @return \Sitegear\Ext\Module\Locations\Model\Region
+	 */
+	public function getParent() {
+		return $this->parent;
 	}
 
 }

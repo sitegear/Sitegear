@@ -10,7 +10,7 @@ $itemDecorator = sprintf('excerpt(%d, "%s")', $view['excerpt-length'], 'Article 
 if (empty($view['items'])) {
 	echo $view->news()->noHeadlines();
 } else {
-	foreach ($view['items'] as $item) { /** @var \Sitegear\Ext\Module\News\Entities\Item $item */
+	foreach ($view['items'] as $item) { /** @var \Sitegear\Ext\Module\News\Model\Item $item */
 		$linkUrl = sprintf('%s/%s', $view['root-url'], $item->getUrlPath());
 		$viewScript = sprintf('%s/%s', $view['item-path'], $item->getUrlPath());
 ?>

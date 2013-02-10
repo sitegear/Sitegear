@@ -6,13 +6,13 @@
  * http://sitegear.org/
  */
 
-namespace Sitegear\Ext\Module\Products\Entities;
+namespace Sitegear\Ext\Module\Products\Model;
 
 /**
- * @Entity(repositoryClass="Sitegear\Ext\Module\Products\ProductsRepository")
- * @Table(name="products_specification")
+ * @Entity
+ * @Table(name="products_category_assignment")
  */
-class Specification {
+class CategoryAssignment {
 
 	//-- Attributes --------------------
 
@@ -25,16 +25,10 @@ class Specification {
 	private $id;
 
 	/**
-	 * @var string
-	 * @Column(type="string", nullable=false)
+	 * @var integer
+	 * @Column(type="integer")
 	 */
-	private $label;
-
-	/**
-	 * @var string
-	 * @Column(type="string", nullable=false)
-	 */
-	private $value;
+	private $displaySequence;
 
 	/**
 	 * @var \DateTime
@@ -52,9 +46,15 @@ class Specification {
 
 	/**
 	 * @var Item
-	 * @ManyToOne(targetEntity="Item", inversedBy="specifications")
+	 * @ManyToOne(targetEntity="Item", inversedBy="categories")
 	 */
 	private $item;
+
+	/**
+	 * @var Category
+	 * @ManyToOne(targetEntity="Category", inversedBy="items")
+	 */
+	private $category;
 
 	//-- Accessor Methods --------------------
 
@@ -80,38 +80,30 @@ class Specification {
 	}
 
 	/**
-	 * @return Item
+	 * @param string $displaySequence
+	 */
+	public function setDisplaySequence($displaySequence) {
+		$this->displaySequence = $displaySequence;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getDisplaySequence() {
+		return $this->displaySequence;
+	}
+	/**
+	 * @return Category
+	 */
+	public function getCategory() {
+		return $this->category;
+	}
+
+	/**
+	 * @return int
 	 */
 	public function getItem() {
 		return $this->item;
-	}
-
-	/**
-	 * @param string $label
-	 */
-	public function setLabel($label) {
-		$this->label = $label;
-	}
-
-	/**
-	 * @return string
-	 */
-	public function getLabel() {
-		return $this->label;
-	}
-
-	/**
-	 * @param string $value
-	 */
-	public function setValue($value) {
-		$this->value = $value;
-	}
-
-	/**
-	 * @return string
-	 */
-	public function getValue() {
-		return $this->value;
 	}
 
 }
