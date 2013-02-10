@@ -11,7 +11,7 @@ namespace Sitegear\Ext\Module\Products\Entities;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * @Entity
+ * @Entity(repositoryClass="Sitegear\Ext\Module\Products\ProductsRepository")
  * @Table(name="products_attribute")
  */
 class Attribute {

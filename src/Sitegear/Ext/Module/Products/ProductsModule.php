@@ -54,7 +54,7 @@ class ProductsModule extends AbstractUrlMountableModule {
 		LoggerRegistry::debug('ProductsModule::indexController');
 		$this->applyViewDefaults($view);
 		$this->applyConfigToView('page.index', $view);
-		$view['categories'] = $this->getRootCategories();
+		$view['categories'] = $this->getRepository()->getRootCategories();
 	}
 
 	/**
@@ -67,9 +67,9 @@ class ProductsModule extends AbstractUrlMountableModule {
 		LoggerRegistry::debug('ProductsModule::categoryController');
 		$this->applyViewDefaults($view);
 		$this->applyConfigToView('page.category', $view);
-		$view['category'] = $this->selectCategoryByUrlPath($request->attributes->get('slug'));
-		$view['categories'] = $this->getChildCategories($view['category']);
-		$view['items'] = $this->getActiveItemsInCategory($view['category']);
+		$view['category'] = $this->getRepository()->selectCategoryByUrlPath($request->attributes->get('slug'));
+		$view['categories'] = $this->getRepository()->getChildCategories($view['category']);
+		$view['items'] = $this->getRepository()->getActiveItemsInCategory($view['category']);
 	}
 
 	/**
@@ -85,7 +85,7 @@ class ProductsModule extends AbstractUrlMountableModule {
 		$this->applyViewDefaults($view);
 		$this->applyConfigToView('page.item', $view);
 		try {
-			$view['item'] = $this->selectActiveItemByUrlPath($request->attributes->get('slug'));
+			$view['item'] = $this->getRepository()->selectActiveItemByUrlPath($request->attributes->get('slug'));
 		} catch (NoResultException $e) {
 			throw new NotFoundHttpException('The requested product is not available.', $e);
 		}
@@ -110,7 +110,7 @@ class ProductsModule extends AbstractUrlMountableModule {
 	protected function buildNavigationData($mode) {
 		$data = $this->buildNavigationDataImpl($mode, intval($this->config('navigation.max-depth')));
 		if ($mode === self::NAVIGATION_DATA_MODE_EXPANDED) {
-			foreach ($this->getAllActiveItems() as $item) {
+			foreach ($this->getRepository()->getAllActiveItems() as $item) {
 				$data[] = array(
 					'url' => sprintf('%s/%s/%s', $this->getMountedUrl(), $this->config('routes.item'), $item->getUrlPath()),
 					'label' => $item->getName()
@@ -147,7 +147,7 @@ class ProductsModule extends AbstractUrlMountableModule {
 	 */
 	private function buildNavigationDataImpl($mode, $maxDepth, $root=null) {
 		$result = array();
-		foreach ((is_null($root) ? $this->getRootCategories() : $this->getChildCategories($root)) as $category) {
+		foreach ((is_null($root) ? $this->getRepository()->getRootCategories() : $this->getRepository()->getChildCategories($root)) as $category) {
 			$categoryResult = array(
 				'url' => sprintf('%s/%s/%s', $this->getMountedUrl(), $this->config('routes.category'), $category->getUrlPath()),
 				'label' => $category->getName(),
@@ -164,86 +164,11 @@ class ProductsModule extends AbstractUrlMountableModule {
 		return $result;
 	}
 
-	// TODO Move these methods somewhere else
 	/**
-	 * @return \Sitegear\Ext\Module\Products\Entities\Category[]
+	 * @return \Sitegear\Ext\Module\Products\ProductsRepository
 	 */
-	private function getRootCategories() {
-		return $this->getEngine()->doctrine()->getEntityManager()->createQueryBuilder()
-				->select('pc')
-				->from('Products:Category', 'pc')
-				->where('pc.parent is null')
-				->getQuery()->getResult();
-	}
-
-	/**
-	 * @param int|\Sitegear\Ext\Module\Products\Entities\Category $parent
-	 *
-	 * @return \Sitegear\Ext\Module\Products\Entities\Category[]
-	 */
-	private function getChildCategories($parent) {
-		return $this->getEngine()->doctrine()->getEntityManager()->createQueryBuilder()
-				->select('pc')
-				->from('Products:Category', 'pc')
-				->where('pc.parent = :parent')
-				->setParameter('parent', $parent)
-				->getQuery()->getResult();
-	}
-
-	/**
-	 * @param string $urlPath
-	 *
-	 * @return \Sitegear\Ext\Module\Products\Entities\Category
-	 */
-	protected function selectCategoryByUrlPath($urlPath) {
-		return $this->getEngine()->doctrine()->getEntityManager()->createQueryBuilder()
-				->select('pc')
-				->from('Products:Category', 'pc')
-				->where('pc.urlPath = :urlPath')
-				->setParameter('urlPath', $urlPath)
-				->getQuery()->getSingleResult();
-	}
-
-	/**
-	 * @param int|\Sitegear\Ext\Module\Products\Entities\Category $category
-	 *
-	 * @return \Sitegear\Ext\Module\Products\Entities\Item[]
-	 */
-	private function getActiveItemsInCategory($category) {
-		return $this->getEngine()->doctrine()->getEntityManager()->createQueryBuilder()
-				->select('pi')
-				->from('Products:Item', 'pi')
-				->join('pi.categoryAssignments', 'pca')
-				->where('pca.category = :category')
-				->andWhere('pi.active = true')
-				->setParameter('category', $category)
-				->getQuery()->getResult();
-	}
-
-	/**
-	 * @return \Sitegear\Ext\Module\Products\Entities\Item[]
-	 */
-	private function getAllActiveItems() {
-		return $this->getEngine()->doctrine()->getEntityManager()->createQueryBuilder()
-				->select('pi')
-				->from('Products:Item', 'pi')
-				->where('pi.active = true')
-				->getQuery()->getResult();
-	}
-
-	/**
-	 * @param string $urlPath
-	 *
-	 * @return \Sitegear\Ext\Module\Products\Entities\Item
-	 */
-	protected function selectActiveItemByUrlPath($urlPath) {
-		return $this->getEngine()->doctrine()->getEntityManager()->createQueryBuilder()
-				->select('pi')
-				->from('Products:Item', 'pi')
-				->where('pi.urlPath = :urlPath')
-				->andWhere('pi.active = true')
-				->setParameter('urlPath', $urlPath)
-				->getQuery()->getSingleResult();
+	private function getRepository() {
+		return $this->getEngine()->doctrine()->getEntityManager()->getRepository('Sitegear\\Ext\\Module\\Products\\Entities\\Item');
 	}
 
 }

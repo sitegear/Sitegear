@@ -9,7 +9,7 @@
 namespace Sitegear\Ext\Module\Products\Entities;
 
 /**
- * @Entity
+ * @Entity(repositoryClass="Sitegear\Ext\Module\Products\ProductsRepository")
  * @Table(name="products_relationship")
  */
 class Relationship {
