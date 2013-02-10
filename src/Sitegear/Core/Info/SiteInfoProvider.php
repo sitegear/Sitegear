@@ -9,7 +9,7 @@
 namespace Sitegear\Core\Info;
 
 use Sitegear\Base\Info\SiteInfoProviderInterface;
-use Sitegear\Base\View\Resources\ResourceLocations;
+use Sitegear\Base\Resources\ResourceLocations;
 use Sitegear\Core\Engine\Engine;
 use Sitegear\Util\NameUtilities;
 
@@ -104,17 +104,18 @@ class SiteInfoProvider implements SiteInfoProviderInterface {
 				$resource = $module . '/' . $resource;
 				break;
 			case ResourceLocations::RESOURCE_LOCATION_MODULE:
-				$root = is_string($module) ? $this->engine->getModule($module)->getModuleRoot() : $module->getModuleRoot();
+				if (is_string($module)) {
+					$module = $this->engine->getModule($module);
+				}
+				$root = sprintf('%s/%s', $module->getModuleRoot(), ResourceLocations::RESOURCES_DIRECTORY);
 				break;
 			case ResourceLocations::RESOURCE_LOCATION_ENGINE:
-				$root = $this->engine->getEngineRoot();
+				$root = sprintf('%s/%s', $this->engine->getEngineRoot(), ResourceLocations::RESOURCES_DIRECTORY);
 				break;
 			default:
 				throw new \InvalidArgumentException(sprintf('Cannot find site resource in unknown location "%s"', $location));
 		}
-		// Ensure the configured site path ends with a single trailing slash and return the result
-		$site = trim($this->engine->config('paths.site'), '/') . '/';
-		return $root . $site . $resource;
+		return sprintf('%s/site/%s', $root, $resource);
 	}
 
 	/**
@@ -132,17 +133,16 @@ class SiteInfoProvider implements SiteInfoProviderInterface {
 				$root = $this->getSiteRoot();
 				break;
 			case ResourceLocations::RESOURCE_LOCATION_MODULE:
-				$root = $this->engine->getModule($module)->getModuleRoot();
+				$root = sprintf('%s/%s', $this->engine->getModule($module)->getModuleRoot(), ResourceLocations::RESOURCES_DIRECTORY);
 				break;
 			case ResourceLocations::RESOURCE_LOCATION_ENGINE:
-				$root = $this->engine->getEngineRoot();
+				$root = sprintf('%s/%s', $this->engine->getEngineRoot(), ResourceLocations::RESOURCES_DIRECTORY);
 				break;
 			default:
 				throw new \InvalidArgumentException(sprintf('Cannot find public resource in unknown location "%s"', $location));
 		}
 		// Ensure the configured public path ends with a single trailing slash and return the result
-		$public = trim($this->engine->config('paths.public'), '/') . '/';
-		return $root . $public . $resource;
+		return sprintf('%s/public/%s', $root, $resource);
 	}
 
 }

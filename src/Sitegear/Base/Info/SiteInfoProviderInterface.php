@@ -48,7 +48,7 @@ interface SiteInfoProviderInterface {
 	/**
 	 * Get the site root file path, which is the parent to the various site-level resource directories.
 	 *
-	 * @return string Root absolute file path.  This value always ends with a trailing slash ('/').
+	 * @return string Root absolute file path.
 	 */
 	public function getSiteRoot();
 

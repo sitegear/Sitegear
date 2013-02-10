@@ -95,7 +95,7 @@ class SitegearInfoProvider implements SitegearInfoProviderInterface {
 	 * {@inheritDoc}
 	 */
 	public function getSitegearRoot() {
-		return dirname(dirname(dirname($this->engine->getEngineRoot()))) . '/';
+		return dirname(dirname(dirname($this->engine->getEngineRoot())));
 	}
 
 }

@@ -209,7 +209,7 @@ abstract class AbstractEngine implements EngineInterface {
 	 */
 	public function getEngineRoot() {
 		$obj = new \ReflectionClass($this);
-		return dirname($obj->getFileName()) . '/';
+		return dirname($obj->getFileName());
 	}
 
 	/**

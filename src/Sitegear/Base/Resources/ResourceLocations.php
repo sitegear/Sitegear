@@ -6,7 +6,7 @@
  * http://sitegear.org/
  */
 
-namespace Sitegear\Base\View\Resources;
+namespace Sitegear\Base\Resources;
 
 /**
  * Defines the locations that a resource may exist in.  These locations can be searched one at a time for a given
@@ -29,5 +29,10 @@ final class ResourceLocations {
 	 * Specifies that a resource is in the scope of a particular module (the module must be specified or contextual).
 	 */
 	const RESOURCE_LOCATION_MODULE = 'module';
+
+	/**
+	 * Name of the directory used to store resources that are internal to the module.
+	 */
+	const RESOURCES_DIRECTORY = 'Resources';
 
 }

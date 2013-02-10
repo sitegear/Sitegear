@@ -14,6 +14,7 @@ use Sitegear\Base\Config\Processor\EngineTokenProcessor;
 use Sitegear\Base\Config\Processor\ConfigTokenProcessor;
 use Sitegear\Base\Config\ConfigLoader;
 use Sitegear\Base\Config\Container\SimpleConfigContainer;
+use Sitegear\Base\Resources\ResourceLocations;
 use Sitegear\Base\View\ViewInterface;
 use Sitegear\Util\TypeUtilities;
 
@@ -113,7 +114,7 @@ abstract class AbstractConfigurableModule extends AbstractModule implements Conf
 	 * @return null|string|array Filename, data array, etc.
 	 */
 	protected function defaults() {
-		return $this->getModuleRoot() . self::FILENAME_DEFAULTS;
+		return sprintf('%s/%s/%s', $this->getModuleRoot(), ResourceLocations::RESOURCES_DIRECTORY, self::FILENAME_DEFAULTS);
 	}
 
 	/**

@@ -9,7 +9,7 @@
 namespace Sitegear\Core\Module\ResourcesIntegration;
 
 use Sitegear\Base\Module\AbstractUrlMountableModule;
-use Sitegear\Base\View\Resources\ResourceLocations;
+use Sitegear\Base\Resources\ResourceLocations;
 use Sitegear\Core\Engine\Engine;
 use Sitegear\Util\LoggerRegistry;
 use Sitegear\Util\NameUtilities;

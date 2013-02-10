@@ -120,25 +120,6 @@ return array(
 	),
 
 	/**
-	 * File path settings; these are the names of the top-level directories.
-	 */
-	'paths' => array(
-
-		/**
-		 * Path to site files, i.e. custom view scripts and data files for the various modules.  The files in this path
-		 * are intended for processing, either directly by the module or as a view script.
-		 */
-		'site' => 'site',
-
-		/**
-		 * Path to public files, i.e. Javascript, CSS, images, etc.  The files in this path are sent directly to a user
-		 * without modifying or processing the contents.
-		 */
-		'public' => 'public'
-
-	),
-
-	/**
 	 * Routing configuration.
 	 */
 	'routes' => array(

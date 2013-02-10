@@ -11,7 +11,7 @@ namespace Sitegear\Core\Module\File;
 use Sitegear\Base\Module\AbstractConfigurableModule;
 use Sitegear\Base\Module\BootstrapModuleInterface;
 use Sitegear\Base\Module\DiscreteDataModuleInterface;
-use Sitegear\Base\View\Resources\ResourceLocations;
+use Sitegear\Base\Resources\ResourceLocations;
 use Sitegear\Core\Engine\Engine;
 use Sitegear\Util\ExtensionMimeTypeGuesser;
 use Sitegear\Util\LoggerRegistry;
@@ -59,7 +59,7 @@ class FileModule extends AbstractConfigurableModule implements BootstrapModuleIn
 	 */
 	public function load($selector) {
 		LoggerRegistry::debug(sprintf('FileModule loading data from "%s"', $selector));
-		$filename = $this->getEngine()->getSiteInfo()->getSiteRoot() . ltrim($selector, '/');
+		$filename = sprintf('%s/%s', $this->getEngine()->getSiteInfo()->getSiteRoot(), ltrim($selector, '/'));
 		return file_exists($filename) ? file_get_contents($filename) : null;
 	}
 
@@ -68,7 +68,7 @@ class FileModule extends AbstractConfigurableModule implements BootstrapModuleIn
 	 */
 	public function save($selector, $value) {
 		LoggerRegistry::debug(sprintf('FileModule saving data to "%s"', $selector));
-		$filename = $this->getEngine()->getSiteInfo()->getSiteRoot() . ltrim($selector, '/');
+		$filename = sprintf('%s/%s', $this->getEngine()->getSiteInfo()->getSiteRoot(), ltrim($selector, '/'));
 		mkdir(dirname($filename), 0777, true);
 		return file_put_contents($filename, $value) !== false;
 	}
@@ -78,7 +78,7 @@ class FileModule extends AbstractConfigurableModule implements BootstrapModuleIn
 	 */
 	public function upload($selector) {
 		LoggerRegistry::debug(sprintf('FileModule uploading data to "%s"', $selector));
-		$filename = $this->getEngine()->getSiteInfo()->getSiteRoot() . ltrim($selector, '/');
+		$filename = sprintf('%s/%s', $this->getEngine()->getSiteInfo()->getSiteRoot(), ltrim($selector, '/'));
 		mkdir(dirname($filename), 0777, true);
 		// TODO Implement me
 	}

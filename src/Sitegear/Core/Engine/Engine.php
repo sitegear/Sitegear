@@ -303,8 +303,8 @@ class Engine extends AbstractConfigurableEngine {
 	//-- Internal Methods --------------------
 
 	protected function createUserStorage($siteRoot, $environment) {
-		$userFilename = $siteRoot . self::DEFAULT_USER_JSON_FILE;
-		$environmentUserFilename = $siteRoot . str_replace('%environment%', $environment, self::DEFAULT_ENVIRONMENT_USER_JSON_FILE);
+		$userFilename = sprintf('%s/%s', $siteRoot, self::DEFAULT_USER_JSON_FILE);
+		$environmentUserFilename = sprintf('%s/%s', $siteRoot, str_replace('%environment%', $environment, self::DEFAULT_ENVIRONMENT_USER_JSON_FILE));
 		return new JsonFileUserStorage(is_file($environmentUserFilename) ? $environmentUserFilename : $userFilename);
 	}
 

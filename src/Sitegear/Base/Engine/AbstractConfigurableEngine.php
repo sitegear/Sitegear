@@ -14,6 +14,7 @@ use Sitegear\Base\Config\Processor\EngineTokenProcessor;
 use Sitegear\Base\Config\Processor\ConfigTokenProcessor;
 use Sitegear\Base\Config\ConfigLoader;
 use Sitegear\Base\Config\Container\SimpleConfigContainer;
+use Sitegear\Base\Resources\ResourceLocations;
 use Sitegear\Util\ExtensionMimeTypeGuesser;
 use Sitegear\Util\TypeUtilities;
 use Sitegear\Util\NameUtilities;
@@ -121,7 +122,7 @@ abstract class AbstractConfigurableEngine extends AbstractEngine implements Conf
 	 * @return null|string|array Filename, data array, etc.
 	 */
 	protected function defaults() {
-		return $this->getEngineRoot() . self::FILENAME_DEFAULTS;
+		return sprintf('%s/%s/%s', $this->getEngineRoot(), ResourceLocations::RESOURCES_DIRECTORY, self::FILENAME_DEFAULTS);
 	}
 
 	/**

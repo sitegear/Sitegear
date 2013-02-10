@@ -49,7 +49,7 @@ interface SitegearInfoProviderInterface {
 	public function getSitegearVersionIdentifier();
 
 	/**
-	 * Get the root file path of the Sitegear application framework source code (the "src/" directory).
+	 * Get the root file path of the Sitegear application framework source code (the "src" directory).
 	 *
 	 * @return mixed
 	 */

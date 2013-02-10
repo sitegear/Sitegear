@@ -119,7 +119,7 @@ interface EngineInterface extends ModuleResolverInterface, ModuleContainerInterf
 	/**
 	 * Get the root file path of the engine, which is the path containing the final implementation of this interface.
 	 *
-	 * @return string Absolute file path to the engine root.  This value always ends with a trailing slash ('/').
+	 * @return string Absolute file path to the engine root.
 	 */
 	public function getEngineRoot();
 
