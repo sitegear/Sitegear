@@ -1,0 +1,15 @@
+<?php
+/** @var \Sitegear\Core\View\View $view */
+/** @var \Sitegear\Ext\Module\Locations\Model\Item $item  */
+$item = $view['item'];
+echo $view->google()->map(
+	'#map',
+	$item->getMapdata(),
+	'AIzaSyDkWZiF7sdGsAbj1yM-VwUjeLI5HyiE9LU',
+	array(
+		array_merge($item->getMapdata(), array(
+			'name' => $item->getName()
+		))
+	),
+	true
+);

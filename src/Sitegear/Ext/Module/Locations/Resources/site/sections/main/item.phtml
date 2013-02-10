@@ -4,10 +4,13 @@
 /** @var \Sitegear\Ext\Module\Locations\Model\Item $item  */
 $item = $view['item'];
 $view->getStringsManager()->prepend('title', $view['title'])->prepend('title', $item->getName());
-?>
-<h1><?php echo $item->getName(); ?></h1>
-<?php
-echo $view->products('editable')->item(sprintf('%s/%s', $view['item-path'], $item->getUrlPath()));
 $linkUrl = sprintf('%s/%s/%s', $view['root-url'], $view['region-url'], $item->getRegion()->getUrlPath());
 ?>
-<p>See other locations in <a href="<?php echo $linkUrl; ?>"><?php echo $item->getRegion()->getName(); ?></a></p>
+<h1><?php echo $item->getName(); ?></h1>
+<?php echo $view->products('editable')->item(sprintf('%s/%s', $view['item-path'], $item->getUrlPath())); ?>
+
+<h2>Map</h2>
+<div id="map"></div>
+
+<h2>Nearby Locations</h2>
+<p>See other locations in <a href="<?php echo $linkUrl; ?>"><?php echo $item->getRegion()->getName(); ?></a>.</p>
