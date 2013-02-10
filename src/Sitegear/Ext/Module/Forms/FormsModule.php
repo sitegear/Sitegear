@@ -349,7 +349,6 @@ class FormsModule extends AbstractUrlMountableModule {
 				$fieldDefinition = $fields[$fieldSpec['field']];
 				if (isset($fieldDefinition['validators'])) {
 					$fieldConstraints = array();
-					//$fieldLabel = isset($fieldDefinition['label']) ? $fieldDefinition['label'] : $fieldDefinition['id'];
 					foreach ($fieldDefinition['validators'] as $validator) {
 						$fieldConstraints[] = TypeUtilities::buildTypeCheckedObject(
 							$this->getConstraintClassName($validator['constraint']),
@@ -358,6 +357,9 @@ class FormsModule extends AbstractUrlMountableModule {
 							null,
 							array( isset($validator['options']) ? $validator['options'] : null )
 						);
+						// The above is used to pass custom messages to the validation constraints, however this breaks
+						// the built-in translations.
+						// TODO Don't pass validation error messages directly; override the built-in translations.
 					}
 					switch (sizeof($fieldConstraints)) {
 						case 0:
