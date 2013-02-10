@@ -15,6 +15,9 @@ use Sitegear\Util\LoggerRegistry;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+
+use Doctrine\ORM\NoResultException;
 
 /**
  * LocationsModule allows display and management of geographical locations.  By default, it requires GoogleModule for
@@ -46,16 +49,50 @@ class LocationsModule extends AbstractUrlMountableModule {
 
 	//-- Page Controller Methods --------------------
 
-	public function indexController(ViewInterface $view, Request $request) {
+	/**
+	 * Display the top-level landing page for the locations module.
+	 *
+	 * @param \Sitegear\Base\View\ViewInterface $view
+	 */
+	public function indexController(ViewInterface $view) {
 		LoggerRegistry::debug('LocationsModule::indexController');
+		$this->applyViewDefaults($view);
 		$this->applyConfigToView('page.index', $view);
 		$view['regions'] = $this->getRepository('Region')->findByParent(null);
-		$view['title'] = $this->config('title');
-		$view['root-url'] = $this->getMountedUrl();
 	}
 
+	/**
+	 * Display a landing page for a region.
+	 *
+	 * @param \Sitegear\Base\View\ViewInterface $view
+	 * @param \Symfony\Component\HttpFoundation\Request $request
+	 */
+	public function regionController(ViewInterface $view, Request $request) {
+		LoggerRegistry::debug('LocationsModule::regionController');
+		$this->applyViewDefaults($view);
+		$this->applyConfigToView('page.region', $view);
+		$view['region'] = $this->getRepository('Region')->findOneByUrlPath($request->attributes->get('slug'));
+		$view['regions'] = $this->getRepository('Region')->findByParent($view['region']);
+		$view['items'] = $this->getRepository('Item')->findByRegion($view['region']);
+	}
+
+	/**
+	 * Display the details page for an individual location item.
+	 *
+	 * @param \Sitegear\Base\View\ViewInterface $view
+	 * @param \Symfony\Component\HttpFoundation\Request $request
+	 *
+	 * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+	 */
 	public function itemController(ViewInterface $view, Request $request) {
-		// TODO
+		LoggerRegistry::debug('LocationsModule::itemController');
+		$this->applyViewDefaults($view);
+		$this->applyConfigToView('page.item', $view);
+		try {
+			$view['item'] = $this->getRepository('Item')->findOneBy(array( 'urlPath' => $request->attributes->get('slug'), 'active' => true ));
+		} catch (NoResultException $e) {
+			throw new NotFoundHttpException('The requested product is not available.', $e);
+		}
 	}
 
 	//-- AbstractUrlMountableModule Methods --------------------
@@ -66,7 +103,8 @@ class LocationsModule extends AbstractUrlMountableModule {
 	protected function buildRoutes() {
 		$routes = new RouteCollection();
 		$routes->add('index', new Route($this->getMountedUrl()));
-		$routes->add('item', new Route(sprintf('%s/{slug}', $this->getMountedUrl())));
+		$routes->add('region', new Route(sprintf('%s/%s/{slug}', $this->getMountedUrl(), $this->config('routes.region'))));
+		$routes->add('item', new Route(sprintf('%s/%s/{slug}', $this->getMountedUrl(), $this->config('routes.item'))));
 		return $routes;
 	}
 
@@ -88,6 +126,20 @@ class LocationsModule extends AbstractUrlMountableModule {
 	}
 
 	//-- Internal Methods --------------------
+
+	/**
+	 * Apply view defaults that are used by all pages in the locations module.
+	 *
+	 * @param \Sitegear\Base\View\ViewInterface $view
+	 */
+	private function applyViewDefaults(ViewInterface $view) {
+		$view['title'] = $this->config('title');
+		$view['region-path'] = trim($this->config('region-path'), '/');
+		$view['item-path'] = trim($this->config('item-path'), '/');
+		$view['item-url'] = $this->config('routes.item');
+		$view['region-url'] = $this->config('routes.region');
+		$view['root-url'] = $this->getMountedUrl();
+	}
 
 	/**
 	 * Recursive method for navigation generation.

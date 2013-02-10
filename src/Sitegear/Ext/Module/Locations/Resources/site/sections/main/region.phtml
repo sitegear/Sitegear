@@ -1,0 +1,77 @@
+<?php
+/** @var \Sitegear\Core\View\View $view */
+$view->getStringsManager()->prepend('title', $view['title']);
+/** @var \Sitegear\Ext\Module\Locations\Model\Region $region */
+$region = $view['region'];
+$view->getStringsManager()->prepend('title', $region->getName());
+$excerptDecorator = sprintf('excerpt(%d, "%s")', $view['excerpt-length'], 'Region description not found.');
+?>
+<h1><?php echo $region->getName(); ?></h1>
+
+<?php echo $view->locations('editable')->item(sprintf('%s/%s', $view['region-path'], $region->getUrlPath())); ?>
+
+<?php
+if (empty($view['items'])) {
+	echo $view->locations()->emptyRegion();
+} else {
+	?>
+<section class="location-items-container">
+    <h2>Locations</h2>
+	<?php
+	foreach ($view['items'] as $item) { /** @var \Sitegear\Ext\Module\Locations\Model\Item $item */
+		$linkUrl = sprintf('%s/%s/%s', $view['root-url'], $view['item-url'], $item->getUrlPath());
+		$viewScript = sprintf('%s/%s', $view['item-path'], $item->getUrlPath());
+		?>
+        <section>
+            <h3><?php echo $item->getName(); ?></h3>
+            <p>
+				<?php echo $view->locations($excerptDecorator)->item($viewScript); ?>
+            </p>
+			<?php
+			if (isset($view['read-more'])) {
+				?>
+                <p class="read-more"><a href="<?php echo $linkUrl ?>"><?php echo $view['read-more']; ?></a></p>
+				<?php
+			}
+			?>
+        </section>
+		<?php
+	}
+	?>
+</section>
+<?php
+}
+?>
+
+<?php
+if (!empty($view['regions'])) {
+	?>
+<section class="location-regions-container">
+    <h2>Regions</h2>
+    <p>
+    The <?php echo $region->getName(); ?> category contains <?php echo number_format(sizeof($view['categories'])); ?> subcategories.
+    </p>
+	<?php
+	foreach ($view['regions'] as $subRegion) { /** @var \Sitegear\Ext\Module\Locations\Model\Region $subRegion */
+		$linkUrl = sprintf('%s/%s/%s', $view['root-url'], $view['category-url'], $subRegion->getUrlPath());
+		$viewScript = sprintf('%s/%s', $view['category-path'], $subRegion->getUrlPath());
+		?>
+        <section>
+            <h3><?php echo $subRegion->getName(); ?></h3>
+            <p>
+				<?php echo $view->locations($excerptDecorator)->item($viewScript); ?>
+            </p>
+			<?php
+			if (isset($view['read-more'])) {
+				?>
+                <p class="read-more"><a href="<?php echo $linkUrl ?>"><?php echo $view['read-more']; ?></a></p>
+				<?php
+			}
+			?>
+        </section>
+		<?php
+	}
+	?>
+</section>
+<?php
+}

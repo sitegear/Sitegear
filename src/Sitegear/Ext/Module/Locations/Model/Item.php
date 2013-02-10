@@ -11,7 +11,7 @@ namespace Sitegear\Ext\Module\Locations\Model;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * @Entity(repositoryClass="Sitegear\Ext\Module\Locations\Repository\ItemRepository")
+ * @Entity
  * @Table(name="locations_item")
  */
 class Item {
