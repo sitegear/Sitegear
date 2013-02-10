@@ -1,3 +1,5 @@
 <?php
 /** @var \Sitegear\Core\View\View $view */
-$view->getStringsManager()->prepend('title', 'Locations');
+$view->getStringsManager()->prepend('title', $view['title']);
+?>
+<h1><?php echo $view['title']; ?></h1>

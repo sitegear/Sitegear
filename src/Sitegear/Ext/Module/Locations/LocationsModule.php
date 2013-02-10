@@ -24,6 +24,10 @@ use Symfony\Component\Routing\RouteCollection;
  */
 class LocationsModule extends AbstractUrlMountableModule {
 
+	//-- Constants --------------------
+
+	const ENTITY_ALIAS = 'Locations';
+
 	//-- ModuleInterface Methods --------------------
 
 	/**
@@ -37,21 +41,17 @@ class LocationsModule extends AbstractUrlMountableModule {
 	 * {@inheritDoc}
 	 */
 	public function start() {
-		$this->getEngine()->doctrine()->getEntityManager()->getConfiguration()->addEntityNamespace('Locations', '\\Sitegear\\Ext\\Module\\Locations\\Model');
+		$this->getEngine()->doctrine()->getEntityManager()->getConfiguration()->addEntityNamespace(self::ENTITY_ALIAS, '\\Sitegear\\Ext\\Module\\Locations\\Model');
 	}
 
 	//-- Page Controller Methods --------------------
 
 	public function indexController(ViewInterface $view, Request $request) {
-//		LoggerRegistry::debug('LocationsModule::indexController');
-//		$this->applyConfigToView('page.index', $view);
-//		$itemCount = $this->getItemRepository()->getItemCount();
-//		$view['items'] = $this->getItemRepository()->selectLatestItems($request->query->has('more') ? 0 : intval($this->config('page.index.item-limit')));
-//		$view['item-count'] = $itemCount;
-//		$view['more'] = $request->query->has('more');
-//		$view['item-path'] = trim($this->config('item-path'), '/');
-//		$view['title'] = $this->config('title');
-//		$view['root-url'] = $this->getMountedUrl();
+		LoggerRegistry::debug('LocationsModule::indexController');
+		$this->applyConfigToView('page.index', $view);
+		$view['regions'] = $this->getRepository('Region')->findByParent(null);
+		$view['title'] = $this->config('title');
+		$view['root-url'] = $this->getMountedUrl();
 	}
 
 	public function itemController(ViewInterface $view, Request $request) {
@@ -74,17 +74,48 @@ class LocationsModule extends AbstractUrlMountableModule {
 	 * {@inheritDoc}
 	 */
 	protected function buildNavigationData($mode) {
-		// TODO Build navigation data
-		return array();
+		return $this->buildNavigationDataImpl($mode, intval($this->config('navigation.max-depth')));
 	}
 
 	//-- Internal Methods --------------------
 
 	/**
-	 * @return \Sitegear\Ext\Module\Locations\Repository\ItemRepository
+	 * Recursive method for navigation generation.
+	 *
+	 * @param int $mode
+	 * @param int $maxDepth
+	 * @param null|int|\Sitegear\Ext\Module\Locations\Model\Region $parent
+	 *
+	 * @return array
 	 */
-	protected function getItemRepository() {
-		return $this->getEngine()->doctrine()->getEntityManager()->getRepository('Locations:Item');
+	private function buildNavigationDataImpl($mode, $maxDepth, $parent=null) {
+		$result = array();
+		foreach ($this->getRepository('Region')->findByParent($parent) as $region) {
+			/** @var \Sitegear\Ext\Module\Locations\Model\Region $region */
+			$regionResult = array(
+				'url' => sprintf('%s/%s/%s', $this->getMountedUrl(), $this->config('routes.region'), $region->getUrlPath()),
+				'label' => $region->getName(),
+				// TODO Make this configurable
+				'tooltip' => sprintf('Find locations in "%s"', $region->getName())
+			);
+			if ($mode === self::NAVIGATION_DATA_MODE_EXPANDED || $maxDepth !== 1) { // >1 means more levels before the limit is reached, <=0 means no limit
+				$subRegions = $this->buildNavigationDataImpl($mode, max(0, $maxDepth - 1), $region);
+				if (!empty($subRegions)) {
+					$regionResult['children'] = $subRegions;
+				}
+			}
+			$result[] = $regionResult;
+		}
+		return $result;
+	}
+
+	/**
+	 * @param string $entity
+	 *
+	 * @return \Doctrine\ORM\EntityRepository
+	 */
+	private function getRepository($entity) {
+		return $this->getEngine()->doctrine()->getEntityManager()->getRepository(sprintf('%s:%s', self::ENTITY_ALIAS, $entity));
 	}
 
 }
