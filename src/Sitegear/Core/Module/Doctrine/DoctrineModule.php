@@ -9,8 +9,6 @@
 namespace Sitegear\Core\Module\Doctrine;
 
 use Sitegear\Base\Module\AbstractConfigurableModule;
-use Doctrine\DBAL\Types\Type;
-use Doctrine\ORM\Mapping\UnderscoreNamingStrategy;
 use Sitegear\Base\Module\DiscreteDataModuleInterface;
 use Sitegear\Util\NameUtilities;
 use Sitegear\Util\LoggerRegistry;
@@ -18,9 +16,11 @@ use Sitegear\Util\LoggerRegistry;
 use Symfony\Component\HttpFoundation\Request;
 
 use Doctrine\Common\EventManager;
+use Doctrine\ORM\Mapping\UnderscoreNamingStrategy;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Setup;
 use Doctrine\ORM\Events;
+use Doctrine\DBAL\Types\Type;
 
 /**
  * Wrapper around a Doctrine entity manager.
