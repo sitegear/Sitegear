@@ -11,35 +11,6 @@
  */
 return array(
 
-	/**
-	 * Validation configuration.
-	 */
-	'validators' => array(
-
-		/**
-		 * Check for non empty values (i.e. implement required fields).
-		 */
-		'not-empty' => array(
-			'class' => '\\Sitegear\\Ext\\Module\\Forms\\Validator\\NotEmptyValidator',
-			'arguments' => array(
-			),
-			'message-format' => 'Field "%field%" is mandatory, please complete this field',
-			'label-mask' => 'required'
-		),
-
-		/**
-		 * Check for values matching a given regular expression.
-		 */
-		'matches-regex' => array(
-			'class' => '\\Sitegear\\Ext\\Module\\Forms\\Validator\\RegularExpressionValidator',
-			'arguments' => array(
-				'pattern',
-				'regex'
-			),
-			'message-format' => 'Field "%field%" given invalid value, please use a valid %pattern%'
-		)
-	),
-
 	'constraints' => array(
 		'class-map' => array(
 		),
@@ -47,7 +18,10 @@ return array(
 			'\\Symfony\\Component\\Validator\\Constraints'
 		),
 		'class-name-prefix' => '',
-		'class-name-suffix' => ''
+		'class-name-suffix' => '',
+		'label-markers' => array(
+			'not-blank' => ' <span class="required-marker">*</span>'
+		)
 	),
 
 

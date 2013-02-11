@@ -311,16 +311,28 @@ class FormsModule extends AbstractUrlMountableModule {
 							if (!isset($field['mode'])) {
 								$field['mode'] = 'field';
 							}
+							// Allow fields to specify label markers.
+							if (!isset($field['label-markers'])) {
+								$field['label-markers'] = array();
+							} elseif (!is_array($field['label-markers'])) {
+								$field['label-markers'] = array( $field['label-markers'] );
+							}
+							// Allow field definitions to specify label markers.
 							$fieldDefinition = $form['fields'][$field['field']];
+							if (isset($fieldDefinition['label-markers'])) {
+								$field['label-markers'] = array_merge(
+									is_array($fieldDefinition['label-markers']) ? $fieldDefinition['label-markers'] : array( $fieldDefinition['label-markers'] ),
+									$field['label-markers']
+								);
+							}
+							// Allow validators to specify label markers.
 							if (isset($fieldDefinition['validators'])) {
-								// Allow validators to specify the label mask
 								foreach ($fieldDefinition['validators'] as $validatorSpec) {
-									if (!isset($field['label-mask'])) {
-										$validatorDefinition = $this->config(sprintf('validators.%s', $validatorSpec['constraint']));
-										if (isset($validatorDefinition['label-mask'])) {
-											$field['label-mask'] = $validatorDefinition['label-mask'];
-										}
-									}
+									$validatorMarkers = $this->config(sprintf('constraints.label-markers.%s', NameUtilities::convertToDashedLower($validatorSpec['constraint'])), array());
+									$field['label-markers'] = array_merge(
+										is_array($validatorMarkers) ? $validatorMarkers : array( $validatorMarkers ),
+										$field['label-markers']
+									);
 								}
 							}
 							$this->data[$formKey]['pages'][$pageIndex]['fieldsets'][$fieldsetIndex]['fields'][$fieldIndex] = $field;
