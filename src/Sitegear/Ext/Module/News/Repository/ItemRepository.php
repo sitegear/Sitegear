@@ -21,7 +21,7 @@ class ItemRepository extends EntityRepository {
 	 * @return integer
 	 */
 	public function getItemCount() {
-		return $this->_em->createQueryBuilder()
+		return $this->getEntityManager()->createQueryBuilder()
 				->select('count(ni)')
 				->from('News:Item', 'ni')
 				->getQuery()

@@ -21,7 +21,7 @@ class ItemRepository extends EntityRepository {
 	 * @return \Sitegear\Ext\Module\Products\Model\Item[]
 	 */
 	public function getActiveItemsInCategory($category) {
-		return $this->_em->createQueryBuilder()
+		return $this->getEntityManager()->createQueryBuilder()
 				->select('pi')
 				->from('Products:Item', 'pi')
 				->join('pi.categoryAssignments', 'pca')
