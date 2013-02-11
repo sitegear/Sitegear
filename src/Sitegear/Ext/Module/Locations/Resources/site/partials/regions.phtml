@@ -7,7 +7,7 @@
 $regions = $view['regions'];
 $excerptDecorator = sprintf('excerpt(%d, "%s")', $view['excerpt-length'], 'Region description not found.');
 if (empty($regions)) {
-	echo $view->locations()->pushTarget($view['no-regions'] ?: 'no-regions');
+	echo $view->locations()->item(sprintf('partials/%s', $view['no-regions'] ?: 'no-regions'));
 } else {
 ?>
 <section class="locations-region-container">
