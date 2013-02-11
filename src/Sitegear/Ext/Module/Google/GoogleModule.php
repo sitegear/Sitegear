@@ -71,7 +71,7 @@ class GoogleModule extends AbstractConfigurableModule {
 			$apiKey = $this->config('maps.api.key');
 		}
 		// TODO Allow other parameters to be specified in config / arguments
-		$view['apiScriptUrl'] = sprintf('http://%s%s?sensor=true&amp;libraries=geometry&amp;key=%s', $this->config('maps.api.host'), $this->config('maps.api.path'), $apiKey);
+		$view['apiScriptUrl'] = sprintf('http://%s/maps/api/js?sensor=true&amp;libraries=geometry&amp;key=%s', $this->config('maps.api.host'), $this->config('maps.api.path'), $apiKey);
 		$view['initialView'] = $initialView;
 		$view['markers'] = $markers ?: array();
 		$defaultOptions = array(
@@ -97,8 +97,8 @@ class GoogleModule extends AbstractConfigurableModule {
 	 */
 	public function geocodeLocation($address) {
 		LoggerRegistry::debug('GoogleModule geocoding location');
-		$key = $this->config('maps.account-key');
-		$url = sprintf('http://%s/maps/geo?output=json&key=%s&q=%s', $this->config('maps.host'), $key, urlencode($address));
+		$key = $this->config('maps.api.key');
+		$url = sprintf('http://%s/maps/geo?output=json&key=%s&q=%s', $this->config('maps.api.host'), $key, urlencode($address));
 		$data = json_decode(file_get_contents($url), true);
 		if (empty($data)) {
 			throw new \RuntimeException(sprintf('Could not geocode location "%s", empty geocode response', $address));

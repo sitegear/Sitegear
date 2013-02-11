@@ -40,7 +40,6 @@ return array(
 		 */
 		'api' => array(
 			'host' => 'maps.google.com.au',
-			'path' => '/maps/api/js',
 			'key' => null,
 		)
 	),
