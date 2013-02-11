@@ -9,6 +9,7 @@
 namespace Sitegear\Core\Module\Doctrine;
 
 use Sitegear\Base\Module\AbstractConfigurableModule;
+use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\Mapping\UnderscoreNamingStrategy;
 use Sitegear\Base\Module\DiscreteDataModuleInterface;
 use Sitegear\Util\NameUtilities;
@@ -64,17 +65,29 @@ class DoctrineModule extends AbstractConfigurableModule implements DiscreteDataM
 		LoggerRegistry::debug('DoctrineModule starting' . ($this->getEngine()->getEnvironmentInfo()->isDevMode() ? ' in dev mode' : ''));
 		$connectionConfig = $this->config('connection');
 		if (!empty($connectionConfig) && is_array($connectionConfig)) {
+			// Create the entity manager configuration.
 			$entityManagerConfig = Setup::createAnnotationMetadataConfiguration(
 				array( $this->getEngine()->getSitegearInfo()->getSitegearRoot() ),
 				$this->getEngine()->getEnvironmentInfo()->isDevMode()
 			);
+
+			// Use lowercase-underscore database naming convention.
 			$entityManagerConfig->setNamingStrategy(new UnderscoreNamingStrategy(CASE_LOWER));
+
+			// Setup table name prefix for shared hosting.
 			$eventManager = new EventManager();
 			$tableNamePrefix = $this->config('table-name-prefix');
 			if (strlen($tableNamePrefix) > 0) {
 				$eventManager->addEventListener(Events::loadClassMetadata, new DoctrineTablePrefix($tableNamePrefix));
 			}
+
+			// Create the entity manager using the configured connection parameters.
 			$this->entityManager = EntityManager::create($this->config('connection'), $entityManagerConfig, $eventManager);
+
+			// Register the JSON custom data type.
+			// TODO Make this configurable to register as many types as required
+			Type::addType('json', 'Sitegear\\Core\\Module\\Doctrine\\Types\\JsonType');
+			$this->entityManager->getConnection()->getDatabasePlatform()->registerDoctrineTypeMapping('JsonType', 'json');
 		} else {
 			throw new \DomainException('<h1>Incorrect or Missing Configuration</h1><p>You have attempted to use the Doctrine module in your site, but you have not provided all the required connection parameters in your configuration file.</p><p>Please rectify this by providing connection parameters ("driver", "dbname", plus normally "username" and "password") or disabling the Doctrine module.</p>');
 		}
