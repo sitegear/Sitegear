@@ -39,7 +39,12 @@ return array(
 		/**
 		 * URL path element under the mounted root URL, containing all location details pages.
 		 */
-		'item' => 'item'
+		'item' => 'item',
+
+		/**
+		 * URL path element under the mounted root URL, containing the search page.
+		 */
+		'search' => 'search'
 
 	),
 
@@ -81,7 +86,12 @@ return array(
 			/**
 			 * Text to use for "read more" links, null to disable completely (only have heading links).
 			 */
-			'read-more' => 'Read More &raquo;'
+			'read-more' => 'Read More &raquo;',
+
+			/**
+			 * Component to use when no regions are found.
+			 */
+			'no-regions' => 'no-regions'
 
 		),
 
@@ -95,11 +105,30 @@ return array(
 			/**
 			 * Text to use for "read more" links, null to disable completely (only have heading links).
 			 */
-			'read-more' => 'Read More &raquo;'
+			'read-more' => 'Read More &raquo;',
+
+			/**
+			 * Component to use when no child regions are found.
+			 */
+			'no-regions' => 'no-sub-regions'
 
 		),
 
 		'item' => array(
+
+		),
+
+		'search' => array(
+
+			/**
+			 * Number of characters to show in each item's preview.
+			 */
+			'excerpt-length' => 100,
+
+			/**
+			 * Text to use for "read more" links, null to disable completely (only have heading links).
+			 */
+			'read-more' => 'Read More &raquo;'
 
 		)
 	),
@@ -121,33 +150,33 @@ return array(
 			 */
 			'radius-options' => array(
 				array(
-					'value' => 1000,
+					'value' => 1,
 					'label' => '1km',
 					'zoom' => 15
 				),
 				array(
-					'value' => 5000,
+					'value' => 5,
 					'label' => '5km',
 					'zoom' => 12,
 					'default' => true
 				),
 				array(
-					'value' => 10000,
+					'value' => 10,
 					'label' => '10km',
 					'zoom' => 11
 				),
 				array(
-					'value' => 25000,
+					'value' => 25,
 					'label' => '25km',
 					'zoom' => 10
 				),
 				array(
-					'value' => 100000,
+					'value' => 100,
 					'label' => '100km',
 					'zoom' => 9
 				),
 				array(
-					'value' => 250000,
+					'value' => 250,
 					'label' => '250km',
 					'zoom' => 8
 				)

@@ -5,40 +5,6 @@
  */
 $view->getStringsManager()->prepend('title', $view['title']);
 $regionDecorator = sprintf('excerpt(%d, "%s")', $view['excerpt-length'], 'Region description not found.');
-?>
-<h1><?php echo $view['title']; ?></h1>
-
-<section class="locations-search-form-container">
-<?php echo $view->locations()->searchForm(); ?>
-</section>
-
-<section class="locations-region-container">
-<?php
-if (empty($view['regions'])) {
-	echo $view->locations()->noRegions();
-} else {
-?>
-<h2>Regions</h2>
-<?php
-	foreach ($view['regions'] as $region) {
-		$linkUrl = sprintf('%s/%s/%s', $view['root-url'], $view['region-url'], $region->getUrlPath());
-		$viewScript = sprintf('%s/%s', $view['region-path'], $region->getUrlPath());
-?>
-	<section>
-		<h3><?php echo $region->getName(); ?></h3>
-		<p>
-<?php echo $view->locations($regionDecorator)->item($viewScript); ?>
-		</p>
-<?php
-		if (isset($view['read-more'])) {
-?>
-		<p class="read-more"><a href="<?php echo $linkUrl ?>"><?php echo $view['read-more']; ?></a></p>
-<?php
-		}
-?>
-	</section>
-<?php
-	}
-}
-?>
-</section>
+echo sprintf('<h1>%s</h1>', $view['title']), PHP_EOL;
+echo $view->locations('element(section, class="locations-search-form-container")')->searchForm();
+echo $view->locations()->item('partials/regions');

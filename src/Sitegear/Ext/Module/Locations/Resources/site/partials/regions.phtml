@@ -1,0 +1,38 @@
+<?php
+/**
+ * @var \Sitegear\Core\View\View $view
+ * @var \Doctrine\Common\Collections\Collection $regions
+ * @var \Sitegear\Ext\Module\Locations\Model\Region $region
+ */
+$regions = $view['regions'];
+$excerptDecorator = sprintf('excerpt(%d, "%s")', $view['excerpt-length'], 'Region description not found.');
+if (empty($regions)) {
+	echo $view->locations()->pushTarget($view['no-regions'] ?: 'no-regions');
+} else {
+?>
+<section class="locations-region-container">
+	<h2>Regions</h2>
+<?php
+	foreach ($regions as $region) {
+		$linkUrl = sprintf('%s/%s/%s', $view['root-url'], $view['region-url'], $region->getUrlPath());
+		$viewScript = sprintf('%s/%s', $view['region-path'], $region->getUrlPath());
+?>
+	<section>
+		<h3><?php echo $region->getName(); ?></h3>
+		<p>
+<?php echo $view->locations($excerptDecorator)->item($viewScript); ?>
+		</p>
+<?php
+		if (isset($view['read-more'])) {
+?>
+		<p class="read-more"><a href="<?php echo $linkUrl ?>"><?php echo $view['read-more']; ?></a></p>
+<?php
+		}
+?>
+	</section>
+<?php
+	}
+?>
+</section>
+<?php
+}

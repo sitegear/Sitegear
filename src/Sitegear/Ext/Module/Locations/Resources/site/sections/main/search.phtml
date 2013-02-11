@@ -1,0 +1,8 @@
+<?php
+/**
+ * @var \Sitegear\Core\View\View $view
+ * @var \Sitegear\Ext\Module\Locations\Model\Item $item
+ */
+$view->getStringsManager()->prepend('title', $view['title']);
+echo sprintf('<h1>%s</h1>', $view['title']), PHP_EOL;
+echo $view->locations()->item('partials/items');

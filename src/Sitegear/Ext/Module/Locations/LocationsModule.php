@@ -71,7 +71,11 @@ class LocationsModule extends AbstractUrlMountableModule {
 		LoggerRegistry::debug('LocationsModule::regionController');
 		$this->applyViewDefaults($view);
 		$this->applyConfigToView('page.region', $view);
-		$view['region'] = $this->getRepository('Region')->findOneByUrlPath($request->attributes->get('slug'));
+		/** @var \Sitegear\Ext\Module\Locations\Model\Region $region */
+		$region = $this->getRepository('Region')->findOneByUrlPath($request->attributes->get('slug'));
+		$view['region'] = $region;
+		$view['regions'] = $region->getChildren();
+		$view['items'] = $region->getItems();
 	}
 
 	/**
@@ -101,12 +105,13 @@ class LocationsModule extends AbstractUrlMountableModule {
 	 */
 	public function searchController(ViewInterface $view, Request $request) {
 		LoggerRegistry::debug('LocationsModule::itemController');
-		$query = isset($params['query']) && !is_null($params['query']) ? $params['query'] : null;
-		$radius = isset($params['radius']) && !is_null($params['radius']) && is_numeric($params['radius']) ? intval($params['radius']) : $this->getDefaultRadius();
+		$this->applyViewDefaults($view);
+		$this->applyConfigToView('page.search', $view);
 		// TODO Another parameter, region, to restrict results to that region (and its children)
-		$location = $this->getEngine()->google()->geocodeLocation(sprintf($this->config('search.query-mask'), $query));
-		$items = $this->getRepository('Item')->findInRadius($location, $radius);
-
+		$query = sprintf($this->config('search.query-mask'), $request->query->get('query', null));
+		$location = $this->getEngine()->google()->geocodeLocation($query);
+		$radius = $request->query->get('radius', $this->getDefaultRadius());
+		$view['items'] = $this->getRepository('Item')->findInRadius($location, $radius);
 	}
 
 	//-- Component Controller Methods --------------------
@@ -137,6 +142,7 @@ class LocationsModule extends AbstractUrlMountableModule {
 		$routes->add('index', new Route($this->getMountedUrl()));
 		$routes->add('region', new Route(sprintf('%s/%s/{slug}', $this->getMountedUrl(), $this->config('routes.region'))));
 		$routes->add('item', new Route(sprintf('%s/%s/{slug}', $this->getMountedUrl(), $this->config('routes.item'))));
+		$routes->add('search', new Route(sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.search'))));
 		return $routes;
 	}
 
@@ -201,6 +207,19 @@ class LocationsModule extends AbstractUrlMountableModule {
 			$result[] = $regionResult;
 		}
 		return $result;
+	}
+
+	/**
+	 * @return int|null Get the default radius as configured.
+	 */
+	private function getDefaultRadius() {
+		$result = null;
+		foreach ($this->config('component.search-form.radius-options') as $option) {
+			if (isset($option['default']) && $option['default']) {
+				$result = $option['value'];
+			}
+		}
+		return $result ?: $this->config('component.search-form.radius-options.0.value');
 	}
 
 	/**
