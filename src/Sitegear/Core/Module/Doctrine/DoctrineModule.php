@@ -85,9 +85,10 @@ class DoctrineModule extends AbstractConfigurableModule implements DiscreteDataM
 			$this->entityManager = EntityManager::create($this->config('connection'), $entityManagerConfig, $eventManager);
 
 			// Register the JSON custom data type.
-			// TODO Make this configurable to register as many types as required
-			Type::addType('json', 'Sitegear\\Core\\Module\\Doctrine\\Types\\JsonType');
-			$this->entityManager->getConnection()->getDatabasePlatform()->registerDoctrineTypeMapping('JsonType', 'json');
+			foreach ($this->config('dbal.types') as $key => $className) {
+				Type::addType($key, $className);
+				$this->entityManager->getConnection()->getDatabasePlatform()->registerDoctrineTypeMapping(preg_replace('/^.*\\\\(.*?)$/', '$1', $className), $key);
+			}
 		} else {
 			throw new \DomainException('<h1>Incorrect or Missing Configuration</h1><p>You have attempted to use the Doctrine module in your site, but you have not provided all the required connection parameters in your configuration file.</p><p>Please rectify this by providing connection parameters ("driver", "dbname", plus normally "username" and "password") or disabling the Doctrine module.</p>');
 		}
