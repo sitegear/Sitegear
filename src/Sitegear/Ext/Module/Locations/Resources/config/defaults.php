@@ -128,7 +128,12 @@ return array(
 			/**
 			 * Text to use for "read more" links, null to disable completely (only have heading links).
 			 */
-			'read-more' => 'Read More &raquo;'
+			'read-more' => 'Read More &raquo;',
+
+			/**
+			 * Additional title text for the search page.
+			 */
+			'search-title' => 'Search'
 
 		)
 	),
