@@ -8,6 +8,10 @@ $regionDecorator = sprintf('excerpt(%d, "%s")', $view['excerpt-length'], 'Region
 ?>
 <h1><?php echo $view['title']; ?></h1>
 
+<section class="locations-search-form-container">
+<?php echo $view->locations()->searchForm(); ?>
+</section>
+
 <section class="locations-region-container">
 <?php
 if (empty($view['regions'])) {

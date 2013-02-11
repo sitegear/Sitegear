@@ -93,6 +93,40 @@ class LocationsModule extends AbstractUrlMountableModule {
 		}
 	}
 
+	/**
+	 * Perform a search for a given (named) location and display results within a specified radius.
+	 *
+	 * @param \Sitegear\Base\View\ViewInterface $view
+	 * @param \Symfony\Component\HttpFoundation\Request $request
+	 */
+	public function searchController(ViewInterface $view, Request $request) {
+		LoggerRegistry::debug('LocationsModule::itemController');
+		$query = isset($params['query']) && !is_null($params['query']) ? $params['query'] : null;
+		$radius = isset($params['radius']) && !is_null($params['radius']) && is_numeric($params['radius']) ? intval($params['radius']) : $this->getDefaultRadius();
+		// TODO Another parameter, region, to restrict results to that region (and its children)
+		$location = $this->getEngine()->google()->geocodeLocation(sprintf($this->config('search.query-mask'), $query));
+		$items = $this->getRepository('Item')->findInRadius($location, $radius);
+
+	}
+
+	//-- Component Controller Methods --------------------
+
+	/**
+	 * The location search form.
+	 *
+	 * @param ViewInterface $view
+	 * @param Request $request
+	 * @param string|null $query Previous query, to populate the value.
+	 * @param string|null $radius Previous radius selection, to populate the selected option.
+	 */
+	public function searchFormComponent(ViewInterface $view, Request $request, $query=null, $radius=null) {
+		$this->applyViewDefaults($view);
+		$this->applyConfigToView('component.search-form', $view);
+		$view['action-url'] = sprintf('%s/search', $this->getMountedUrl());
+		$view['query'] = $query;
+		$view['radius'] = $radius;
+	}
+
 	//-- AbstractUrlMountableModule Methods --------------------
 
 	/**

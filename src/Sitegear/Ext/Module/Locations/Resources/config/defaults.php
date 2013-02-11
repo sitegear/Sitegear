@@ -55,6 +55,17 @@ return array(
 
 	),
 
+	'search' => array(
+
+		/**
+		 * An sprintf() mask which allows addition of boilerplate to provided queries.  The single placeholder is
+		 * replaced by the query entered by the user.  For example "%s, Australia" will explicitly add ", Australia"
+		 * to the end of every query.
+		 */
+		'query-mask' => '%s'
+
+	),
+
 	/**
 	 * Page specific settings.
 	 */
@@ -91,6 +102,57 @@ return array(
 		'item' => array(
 
 		)
+	),
 
+	/**
+	 * Component specific settings.
+	 */
+	'component' => array(
+
+		'search-form' => array(
+
+			/**
+			 * Maximum number of results to show on the results page.
+			 */
+			'result-limit' => 10,
+
+			/**
+			 * List of options for the radius selector.
+			 */
+			'radius-options' => array(
+				array(
+					'value' => 1000,
+					'label' => '1km',
+					'zoom' => 15
+				),
+				array(
+					'value' => 5000,
+					'label' => '5km',
+					'zoom' => 12,
+					'default' => true
+				),
+				array(
+					'value' => 10000,
+					'label' => '10km',
+					'zoom' => 11
+				),
+				array(
+					'value' => 25000,
+					'label' => '25km',
+					'zoom' => 10
+				),
+				array(
+					'value' => 100000,
+					'label' => '100km',
+					'zoom' => 9
+				),
+				array(
+					'value' => 250000,
+					'label' => '250km',
+					'zoom' => 8
+				)
+			)
+		)
 	)
+
 );

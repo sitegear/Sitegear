@@ -1,0 +1,33 @@
+<?php
+/**
+ * @var \Sitegear\Core\View\View $view
+ *
+ * TODO Use forms module?
+ */
+?>
+<form name="location-search-form" id="location-search-form" action="<?php echo $view['action-url']; ?>" method="get">
+	<fieldset>
+		<div id="location-input-field">
+			<label for="query">Location:</label>
+			<input type="text" id="query" name="query" size="25" value="<?php echo $view['location-query']; ?>" class="text" />
+			<p class="comment">Be as specific as you like, just a postcode is fine.</p>
+		</div>
+		<div id="location-radius-field">
+			<label for="radius">Within:</label>
+			<select id="radius" name="radius">
+<?php
+$selectedRadius = $view['location-radius'];
+foreach ($view['radius-options'] as $radiusOption) {
+	$selected = is_null($selectedRadius) ? isset($radiusOption['default']) && $radiusOption['default'] : ($selectedRadius === $radiusOption['value']);
+?>
+				<option value="<?php echo $radiusOption['value']; ?>"<?php echo ($selected ? ' selected="selected"' : ''); ?>><?php echo $radiusOption['label']; ?></option>
+<?php
+}
+?>
+			</select>
+		</div>
+		<div id="location-search-button">
+			<input type="submit" value="Search" />
+		</div>
+	</fieldset>
+</form>

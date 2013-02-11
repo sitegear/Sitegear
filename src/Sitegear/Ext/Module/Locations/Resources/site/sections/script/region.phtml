@@ -8,8 +8,10 @@ $region = $view['region'];
 $locations = array();
 foreach ($region->getItems() as $item) {
 	$locations[] = array_merge(
-		$item->getMapdata(),
+		$item->getMapOptions(),
 		array(
+			'latitude' => $item->getLatitude(),
+			'longitude' => $item->getLongitude(),
 			'name' => $item->getName(),
 			'url' => sprintf('%s/%s/%s', $view['root-url'], $view['item-url'], $item->getUrlPath())
 		)
@@ -17,7 +19,13 @@ foreach ($region->getItems() as $item) {
 }
 echo $view->google()->map(
 	'#map',
-	$region->getMapdata(),
+	array_merge(
+		$region->getMapOptions(),
+		array(
+			'latitude' => $region->getLatitude(),
+			'longitude' => $region->getLongitude()
+		)
+	),
 	// TODO This is forcing the API key to be set in GoogleModule config, do we want this? Maybe it shouldn't even be a parameter here?
 	null,
 	$locations,

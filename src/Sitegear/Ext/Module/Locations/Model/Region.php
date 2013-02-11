@@ -51,10 +51,22 @@ class Region {
 	private $name;
 
 	/**
-	 * @var array
-	 * @Column(type="array", nullable=false)
+	 * @var float
+	 * @Column(type="decimal", precision=16, scale=10)
 	 */
-	private $mapdata;
+	private $latitude;
+
+	/**
+	 * @var float
+	 * @Column(type="decimal", precision=16, scale=10)
+	 */
+	private $longitude;
+
+	/**
+	 * @var array
+	 * @Column(type="json", nullable=false)
+	 */
+	private $mapOptions;
 
 	/**
 	 * @var \DateTime
@@ -147,17 +159,17 @@ class Region {
 	}
 
 	/**
-	 * @param array $mapdata
+	 * @param array $mapOptions
 	 */
-	public function setMapdata($mapdata) {
-		$this->mapdata = $mapdata;
+	public function setMapOptions($mapOptions) {
+		$this->mapOptions = $mapOptions;
 	}
 
 	/**
 	 * @return array
 	 */
-	public function getMapdata() {
-		return $this->mapdata;
+	public function getMapOptions() {
+		return $this->mapOptions;
 	}
 
 	/**
@@ -207,6 +219,34 @@ class Region {
 	 */
 	public function getParent() {
 		return $this->parent;
+	}
+
+	/**
+	 * @param float $latitude
+	 */
+	public function setLatitude($latitude) {
+		$this->latitude = $latitude;
+	}
+
+	/**
+	 * @return float
+	 */
+	public function getLatitude() {
+		return $this->latitude;
+	}
+
+	/**
+	 * @param float $longitude
+	 */
+	public function setLongitude($longitude) {
+		$this->longitude = $longitude;
+	}
+
+	/**
+	 * @return float
+	 */
+	public function getLongitude() {
+		return $this->longitude;
 	}
 
 }
