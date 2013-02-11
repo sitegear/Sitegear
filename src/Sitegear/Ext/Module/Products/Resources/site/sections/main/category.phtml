@@ -15,7 +15,7 @@ if (empty($view['items'])) {
 	echo $view->products()->emptyCategory();
 } else {
 ?>
-<section class="product-items-container">
+<section class="products-items-container">
 	<h2>Products</h2>
 <?php
 	foreach ($view['items'] as $item) { /** @var \Sitegear\Ext\Module\Products\Model\Item $item */
@@ -46,7 +46,7 @@ if (empty($view['items'])) {
 <?php
 if (!empty($view['categories'])) {
 ?>
-<section class="product-categories-container">
+<section class="products-categories-container">
 	<h2>Subcategories</h2>
 	<p>
 	The <?php echo $category->getName(); ?> category contains <?php echo number_format(sizeof($view['categories'])); ?> subcategories.

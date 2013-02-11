@@ -5,7 +5,7 @@ $categoryDecorator = sprintf('excerpt(%d, "%s")', $view['excerpt-length'], 'Cate
 ?>
 <h1><?php echo $view['title']; ?></h1>
 
-<section class="product-categories-container">
+<section class="products-categories-container">
 <?php
 if (empty($view['categories'])) {
 	echo $view->products()->noCategories();

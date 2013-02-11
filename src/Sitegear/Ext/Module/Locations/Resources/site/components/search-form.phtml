@@ -7,12 +7,11 @@
 ?>
 <form name="location-search-form" id="location-search-form" action="<?php echo $view['action-url']; ?>" method="get">
 	<fieldset>
-		<div id="location-input-field">
+		<div class="field" id="location-input-field">
 			<label for="query">Location:</label>
 			<input type="text" id="query" name="query" size="25" value="<?php echo $view['location-query']; ?>" class="text" />
-			<p class="comment">Be as specific as you like, just a postcode is fine.</p>
 		</div>
-		<div id="location-radius-field">
+		<div class="field" id="location-radius-field">
 			<label for="radius">Within:</label>
 			<select id="radius" name="radius">
 <?php
@@ -26,7 +25,7 @@ foreach ($view['radius-options'] as $radiusOption) {
 ?>
 			</select>
 		</div>
-		<div id="location-search-button">
+		<div class="buttons" id="location-search-button">
 			<input type="submit" value="Search" />
 		</div>
 	</fieldset>

@@ -10,7 +10,7 @@ if (empty($regions)) {
 	echo $view->locations()->item(sprintf('partials/%s', $view['no-regions'] ?: 'no-regions'));
 } else {
 ?>
-<section class="locations-region-container">
+<section class="locations-regions-container">
 	<h2>Regions</h2>
 <?php
 	foreach ($regions as $region) {

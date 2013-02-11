@@ -10,7 +10,7 @@ if (empty($items)) {
 	echo $view->locations()->item(sprintf('partials/%s', $view['no-items'] ?: 'no-items'));
 } else {
 ?>
-<section class="locations-item-container">
+<section class="locations-items-container">
     <h2>Locations</h2>
 <?php
 	foreach ($items as $item) {
