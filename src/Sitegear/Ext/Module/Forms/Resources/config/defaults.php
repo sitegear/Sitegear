@@ -85,13 +85,6 @@ return array(
 			'fieldset-attributes' => array(),
 
 			/**
-			 * Attributes for the field container element.
-			 */
-			'field-attributes' => array(
-				'class' => 'field'
-			),
-
-			/**
 			 * Attributes for the buttons container element.
 			 */
 			'buttons-attributes' => array(
@@ -107,6 +100,25 @@ return array(
 			 * Reset button text, or null to use the browser default, or false to not show the reset button.
 			 */
 			'reset-button' => 'Reset'
+
+		),
+
+		/**
+		 * Default configuration for the field wrapper elements.
+		 */
+		'field-wrapper' => array(
+
+			/**
+			 * Element to use for wrappers.
+			 */
+			'element' => 'div',
+
+			/**
+			 * Attributes for the field container element.
+			 */
+			'field-attributes' => array(
+				'class' => 'field'
+			)
 
 		)
 	)

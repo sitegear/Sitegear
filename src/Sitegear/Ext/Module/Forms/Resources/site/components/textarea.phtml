@@ -10,5 +10,4 @@ $attributes = array_merge(
 if (!isset($attributes['id'])) {
 	$attributes['id'] = sprintf('%s%s', $view['form-id-prefix'], $view['name']);
 }
-?>
-<textarea<?php echo \Sitegear\Util\HtmlUtilities::attributes($attributes); ?>><?php echo $view['value']; ?></textarea>
+echo sprintf('<textarea%s>%s</textarea>', \Sitegear\Util\HtmlUtilities::attributes($attributes), $view['value']), PHP_EOL;

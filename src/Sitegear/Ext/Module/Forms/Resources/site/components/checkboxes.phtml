@@ -14,10 +14,8 @@ $attributes = array_merge(
 if (!isset($attributes['id'])) {
 	$attributes['id'] = sprintf('%s%s', $view['form-id-prefix'], $view['name']);
 }
-?>
-<span id="<?php echo $attributes['id']; ?>" class="ui-helper-clearfix">
-	<input type="hidden" name="<?php echo $view['name'] ?>" value="" />
-<?php
+echo sprintf('<span id="%s" class="ui-helper-clearfix">', $attributes['id']), PHP_EOL;
+echo sprintf('<input type="hidden" name="%s" value="" />', $view['name']), PHP_EOL;
 foreach ($field['values'] as $valueIndex => $valueSpec) {
 	$elementAttributes = array_merge(
 		$attributes,
@@ -36,9 +34,6 @@ foreach ($field['values'] as $valueIndex => $valueSpec) {
 	if ($valueSpec['value'] === $view['value']) {
 		$elementAttributes['checked'] = 'checked';
 	}
-?>
-	<input<?php echo \Sitegear\Util\HtmlUtilities::attributes($elementAttributes); ?> /><label class="checkbox-label" for="<?php echo $elementAttributes['id']; ?>"><?php echo $valueSpec['label']; ?></label>
-<?php
+	echo sprintf('<input%s /><label class="checkbox-label" for="%s">%s</label> ', \Sitegear\Util\HtmlUtilities::attributes($elementAttributes), $elementAttributes['id'], $valueSpec['label']), PHP_EOL;
 }
-?>
-</span>
+echo '</span>', PHP_EOL;

@@ -11,16 +11,11 @@ $attributes = array_merge(
 if (!isset($attributes['id'])) {
 	$attributes['id'] = sprintf('%s%s', $view['form-id-prefix'], $view['name']);
 }
-?>
-<select<?php echo \Sitegear\Util\HtmlUtilities::attributes($attributes); ?>>
-<?php
+echo sprintf('<select%s>', \Sitegear\Util\HtmlUtilities::attributes($attributes)), PHP_EOL;
 foreach ($field['values'] as $value => $label) {
 	$labelText = is_array($label) ? $label['label'] : $label;
 	$attributes = (is_array($label) && isset($label['attributes'])) ? $label['attributes'] : array();
 	$attributes['value'] = $value;
-?>
-	<option<?php echo \Sitegear\Util\HtmlUtilities::attributes($attributes); ?>><?php echo $labelText; ?></option>
-<?php
+	echo sprintf('<option%s>%s</option>', \Sitegear\Util\HtmlUtilities::attributes($attributes), $labelText);
 }
-?>
-</select>
+echo '</select>', PHP_EOL;

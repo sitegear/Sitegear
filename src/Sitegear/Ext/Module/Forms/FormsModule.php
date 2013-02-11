@@ -154,11 +154,26 @@ class FormsModule extends AbstractUrlMountableModule {
 		$currentPage = 0;
 		$view['current-page'] = $currentPage;
 		$view['page-count'] = sizeof($form['pages']);
-		$view['form-name'] = $formKey;
+		$view['form-key'] = $formKey;
 		$view['page'] = $form['pages'][$currentPage];
-		$view['fields'] = $form['fields'];
 		$view['action-url'] = sprintf('%s/%s', $this->getMountedUrl(), $formKey);
 		$view['form-url'] = ltrim($request->getPathInfo(), '/');
+	}
+
+	/**
+	 * Display a field wrapper, with its label and the relevant form input element.
+	 *
+	 * @param \Sitegear\Base\View\ViewInterface $view
+	 * @param string $formKey
+	 * @param array $field
+	 */
+	public function fieldWrapperComponent(ViewInterface $view, $formKey, array $field) {
+		LoggerRegistry::debug('FormsModule::fieldWrapperComponent');
+		$this->applyConfigToView('components.field-wrapper', $view);
+		$form = $this->getData($formKey);
+		$view['form-key'] = $formKey;
+		$view['fields'] = $form['fields'];
+		$view['field'] = $field;
 	}
 
 	/**

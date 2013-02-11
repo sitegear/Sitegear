@@ -1,0 +1,17 @@
+<?php
+/** @var \Sitegear\Core\View\View $view */
+$field = $view['field'];
+$fieldName = $field['field'];
+$formKey = $view['form-key'];
+$fieldDefinition = $view['fields'][$fieldName];
+$component = \Sitegear\Util\NameUtilities::convertToCamelCase($fieldDefinition['component']);
+$fieldError = $view->getEngine()->forms()->extractFieldSessionData($formKey, '['.$fieldName.']', 'violation');
+$fieldValue = $view->getEngine()->forms()->extractFieldSessionData($formKey, $fieldName, 'value', $fieldDefinition['default']);
+$labelMaskKey = isset($field['label-mask']) ? $field['label-mask'] : '_default';
+echo sprintf('<%s%s>', $view['element'], \Sitegear\Util\HtmlUtilities::attributes(array_merge($view['field-attributes'], isset($fieldDefinition['field-attributes']) ? $fieldDefinition['field-attributes'] : array()))), PHP_EOL;
+echo sprintf('<label for="%s">%s</label>', $fieldName, $fieldDefinition['label']), PHP_EOL;
+if (!empty($fieldError)) {
+	echo sprintf('<span class="error-message">%s</span>', $fieldError);
+}
+echo $field['mode'] === 'display' ? $fieldValue : $view->forms()->$component($fieldName, $fieldDefinition, $fieldValue);
+echo sprintf('</%s>', $view['element']), PHP_EOL;

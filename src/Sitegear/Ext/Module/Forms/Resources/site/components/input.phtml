@@ -14,5 +14,4 @@ $attributes = array_merge(
 if (!isset($attributes['id'])) {
 	$attributes['id'] = sprintf('%s%s', $view['form-id-prefix'], $view['name']);
 }
-?>
-<input<?php echo \Sitegear\Util\HtmlUtilities::attributes($attributes); ?> />
+echo sprintf('<input%s>', \Sitegear\Util\HtmlUtilities::attributes($attributes)), PHP_EOL;
