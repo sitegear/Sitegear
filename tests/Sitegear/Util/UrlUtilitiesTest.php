@@ -65,7 +65,7 @@ class UrlUtilitiesTest extends AbstractSitegearTestCase {
 		$this->assertEquals(1, preg_match(UrlUtilities::compileWildcardUrl('??'), '/'));
 		$this->assertEquals(0, preg_match(UrlUtilities::compileWildcardUrl('??'), '/foo'));
 		$this->assertEquals(1, preg_match(UrlUtilities::compileWildcardUrl('???'), '/'));
-		$this->assertEquals(0, preg_match(UrlUtilities::compileWildcardUrl('???'), '/foo'));
+		$this->assertEquals(1, preg_match(UrlUtilities::compileWildcardUrl('???'), '/foo'));
 		$this->assertEquals(1, preg_match(UrlUtilities::compileWildcardUrl('????'), '/'));
 		$this->assertEquals(1, preg_match(UrlUtilities::compileWildcardUrl('????'), '/foo'));
 
