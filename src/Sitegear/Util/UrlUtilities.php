@@ -89,7 +89,7 @@ final class UrlUtilities {
 		$regex = str_replace('+', '.+', $regex);
 		$regex = str_replace('?', '.?', $regex);
 		$regex = str_replace('!', '(?:\\/.*)?', $regex);
-		if ($wildcardUrl[0] !== '!') {
+		if ($wildcardUrl[0] !== '!' && $wildcardUrl[0] !== '/') {
 			$regex = '\\/' . $regex;
 		}
 		return sprintf('/^%s$/', $regex);
