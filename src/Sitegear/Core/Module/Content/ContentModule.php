@@ -51,13 +51,15 @@ class ContentModule extends AbstractUrlMountableModule {
 
 	/**
 	 * Doctype declaration and optional XML declaration.
+	 *
+	 * @param ViewInterface $view
+	 * @param string $html
+	 * @param boolean $xml
 	 */
-	public function doctypeComponent(ViewInterface $view, $html=null, $xml=false) {
+	public function doctypeComponent(ViewInterface $view, $html, $xml=false) {
 		LoggerRegistry::debug('ContentModule::doctypeComponent');
-		$xml = $xml ?: $this->config('view.page.doctype.xml-spec');
-		$view['xml-spec'] = $this->getEngine()->config('view.page.doctype.display-xml-spec') ? $this->xmlSpec($xml) : '';
-		$html = $html ?: $this->config('view.page.doctype.html-spec');
-		$view['doctype-spec'] = $this->getEngine()->config('view.page.doctype.display-doctype') ? $this->doctypeSpec($html) : '';
+		$view['doctype-spec'] = $this->doctypeSpec($html);
+		$view['xml-spec'] = $this->xmlSpec($xml);
 	}
 
 	/**
@@ -154,7 +156,7 @@ class ContentModule extends AbstractUrlMountableModule {
 	 *
 	 * @return string Document type declaration tag.
 	 */
-	private function doctypeSpec($spec=null) {
+	private function doctypeSpec($spec) {
 		switch (strtolower($spec)) {
 			case 'html4':
 			case 'html4-strict':
@@ -188,7 +190,7 @@ class ContentModule extends AbstractUrlMountableModule {
 	 *
 	 * @return string
 	 */
-	private function xmlSpec($xml=false) {
+	private function xmlSpec($xml) {
 		return $xml ? '<?xml version="1.0" encoding="utf-8" ?>' . PHP_EOL : '';
 	}
 
