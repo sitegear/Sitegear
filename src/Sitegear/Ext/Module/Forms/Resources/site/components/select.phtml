@@ -4,7 +4,7 @@ $field = $view['field'];
 $attributes = array_merge(
 	isset($field['attributes']) ? $field['attributes'] : array(),
 	array(
-		'name' => $field['name'],
+		'name' => $view['name'],
 		'value' => $view['value']
 	)
 );
