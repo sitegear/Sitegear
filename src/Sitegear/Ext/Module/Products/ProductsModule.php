@@ -57,7 +57,7 @@ class ProductsModule extends AbstractUrlMountableModule implements PurchaseItemP
 		$result = null;
 		switch ($type) {
 			case 'item':
-				$result = $this->getRepository('item')->find($id)->getName();
+				$result = $this->getRepository('Item')->find($id)->getName();
 				break;
 			default:
 				throw new \InvalidArgumentException(sprintf('ProductsModule encountered unknown type "%s" when retrieving label for purchase item', $type));
@@ -72,12 +72,20 @@ class ProductsModule extends AbstractUrlMountableModule implements PurchaseItemP
 		$result = array();
 		switch ($type) {
 			case 'item':
-				foreach ($this->getRepository('item')->find($id)->getAttributeAssignments() as $assignment) { /** @var \Sitegear\Ext\Module\Products\Model\AttributeAssignment $assignment */
+				foreach ($this->getRepository('Item')->find($id)->getAttributeAssignments() as $assignment) { /** @var \Sitegear\Ext\Module\Products\Model\AttributeAssignment $assignment */
 					$options = array();
 					foreach ($assignment->getAttribute()->getOptions() as $option) { /** @var \Sitegear\Ext\Module\Products\Model\AttributeOption $option */
-						$options[$option->getLabel()] = $option->getValue();
+						$options[] = array(
+							'id' => $option->getId(),
+							'value' => $option->getValue(),
+							'label' => $option->getLabel()
+						);
 					}
-					$result[$assignment->getAttribute()->getLabel()] = $options;
+					$result[] = array(
+						'id' => $assignment->getAttribute()->getId(),
+						'label' => $assignment->getAttribute()->getLabel(),
+						'options' => $options
+					);
 				}
 				break;
 			default:

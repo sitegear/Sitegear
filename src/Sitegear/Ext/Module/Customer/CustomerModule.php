@@ -9,6 +9,7 @@
 namespace Sitegear\Ext\Module\Customer;
 
 use Sitegear\Base\Module\AbstractUrlMountableModule;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Sitegear\Base\Module\PurchaseItemProviderModuleInterface;
 use Sitegear\Base\View\ViewInterface;
 use Sitegear\Util\LoggerRegistry;
@@ -70,12 +71,15 @@ class CustomerModule extends AbstractUrlMountableModule {
 			}
 		}
 		$this->addTrolleyItem($request->request->get('module'), $request->request->get('type'), $request->request->get('id'), $attributeValues, $request->request->get('qty'));
+		$targetUrl = $request->request->get('form-url');
+		return new RedirectResponse($request->getUriForPath('/' . $targetUrl));
 	}
 
 	//-- Component Controller Methods --------------------
 
 	public function trolleyFormComponent(ViewInterface $view, $moduleName, $type, $id) {
 		$module = $this->getPurchaseItemProviderModule($moduleName);
+		$view['root-url'] = $this->getMountedUrl();
 		$view['module'] = $moduleName;
 		$view['type'] = $type;
 		$view['id'] = $id;
@@ -115,7 +119,7 @@ class CustomerModule extends AbstractUrlMountableModule {
 		$data = $this->getTrolleyData();
 		$matched = false;
 		foreach ($data as $index => $record) {
-			if (($record['module'] === $item['module']) && ($record['type'] === $item['type']) && ($record['attributes'] === $item['attributes'])) {
+			if (($record['module'] === $moduleName) && ($record['type'] === $type) && ($record['attribute-values'] === $attributeValues)) {
 				$data[$index]['qty'] += $item['qty'];
 				$matched = true;
 			}
@@ -137,7 +141,7 @@ class CustomerModule extends AbstractUrlMountableModule {
 	}
 
 	protected function getTrolleyData() {
-		return $this->getEngine()->getSession()->get(self::SESSION_KEY_TROLLEY);
+		return $this->getEngine()->getSession()->get(self::SESSION_KEY_TROLLEY, array());
 	}
 
 	protected function setTrolleyData(array $data) {

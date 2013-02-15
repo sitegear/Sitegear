@@ -8,19 +8,22 @@ $fieldDefinitions = array(
 		'component' => 'input',
 		'attributes' => array(
 			'type' => 'hidden'
-		)
+		),
+		'default' => $view['module']
 	),
 	'type' => array(
 		'component' => 'input',
 		'attributes' => array(
 			'type' => 'hidden'
-		)
+		),
+		'default' => $view['type']
 	),
 	'id' => array(
 		'component' => 'input',
 		'attributes' => array(
 			'type' => 'hidden'
-		)
+		),
+		'default' => $view['id']
 	)
 );
 $fields = array(
@@ -30,20 +33,25 @@ $fields = array(
 );
 
 // Every item attribute is an additional field in the form.
-foreach ($view['attribute-definitions'] as $name => $attribute) {
+foreach ($view['attribute-definitions'] as $attribute) { /** @var \Sitegear\Ext\Module\Products\Model\Attribute $attribute */
 	$component = 'select'; // TODO Others
 	$default = ''; // TODO Default value
 	// TODO Configurable text and sprintf() format mask.
 	$values = array( '' => 'Please Select...' );
-	foreach ($attribute as $label => $value) {
-		$values[$value] = sprintf('%s - $%.2f', $label, $value / 100);
+	foreach ($attribute['options'] as $option) {
+		$values[$option['id']] = sprintf('%s - $%.2f', $option['label'], $option['value'] / 100);
 	}
+	$name = sprintf('attr_%s', $attribute['id']);
 	$fieldDefinitions[$name] = array(
 		'component' => $component,
-		'name' => $name,
-		'label' => $name,
+		'label' => $attribute['label'],
 		'default' => $default,
-		'values' => $values
+		'values' => $values,
+		'validators' => array(
+			array(
+				'constraint' => 'not-blank'
+			)
+		)
 	);
 	$fields[] = $name;
 }
@@ -53,7 +61,8 @@ foreach ($view['attribute-definitions'] as $name => $attribute) {
 $fieldDefinitions['qty'] = array(
 	'component' => 'input',
 	// TODO Configurable label
-	'label' => 'Quantity'
+	'label' => 'Quantity',
+	'default' => 1
 );
 $fields[] = 'qty';
 
