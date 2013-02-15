@@ -144,11 +144,16 @@ class FormsModule extends AbstractUrlMountableModule {
 	 *
 	 * @param \Sitegear\Base\View\ViewInterface $view
 	 * @param \Symfony\Component\HttpFoundation\Request $request
-	 * @param string $formKey
+	 * @param string $formKey Unique key of the form, used for session storage and also is the key used to retrieve the
+	 *   form data, if it is not supplied directly.
+	 * @param array|null $form Overrides the data from the data file(s) in its entirety.
 	 */
-	public function formComponent(ViewInterface $view, Request $request, $formKey) {
+	public function formComponent(ViewInterface $view, Request $request, $formKey, array $form=null) {
 		LoggerRegistry::debug('FormsModule::formComponent');
 		$this->applyConfigToView('components.form', $view);
+		if (is_array($form) && !empty($form)) {
+			$this->data[$formKey] = $form;
+		}
 		$form = $this->getData($formKey);
 		// TODO Multiple pages
 		$currentPage = 0;
@@ -157,7 +162,12 @@ class FormsModule extends AbstractUrlMountableModule {
 		$view['form-key'] = $formKey;
 		$view['field-definitions'] = $form['fields'];
 		$view['page'] = $form['pages'][$currentPage];
-		$view['action-url'] = sprintf('%s/%s', $this->getMountedUrl(), $formKey);
+		foreach (array( 'attributes', 'fieldset-attributes', 'submit-button', 'reset-button' ) as $key) {
+			if (isset($form[$key])) {
+				$view[$key] = $form[$key];
+			}
+		}
+		$view['action-url'] = isset($form['action-url']) ? $form['action-url'] : sprintf('%s/%s', $this->getMountedUrl(), $formKey);
 		$view['form-url'] = ltrim($request->getPathInfo(), '/');
 	}
 
