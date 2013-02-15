@@ -10,6 +10,7 @@ $attributes = array_merge($view['attributes'], array(
 // TODO Merge "class" attributes properly
 echo sprintf('<form%s>', \Sitegear\Util\HtmlUtilities::attributes($attributes)), PHP_EOL;
 echo $view->forms()->input('form-url', array( 'attributes' => array( 'type' => 'hidden' ) ), $view['form-url']);
+$fieldDefinitions = $view['field-definitions'];
 foreach ($view['page']['fieldsets'] as $fieldset) {
 	$fieldsetAttributes = array_merge($view['fieldset-attributes'], $fieldset['attributes']);
 	echo sprintf('<fieldset%s>', \Sitegear\Util\HtmlUtilities::attributes($fieldsetAttributes)), PHP_EOL;

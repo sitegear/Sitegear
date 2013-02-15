@@ -155,6 +155,7 @@ class FormsModule extends AbstractUrlMountableModule {
 		$view['current-page'] = $currentPage;
 		$view['page-count'] = sizeof($form['pages']);
 		$view['form-key'] = $formKey;
+		$view['field-definitions'] = $form['fields'];
 		$view['page'] = $form['pages'][$currentPage];
 		$view['action-url'] = sprintf('%s/%s', $this->getMountedUrl(), $formKey);
 		$view['form-url'] = ltrim($request->getPathInfo(), '/');
@@ -164,15 +165,14 @@ class FormsModule extends AbstractUrlMountableModule {
 	 * Display a field wrapper, with its label and the relevant form input element.
 	 *
 	 * @param \Sitegear\Base\View\ViewInterface $view
-	 * @param string $formKey
-	 * @param array $field
+	 * @param string $formKey Note this is only used here as a session key.
+	 * @param array $field Must include 'field', 'mode' and 'definition' keys.  The 'definition' key must be an
+	 *   associative array with at least keys 'component', 'label', and 'default'.
 	 */
 	public function fieldWrapperComponent(ViewInterface $view, $formKey, array $field) {
 		LoggerRegistry::debug('FormsModule::fieldWrapperComponent');
 		$this->applyConfigToView('components.field-wrapper', $view);
-		$form = $this->getData($formKey);
 		$view['form-key'] = $formKey;
-		$view['fields'] = $form['fields'];
 		$view['field'] = $field;
 	}
 
@@ -299,7 +299,7 @@ class FormsModule extends AbstractUrlMountableModule {
 					if (!isset($field['default'])) {
 						$field['default'] = null;
 					}
-					$this->data[$formKey]['fields'][$fieldIndex] = $field;
+					$form['fields'][$fieldIndex] = $this->data[$formKey]['fields'][$fieldIndex] = $field;
 				}
 				// Normalise page and fieldset definitions and field specifications
 				foreach ($form['pages'] as $pageIndex => $page) {
@@ -335,6 +335,9 @@ class FormsModule extends AbstractUrlMountableModule {
 									);
 								}
 							}
+							// Add the definition to the field specification.
+							$field['definition'] = $fieldDefinition;
+							// Merge back.
 							$this->data[$formKey]['pages'][$pageIndex]['fieldsets'][$fieldsetIndex]['fields'][$fieldIndex] = $field;
 						}
 						if (!isset($fieldset['attributes'])) {
