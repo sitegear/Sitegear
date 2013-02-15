@@ -1,15 +1,35 @@
 <?php
 /** @var \Sitegear\Core\View\View $view */
-$hidden = array( 'attributes' => array( 'type' => 'hidden' ));
-?>
-<form name="add-trolley-item" id="add-trolley-item">
-<?php
-echo $view->forms()->input('module', $hidden, $view['module']);
-echo $view->forms()->input('type', $hidden, $view['type']);
-echo $view->forms()->input('id', $hidden, $view['id']);
-?>
-	<fieldset>
-<?php
+
+// The first three fields are fixed, and they are all hidden fields.  This carries the information needed to determine
+// the unit price and other details of the project, once it is submitted to the Customer Module.
+$fieldDefinitions = array(
+	'module' => array(
+		'component' => 'input',
+		'attributes' => array(
+			'type' => 'hidden'
+		)
+	),
+	'type' => array(
+		'component' => 'input',
+		'attributes' => array(
+			'type' => 'hidden'
+		)
+	),
+	'id' => array(
+		'component' => 'input',
+		'attributes' => array(
+			'type' => 'hidden'
+		)
+	)
+);
+$fields = array(
+	'module',
+	'type',
+	'id'
+);
+
+// Every item attribute is an additional field in the form.
 foreach ($view['attribute-definitions'] as $name => $attribute) {
 	$component = 'select'; // TODO Others
 	$default = ''; // TODO Default value
@@ -18,19 +38,39 @@ foreach ($view['attribute-definitions'] as $name => $attribute) {
 	foreach ($attribute as $label => $value) {
 		$values[$value] = sprintf('%s - $%.2f', $label, $value / 100);
 	}
-	$fieldDefinition = array(
+	$fieldDefinitions[$name] = array(
 		'component' => $component,
 		'name' => $name,
 		'label' => $name,
 		'default' => $default,
 		'values' => $values
 	);
-	echo $view->forms()->fieldWrapper('add-trolley-item', array( 'field' => $name, 'mode' => 'field', 'definition' => $fieldDefinition ));
+	$fields[] = $name;
 }
-echo $view->forms()->fieldWrapper('add-trolley-item', array( 'field' => 'qty', 'mode' => 'field', 'definition' => array( 'component' => 'input', 'label' => 'Quantity', 'default' => '1' ) ));
-?>
-		<div class="buttons">
-			<input type="submit" value="Buy Now" />
-		</div>
-	</fieldset>
-</form>
+
+// Add the quantity field, which is a standard text field with a label.
+// TODO Validation
+$fieldDefinitions['qty'] = array(
+	'component' => 'input',
+	// TODO Configurable label
+	'label' => 'Quantity'
+);
+$fields[] = 'qty';
+
+// Display the combined form.
+$form = array(
+	'action-url' => sprintf('%s/add-trolley-item', $view['root-url']),
+	'submit-button' => 'Buy Now',
+	'reset-button' => false,
+	'fields' => $fieldDefinitions,
+	'pages' => array(
+		array(
+			'fieldsets' => array(
+				array(
+					'fields' => $fields
+				)
+			)
+		)
+	)
+);
+echo $view->forms()->form('add-trolley-item', $form);
