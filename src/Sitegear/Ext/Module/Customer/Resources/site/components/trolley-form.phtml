@@ -11,19 +11,24 @@ echo $view->forms()->input('id', $hidden, $view['id']);
 	<fieldset>
 <?php
 foreach ($view['attribute-definitions'] as $name => $attribute) {
-?>
-		<div class="field">
-<?php
-	echo $name, PHP_EOL;
-?>
-		</div>
-<?php
+	$component = 'select'; // TODO Others
+	$default = ''; // TODO Default value
+	// TODO Configurable text and sprintf() format mask.
+	$values = array( '' => 'Please Select...' );
+	foreach ($attribute as $label => $value) {
+		$values[$value] = sprintf('%s - $%.2f', $label, $value / 100);
+	}
+	$fieldDefinition = array(
+		'component' => $component,
+		'name' => $name,
+		'label' => $name,
+		'default' => $default,
+		'values' => $values
+	);
+	echo $view->forms()->fieldWrapper('add-trolley-item', array( 'field' => $name, 'mode' => 'field', 'definition' => $fieldDefinition ));
 }
+echo $view->forms()->fieldWrapper('add-trolley-item', array( 'field' => 'qty', 'mode' => 'field', 'definition' => array( 'component' => 'input', 'label' => 'Quantity', 'default' => '1' ) ));
 ?>
-		<div class="field">
-			<label for="qty">Quantity:</label>
-			<input type="text" name="qty" id="qty" value="1" />
-		</div>
 		<div class="buttons">
 			<input type="submit" value="Buy Now" />
 		</div>
