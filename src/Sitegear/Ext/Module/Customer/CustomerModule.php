@@ -29,6 +29,8 @@ class CustomerModule extends AbstractUrlMountableModule {
 
 	const SESSION_KEY_TROLLEY = 'customer.trolley';
 
+	const FORM_KEY_TROLLEY = 'trolley';
+
 	//-- ModuleInterface Methods --------------------
 
 	/**
@@ -64,26 +66,33 @@ class CustomerModule extends AbstractUrlMountableModule {
 	}
 
 	public function addTrolleyItemController(Request $request) {
-		$attributeValues = array();
-		foreach ($request->request->all() as $key => $value) {
-			if (strstr($key, 'attr_') !== false) {
-				$attributeValues[substr($key, 5)] = $value;
+		// Extract request details.
+		$moduleName = $request->request->get('module');
+		$type = $request->request->get('type');
+		$id = $request->request->get('id');
+		// Setup the generated form.
+		$this->getEngine()->forms()->registerForm(self::FORM_KEY_TROLLEY, $this->buildTrolleyForm($moduleName, $type, $id));
+		// Validate the data against the generated form, and add the trolley item if valid.
+		if ($valid = $this->getEngine()->forms()->validatePage(self::FORM_KEY_TROLLEY, 0, $request->request->all())) {
+			$attributeValues = array();
+			foreach ($request->request->all() as $key => $value) {
+				if (strstr($key, 'attr_') !== false) {
+					$attributeValues[substr($key, 5)] = $value;
+				}
 			}
+			$this->addTrolleyItem($moduleName, $type, $id, $attributeValues, $request->request->get('qty'));
 		}
-		$this->addTrolleyItem($request->request->get('module'), $request->request->get('type'), $request->request->get('id'), $attributeValues, $request->request->get('qty'));
-		$targetUrl = $request->request->get('form-url');
-		return new RedirectResponse($request->getUriForPath('/' . $targetUrl));
+		// Go back to the page where the submission was made.
+		return new RedirectResponse($request->getUriForPath('/' . $request->request->get('form-url')));
 	}
 
 	//-- Component Controller Methods --------------------
 
 	public function trolleyFormComponent(ViewInterface $view, $moduleName, $type, $id) {
-		$module = $this->getPurchaseItemProviderModule($moduleName);
-		$view['root-url'] = $this->getMountedUrl();
-		$view['module'] = $moduleName;
-		$view['type'] = $type;
-		$view['id'] = $id;
-		$view['attribute-definitions'] = $module->getPurchaseItemAttributeDefinitions($type, $id);
+		// Setup the generated form.
+		$this->getEngine()->forms()->registerForm(self::FORM_KEY_TROLLEY, $this->buildTrolleyForm($moduleName, $type, $id));
+		// Set the form key for the view to use.
+		$view['form-key'] = self::FORM_KEY_TROLLEY;
 	}
 
 	//-- Public Methods --------------------
@@ -102,9 +111,6 @@ class CustomerModule extends AbstractUrlMountableModule {
 	 * @throws \DomainException
 	 */
 	public function addTrolleyItem($moduleName, $type, $id, array $attributeValues=null, $qty=null) {
-		if (!is_null($qty) && $qty < 1) {
-			throw new \DomainException(sprintf('Can\'t add %d of an item, must be a positive integer.', $qty));
-		}
 		$module = $this->getPurchaseItemProviderModule($moduleName);
 		$item = array(
 			'module' => $moduleName,
@@ -146,6 +152,105 @@ class CustomerModule extends AbstractUrlMountableModule {
 
 	protected function setTrolleyData(array $data) {
 		$this->getEngine()->getSession()->set(self::SESSION_KEY_TROLLEY, $data);
+	}
+
+	protected function buildTrolleyForm($moduleName, $type, $id) {
+		// The first three fields are fixed, and they are all hidden fields.  This carries the information needed to determine
+		// the unit price and other details of the project, once it is submitted to the Customer Module.
+		$fieldDefinitions = array(
+			'module' => array(
+				'component' => 'input',
+				'attributes' => array(
+					'type' => 'hidden'
+				),
+				'default' => $moduleName
+			),
+			'type' => array(
+				'component' => 'input',
+				'attributes' => array(
+					'type' => 'hidden'
+				),
+				'default' => $type
+			),
+			'id' => array(
+				'component' => 'input',
+				'attributes' => array(
+					'type' => 'hidden'
+				),
+				'default' => $id
+			)
+		);
+		$fields = array(
+			'module',
+			'type',
+			'id'
+		);
+
+		// Every item attribute is an additional field in the form.
+		foreach ($this->getPurchaseItemProviderModule($moduleName)->getPurchaseItemAttributeDefinitions($type, $id) as $attribute) { /** @var \Sitegear\Ext\Module\Products\Model\Attribute $attribute */
+			$component = 'select'; // TODO Others
+			$default = ''; // TODO Default value
+			// TODO Configurable text and sprintf() format mask.
+			$options = array();
+			$options[] = array(
+				'value' => '',
+				'label' => '-- Please Select --'
+			);
+			foreach ($attribute['options'] as $option) {
+				$options[] = array(
+					'value' => $option['id'],
+					'label' => sprintf('%s - $%.2f', $option['label'], $option['value'] / 100)
+				);
+			}
+			$name = sprintf('attr_%s', $attribute['id']);
+			$fieldDefinitions[$name] = array(
+				'component' => $component,
+				'label' => $attribute['label'],
+				'default' => $default,
+				'options' => $options,
+				'validators' => array(
+					array(
+						'constraint' => 'not-blank'
+					)
+				)
+			);
+			$fields[] = $name;
+		}
+
+		// Add the quantity field, which is a standard text field with a label.
+		// TODO Validation
+		$fieldDefinitions['qty'] = array(
+			'component' => 'input',
+			// TODO Configurable label
+			'label' => 'Quantity',
+			'default' => 1,
+			'validators' => array(
+				array(
+					'constraint' => 'range',
+					'options' => array(
+						'min' => 1
+					)
+				)
+			)
+		);
+		$fields[] = 'qty';
+
+		// Display the combined form.
+		return array(
+			'action-url' => sprintf('%s/add-trolley-item', $this->getMountedUrl()),
+			'submit-button' => 'Buy Now',
+			'reset-button' => false,
+			'fields' => $fieldDefinitions,
+			'pages' => array(
+				array(
+					'fieldsets' => array(
+						array(
+							'fields' => $fields
+						)
+					)
+				)
+			)
+		);
 	}
 
 }
