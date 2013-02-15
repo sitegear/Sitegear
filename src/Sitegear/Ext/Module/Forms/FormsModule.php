@@ -303,7 +303,7 @@ class FormsModule extends AbstractUrlMountableModule {
 	 */
 	protected function normaliseData() {
 		foreach ($this->data as $formKey => $form) {
-			if (!isset($this->data[$formKey]['_normalised'])) {
+			if (!isset($form['_normalised'])) {
 				// Normalise field definitions
 				foreach ($form['fields'] as $fieldIndex => $field) {
 					if (!isset($field['default'])) {
