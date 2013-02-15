@@ -96,8 +96,7 @@ class FormsModule extends AbstractUrlMountableModule {
 		$data = $request->request->all();
 
 		// Perform validation, only continue if no errors
-		$valid = $this->validatePage($formKey, $currentPage, $data);
-		if ($valid) {
+		if ($valid = $this->validatePage($formKey, $currentPage, $data)) {
 			// Execute configured processors
 			if (isset($form['pages'][$currentPage]['processors'])) {
 				foreach ($form['pages'][$currentPage]['processors'] as $processor) {
@@ -122,14 +121,10 @@ class FormsModule extends AbstractUrlMountableModule {
 	 * @param \Symfony\Component\HttpFoundation\Request $request
 	 * @param string $formKey Unique key of the form, used for session storage and also is the key used to retrieve the
 	 *   form data, if it is not supplied directly.
-	 * @param array|null $form Overrides the data from the data file(s) in its entirety.
 	 */
-	public function formComponent(ViewInterface $view, Request $request, $formKey, array $form=null) {
+	public function formComponent(ViewInterface $view, Request $request, $formKey) {
 		LoggerRegistry::debug('FormsModule::formComponent');
 		$this->applyConfigToView('components.form', $view);
-		if (is_array($form) && !empty($form)) {
-			$this->data[$formKey] = $form;
-		}
 		$form = $this->getData($formKey);
 		// TODO Multiple pages
 		$currentPage = 0;
@@ -219,6 +214,10 @@ class FormsModule extends AbstractUrlMountableModule {
 	}
 
 	//-- Public Methods --------------------
+
+	public function registerForm($formKey, $form) {
+		$this->data[$formKey] = $form;
+	}
 
 	/**
 	 * Validate a single page of the given form against the given data.
