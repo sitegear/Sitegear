@@ -74,14 +74,14 @@ class AttributeAssignment {
 	}
 
 	/**
-	 * @return int
+	 * @return Attribute
 	 */
 	public function getAttribute() {
 		return $this->attribute;
 	}
 
 	/**
-	 * @return int
+	 * @return Item
 	 */
 	public function getItem() {
 		return $this->item;
