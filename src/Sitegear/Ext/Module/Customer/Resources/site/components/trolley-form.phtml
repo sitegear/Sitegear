@@ -1,0 +1,31 @@
+<?php
+/** @var \Sitegear\Core\View\View $view */
+$hidden = array( 'attributes' => array( 'type' => 'hidden' ));
+?>
+<form name="add-trolley-item" id="add-trolley-item">
+<?php
+echo $view->forms()->input('module', $hidden, $view['module']);
+echo $view->forms()->input('type', $hidden, $view['type']);
+echo $view->forms()->input('id', $hidden, $view['id']);
+?>
+	<fieldset>
+<?php
+foreach ($view['attribute-definitions'] as $name => $attribute) {
+?>
+		<div class="field">
+<?php
+	echo $name, PHP_EOL;
+?>
+		</div>
+<?php
+}
+?>
+		<div class="field">
+			<label for="qty">Quantity:</label>
+			<input type="text" name="qty" id="qty" value="1" />
+		</div>
+		<div class="buttons">
+			<input type="submit" value="Buy Now" />
+		</div>
+	</fieldset>
+</form>
