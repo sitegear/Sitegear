@@ -26,7 +26,7 @@ interface PurchaseItemProviderModuleInterface extends ModuleInterface {
 	/**
 	 * Get the available attributes and the allowed values in a nested array structure.  The top-level array is an
 	 * indexed array, each element is a key-value array representing a single attribute.  The key-value arrays have
-	 * keys "label" and "values" where the "values" key is a key-value array of id (value) to label.
+	 * keys "label" and "options" where the "options" key is a key-value array of id (value) to label.
 	 *
 	 * @param string $type
 	 * @param int $id
