@@ -16,7 +16,7 @@ namespace Sitegear\Base\Module;
  * pages in the level below like "shop/widgets/" and product details pages at the level below that, with URLs like
  * "shop/widgets/red-widget".
  */
-interface MountableModuleInterface {
+interface MountableModuleInterface extends ModuleInterface {
 
 	//-- Constants --------------------
 

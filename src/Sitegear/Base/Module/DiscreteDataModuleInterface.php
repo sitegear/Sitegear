@@ -18,7 +18,7 @@ namespace Sitegear\Base\Module;
  * This exists primarily for the purpose of the content editor widget, so that it has a unified method of loading and
  * saving data from and to any number of sources.
  */
-interface DiscreteDataModuleInterface {
+interface DiscreteDataModuleInterface extends ModuleInterface {
 
 	/**
 	 * Load a single piece of data.

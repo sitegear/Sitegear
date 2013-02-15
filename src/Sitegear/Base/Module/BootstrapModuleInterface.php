@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
  * processing cycle by returning a Response object from the runBootstrap() method.  When this occurs, no controller
  * method is called, and no rendering occurs (except decoration, see below).
  */
-interface BootstrapModuleInterface {
+interface BootstrapModuleInterface extends ModuleInterface {
 
 	/**
 	 * Initialise the module during the Sitegear bootstrap.
