@@ -16,13 +16,14 @@ if (!isset($attributes['id'])) {
 }
 echo sprintf('<span id="%s" class="ui-helper-clearfix">', $attributes['id']), PHP_EOL;
 echo sprintf('<input type="hidden" name="%s" value="" />', $view['name']), PHP_EOL;
-foreach ($field['values'] as $valueIndex => $valueSpec) {
+foreach ($field['options'] as $optionIndex => $option) {
 	$elementAttributes = array_merge(
 		$attributes,
+		isset($option['attributes']) ? $option['attributes'] : array(),
 		array(
-			'id' => sprintf('%s-checkbox-%s', $attributes['id'], $valueIndex),
+			'id' => sprintf('%s-checkbox-%s', $attributes['id'], $optionIndex),
 			'type' => 'checkbox', // TODO Allow radio buttons
-			'value' => $valueSpec['value']
+			'value' => $option['value']
 		)
 	);
 	// TODO move class names into config - 'checkbox' and 'checkbox-label' (below)
@@ -31,9 +32,9 @@ foreach ($field['values'] as $valueIndex => $valueSpec) {
 	} else {
 		$elementAttributes['class'] .= ' checkbox';
 	}
-	if ($valueSpec['value'] === $view['value']) {
+	if ($option['value'] === $view['value']) {
 		$elementAttributes['checked'] = 'checked';
 	}
-	echo sprintf('<input%s /><label class="checkbox-label" for="%s">%s</label> ', \Sitegear\Util\HtmlUtilities::attributes($elementAttributes), $elementAttributes['id'], $valueSpec['label']), PHP_EOL;
+	echo sprintf('<input%s /><label class="checkbox-label" for="%s">%s</label> ', \Sitegear\Util\HtmlUtilities::attributes($elementAttributes), $elementAttributes['id'], $option['label']), PHP_EOL;
 }
 echo '</span>', PHP_EOL;

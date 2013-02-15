@@ -4,18 +4,20 @@ $field = $view['field'];
 $attributes = array_merge(
 	isset($field['attributes']) ? $field['attributes'] : array(),
 	array(
-		'name' => $view['name'],
-		'value' => $view['value']
+		'name' => $view['name']
 	)
 );
 if (!isset($attributes['id'])) {
 	$attributes['id'] = sprintf('%s%s', $view['form-id-prefix'], $view['name']);
 }
 echo sprintf('<select%s>', \Sitegear\Util\HtmlUtilities::attributes($attributes)), PHP_EOL;
-foreach ($field['values'] as $value => $label) {
-	$labelText = is_array($label) ? $label['label'] : $label;
-	$attributes = (is_array($label) && isset($label['attributes'])) ? $label['attributes'] : array();
-	$attributes['value'] = $value;
+foreach ($field['options'] as $option) {
+	$labelText = $option['label'];
+	$attributes = isset($option['attributes']) ? $option['attributes'] : array();
+	$attributes['value'] = $option['value'];
+	if ($option['value'] === $view['value']) {
+		$attributes['selected'] = 'selected';
+	}
 	echo sprintf('<option%s>%s</option>', \Sitegear\Util\HtmlUtilities::attributes($attributes), $labelText);
 }
 echo '</select>', PHP_EOL;
