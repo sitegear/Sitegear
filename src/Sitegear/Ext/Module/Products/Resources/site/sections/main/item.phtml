@@ -11,6 +11,11 @@ $view->getStringsManager()->prepend('title', $view['title'])->prepend('title', $
 // ITEM DESCRIPTION
 echo $view->products('editable')->item(sprintf('%s/%s', $view['item-path'], $item->getUrlPath()));
 
+// PURCHASE FORM
+if ($view['display-add-to-trolley-form']) {
+	echo $view->customer()->trolleyForm('products', 'item', $item->getId());
+}
+
 // ITEM SPECIFICATIONS
 if (sizeof($item->getSpecifications()) > 0) {
 ?>

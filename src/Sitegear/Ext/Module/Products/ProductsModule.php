@@ -9,6 +9,7 @@
 namespace Sitegear\Ext\Module\Products;
 
 use Sitegear\Base\Module\AbstractUrlMountableModule;
+use Sitegear\Base\Module\PurchaseItemProviderModuleInterface;
 use Sitegear\Base\View\ViewInterface;
 use Sitegear\Util\LoggerRegistry;
 
@@ -24,7 +25,7 @@ use Doctrine\ORM\NoResultException;
  *
  * @method \Sitegear\Core\Engine\Engine getEngine()
  */
-class ProductsModule extends AbstractUrlMountableModule {
+class ProductsModule extends AbstractUrlMountableModule implements PurchaseItemProviderModuleInterface {
 
 	//-- Constants --------------------
 
@@ -45,6 +46,51 @@ class ProductsModule extends AbstractUrlMountableModule {
 	public function start() {
 		LoggerRegistry::debug('ProductsModule starting');
 		$this->getEngine()->doctrine()->getEntityManager()->getConfiguration()->addEntityNamespace(self::ENTITY_ALIAS, '\\Sitegear\\Ext\\Module\\Products\\Model');
+	}
+
+	//-- PurchaseItemProviderModuleInterface Methods --------------------
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function getPurchaseItemLabel($type, $id) {
+		$result = null;
+		switch ($type) {
+			case 'item':
+				$result = $this->getRepository('item')->find($id)->getName();
+				break;
+			default:
+				throw new \InvalidArgumentException(sprintf('ProductsModule encountered unknown type "%s" when retrieving label for purchase item', $type));
+		}
+		return $result;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function getPurchaseItemAttributeDefinitions($type, $id) {
+		$result = array();
+		switch ($type) {
+			case 'item':
+				foreach ($this->getRepository('item')->find($id)->getAttributeAssignments() as $assignment) { /** @var \Sitegear\Ext\Module\Products\Model\AttributeAssignment $assignment */
+					$options = array();
+					foreach ($assignment->getAttribute()->getOptions() as $option) { /** @var \Sitegear\Ext\Module\Products\Model\AttributeOption $option */
+						$options[$option->getLabel()] = $option->getValue();
+					}
+					$result[$assignment->getAttribute()->getLabel()] = $options;
+				}
+				break;
+			default:
+				throw new \InvalidArgumentException(sprintf('ProductsModule encountered unknown type "%s" when retrieving label for purchase item', $type));
+		}
+		return $result;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function getPurchaseItemUnitPrice($type, $id, array $attributeValues) {
+		// TODO: Implement getPurchaseItemUnitPrice() method.
 	}
 
 	//-- AbstractUrlMountableModule Methods --------------------

@@ -64,6 +64,9 @@ return array(
 	 */
 	'page' => array(
 
+		/**
+		 * Products main landing page settings.
+		 */
 		'index' => array(
 
 			/**
@@ -78,6 +81,9 @@ return array(
 
 		),
 
+		/**
+		 * Category landing page settings.
+		 */
 		'category' => array(
 
 			/**
@@ -92,10 +98,17 @@ return array(
 
 		),
 
+		/**
+		 * Product detail page settings.
+		 */
 		'item' => array(
 
+			/**
+			 * Whether or not to display the "Add to Trolley" form.  This requires that the Customer module is
+			 * correctly configured.
+			 */
+			'display-add-to-trolley-form' => false
+
 		)
-
 	)
-
 );

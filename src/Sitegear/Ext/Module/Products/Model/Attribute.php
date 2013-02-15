@@ -16,6 +16,14 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class Attribute {
 
+	//-- Constants --------------------
+
+	const TYPE_BASE = 'base';
+	const TYPE_SINGLE = 'single';
+	const TYPE_MULTIPLE = 'multiple';
+
+	private static $validTypes = array( self::TYPE_BASE, self::TYPE_SINGLE, self::TYPE_MULTIPLE );
+
 	//-- Attributes --------------------
 
 	/**
@@ -30,13 +38,15 @@ class Attribute {
 	 * @var string
 	 * @Column(type="string", nullable=false)
 	 */
-	private $name;
+	private $label;
 
 	/**
-	 * @var boolean
-	 * @Column(type="boolean")
+	 * Must be one of the TYPE_* constants defined in this class.
+	 *
+	 * @var string
+	 * @Column(type="string", nullable=false)
 	 */
-	private $multiple;
+	private $type;
 
 	/**
 	 * @var \DateTime
@@ -95,31 +105,37 @@ class Attribute {
 	}
 
 	/**
-	 * @param boolean $multiple
+	 * @param string $type Must be one of the TYPE_* constants defined in this class.
+	 *
+	 * @throws \InvalidArgumentException
 	 */
-	public function setMultiple($multiple) {
-		$this->multiple = $multiple;
-	}
-
-	/**
-	 * @return boolean
-	 */
-	public function getMultiple() {
-		return $this->multiple;
-	}
-
-	/**
-	 * @param string $name
-	 */
-	public function setName($name) {
-		$this->name = $name;
+	public function setType($type) {
+		if (!in_array($type, self::$validTypes)) {
+			$validTypes = implode('", "', self::$validTypes);
+			throw new \InvalidArgumentException(sprintf('Attribute cannot handle invalid type "%s", expecting one of: "%s"', $type, $validTypes));
+		}
+		$this->type = $type;
 	}
 
 	/**
 	 * @return string
 	 */
-	public function getName() {
-		return $this->name;
+	public function getType() {
+		return $this->type;
+	}
+
+	/**
+	 * @param string $name
+	 */
+	public function setLabel($name) {
+		$this->label = $name;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getLabel() {
+		return $this->label;
 	}
 
 	/**
