@@ -2,7 +2,7 @@
 /** @var \Sitegear\Core\View\View $view */
 $field = $view['field'];
 $attributes = array_merge(
-	$field['attributes'],
+	isset($field['attributes']) ? $field['attributes'] : array(),
 	array(
 		'name' => $field['name'],
 		'value' => $view['value']
