@@ -47,6 +47,37 @@ class LocationsModule extends AbstractUrlMountableModule {
 		$this->getEngine()->doctrine()->getEntityManager()->getConfiguration()->addEntityNamespace(self::ENTITY_ALIAS, '\\Sitegear\\Ext\\Module\\Locations\\Model');
 	}
 
+	//-- AbstractUrlMountableModule Methods --------------------
+
+	/**
+	 * {@inheritDoc}
+	 */
+	protected function buildRoutes() {
+		$routes = new RouteCollection();
+		$routes->add('index', new Route($this->getMountedUrl()));
+		$routes->add('region', new Route(sprintf('%s/%s/{slug}', $this->getMountedUrl(), $this->config('routes.region'))));
+		$routes->add('item', new Route(sprintf('%s/%s/{slug}', $this->getMountedUrl(), $this->config('routes.item'))));
+		$routes->add('search', new Route(sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.search'))));
+		return $routes;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	protected function buildNavigationData($mode) {
+		$data = $this->buildNavigationDataImpl($mode, intval($this->config('navigation.max-depth')));
+		if ($mode === self::NAVIGATION_DATA_MODE_EXPANDED) {
+			foreach ($this->getRepository('Item')->findByActive(true) as $item) {
+				/** @var \Sitegear\Ext\Module\Locations\Model\Item $item */
+				$data[] = array(
+					'url' => sprintf('%s/%s/%s', $this->getMountedUrl(), $this->config('routes.item'), $item->getUrlPath()),
+					'label' => $item->getName()
+				);
+			}
+		}
+		return $data;
+	}
+
 	//-- Page Controller Methods --------------------
 
 	/**
@@ -130,37 +161,6 @@ class LocationsModule extends AbstractUrlMountableModule {
 		$view['action-url'] = sprintf('%s/search', $this->getMountedUrl());
 		$view['query'] = $query;
 		$view['radius'] = $radius;
-	}
-
-	//-- AbstractUrlMountableModule Methods --------------------
-
-	/**
-	 * {@inheritDoc}
-	 */
-	protected function buildRoutes() {
-		$routes = new RouteCollection();
-		$routes->add('index', new Route($this->getMountedUrl()));
-		$routes->add('region', new Route(sprintf('%s/%s/{slug}', $this->getMountedUrl(), $this->config('routes.region'))));
-		$routes->add('item', new Route(sprintf('%s/%s/{slug}', $this->getMountedUrl(), $this->config('routes.item'))));
-		$routes->add('search', new Route(sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.search'))));
-		return $routes;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	protected function buildNavigationData($mode) {
-		$data = $this->buildNavigationDataImpl($mode, intval($this->config('navigation.max-depth')));
-		if ($mode === self::NAVIGATION_DATA_MODE_EXPANDED) {
-			foreach ($this->getRepository('Item')->findByActive(true) as $item) {
-				/** @var \Sitegear\Ext\Module\Locations\Model\Item $item */
-				$data[] = array(
-					'url' => sprintf('%s/%s/%s', $this->getMountedUrl(), $this->config('routes.item'), $item->getUrlPath()),
-					'label' => $item->getName()
-				);
-			}
-		}
-		return $data;
 	}
 
 	//-- Internal Methods --------------------

@@ -47,6 +47,35 @@ class ProductsModule extends AbstractUrlMountableModule {
 		$this->getEngine()->doctrine()->getEntityManager()->getConfiguration()->addEntityNamespace(self::ENTITY_ALIAS, '\\Sitegear\\Ext\\Module\\Products\\Model');
 	}
 
+	//-- AbstractUrlMountableModule Methods --------------------
+
+	/**
+	 * {@inheritDoc}
+	 */
+	protected function buildRoutes() {
+		$routes = new RouteCollection();
+		$routes->add('index', new Route($this->getMountedUrl()));
+		$routes->add('category', new Route(sprintf('%s/%s/{slug}', $this->getMountedUrl(), $this->config('routes.category'))));
+		$routes->add('item', new Route(sprintf('%s/%s/{slug}', $this->getMountedUrl(), $this->config('routes.item'))));
+		return $routes;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	protected function buildNavigationData($mode) {
+		$data = $this->buildNavigationDataImpl($mode, intval($this->config('navigation.max-depth')));
+		if ($mode === self::NAVIGATION_DATA_MODE_EXPANDED) {
+			foreach ($this->getRepository('Item')->findByActive(true) as $item) {
+				$data[] = array(
+					'url' => sprintf('%s/%s/%s', $this->getMountedUrl(), $this->config('routes.item'), $item->getUrlPath()),
+					'label' => $item->getName()
+				);
+			}
+		}
+		return $data;
+	}
+
 	//-- Page Controller Methods --------------------
 
 	/**
@@ -93,35 +122,6 @@ class ProductsModule extends AbstractUrlMountableModule {
 		} catch (NoResultException $e) {
 			throw new NotFoundHttpException('The requested product is not available.', $e);
 		}
-	}
-
-	//-- AbstractUrlMountableModule Methods --------------------
-
-	/**
-	 * {@inheritDoc}
-	 */
-	protected function buildRoutes() {
-		$routes = new RouteCollection();
-		$routes->add('index', new Route($this->getMountedUrl()));
-		$routes->add('category', new Route(sprintf('%s/%s/{slug}', $this->getMountedUrl(), $this->config('routes.category'))));
-		$routes->add('item', new Route(sprintf('%s/%s/{slug}', $this->getMountedUrl(), $this->config('routes.item'))));
-		return $routes;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	protected function buildNavigationData($mode) {
-		$data = $this->buildNavigationDataImpl($mode, intval($this->config('navigation.max-depth')));
-		if ($mode === self::NAVIGATION_DATA_MODE_EXPANDED) {
-			foreach ($this->getRepository('Item')->findByActive(true) as $item) {
-				$data[] = array(
-					'url' => sprintf('%s/%s/%s', $this->getMountedUrl(), $this->config('routes.item'), $item->getUrlPath()),
-					'label' => $item->getName()
-				);
-			}
-		}
-		return $data;
 	}
 
 	//-- Internal Methods --------------------

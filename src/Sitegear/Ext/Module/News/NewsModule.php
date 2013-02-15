@@ -46,6 +46,44 @@ class NewsModule extends AbstractUrlMountableModule {
 		$this->getEngine()->doctrine()->getEntityManager()->getConfiguration()->addEntityNamespace(self::ENTITY_ALIAS, '\\Sitegear\\Ext\\Module\\News\\Model');
 	}
 
+	//-- AbstractUrlMountableModule Methods --------------------
+
+	/**
+	 * {@inheritDoc}
+	 */
+	protected function buildRoutes() {
+		$routes = new RouteCollection();
+		$routes->add('index', new Route($this->getMountedUrl()));
+		$routes->add('item', new Route(sprintf('%s/{slug}', $this->getMountedUrl())));
+		return $routes;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	protected function buildNavigationData($mode) {
+		$result = array();
+		$itemLimit = intval($this->config('navigation.item-limit'));
+		foreach ($this->getRepository('Item')->findLatestItems($itemLimit) as $item) { /** @var \Sitegear\Ext\Module\News\Model\Item $item */
+			$result[] = array(
+				'url' => sprintf('%s/%s', $this->getMountedUrl(), $item->getUrlPath()),
+				'label' => $item->getHeadline(),
+				// TODO Make this configurable
+				'tooltip' => sprintf('Read this news item "%s"', $item->getHeadline())
+			);
+		}
+		$allNewsLink = $this->config('navigation.all-news-link');
+		if (is_string($allNewsLink) && strlen($allNewsLink) > 0) {
+			$result[] = array(
+				'url' => sprintf('%s?more=1', $this->getMountedUrl()),
+				'label' => $allNewsLink,
+				// TODO Make this configurable
+				'tooltip' => 'View index of all news items'
+			);
+		}
+		return $result;
+	}
+
 	//-- Page Controller Methods --------------------
 
 	/**
@@ -111,44 +149,6 @@ class NewsModule extends AbstractUrlMountableModule {
 		$view['excerpt-length'] = !is_null($excerptLength) ? $excerptLength : $this->config('component.latest-headlines.excerpt-length');
 		$view['read-more'] = $readMore ?: $this->config('component.latest-headlines.read-more');
 		$view['root-url'] = $this->getMountedUrl();
-	}
-
-	//-- AbstractUrlMountableModule Methods --------------------
-
-	/**
-	 * {@inheritDoc}
-	 */
-	protected function buildRoutes() {
-		$routes = new RouteCollection();
-		$routes->add('index', new Route($this->getMountedUrl()));
-		$routes->add('item', new Route(sprintf('%s/{slug}', $this->getMountedUrl())));
-		return $routes;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	protected function buildNavigationData($mode) {
-		$result = array();
-		$itemLimit = intval($this->config('navigation.item-limit'));
-		foreach ($this->getRepository('Item')->findLatestItems($itemLimit) as $item) { /** @var \Sitegear\Ext\Module\News\Model\Item $item */
-			$result[] = array(
-				'url' => sprintf('%s/%s', $this->getMountedUrl(), $item->getUrlPath()),
-				'label' => $item->getHeadline(),
-				// TODO Make this configurable
-				'tooltip' => sprintf('Read this news item "%s"', $item->getHeadline())
-			);
-		}
-		$allNewsLink = $this->config('navigation.all-news-link');
-		if (is_string($allNewsLink) && strlen($allNewsLink) > 0) {
-			$result[] = array(
-				'url' => sprintf('%s?more=1', $this->getMountedUrl()),
-				'label' => $allNewsLink,
-				// TODO Make this configurable
-				'tooltip' => 'View index of all news items'
-			);
-		}
-		return $result;
 	}
 
 	//-- Internal Methods --------------------
