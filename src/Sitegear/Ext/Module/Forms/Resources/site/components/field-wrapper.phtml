@@ -7,11 +7,15 @@ $fieldDefinition = $field['definition'];
 $component = \Sitegear\Util\NameUtilities::convertToCamelCase($fieldDefinition['component']);
 $fieldError = $view->getEngine()->forms()->extractFieldSessionData($formKey, '['.$fieldName.']', 'violation');
 $fieldValue = $view->getEngine()->forms()->extractFieldSessionData($formKey, $fieldName, 'value', $fieldDefinition['default']);
-$labelMarkers = isset($field['label-markers']) ? $field['label-markers'] : array();
-echo sprintf('<%s%s>', $view['element'], \Sitegear\Util\HtmlUtilities::attributes(array_merge($view['field-attributes'], isset($fieldDefinition['field-attributes']) ? $fieldDefinition['field-attributes'] : array()))), PHP_EOL;
-echo sprintf('<label for="%s">%s%s</label>', $fieldName, $fieldDefinition['label'], implode('', $labelMarkers)), PHP_EOL;
+if (isset($fieldDefinition['label'])) {
+	$labelMarkers = isset($field['label-markers']) ? $field['label-markers'] : array();
+	echo sprintf('<%s%s>', $view['element'], \Sitegear\Util\HtmlUtilities::attributes(array_merge($view['field-attributes'], isset($fieldDefinition['field-attributes']) ? $fieldDefinition['field-attributes'] : array()))), PHP_EOL;
+	echo sprintf('<label for="%s">%s%s</label>', $fieldName, $fieldDefinition['label'], implode('', $labelMarkers)), PHP_EOL;
+}
 if (!empty($fieldError)) {
 	echo sprintf('<span class="error-message">%s</span>', $fieldError);
 }
 echo $field['mode'] === 'display' ? $fieldValue : $view->forms()->$component($fieldName, $fieldDefinition, $fieldValue);
-echo sprintf('</%s>', $view['element']), PHP_EOL;
+if (isset($fieldDefinition['label'])) {
+	echo sprintf('</%s>', $view['element']), PHP_EOL;
+}
