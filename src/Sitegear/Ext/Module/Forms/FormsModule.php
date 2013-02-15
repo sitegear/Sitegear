@@ -93,46 +93,22 @@ class FormsModule extends AbstractUrlMountableModule {
 		$form = $this->getData($formKey);
 		// TODO Multiple pages
 		$currentPage = 0;
-		$page = $form['pages'][$currentPage];
 		$data = $request->request->all();
 
 		// Perform validation, only continue if no errors
-		$validator = Validation::createValidator();
-		$constraints = $this->getConstraints($page['fieldsets'], $form['fields']);
-		$violations = $validator->validateValue($data, $constraints);
-		if ($valid = ($violations->count() === 0)) {
+		$valid = $this->validatePage($formKey, $currentPage, $data);
+		if ($valid) {
 			// Execute configured processors
-			if (isset($page['processors'])) {
-				foreach ($page['processors'] as $processor) {
+			if (isset($form['pages'][$currentPage]['processors'])) {
+				foreach ($form['pages'][$currentPage]['processors'] as $processor) {
 					$this->executeProcessor($processor, $data, $request);
 				}
-			}
-		} else {
-			// An error occurred.
-			$session = $this->getEngine()->getSession();
-
-			// Set the values into the session so they can be displayed after redirecting.
-			foreach ($page['fieldsets'] as $fieldset) {
-				foreach ($fieldset['fields'] as $fieldSpec) {
-					if ($fieldSpec['mode'] === 'field') {
-						$field = $fieldSpec['field'];
-						$fieldValue = $request->request->get($field);
-						$session->set($this->getSessionKey($formKey, $field, 'value'), $fieldValue);
-					}
-				}
-			}
-
-			// Set the error messages into the session so they can be displayed after redirecting.
-			foreach ($violations as $violation) { /** @var \Symfony\Component\Validator\ConstraintViolationInterface $violation */
-				$field = $violation->getPropertyPath();
-				$session->set($this->getSessionKey($formKey, $field, 'violation'), $violation->getMessage());
-				LoggerRegistry::debug(sprintf('Set validation violation for field "%s" to "%s"', $field, $violation->getMessage()));
 			}
 		}
 
 		// Redirect to the target page, which is either the actual target-url, if the form is finished and there is one
 		// set, or the form-url, if one is set (which it should be!), or to the home page as a fallback.
-		$finished = ($valid && isset($form['target-url']) && (++$page >= sizeof($form['pages'])));
+		$finished = ($valid && isset($form['target-url']) && (++$currentPage >= sizeof($form['pages'])));
 		$targetUrl = $finished ? $form['target-url'] : $request->request->get('form-url', $request->getBaseUrl());
 		return new RedirectResponse($request->getUriForPath('/' . $targetUrl));
 	}
@@ -243,6 +219,49 @@ class FormsModule extends AbstractUrlMountableModule {
 	}
 
 	//-- Public Methods --------------------
+
+	/**
+	 * Validate a single page of the given form against the given data.
+	 *
+	 * If there are any violations, store the supplied values and the error messages in the session against the
+	 * relevant field names.
+	 *
+	 * @param $formKey
+	 * @param $currentPage
+	 * @param array $data
+	 *
+	 * @return boolean Whether or not the given data is valid.
+	 */
+	public function validatePage($formKey, $currentPage, array $data) {
+		$form = $this->getData($formKey);
+		$page = $form['pages'][$currentPage];
+		$validator = Validation::createValidator();
+		$constraints = $this->getConstraints($page['fieldsets'], $form['fields']);
+		$violations = $validator->validateValue($data, $constraints);
+		$valid = ($violations->count() === 0);
+		if (!$valid) {
+			// An error occurred.
+			$session = $this->getEngine()->getSession();
+
+			// Set the values into the session so they can be displayed after redirecting.
+			foreach ($page['fieldsets'] as $fieldset) {
+				foreach ($fieldset['fields'] as $fieldSpec) {
+					if ($fieldSpec['mode'] === 'field') {
+						$field = $fieldSpec['field'];
+						$session->set($this->getSessionKey($formKey, $field, 'value'), $data[$field]);
+					}
+				}
+			}
+
+			// Set the error messages into the session so they can be displayed after redirecting.
+			foreach ($violations as $violation) { /** @var \Symfony\Component\Validator\ConstraintViolationInterface $violation */
+				$field = $violation->getPropertyPath();
+				$session->set($this->getSessionKey($formKey, $field, 'violation'), $violation->getMessage());
+				LoggerRegistry::debug(sprintf('Set validation violation for field "%s" to "%s"', $field, $violation->getMessage()));
+			}
+		}
+		return $valid;
+	}
 
 	/**
 	 * Get the error for the given field in the given form, and clear the error message from the session.
