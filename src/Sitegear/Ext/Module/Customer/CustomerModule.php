@@ -9,12 +9,12 @@
 namespace Sitegear\Ext\Module\Customer;
 
 use Sitegear\Base\Module\AbstractUrlMountableModule;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Sitegear\Base\Module\PurchaseItemProviderModuleInterface;
 use Sitegear\Base\View\ViewInterface;
 use Sitegear\Util\LoggerRegistry;
 
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\Route;
 
@@ -27,8 +27,14 @@ class CustomerModule extends AbstractUrlMountableModule {
 
 	//-- Constants --------------------
 
+	/**
+	 * Session key to use for the trolley contents.
+	 */
 	const SESSION_KEY_TROLLEY = 'customer.trolley';
 
+	/**
+	 * Form key to use for the generated "add to trolley" form.
+	 */
 	const FORM_KEY_TROLLEY = 'trolley';
 
 	//-- ModuleInterface Methods --------------------
@@ -61,10 +67,20 @@ class CustomerModule extends AbstractUrlMountableModule {
 
 	//-- Page Controller Methods --------------------
 
+	/**
+	 * Show the customer profile page.
+	 */
 	public function indexController() {
 		// TODO Customer profile page
 	}
 
+	/**
+	 * Handle the "add to trolley" action for any purchasable item.  This is the target of the "add to trolley" form.
+	 *
+	 * @param \Symfony\Component\HttpFoundation\Request $request
+	 *
+	 * @return \Symfony\Component\HttpFoundation\RedirectResponse
+	 */
 	public function addTrolleyItemController(Request $request) {
 		// Extract request details.
 		$moduleName = $request->request->get('module');
@@ -88,6 +104,14 @@ class CustomerModule extends AbstractUrlMountableModule {
 
 	//-- Component Controller Methods --------------------
 
+	/**
+	 * Display the "add to trolley" form.
+	 *
+	 * @param \Sitegear\Base\View\ViewInterface $view
+	 * @param $moduleName
+	 * @param $type
+	 * @param $id
+	 */
 	public function trolleyFormComponent(ViewInterface $view, $moduleName, $type, $id) {
 		// Setup the generated form.
 		$this->getEngine()->forms()->registerForm(self::FORM_KEY_TROLLEY, $this->buildTrolleyForm($moduleName, $type, $id));
@@ -138,6 +162,15 @@ class CustomerModule extends AbstractUrlMountableModule {
 
 	//-- Internal Methods --------------------
 
+	/**
+	 * Retrieve a named module from the engine and check that it is an instance of PurchaseItemProviderModuleInterface.
+	 * Essentially this is a shortcut to getEngine()->getModule() with an additional type check.
+	 *
+	 * @param $name
+	 *
+	 * @return \Sitegear\Base\Module\PurchaseItemProviderModuleInterface
+	 * @throws \InvalidArgumentException
+	 */
 	protected function getPurchaseItemProviderModule($name) {
 		$module = $this->getEngine()->getModule($name);
 		if (!$module instanceof PurchaseItemProviderModuleInterface) {
@@ -146,14 +179,33 @@ class CustomerModule extends AbstractUrlMountableModule {
 		return $module;
 	}
 
+	/**
+	 * Get the current contents of the trolley.
+	 *
+	 * @return array
+	 */
 	protected function getTrolleyData() {
 		return $this->getEngine()->getSession()->get(self::SESSION_KEY_TROLLEY, array());
 	}
 
+	/**
+	 * Set the contents of the trolley.
+	 *
+	 * @param array $data
+	 */
 	protected function setTrolleyData(array $data) {
 		$this->getEngine()->getSession()->set(self::SESSION_KEY_TROLLEY, $data);
 	}
 
+	/**
+	 * Dynamically generate the trolley form configuration.
+	 *
+	 * @param $moduleName
+	 * @param $type
+	 * @param $id
+	 *
+	 * @return array
+	 */
 	protected function buildTrolleyForm($moduleName, $type, $id) {
 		// The first three fields are fixed, and they are all hidden fields.  This carries the information needed to determine
 		// the unit price and other details of the project, once it is submitted to the Customer Module.
