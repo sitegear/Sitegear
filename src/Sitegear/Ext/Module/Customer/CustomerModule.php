@@ -104,7 +104,11 @@ class CustomerModule extends AbstractUrlMountableModule {
 			$this->addTrolleyItem($moduleName, $type, $id, $attributeValues, intval($request->request->get('qty')));
 		}
 		// Go back to the page where the submission was made.
-		return new RedirectResponse($request->getUriForPath(sprintf('/%s/trolley', $this->getMountedUrl())));
+		return new RedirectResponse($request->getUriForPath(
+			$valid ?
+				sprintf('/%s/trolley', $this->getMountedUrl()) :
+				sprintf('/%s', $request->request->get('form-url'))
+		));
 	}
 
 	/**
@@ -211,6 +215,8 @@ class CustomerModule extends AbstractUrlMountableModule {
 		$module = $this->getPurchaseItemProviderModule($moduleName);
 		$attributeDefinitions = $module->getPurchaseItemAttributeDefinitions($type, $id);
 		$attributes = array();
+
+		// Get an array of attributes, which each have a value and a label.
 		foreach ($attributeValues as $attributeValue) {
 			$attributeValue = intval($attributeValue);
 			foreach ($attributeDefinitions as $attributeDefinition) {
@@ -224,6 +230,8 @@ class CustomerModule extends AbstractUrlMountableModule {
 				}
 			}
 		}
+
+		// Build the item data array.
 		$item = array(
 			'module' => $moduleName,
 			'type' => $type,
@@ -234,10 +242,12 @@ class CustomerModule extends AbstractUrlMountableModule {
 			'unit-price' => $module->getPurchaseItemUnitPrice($type, $id, $attributeValues),
 			'qty' => $qty
 		);
+
+		// Add the item data to the trolley, or merge it in to an existing matching item.
 		$data = $this->getTrolleyData();
 		$matched = false;
 		foreach ($data as $index => $record) {
-			if (($record['module'] === $moduleName) && ($record['type'] === $type) && ($record['attribute-values'] === $attributeValues)) {
+			if (($record['module'] === $moduleName) && ($record['type'] === $type) && ($record['attributes'] === $attributes)) {
 				$data[$index]['qty'] += $item['qty'];
 				$matched = true;
 			}
