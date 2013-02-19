@@ -156,7 +156,7 @@ class CustomerModule extends AbstractUrlMountableModule {
 	 */
 	public function checkoutController(ViewInterface $view) {
 		LoggerRegistry::debug('CustomerModule::checkoutController');
-
+		// TODO Checkout page
 	}
 
 	//-- Component Controller Methods --------------------
