@@ -100,5 +100,33 @@ return array(
 				'checkout-link' => '{{ config:common.text.checkout-link }}'
 			)
 		)
+	),
+
+	/**
+	 * Settings for the generated "add to trolley" form.
+	 */
+	'trolley-form' => array(
+
+		/**
+		 * Text to display on the no-value option.  Set to an empty string to display no text, or to null to omit the
+		 * no-value option altogether.
+		 */
+		'no-value-option-label' => '-- Please Select --',
+
+		/**
+		 * Label for the Quantity field.
+		 */
+		'quantity-label' => 'Quantity',
+
+		/**
+		 * Format mask to apply to values in the trolley form.  The available tokens are %label% and %value%, the
+		 * latter of which is given a formatted value.
+		 */
+		'value-format' => '%label% - %value%',
+
+		/**
+		 * Text for the submit button.
+		 */
+		'submit-button' => 'Buy Now'
 	)
 );

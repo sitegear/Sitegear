@@ -365,25 +365,29 @@ class CustomerModule extends AbstractUrlMountableModule {
 
 		// Every item attribute is an additional field in the form.
 		foreach ($this->getPurchaseItemProviderModule($moduleName)->getPurchaseItemAttributeDefinitions($type, $id) as $attribute) { /** @var \Sitegear\Ext\Module\Products\Model\Attribute $attribute */
-			$component = 'select'; // TODO Others
-			$default = ''; // TODO Default value
-			// TODO Configurable text and sprintf() format mask.
+			$component = 'select'; // TODO Other field types
 			$options = array();
-			$options[] = array(
-				'value' => '',
-				'label' => '-- Please Select --'
-			);
+			$noValueOptionLabel = $this->config('trolley-form.no-value-option-label');
+			if (!is_null($noValueOptionLabel)) {
+				$options[] = array(
+					'value' => '',
+					'label' => $noValueOptionLabel
+				);
+			}
+			$labelFormat = $this->config('trolley-form.value-format');
 			foreach ($attribute['options'] as $option) {
+				$label = $labelFormat;
+				$label = str_replace('%label%', $option['label'], $label);
+				$label = str_replace('%value%', sprintf('$%s', number_format($option['value'] / 100, 2)), $label);
 				$options[] = array(
 					'value' => $option['id'],
-					'label' => sprintf('%s - $%.2f', $option['label'], $option['value'] / 100)
+					'label' => $label
 				);
 			}
 			$name = sprintf('attr_%s', $attribute['id']);
 			$fieldDefinitions[$name] = array(
 				'component' => $component,
 				'label' => $attribute['label'],
-				'default' => $default,
 				'options' => $options,
 				'validators' => array(
 					array(
@@ -395,13 +399,14 @@ class CustomerModule extends AbstractUrlMountableModule {
 		}
 
 		// Add the quantity field, which is a standard text field with a label.
-		// TODO Validation
 		$fieldDefinitions['qty'] = array(
 			'component' => 'input',
-			// TODO Configurable label
-			'label' => 'Quantity',
+			'label' => $this->config('trolley-form.quantity-label'),
 			'default' => 1,
 			'validators' => array(
+				array(
+					'constraint' => 'not-blank'
+				),
 				array(
 					'constraint' => 'range',
 					'options' => array(
@@ -415,7 +420,7 @@ class CustomerModule extends AbstractUrlMountableModule {
 		// Display the combined form.
 		return array(
 			'action-url' => sprintf('%s/add-trolley-item', $this->getMountedUrl()),
-			'submit-button' => 'Buy Now',
+			'submit-button' => $this->config('trolley-form.submit-button'),
 			'reset-button' => false,
 			'fields' => $fieldDefinitions,
 			'pages' => array(
