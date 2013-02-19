@@ -149,6 +149,15 @@ abstract class AbstractEngine implements EngineInterface {
 	/**
 	 * {@inheritDoc}
 	 */
+	public function stop() {
+		foreach ($this->modules as $module) {
+			$module->stop();
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public function getRouteMap() {
 		if (is_null($this->compiledRouteCollection)) {
 			$this->compiledRouteCollection = new RouteCollection();

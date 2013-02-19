@@ -33,6 +33,11 @@ interface ModuleInterface {
 	public function start();
 
 	/**
+	 * Stop the module.  This should clean up and free any internal resources, i.e. is the reverse of `start()`.
+	 */
+	public function stop();
+
+	/**
 	 * Retrieve the engine that contains this module.
 	 *
 	 * @return \Sitegear\Base\Engine\EngineInterface Engine that contains this module.

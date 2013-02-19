@@ -31,6 +31,11 @@ interface EngineInterface extends ModuleResolverInterface, ModuleContainerInterf
 	 */
 	public function start(Request $request);
 
+	/**
+	 * Stop the engine.  Cleanup any resources.
+	 */
+	public function stop();
+
 	//-- Routing Methods --------------------
 
 	/**
