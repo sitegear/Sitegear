@@ -12,6 +12,7 @@ use Sitegear\Base\Module\AbstractUrlMountableModule;
 use Sitegear\Base\Module\PurchaseItemProviderModuleInterface;
 use Sitegear\Base\View\ViewInterface;
 use Sitegear\Ext\Module\Customer\Model\TransactionItem;
+use Sitegear\Ext\Module\Customer\Model\Account;
 use Sitegear\Util\LoggerRegistry;
 
 use Symfony\Component\HttpFoundation\Request;
@@ -27,6 +28,11 @@ use Symfony\Component\Routing\Route;
 class CustomerModule extends AbstractUrlMountableModule {
 
 	//-- Constants --------------------
+
+	/**
+	 * Alias to use for this module's entity namespace.
+	 */
+	const ENTITY_ALIAS = 'Customer';
 
 	/**
 	 * Session key to use for the trolley contents.
@@ -45,6 +51,14 @@ class CustomerModule extends AbstractUrlMountableModule {
 	 */
 	public function getDisplayName() {
 		return 'Customer Experience';
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function start() {
+		LoggerRegistry::debug('CustomerModule starting');
+		$this->getEngine()->doctrine()->getEntityManager()->getConfiguration()->addEntityNamespace(self::ENTITY_ALIAS, '\\Sitegear\\Ext\\Module\\Customer\\Model');
 	}
 
 	//-- AbstractUrlMountableModule Methods --------------------
@@ -75,9 +89,20 @@ class CustomerModule extends AbstractUrlMountableModule {
 	/**
 	 * Show the customer profile page.
 	 */
-	public function indexController() {
+	public function indexController(ViewInterface $view) {
 		LoggerRegistry::debug('CustomerModule::indexController');
-
+		$this->applyConfigToView('pages.index', $view);
+		if ($this->getEngine()->getUserManager()->isLoggedIn()) {
+			$email = $this->getEngine()->getUserManager()->getUser()->getEmail();
+			$account = $this->getRepository('Account')->findOneBy(array( 'email' => $email ));
+			if (is_null($account)) {
+				$account = new Account();
+				$account->setEmail($email);
+				$this->getEngine()->doctrine()->getEntityManager()->persist($account);
+				$this->getEngine()->doctrine()->getEntityManager()->flush();
+			}
+			$view['account'] = $account;
+		}
 	}
 
 	/**
@@ -447,6 +472,15 @@ class CustomerModule extends AbstractUrlMountableModule {
 				)
 			)
 		);
+	}
+
+	/**
+	 * @param string $entity
+	 *
+	 * @return \Doctrine\ORM\EntityRepository
+	 */
+	private function getRepository($entity) {
+		return $this->getEngine()->doctrine()->getEntityManager()->getRepository(sprintf('%s:%s', self::ENTITY_ALIAS, $entity));
 	}
 
 }

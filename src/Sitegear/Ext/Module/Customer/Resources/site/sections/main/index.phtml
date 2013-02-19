@@ -1,4 +1,23 @@
 <?php
-/** @var \Sitegear\Core\View\View $view */
+/**
+ * @var \Sitegear\Core\View\View $view
+ * @var \Sitegear\Ext\Module\Customer\Model\Account $account
+ */
+if ($view['account']) {
+	$account = $view['account'];
 ?>
 <h1>Customer Profile</h1>
+<p>
+You are logged in as <strong><?php echo $account->getEmail() ?></strong>.
+</p>
+<?php
+} else {
+?>
+<h1>Not Logged In</h1>
+<p>
+<?php /** TODO Generate the following URL */ ?>
+You need to be <a href="sitegear/user/login">logged in</a> to view this page.
+</p>
+<?php
+}
+?>
