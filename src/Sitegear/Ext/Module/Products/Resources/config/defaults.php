@@ -53,6 +53,11 @@ return array(
 		 */
 		'max-depth' => 1,
 
+		/**
+		 * Tooltip format mask, the single placeholder is given the name of the category.
+		 */
+		'tooltip' => 'Find out about our range of %s'
+
 		// TODO
 //		'all-products-link' => false
 //		'all-categories-link' => false

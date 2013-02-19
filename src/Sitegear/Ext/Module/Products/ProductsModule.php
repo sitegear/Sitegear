@@ -9,9 +9,9 @@
 namespace Sitegear\Ext\Module\Products;
 
 use Sitegear\Base\Module\AbstractUrlMountableModule;
-use Sitegear\Ext\Module\Products\Model\Attribute;
 use Sitegear\Base\Module\PurchaseItemProviderModuleInterface;
 use Sitegear\Base\View\ViewInterface;
+use Sitegear\Ext\Module\Products\Model\Attribute;
 use Sitegear\Util\LoggerRegistry;
 
 use Symfony\Component\HttpFoundation\Request;
@@ -233,8 +233,7 @@ class ProductsModule extends AbstractUrlMountableModule implements PurchaseItemP
 			$categoryResult = array(
 				'url' => sprintf('%s/%s/%s', $this->getMountedUrl(), $this->config('routes.category'), $category->getUrlPath()),
 				'label' => $category->getName(),
-				// TODO Make this configurable
-				'tooltip' => sprintf('Find out about our range of "%s"', $category->getName())
+				'tooltip' => sprintf($this->config('navigation.tooltip'), $category->getName())
 			);
 			if ($mode === self::NAVIGATION_DATA_MODE_EXPANDED || $maxDepth !== 1) { // >1 means more levels before the limit is reached, <=0 means no limit
 				$subCategories = $this->buildNavigationDataImpl($mode, max(0, $maxDepth - 1), $category);
