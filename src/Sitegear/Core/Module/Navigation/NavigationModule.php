@@ -129,7 +129,44 @@ class NavigationModule extends AbstractConfigurableModule {
 		return $result && empty($urlPath);
 	}
 
+	/**
+	 * Force the navigation data to be regenerated the next time it is required.
+	 *
+	 * This method should be called whenever any item is changed which will affect navigation of the relevant type.
+	 *
+	 * If `$type` is null (the default) then all types will be cleared and recached.  Otherwise it must be one of the
+	 * NAVIGATION_DATA_MODE_* constants defined by MountableModuleInterface.
+	 *
+	 * @param integer|null $mode
+	 *
+	 * @throws \InvalidArgumentException
+	 */
+	public function recache($mode=null) {
+		$modes = array( MountableModuleInterface::NAVIGATION_DATA_MODE_MAIN, MountableModuleInterface::NAVIGATION_DATA_MODE_EXPANDED );
+		if (!is_null($mode)) {
+			if (in_array($mode, $modes)) {
+				$modes = array( $mode );
+			} else {
+				throw new \InvalidArgumentException(sprintf('NavigationModule cannot recache on unknown mode value "%s"', $mode));
+			}
+		}
+		foreach ($modes as $mode) {
+			$this->getEngine()->getMemcached()->delete($this->getCacheKey($mode));
+		}
+	}
+
 	//-- Internal Methods --------------------
+
+	/**
+	 * Get the memcached key for navigation data in the given mode.
+	 *
+	 * @param integer $mode
+	 *
+	 * @return string
+	 */
+	private function getCacheKey($mode) {
+		return sprintf('navigation.data.%s', $mode);
+	}
 
 	/**
 	 * Retrieve normalised navigation data, which is loaded and cached the first time it is required.
@@ -142,7 +179,7 @@ class NavigationModule extends AbstractConfigurableModule {
 	 */
 	private function getData($mode) {
 		if (!isset($this->data[$mode])) {
-			$cacheKey = sprintf('navigation.data.%s', $mode);
+			$cacheKey = $this->getCacheKey($mode);
 			$cacheValue = $this->getEngine()->getMemcached()->get($cacheKey);
 			if ($cacheValue) {
 				$this->data[$mode] = $cacheValue;
@@ -152,7 +189,6 @@ class NavigationModule extends AbstractConfigurableModule {
 					throw new \DomainException(sprintf('Invalid module "%s" specified as default content module, does not provide navigation data, must implement MountableModuleInterface.', $this->getEngine()->getDefaultContentModule()));
 				}
 				$this->data[$mode] = $this->normaliseNavigation($rootModule->getNavigationData($mode), $mode);
-				// TODO When the navigation data is modified anywhere we should delete this key
 				$this->getEngine()->getMemcached()->set($cacheKey, $this->data[$mode]);
 			}
 		}
