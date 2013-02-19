@@ -27,6 +27,11 @@ return array(
 	'title' => 'Products',
 
 	/**
+	 * Main page heading.
+	 */
+	'heading' => 'Products',
+
+	/**
 	 * Route settings.
 	 */
 	'routes' => array(

@@ -210,6 +210,7 @@ class ProductsModule extends AbstractUrlMountableModule implements PurchaseItemP
 	 */
 	private function applyViewDefaults(ViewInterface $view) {
 		$view['title'] = $this->config('title');
+		$view['heading'] = $this->config('heading');
 		$view['category-path'] = trim($this->config('category-path'), '/');
 		$view['item-path'] = trim($this->config('item-path'), '/');
 		$view['item-url'] = $this->config('routes.item');

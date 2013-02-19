@@ -27,6 +27,11 @@ return array(
 	'title' => 'Locations',
 
 	/**
+	 * Main page heading.
+	 */
+	'heading' => 'Locations',
+
+	/**
 	 * Route settings.
 	 */
 	'routes' => array(

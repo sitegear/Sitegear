@@ -22,6 +22,11 @@ return array(
 	'title' => 'News',
 
 	/**
+	 * Main page heading.
+	 */
+	'heading' => 'News',
+
+	/**
 	 * Settings for navigation data generation.
 	 */
 	'navigation' => array(

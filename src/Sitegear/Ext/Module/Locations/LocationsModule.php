@@ -172,6 +172,7 @@ class LocationsModule extends AbstractUrlMountableModule {
 	 */
 	private function applyViewDefaults(ViewInterface $view) {
 		$view['title'] = $this->config('title');
+		$view['heading'] = $this->config('heading');
 		$view['region-path'] = trim($this->config('region-path'), '/');
 		$view['item-path'] = trim($this->config('item-path'), '/');
 		$view['item-url'] = $this->config('routes.item');

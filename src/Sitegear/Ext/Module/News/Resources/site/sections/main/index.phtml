@@ -3,7 +3,7 @@
 $view->getStringsManager()->prepend('title', $view['title']);
 $itemDecorator = sprintf('excerpt(%d, "%s")', $view['excerpt-length'], 'Article content not found.');
 ?>
-<h1><?php echo $view['title']; ?></h1>
+<h1><?php echo $view['heading']; ?></h1>
 
 <section class="news-item-preview-container">
 <?php

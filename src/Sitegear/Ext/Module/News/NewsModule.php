@@ -97,14 +97,13 @@ class NewsModule extends AbstractUrlMountableModule {
 	 */
 	public function indexController(ViewInterface $view, Request $request) {
 		LoggerRegistry::debug('NewsModule::indexController');
+		$this->applyDefaults($view);
 		$this->applyConfigToView('page.index', $view);
 		$itemCount = $this->getRepository('Item')->getItemCount();
 		$view['items'] = $this->getRepository('Item')->findLatestItems($request->query->has('more') ? 0 : intval($this->config('page.index.item-limit')));
 		$view['item-count'] = $itemCount;
 		$view['more'] = $request->query->has('more');
 		$view['item-path'] = trim($this->config('item-path'), '/');
-		$view['title'] = $this->config('title');
-		$view['root-url'] = $this->getMountedUrl();
 	}
 
 	/**
@@ -120,9 +119,8 @@ class NewsModule extends AbstractUrlMountableModule {
 	 */
 	public function itemController(ViewInterface $view, Request $request) {
 		LoggerRegistry::debug('NewsModule::itemController');
+		$this->applyDefaults($view);
 		$this->applyConfigToView('page.item', $view);
-		$view['title'] = $this->config('title');
-		$view['root-url'] = $this->getMountedUrl();
 		try {
 			$view['item'] = $this->getRepository('Item')->findOneByUrlPath($request->attributes->get('slug'));
 		} catch (NoResultException $e) {
@@ -143,15 +141,26 @@ class NewsModule extends AbstractUrlMountableModule {
 	 */
 	public function latestHeadlinesComponent(ViewInterface $view, $itemLimit=null, $excerptLength=null, $readMore=null) {
 		LoggerRegistry::debug('NewsModule::latestHeadlinesComponent');
+		$this->applyDefaults($view);
 		$itemLimit = intval(!is_null($itemLimit) ? $itemLimit : $this->config('component.latest-headlines.item-limit'));
 		$view['items'] = $this->getRepository('Item')->findLatestItems($itemLimit);
 		$view['date-format'] = $this->config('component.latest-headlines.date-format');
 		$view['excerpt-length'] = !is_null($excerptLength) ? $excerptLength : $this->config('component.latest-headlines.excerpt-length');
 		$view['read-more'] = $readMore ?: $this->config('component.latest-headlines.read-more');
-		$view['root-url'] = $this->getMountedUrl();
 	}
 
 	//-- Internal Methods --------------------
+
+	/**
+	 * Apply default configuration used throughout this module.
+	 *
+	 * @param \Sitegear\Base\View\ViewInterface $view
+	 */
+	private function applyDefaults(ViewInterface $view) {
+		$view['title'] = $this->config('title');
+		$view['heading'] = $this->config('heading');
+		$view['root-url'] = $this->getMountedUrl();
+	}
 
 	/**
 	 * @param string $entity

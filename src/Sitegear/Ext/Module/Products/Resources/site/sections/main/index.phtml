@@ -3,7 +3,7 @@
 $view->getStringsManager()->prepend('title', $view['title']);
 $categoryDecorator = sprintf('excerpt(%d, "%s")', $view['excerpt-length'], 'Category description not found.');
 ?>
-<h1><?php echo $view['title']; ?></h1>
+<h1><?php echo $view['heading']; ?></h1>
 
 <section class="products-categories-container">
 <?php
