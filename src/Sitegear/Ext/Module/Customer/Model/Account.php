@@ -8,16 +8,18 @@
 
 namespace Sitegear\Ext\Module\Customer\Model;
 
+use Doctrine\Common\Collections\ArrayCollection;
+
 /**
  * @Entity
- * @Table("customer_master")
+ * @Table("customer_account")
  */
-class Customer {
+class Account {
 
 	//-- Attributes --------------------
 
 	/**
-	 * @var int
+	 * @var integer
 	 * @Id
 	 * @Column(type="integer")
 	 * @GeneratedValue
@@ -25,18 +27,30 @@ class Customer {
 	private $id;
 
 	/**
-	 * Coupled to the `User` package email address.
+	 * @var \Doctrine\Common\Collections\Collection
+	 * @OneToMany(targetEntity="AccountFieldValue", mappedBy="account")
+	 */
+	private $fieldValues;
+
+	/**
+	 * @var \Doctrine\Common\Collections\Collection
+	 * @OneToMany(targetEntity="Transaction", mappedBy="account")
+	 */
+	private $transactions;
+
+	/**
+	 * @var \Doctrine\Common\Collections\Collection
+	 * @OneToMany(targetEntity="Token", mappedBy="account")
+	 */
+	private $tokens;
+
+	/**
+	 * Matches the `User` package email address.
 	 *
 	 * @var string
 	 * @Column(type="string", unique=true)
 	 */
 	private $email;
-
-	/**
-	 * @var array
-	 * @Column(type="json")
-	 */
-	private $fields;
 
 	/**
 	 * @var \DateTime
@@ -55,7 +69,9 @@ class Customer {
 	//-- Constructor --------------------
 
 	public function __construct() {
-		$this->fields = array();
+		$this->fieldValues = new ArrayCollection();
+		$this->transactions = new ArrayCollection();
+		$this->tokens = new ArrayCollection();
 	}
 
 	//-- Accessor Methods --------------------
@@ -82,29 +98,24 @@ class Customer {
 	}
 
 	/**
-	 * @param string $key
-	 *
-	 * @return mixed
+	 * @return \Doctrine\Common\Collections\Collection
 	 */
-	public function getField($key) {
-		return array_key_exists($key, $this->fields) ? $this->fields[$key] : null;
+	public function getFieldValues() {
+		return $this->fieldValues;
 	}
 
 	/**
-	 * @param string $key
-	 * @param mixed $value
+	 * @return \Doctrine\Common\Collections\Collection
 	 */
-	public function setField($key, $value) {
-		$this->fields[$key] = $value;
+	public function getTokens() {
+		return $this->tokens;
 	}
 
 	/**
-	 * @param string $key
+	 * @return \Doctrine\Common\Collections\Collection
 	 */
-	public function removeField($key) {
-		if (array_key_exists($key, $this->fields)) {
-			unset($this->fields[$key]);
-		}
+	public function getTransactions() {
+		return $this->transactions;
 	}
 
 	/**
@@ -120,4 +131,5 @@ class Customer {
 	public function getDateCreated() {
 		return $this->dateCreated;
 	}
+
 }
