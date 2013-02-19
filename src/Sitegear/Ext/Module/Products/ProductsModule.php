@@ -30,6 +30,9 @@ class ProductsModule extends AbstractUrlMountableModule implements PurchaseItemP
 
 	//-- Constants --------------------
 
+	/**
+	 * Alias to use for this module's entity namespace.
+	 */
 	const ENTITY_ALIAS = 'Products';
 
 	//-- ModuleInterface Methods --------------------

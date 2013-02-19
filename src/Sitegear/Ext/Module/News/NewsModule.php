@@ -28,6 +28,9 @@ class NewsModule extends AbstractUrlMountableModule {
 
 	//-- Constants --------------------
 
+	/**
+	 * Alias to use for this module's entity namespace.
+	 */
 	const ENTITY_ALIAS = 'News';
 
 	//-- ModuleInterface Methods --------------------

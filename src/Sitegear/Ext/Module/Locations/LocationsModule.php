@@ -29,6 +29,9 @@ class LocationsModule extends AbstractUrlMountableModule {
 
 	//-- Constants --------------------
 
+	/**
+	 * Alias to use for this module's entity namespace.
+	 */
 	const ENTITY_ALIAS = 'Locations';
 
 	//-- ModuleInterface Methods --------------------
