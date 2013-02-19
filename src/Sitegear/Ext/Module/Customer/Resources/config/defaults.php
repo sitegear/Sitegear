@@ -21,7 +21,10 @@ return array(
 		 */
 		'text' => array(
 			'no-items' => '<span class="sitegear-trolley-preview-no-items">Trolley is empty</span>',
-			'items-count' => '<span class="sitegear-trolley-preview-items-count">Trolley contains %d items</span>',
+			'items-count' => array(
+				'<span class="sitegear-trolley-preview-items-count">Trolley contains %d item</span>',
+				'<span class="sitegear-trolley-preview-items-count">Trolley contains %d items</span>'
+			),
 			'details-link' => '<a href="%s" class="sitegear-trolley-preview-details-link">Details</a>',
 			'checkout-link' => '<a href="%s" class="sitegear-trolley-preview-checkout-link">Checkout</a>'
 		)
@@ -92,12 +95,30 @@ return array(
 		'trolley' => array(
 
 			/**
+			 * Page title.
+			 */
+			'title' => 'Your Trolley',
+
+			/**
+			 * Page heading.
+			 */
+			'heading' => 'Your Trolley',
+
+			/**
 			 * Text used in the trolley preview component.
 			 */
 			'text' => array(
 				'no-items' => '{{ config:common.text.no-items }}',
 				'items-count' => '{{ config:common.text.items-count }}',
-				'checkout-link' => '{{ config:common.text.checkout-link }}'
+				'checkout-link' => '{{ config:common.text.checkout-link }}',
+				'table-headings' => array(
+					'item' => 'Item',
+					'details' => 'Details',
+					'price' => 'Price',
+					'quantity' => 'Quantity',
+					'total' => 'Total',
+					'actions' => 'Actions'
+				)
 			)
 		)
 	),

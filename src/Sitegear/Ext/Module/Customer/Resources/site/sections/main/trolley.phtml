@@ -1,41 +1,49 @@
 <?php
 /** @var \Sitegear\Core\View\View $view */
+$view->getStringsManager()->prepend('title', $view['title'])
+?>
+<h1><?php echo $view['heading']; ?></h1>
+<p>
+<?php
 $trolleyEmpty = !isset($view['trolley-data']) || empty($view['trolley-data']);
 if ($trolleyEmpty) {
 	echo $view['text']['no-items'];
 } else {
-	echo sprintf($view['text']['items-count'], sizeof($view['trolley-data']));
+	echo sprintf(sizeof($view['trolley-data']) === 1 ? $view['text']['items-count'][0] : $view['text']['items-count'][1], sizeof($view['trolley-data']));
 ?>
+</p>
 <table>
 	<thead>
 	<tr>
-		<th>Item</th>
-		<th>Details</th>
-		<th>Unit Price</th>
-		<th>Qty</th>
-		<th>Item Total</th>
-		<th>Actions</th>
+		<th><?php echo $view['text']['table-headings']['item']; ?></th>
+		<th><?php echo $view['text']['table-headings']['details']; ?></th>
+		<th><?php echo $view['text']['table-headings']['price']; ?></th>
+		<th><?php echo $view['text']['table-headings']['quantity']; ?></th>
+		<th><?php echo $view['text']['table-headings']['total']; ?></th>
+		<th><?php echo $view['text']['table-headings']['actions']; ?></th>
 	</tr>
 	</thead>
 	<tbody>
 <?php
-	foreach ($view['trolley-data'] as $index => $item) {
+	$totalPrice = 0;
+	foreach ($view['trolley-data'] as $index => $item) { /** @var \Sitegear\Ext\Module\Customer\Model\TransactionItem $item */
+		$totalPrice += $item->getQuantity() * $item->getUnitPrice();
 ?>
 	<tr>
-		<td><a href="<?php echo $item['details-url']; ?>"><?php echo $item['label']; ?></a></td>
-		<td><?php echo implode('<br/>', array_map(function($e) { return $e['label']; }, $item['attributes'])); ?></td>
-		<td>$<?php echo number_format($item['unit-price'] / 100, 2); ?></td>
+		<td><a href="<?php echo $item->getDetailsUrl(); ?>"><?php echo $item->getLabel(); ?></a></td>
+		<td><?php echo implode('<br/>', array_map(function($attribute) { return $attribute['label']; }, $item->getAttributes())); ?></td>
+		<td>$<?php echo number_format($item->getUnitPrice() / 100, 2); ?></td>
 		<td>
 			<form method="post" action="<?php echo sprintf("%s/modify-trolley-item", $view['root-url']); ?>" class="minimal">
 				<nobr>
 					<input type="hidden" name="form-url" value="<?php echo sprintf('%s/trolley', $view['root-url']); ?>" />
 					<input type="hidden" name="index" value="<?php echo $index; ?>" />
-					<input type="text" name="qty" value="<?php echo $item['qty']; ?>" style="width:2em;" />
-					<input type="submit" value="=" />
+					<input type="text" name="quantity" value="<?php echo number_format($item->getQuantity()); ?>" style="width:2em;" />
+					<input type="submit" value="=" /><?php /* TODO Configurable button text */ ?>
 				</nobr>
 			</form>
 		</td>
-		<td>$<?php echo number_format($item['unit-price'] * $item['qty'] / 100, 2); ?></td>
+		<td>$<?php echo number_format($item->getUnitPrice() * $item->getQuantity() / 100, 2); ?></td>
 		<td>
 			<form method="post" action="<?php echo sprintf('%s/remove-trolley-item', $view['root-url']); ?>" class="minimal">
 				<input type="hidden" name="form-url" value="<?php echo sprintf('%s/trolley', $view['root-url']); ?>" />
@@ -47,6 +55,25 @@ if ($trolleyEmpty) {
 <?php
 	}
 ?>
+	<tr>
+		<td colspan="4">Subtotal</td>
+		<td>$<?php echo number_format($totalPrice / 100, 2); ?></td>
+		<td></td>
+	</tr>
+	<tr>
+		<td colspan="4">Tax and Shipping</td>
+		<td>TBA</td>
+		<td></td>
+	</tr>
+	<tr>
+		<td colspan="4">Total</td>
+		<td>TBA</td>
+		<td>
+			<form method="get" action="<?php echo sprintf('%s/checkout', $view['root-url']); ?>" class="minimal">
+				<input type="submit" value="Checkout" />
+			</form>
+		</td>
+	</tr>
 	</tbody>
 </table>
 <?php
