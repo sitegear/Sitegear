@@ -99,7 +99,6 @@ class CustomerModule extends AbstractUrlMountableModule {
 				$account = new Account();
 				$account->setEmail($email);
 				$this->getEngine()->doctrine()->getEntityManager()->persist($account);
-				$this->getEngine()->doctrine()->getEntityManager()->flush();
 			}
 			$view['account'] = $account;
 		}
