@@ -94,6 +94,14 @@ class DoctrineModule extends AbstractConfigurableModule implements DiscreteDataM
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	public function stop() {
+		$this->entityManager->flush();
+		$this->entityManager->close();
+	}
+
 	//-- DiscreteDataModuleInterface Methods --------------------
 
 	/**
