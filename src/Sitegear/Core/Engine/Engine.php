@@ -240,7 +240,9 @@ class Engine extends AbstractConfigurableEngine {
 			foreach ($this->config('memcached.servers') as $server) {
 				if (isset($server['host']) && isset($server['port'])) {
 					$memcached->addServer($server['host'], $server['port']);
-				} // else ignore
+				} else {
+					throw new \InvalidArgumentException('Engine cannot connect to memcached server without both "host" and "port" specified.');
+				}
 			}
 		}
 		return new SoftWrapper($memcached);
