@@ -104,7 +104,7 @@ class CustomerModule extends AbstractUrlMountableModule {
 			$this->addTrolleyItem($moduleName, $type, $id, $attributeValues, intval($request->request->get('qty')));
 		}
 		// Go back to the page where the submission was made.
-		return new RedirectResponse($request->getUriForPath('/' . $request->request->get('form-url')));
+		return new RedirectResponse($request->getUriForPath(sprintf('/%s/trolley', $this->getMountedUrl())));
 	}
 
 	/**
@@ -119,7 +119,7 @@ class CustomerModule extends AbstractUrlMountableModule {
 		// Remove the item from the stored trolley data.
 		$this->removeTrolleyItem(intval($request->request->get('index')));
 		// Go back to the page where the submission was made.
-		return new RedirectResponse($request->getUriForPath('/' . $request->request->get('form-url')));
+		return new RedirectResponse($request->getUriForPath(sprintf('/%s/trolley', $this->getMountedUrl())));
 	}
 
 	/**
@@ -134,7 +134,7 @@ class CustomerModule extends AbstractUrlMountableModule {
 		// Update the stored trolley data.
 		$this->modifyTrolleyItem(intval($request->request->get('index')), intval($request->request->get('qty')));
 		// Go back to the page where the submission was made.
-		return new RedirectResponse($request->getUriForPath('/' . $request->request->get('form-url')));
+		return new RedirectResponse($request->getUriForPath(sprintf('/%s/trolley', $this->getMountedUrl())));
 	}
 
 	/**
