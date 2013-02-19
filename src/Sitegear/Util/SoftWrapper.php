@@ -38,12 +38,30 @@ namespace Sitegear\Util;
  */
 class SoftWrapper {
 
+	//-- Attributes --------------------
+
+	/**
+	 * @var object
+	 */
 	private $object;
 
+	//-- Constructor --------------------
+
+	/**
+	 * @param mixed $object
+	 */
 	public function __construct($object) {
 		$this->object = is_object($object) ? $object : new \StdClass();
 	}
 
+	//-- Magic Methods --------------------
+
+	/**
+	 * @param $name
+	 * @param $arguments
+	 *
+	 * @return mixed|null
+	 */
 	public function __call($name, $arguments) {
 		if (method_exists($this->object, $name)) {
 			return call_user_func_array(array( $this->object, $name ), $arguments);
