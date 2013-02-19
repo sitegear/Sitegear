@@ -42,7 +42,7 @@ class UserIntegrationModule extends AbstractUrlMountableModule {
 			$returnUrl = $request->request->get('return-url');
 			$userManager = $this->getEngine()->getUserManager();
 			if ($userManager->login($request->request->all())) {
-				return new RedirectResponse($returnUrl);
+				return new RedirectResponse($returnUrl ?: $request->getBaseUrl());
 			} else {
 				$view['error-message'] = 'Invalid credentials supplied, please try again.';
 			}
@@ -57,7 +57,8 @@ class UserIntegrationModule extends AbstractUrlMountableModule {
 	public function logoutController(Request $request) {
 		LoggerRegistry::debug('UserIntegrationModule::logoutController');
 		$this->getEngine()->getUserManager()->logout();
-		return new RedirectResponse(UrlUtilities::getReturnUrl($request->getUri()));
+		$return = UrlUtilities::getReturnUrl($request->getUri());
+		return new RedirectResponse($return ?: $request->getBaseUrl());
 	}
 
 	//-- Component Target Controller Methods --------------------
