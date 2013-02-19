@@ -1,0 +1,26 @@
+<?php
+/** @var \Sitegear\Core\View\View $view */
+$trolleyEmpty = !isset($view['trolley-data']) || empty($view['trolley-data']);
+if ($trolleyEmpty) {
+	echo $view['text']['no-items'];
+} else {
+	echo sprintf($view['text']['items-count'], sizeof($view['trolley-data']));
+}
+$showDetailsLink = is_bool($view['links']['details']) ? $view['links']['details'] : ($view['links']['details'] === 'non-empty' && !$trolleyEmpty);
+$showCheckoutLink = is_bool($view['links']['checkout']) ? $view['links']['checkout'] : ($view['links']['checkout'] === 'non-empty' && !$trolleyEmpty);
+if ($showDetailsLink || $showCheckoutLink) {
+	$linkWrapper = $view['links']['wrapper']['element'];
+	if (is_string($linkWrapper)) {
+		echo sprintf('<%s%s>', $linkWrapper, \Sitegear\Util\HtmlUtilities::attributes($view['links']['wrapper']['attributes']));
+	}
+	if ($showDetailsLink) {
+		echo sprintf($view['text']['details-link'], sprintf('%s/trolley', $view['root-url']));
+	}
+	echo $view['links']['separator'];
+	if ($showCheckoutLink) {
+		echo sprintf($view['text']['checkout-link'], sprintf('%s/checkout', $view['root-url']));
+	}
+	if (is_string($linkWrapper)) {
+		echo sprintf('</%s>', $linkWrapper);
+	}
+}

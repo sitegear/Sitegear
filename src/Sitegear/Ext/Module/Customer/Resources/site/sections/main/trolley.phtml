@@ -1,0 +1,53 @@
+<?php
+/** @var \Sitegear\Core\View\View $view */
+$trolleyEmpty = !isset($view['trolley-data']) || empty($view['trolley-data']);
+if ($trolleyEmpty) {
+	echo $view['text']['no-items'];
+} else {
+	echo sprintf($view['text']['items-count'], sizeof($view['trolley-data']));
+?>
+<table>
+	<thead>
+	<tr>
+		<th>Item</th>
+		<th>Details</th>
+		<th>Unit Price</th>
+		<th>Qty</th>
+		<th>Item Total</th>
+		<th>Actions</th>
+	</tr>
+	</thead>
+	<tbody>
+<?php
+	foreach ($view['trolley-data'] as $index => $item) {
+?>
+	<tr>
+		<td><a href="<?php echo $item['details-url']; ?>"><?php echo $item['label']; ?></a></td>
+		<td><?php echo implode('<br/>', array_map(function($e) { return $e['label']; }, $item['attributes'])); ?></td>
+		<td>$<?php echo number_format($item['unit-price'] / 100, 2); ?></td>
+		<td>
+			<form method="post" action="<?php echo sprintf("%s/modify-trolley-item", $view['root-url']); ?>" class="minimal">
+				<nobr>
+					<input type="hidden" name="form-url" value="<?php echo sprintf('%s/trolley', $view['root-url']); ?>" />
+					<input type="hidden" name="index" value="<?php echo $index; ?>" />
+					<input type="text" name="qty" value="<?php echo $item['qty']; ?>" style="width:2em;" />
+					<input type="submit" value="=" />
+				</nobr>
+			</form>
+		</td>
+		<td>$<?php echo number_format($item['unit-price'] * $item['qty'] / 100, 2); ?></td>
+		<td>
+			<form method="post" action="<?php echo sprintf('%s/remove-trolley-item', $view['root-url']); ?>" class="minimal">
+				<input type="hidden" name="form-url" value="<?php echo sprintf('%s/trolley', $view['root-url']); ?>" />
+				<input type="hidden" name="index" value="<?php echo $index; ?>" />
+				<input type="submit" value="Remove" />
+			</form>
+		</td>
+	</tr>
+<?php
+	}
+?>
+	</tbody>
+</table>
+<?php
+}

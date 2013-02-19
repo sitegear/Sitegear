@@ -31,8 +31,10 @@ class AttributeOption {
 	private $label;
 
 	/**
-	 * @var string
-	 * @Column(type="string", nullable=false)
+	 * Price in whole cents.
+	 *
+	 * @var integer
+	 * @Column(type="integer", nullable=false)
 	 */
 	private $value;
 
@@ -72,7 +74,7 @@ class AttributeOption {
 	}
 
 	/**
-	 * @return int
+	 * @return Attribute
 	 */
 	public function getAttribute() {
 		return $this->attribute;
@@ -128,7 +130,7 @@ class AttributeOption {
 	}
 
 	/**
-	 * @return string
+	 * @return integer
 	 */
 	public function getValue() {
 		return $this->value;

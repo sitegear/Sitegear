@@ -9,6 +9,7 @@
 namespace Sitegear\Ext\Module\Products;
 
 use Sitegear\Base\Module\AbstractUrlMountableModule;
+use Sitegear\Ext\Module\Products\Model\Attribute;
 use Sitegear\Base\Module\PurchaseItemProviderModuleInterface;
 use Sitegear\Base\View\ViewInterface;
 use Sitegear\Util\LoggerRegistry;
@@ -98,7 +99,29 @@ class ProductsModule extends AbstractUrlMountableModule implements PurchaseItemP
 	 * {@inheritDoc}
 	 */
 	public function getPurchaseItemUnitPrice($type, $id, array $attributeValues) {
-		// TODO: Implement getPurchaseItemUnitPrice() method.
+		$basePrice = null;
+		$adjustments = 0;
+		foreach ($attributeValues as $attributeValue) {
+			/** @var \Sitegear\Ext\Module\Products\Model\AttributeOption $attributeOption */
+			$attributeOption = $this->getRepository('AttributeOption')->find($attributeValue);
+			switch ($attributeOption->getAttribute()->getType()) {
+				case Attribute::TYPE_BASE:
+					$basePrice = $attributeOption->getValue();
+					break;
+				case Attribute::TYPE_SINGLE:
+				case Attribute::TYPE_MULTIPLE:
+					$adjustments = $attributeOption->getValue();
+					break;
+			}
+		}
+		return $basePrice + $adjustments;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function getPurchaseItemDetailsUrl($type, $id, array $attributeValues) {
+		return sprintf('%s/item/%s', $this->getMountedUrl(), $this->getRepository('Item')->find($id)->getUrlPath());
 	}
 
 	//-- AbstractUrlMountableModule Methods --------------------

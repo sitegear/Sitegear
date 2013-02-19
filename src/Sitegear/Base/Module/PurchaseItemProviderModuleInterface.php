@@ -46,4 +46,16 @@ interface PurchaseItemProviderModuleInterface extends ModuleInterface {
 	 */
 	public function getPurchaseItemUnitPrice($type, $id, array $attributeValues);
 
+	/**
+	 * Get the URL describing the specified item, this is often the same URL as (or a non-canonical equivalent of) the
+	 * URL where the product is purchased.
+	 *
+	 * @param $type
+	 * @param $id
+	 * @param array $attributeValues
+	 *
+	 * @return string
+	 */
+	public function getPurchaseItemDetailsUrl($type, $id, array $attributeValues);
+
 }

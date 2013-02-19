@@ -55,6 +55,9 @@ class CustomerModule extends AbstractUrlMountableModule {
 		$routes = new RouteCollection();
 		$routes->add('index', new Route($this->getMountedUrl()));
 		$routes->add('addTrolleyItem', new Route(sprintf('%s/add-trolley-item', $this->getMountedUrl())));
+		$routes->add('removeTrolleyItem', new Route(sprintf('%s/remove-trolley-item', $this->getMountedUrl())));
+		$routes->add('modifyTrolleyItem', new Route(sprintf('%s/modify-trolley-item', $this->getMountedUrl())));
+		$routes->add('trolley', new Route(sprintf('%s/trolley', $this->getMountedUrl())));
 		return $routes;
 	}
 
@@ -71,6 +74,7 @@ class CustomerModule extends AbstractUrlMountableModule {
 	 * Show the customer profile page.
 	 */
 	public function indexController() {
+		LoggerRegistry::debug('CustomerModule::indexController');
 		// TODO Customer profile page
 	}
 
@@ -82,6 +86,7 @@ class CustomerModule extends AbstractUrlMountableModule {
 	 * @return \Symfony\Component\HttpFoundation\RedirectResponse
 	 */
 	public function addTrolleyItemController(Request $request) {
+		LoggerRegistry::debug('CustomerModule::addTrolleyItemController');
 		// Extract request details.
 		$moduleName = $request->request->get('module');
 		$type = $request->request->get('type');
@@ -96,13 +101,77 @@ class CustomerModule extends AbstractUrlMountableModule {
 					$attributeValues[substr($key, 5)] = $value;
 				}
 			}
-			$this->addTrolleyItem($moduleName, $type, $id, $attributeValues, $request->request->get('qty'));
+			$this->addTrolleyItem($moduleName, $type, $id, $attributeValues, intval($request->request->get('qty')));
 		}
 		// Go back to the page where the submission was made.
 		return new RedirectResponse($request->getUriForPath('/' . $request->request->get('form-url')));
 	}
 
+	/**
+	 * Handle the "remove" button action from the trolley details page.
+	 *
+	 * @param \Symfony\Component\HttpFoundation\Request $request
+	 *
+	 * @return \Symfony\Component\HttpFoundation\RedirectResponse
+	 */
+	public function removeTrolleyItemController(Request $request) {
+		LoggerRegistry::debug('CustomerModule::removeTrolleyItemController');
+		// Remove the item from the stored trolley data.
+		$this->removeTrolleyItem(intval($request->request->get('index')));
+		// Go back to the page where the submission was made.
+		return new RedirectResponse($request->getUriForPath('/' . $request->request->get('form-url')));
+	}
+
+	/**
+	 * Handle the quantity update from the trolley details page.
+	 *
+	 * @param \Symfony\Component\HttpFoundation\Request $request
+	 *
+	 * @return \Symfony\Component\HttpFoundation\RedirectResponse
+	 */
+	public function modifyTrolleyItemController(Request $request) {
+		LoggerRegistry::debug('CustomerModule::modifyTrolleyItemController');
+		// Update the stored trolley data.
+		$this->modifyTrolleyItem(intval($request->request->get('index')), intval($request->request->get('qty')));
+		// Go back to the page where the submission was made.
+		return new RedirectResponse($request->getUriForPath('/' . $request->request->get('form-url')));
+	}
+
+	/**
+	 * Display the trolley details page.
+	 *
+	 * @param \Sitegear\Base\View\ViewInterface $view
+	 */
+	public function trolleyController(ViewInterface $view) {
+		LoggerRegistry::debug('CustomerModule::trolleyController');
+		$this->applyConfigToView('pages.trolley', $view);
+		$view['root-url'] = $this->getMountedUrl();
+		$view['trolley-data'] = $this->getTrolleyData();
+	}
+
+	/**
+	 * Display the checkout page.
+	 *
+	 * @param \Sitegear\Base\View\ViewInterface $view
+	 */
+	public function checkoutController(ViewInterface $view) {
+		LoggerRegistry::debug('CustomerModule::checkoutController');
+
+	}
+
 	//-- Component Controller Methods --------------------
+
+	/**
+	 * Display the trolley preview, which is usually found in the site header.
+	 *
+	 * @param \Sitegear\Base\View\ViewInterface $view
+	 */
+	public function trolleyPreviewComponent(ViewInterface $view) {
+		LoggerRegistry::debug('CustomerModule::trolleyPreviewComponent');
+		$this->applyConfigToView('components.trolley-preview', $view);
+		$view['root-url'] = $this->getMountedUrl();
+		$view['trolley-data'] = $this->getTrolleyData();
+	}
 
 	/**
 	 * Display the "add to trolley" form.
@@ -113,6 +182,7 @@ class CustomerModule extends AbstractUrlMountableModule {
 	 * @param $id
 	 */
 	public function trolleyFormComponent(ViewInterface $view, $moduleName, $type, $id) {
+		LoggerRegistry::debug('CustomerModule::trolleyFormComponent');
 		// Setup the generated form.
 		$this->getEngine()->forms()->registerForm(self::FORM_KEY_TROLLEY, $this->buildTrolleyForm($moduleName, $type, $id));
 		// Set the form key for the view to use.
@@ -135,16 +205,34 @@ class CustomerModule extends AbstractUrlMountableModule {
 	 * @throws \DomainException
 	 */
 	public function addTrolleyItem($moduleName, $type, $id, array $attributeValues=null, $qty=null) {
+		if ($qty < 1) {
+			throw new \DomainException('CustomerModule cannot modify trolley item to a zero or negative quantity; use removeTrolleyItem instead.');
+		}
 		$module = $this->getPurchaseItemProviderModule($moduleName);
+		$attributeDefinitions = $module->getPurchaseItemAttributeDefinitions($type, $id);
+		$attributes = array();
+		foreach ($attributeValues as $attributeValue) {
+			$attributeValue = intval($attributeValue);
+			foreach ($attributeDefinitions as $attributeDefinition) {
+				foreach ($attributeDefinition['options'] as $option) {
+					if ($option['id'] === $attributeValue) {
+						$attributes[] = array(
+							'value' => $attributeValue,
+							'label' => sprintf('%s: %s', $attributeDefinition['label'], $option['label'])
+						);
+					}
+				}
+			}
+		}
 		$item = array(
 			'module' => $moduleName,
 			'type' => $type,
 			'id' => $id,
 			'label' => $module->getPurchaseItemLabel($type, $id),
-			'attribute-definitions' => $module->getPurchaseItemAttributeDefinitions($type, $id),
-			'attribute-values' => $attributeValues,
+			'details-url' => $module->getPurchaseItemDetailsUrl($type, $id, $attributeValues),
+			'attributes' => $attributes,
 			'unit-price' => $module->getPurchaseItemUnitPrice($type, $id, $attributeValues),
-			'qty' => $qty ?: 1
+			'qty' => $qty
 		);
 		$data = $this->getTrolleyData();
 		$matched = false;
@@ -157,6 +245,43 @@ class CustomerModule extends AbstractUrlMountableModule {
 		if (!$matched) {
 			$data[] = $item;
 		}
+		$this->setTrolleyData($data);
+	}
+
+	/**
+	 * Remove the trolley item at the given index.
+	 *
+	 * @param $index
+	 *
+	 * @throws \OutOfBoundsException
+	 */
+	public function removeTrolleyItem($index) {
+		$data = $this->getTrolleyData();
+		if ($index < 0 || $index >= sizeof($data)) {
+			throw new \OutOfBoundsException(sprintf('CustomerModule cannot modify trolley item with index (%d) out-of-bounds', $index));
+		}
+		array_splice($data, $index, 1);
+		$this->setTrolleyData($data);
+	}
+
+	/**
+	 * Set the quantity of the trolley item at the given index.  The quantity must be greater than zero.
+	 *
+	 * @param $index
+	 * @param $qty
+	 *
+	 * @throws \DomainException
+	 * @throws \OutOfBoundsException
+	 */
+	public function modifyTrolleyItem($index, $qty) {
+		if ($qty < 1) {
+			throw new \DomainException('CustomerModule cannot modify trolley item to a zero or negative quantity; use removeTrolleyItem instead.');
+		}
+		$data = $this->getTrolleyData();
+		if ($index < 0 || $index >= sizeof($data)) {
+			throw new \OutOfBoundsException(sprintf('CustomerModule cannot modify trolley item with index (%d) out-of-bounds', $index));
+		}
+		$data[$index]['qty'] = $qty;
 		$this->setTrolleyData($data);
 	}
 
