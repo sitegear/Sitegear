@@ -22,12 +22,14 @@ use Symfony\Component\HttpFoundation\Response;
  */
 interface EngineInterface extends ModuleResolverInterface, ModuleContainerInterface {
 
+	//-- Life Cycle Methods --------------------
+
 	/**
 	 * Start the engine.
 	 *
 	 * @param \Symfony\Component\HttpFoundation\Request $request
 	 */
-	public function ignition(Request $request);
+	public function start(Request $request);
 
 	//-- Routing Methods --------------------
 

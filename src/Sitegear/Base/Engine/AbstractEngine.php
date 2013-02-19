@@ -122,7 +122,7 @@ abstract class AbstractEngine implements EngineInterface {
 	 *
 	 * This implementation registers the request in the view factory, and sets up the session.
 	 */
-	public function ignition(Request $request) {
+	public function start(Request $request) {
 		// Setup view related dependencies.
 		$this->getViewFactory()->setRequest($request);
 		$this->getViewFactory()->getRendererRegistry()->register($this->getRenderers());
