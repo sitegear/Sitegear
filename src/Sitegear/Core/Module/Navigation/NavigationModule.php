@@ -142,11 +142,19 @@ class NavigationModule extends AbstractConfigurableModule {
 	 */
 	private function getData($mode) {
 		if (!isset($this->data[$mode])) {
-			$rootModule = $this->getEngine()->getModule($this->getEngine()->getDefaultContentModule());
-			if (!$rootModule instanceof MountableModuleInterface) {
-				throw new \DomainException(sprintf('Invalid module "%s" specified as default content module, does not provide navigation data, must implement MountableModuleInterface.', $this->getEngine()->getDefaultContentModule()));
+			$cacheKey = sprintf('navigation.data.%s', $mode);
+			$cacheValue = $this->getEngine()->getMemcached()->get($cacheKey);
+			if ($cacheValue) {
+				$this->data[$mode] = $cacheValue;
+			} else {
+				$rootModule = $this->getEngine()->getModule($this->getEngine()->getDefaultContentModule());
+				if (!$rootModule instanceof MountableModuleInterface) {
+					throw new \DomainException(sprintf('Invalid module "%s" specified as default content module, does not provide navigation data, must implement MountableModuleInterface.', $this->getEngine()->getDefaultContentModule()));
+				}
+				$this->data[$mode] = $this->normaliseNavigation($rootModule->getNavigationData($mode), $mode);
+				// TODO When the navigation data is modified anywhere we should delete this key
+				$this->getEngine()->getMemcached()->set($cacheKey, $this->data[$mode]);
 			}
-			$this->data[$mode] = $this->normaliseNavigation($rootModule->getNavigationData($mode), $mode);
 		}
 		return $this->data[$mode];
 	}

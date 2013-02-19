@@ -145,6 +145,13 @@ interface EngineInterface extends ModuleResolverInterface, ModuleContainerInterf
 	public function getSession();
 
 	/**
+	 * Retrieve the memcached connection object.
+	 *
+	 * @return \Memcached
+	 */
+	public function getMemcached();
+
+	/**
 	 * Get the user manager for this engine.
 	 *
 	 * @return \Sitegear\Base\User\Manager\UserManagerInterface

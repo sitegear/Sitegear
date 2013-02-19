@@ -23,6 +23,7 @@ use Sitegear\Core\View\ViewFactory;
 use Sitegear\Util\ExtensionMimeTypeGuesser;
 use Sitegear\Util\NameUtilities;
 use Sitegear\Util\TypeUtilities;
+use Sitegear\Util\SoftWrapper;
 use Sitegear\Util\LoggerRegistry;
 
 use Symfony\Component\HttpFoundation\Request;
@@ -232,8 +233,17 @@ class Engine extends AbstractConfigurableEngine {
 	/**
 	 * {@inheritDoc}
 	 */
-	protected function getRawTemplateMap() {
-		return $this->config('templates.map');
+	protected function initMemcached() {
+		$memcached = null;
+		if ($this->config('memcached.enabled')) {
+			$memcached = new \Memcached();
+			foreach ($this->config('memcached.servers') as $server) {
+				if (isset($server['host']) && isset($server['port'])) {
+					$memcached->addServer($server['host'], $server['port']);
+				} // else ignore
+			}
+		}
+		return new SoftWrapper($memcached);
 	}
 
 	/**
@@ -261,6 +271,13 @@ class Engine extends AbstractConfigurableEngine {
 				)
 			)
 		);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	protected function getRawTemplateMap() {
+		return $this->config('templates.map');
 	}
 
 	/**
