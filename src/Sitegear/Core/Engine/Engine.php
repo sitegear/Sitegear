@@ -23,7 +23,7 @@ use Sitegear\Core\View\ViewFactory;
 use Sitegear\Util\ExtensionMimeTypeGuesser;
 use Sitegear\Util\NameUtilities;
 use Sitegear\Util\TypeUtilities;
-use Sitegear\Util\SoftWrapper;
+use Sitegear\Util\FakeMemcached;
 use Sitegear\Util\LoggerRegistry;
 
 use Symfony\Component\HttpFoundation\Request;
@@ -245,7 +245,7 @@ class Engine extends AbstractConfigurableEngine {
 				}
 			}
 		}
-		return new SoftWrapper($memcached);
+		return $memcached ?: new FakeMemcached();
 	}
 
 	/**
