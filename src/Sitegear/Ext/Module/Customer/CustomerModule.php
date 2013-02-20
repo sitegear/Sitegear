@@ -89,7 +89,7 @@ class CustomerModule extends AbstractUrlMountableModule {
 	/**
 	 * Show the customer profile page.
 	 */
-	public function indexController(ViewInterface $view) {
+	public function indexController(ViewInterface $view, Request $request) {
 		LoggerRegistry::debug('CustomerModule::indexController');
 		$this->applyConfigToView('pages.index', $view);
 		if ($this->getEngine()->getUserManager()->isLoggedIn()) {
@@ -101,6 +101,8 @@ class CustomerModule extends AbstractUrlMountableModule {
 				$this->getEngine()->doctrine()->getEntityManager()->persist($account);
 			}
 			$view['account'] = $account;
+		} else {
+			$view['login-url'] = $this->getEngine()->userIntegration()->getAuthenticationLinkUrl('login', $request->getUri());
 		}
 	}
 
