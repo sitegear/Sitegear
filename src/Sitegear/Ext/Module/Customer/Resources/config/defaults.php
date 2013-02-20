@@ -114,6 +114,7 @@ return array(
 				'items-count' => '{{ config:common.text.items-count }}',
 				'checkout-link' => '{{ config:common.text.checkout-link }}',
 				'remove-button' => 'Remove',
+				'quantity-button' => '=',
 				'table-headings' => array(
 					'item' => 'Item',
 					'details' => 'Details',

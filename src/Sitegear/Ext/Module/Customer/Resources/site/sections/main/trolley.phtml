@@ -28,6 +28,7 @@ if ($trolleyEmpty) {
 	$totalPrice = 0;
 	foreach ($view['trolley-data'] as $index => $item) { /** @var \Sitegear\Ext\Module\Customer\Model\TransactionItem $item */
 		$totalPrice += $item->getQuantity() * $item->getUnitPrice();
+		$inputId = sprintf('item-%d-quantity', $index);
 ?>
 	<tr>
 		<td><a href="<?php echo $item->getDetailsUrl(); ?>"><?php echo $item->getLabel(); ?></a></td>
@@ -38,8 +39,9 @@ if ($trolleyEmpty) {
 				<nobr>
 					<input type="hidden" name="form-url" value="<?php echo sprintf('%s/trolley', $view['root-url']); ?>" />
 					<input type="hidden" name="index" value="<?php echo $index; ?>" />
-					<input type="text" name="quantity" value="<?php echo number_format($item->getQuantity()); ?>" style="width:2em;" />
-					<input type="submit" value="=" /><?php /* TODO Configurable button text */ ?>
+					<label for="<?php echo $inputId; ?>" style="display:none;"></label>
+					<input type="text" name="quantity" id="<?php echo $inputId; ?>" value="<?php echo number_format($item->getQuantity()); ?>" style="width:2em;" />
+					<input type="submit" value="<?php echo $view['text']['quantity-button']; ?>" />
 				</nobr>
 			</form>
 		</td>
