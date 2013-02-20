@@ -59,6 +59,15 @@ interface EngineInterface extends ModuleResolverInterface, ModuleContainerInterf
 	public function getModuleForUrl($url);
 
 	/**
+	 * Get the root URL where the given module is mounted.
+	 *
+	 * @param string $module Name of the module to check.
+	 *
+	 * @return string|null The root URL for the given module, or null if the module does not exist or is not mounted.
+	 */
+	public function getModuleMountedUrl($module);
+
+	/**
 	 * Retrieve the route for handling errors.
 	 *
 	 * @return \Symfony\Component\Routing\Route

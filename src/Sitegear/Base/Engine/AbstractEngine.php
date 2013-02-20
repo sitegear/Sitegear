@@ -181,10 +181,23 @@ abstract class AbstractEngine implements EngineInterface {
 	 */
 	public function getModuleForUrl($url) {
 		$result = null;
-		$url = trim($url, '/');
+		$url = ltrim($url, '/');
 		foreach ($this->getRawRouteMap() as $route) {
-			if (trim($route['root'], '/') === $url) {
+			if (ltrim($route['root'], '/') === $url) {
 				$result = $route['module'];
+			}
+		}
+		return $result;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function getModuleMountedUrl($module) {
+		$result = null;
+		foreach ($this->getRawRouteMap() as $route) {
+			if ($route['module'] === $module) {
+				$result = ltrim($route['root'], '/');
 			}
 		}
 		return $result;
