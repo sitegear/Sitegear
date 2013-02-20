@@ -9,14 +9,18 @@
 namespace Sitegear\Core\Module\Doctrine;
 
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
+use Doctrine\ORM\Events;
+use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Mapping\ClassMetadataInfo;
 
 /**
  * Taken from:
  * http://docs.doctrine-project.org/projects/doctrine-orm/en/2.0.x/cookbook/sql-table-prefixes.html
  * http://envysphere.com/symfony2-doctrine-table-prefix-62/
+ *
+ * Converted from a simple listener to a subscriber.
  */
-class DoctrineTablePrefix {
+class DoctrineTablePrefixSubscriber implements EventSubscriber {
 
 	//-- Attributes --------------------
 
@@ -29,6 +33,15 @@ class DoctrineTablePrefix {
 	 */
 	public function __construct($prefix) {
 		$this->prefix = strval($prefix);
+	}
+
+	//-- EventSubscriber Methods --------------------
+
+	/**
+	 * {@inheritDoc}
+	 */
+	function getSubscribedEvents() {
+		return array( Events::loadClassMetadata );
 	}
 
 	//-- Event Handler Methods --------------------
@@ -48,5 +61,4 @@ class DoctrineTablePrefix {
 			}
 		}
 	}
-
 }

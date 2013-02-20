@@ -10,6 +10,7 @@ namespace Sitegear\Core\Module\Doctrine;
 
 use Sitegear\Base\Module\AbstractConfigurableModule;
 use Sitegear\Base\Module\DiscreteDataModuleInterface;
+use Sitegear\Util\TypeUtilities;
 use Sitegear\Util\NameUtilities;
 use Sitegear\Util\LoggerRegistry;
 
@@ -24,12 +25,11 @@ use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Configuration;
-use Doctrine\ORM\Events;
 use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
 use Doctrine\ORM\Mapping\Driver\DriverChain;
 use Doctrine\ORM\Mapping\UnderscoreNamingStrategy;
 
-use Gedmo\Timestampable\TimestampableListener;
+use Gedmo\Mapping\MappedEventSubscriber;
 use Gedmo\DoctrineExtensions;
 
 /**
@@ -84,20 +84,26 @@ class DoctrineModule extends AbstractConfigurableModule implements DiscreteDataM
 			);
 
 			// Setup annotation metadata
-			// TODO Determine availability of Memcache / APC and use best (in non-dev)
-			$cache = $this->getEngine()->getEnvironmentInfo()->isDevMode() ? new ArrayCache() : new MemcacheCache();
+			if ($this->getEngine()->getEnvironmentInfo()->isDevMode() || !$this->getEngine()->config('memcache.enabled')) {
+				$cache = new ArrayCache();
+			} else {
+				$cache = new MemcacheCache();
+				$cache->setMemcache($this->getEngine()->getMemcache());
+			}
 			$annotationReader = new AnnotationReader();
 			$cachedAnnotationReader = new CachedReader($annotationReader, $cache);
 			$driverChain = new DriverChain();
 			DoctrineExtensions::registerAbstractMappingIntoDriverChainORM($driverChain, $cachedAnnotationReader);
 			$annotationDriver = new AnnotationDriver($annotationReader, array( $this->getEngine()->getSitegearInfo()->getSitegearRoot() ));
+
 			// TODO Make model-providing modules declare their own namespaces
 			$driverChain->addDriver($annotationDriver, 'Sitegear\Ext\Module\Customer\Model');
 			$driverChain->addDriver($annotationDriver, 'Sitegear\Ext\Module\News\Model');
 			$driverChain->addDriver($annotationDriver, 'Sitegear\Ext\Module\Locations\Model');
 			$driverChain->addDriver($annotationDriver, 'Sitegear\Ext\Module\Products\Model');
 
-			// Create the entity manager configuration.
+			// Create the entity manager configuration, with proxy generation, cached metadata and lowercase-underscore
+			// database naming convention.
 			$entityManagerConfig = new Configuration();
 			$entityManagerConfig->setProxyDir(sys_get_temp_dir());
 			$entityManagerConfig->setProxyNamespace('Proxy');
@@ -105,26 +111,30 @@ class DoctrineModule extends AbstractConfigurableModule implements DiscreteDataM
 			$entityManagerConfig->setMetadataDriverImpl($driverChain);
 			$entityManagerConfig->setMetadataCacheImpl($cache);
 			$entityManagerConfig->setQueryCacheImpl($cache);
-
-			// Use lowercase-underscore database naming convention.
 			$entityManagerConfig->setNamingStrategy(new UnderscoreNamingStrategy(CASE_LOWER));
 
-			// Setup table name prefix for shared hosting.
+			// Setup event subscribers.
 			$eventManager = new EventManager();
-			$tableNamePrefix = $this->config('table-name-prefix');
-			if (strlen($tableNamePrefix) > 0) {
-				$eventManager->addEventListener(Events::loadClassMetadata, new DoctrineTablePrefix($tableNamePrefix));
+			foreach ($this->config('orm.subscribers') as $subscriberConfig) {
+				/** @var \Doctrine\Common\EventSubscriber $subscriber */
+				$subscriber = TypeUtilities::buildTypeCheckedObject(
+					$subscriberConfig['class'],
+					'event subscriber',
+					null,
+					array( '\\Doctrine\\Common\\EventSubscriber' ),
+					isset($subscriberConfig['arguments']) ? $subscriberConfig['arguments'] : array()
+				);
+				if ($subscriber instanceof MappedEventSubscriber) {
+					/** @var MappedEventSubscriber $subscriber */
+					$subscriber->setAnnotationReader($cachedAnnotationReader);
+				}
+				$eventManager->addEventSubscriber($subscriber);
 			}
-
-			// Setup the Gedmo Timestampable subscriber.  TODO Move this to configuration
-			$timestampableListener = new TimestampableListener();
-			$timestampableListener->setAnnotationReader($cachedAnnotationReader);
-			$eventManager->addEventSubscriber($timestampableListener);
 
 			// Create the entity manager using the configured connection parameters.
 			$this->entityManager = EntityManager::create($this->config('connection'), $entityManagerConfig, $eventManager);
 
-			// Register the JSON custom data type.
+			// Register the JSON custom data type.  This has to be done last, when the entity manager has a connection.
 			foreach ($this->config('dbal.types') as $key => $className) {
 				Type::addType($key, $className);
 				$this->entityManager->getConnection()->getDatabasePlatform()->registerDoctrineTypeMapping(preg_replace('/^.*\\\\(.*?)$/', '$1', $className), $key);

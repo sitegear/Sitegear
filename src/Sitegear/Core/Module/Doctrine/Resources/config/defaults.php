@@ -12,6 +12,11 @@
 return array(
 
 	/**
+	 * Connection parameters must be supplied by site configuration.
+	 */
+	'connection' => null,
+
+	/**
 	 * Table name to apply to all tables, should end with an underscore.
 	 */
 	'table-name-prefix' => 'sg_',
@@ -26,8 +31,25 @@ return array(
 		 * fully qualified class name of the Type implementation.
 		 */
 		'types' => array(
-			'json' => 'Sitegear\Core\Module\Doctrine\Types\JsonType'
+			'json' => 'Sitegear\\Core\\Module\\Doctrine\\Types\\JsonType'
+		)
+	),
+
+	/**
+	 * ORM settings.
+	 */
+	'orm' => array(
+
+		'subscribers' => array(
+			array(
+				'class' => 'Sitegear\\Core\\Module\\Doctrine\\DoctrineTablePrefixSubscriber',
+				'arguments' => array(
+					'{{ config:table-name-prefix }}'
+				)
+			),
+			array(
+				'class' => 'Gedmo\\Timestampable\\TimestampableListener'
+			)
 		)
 	)
-
 );
