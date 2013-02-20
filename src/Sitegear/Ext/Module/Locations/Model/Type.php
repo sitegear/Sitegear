@@ -9,10 +9,12 @@
 namespace Sitegear\Ext\Module\Locations\Model;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
- * @Entity
- * @Table(name="locations_type")
+ * @ORM\Entity
+ * @ORM\Table(name="locations_type")
  */
 class Type {
 
@@ -20,41 +22,41 @@ class Type {
 
 	/**
 	 * @var int
-	 * @Id
-	 * @Column(type="integer")
-	 * @GeneratedValue
+	 * @ORM\Id
+	 * @ORM\Column(type="integer")
+	 * @ORM\GeneratedValue
 	 */
 	private $id;
 
 	/**
 	 * @var integer
-	 * @Column(type="integer")
+	 * @ORM\Column(type="integer")
 	 */
 	private $displaySequence;
 
 	/**
 	 * @var string
-	 * @Column(type="string", nullable=false)
+	 * @ORM\Column(type="string", nullable=false)
 	 */
 	private $name;
 
 	/**
 	 * @var \DateTime
-	 * @Column(type="datetime", nullable=false)
-	 * @Timestampable(on="create")
+	 * @ORM\Column(type="datetime", nullable=false)
+	 * @Gedmo\Timestampable(on="create")
 	 */
 	private $dateCreated;
 
 	/**
 	 * @var \DateTime
-	 * @Column(type="datetime", nullable=true)
-	 * @Timestampable(on="update")
+	 * @ORM\Column(type="datetime", nullable=true)
+	 * @Gedmo\Timestampable(on="update")
 	 */
 	private $dateModified;
 
 	/**
 	 * @var \Doctrine\Common\Collections\Collection
-	 * @OneToMany(targetEntity="Item", mappedBy="type")
+	 * @ORM\OneToMany(targetEntity="Item", mappedBy="type")
 	 */
 	private $items;
 

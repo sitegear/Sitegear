@@ -8,9 +8,12 @@
 
 namespace Sitegear\Ext\Module\Customer\Model;
 
+use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
+
 /**
- * @Entity
- * @Table("customer_field")
+ * @ORM\Entity
+ * @ORM\Table("customer_field")
  */
 class Field {
 
@@ -18,9 +21,9 @@ class Field {
 
 	/**
 	 * @var integer
-	 * @Id
-	 * @Column(type="integer")
-	 * @GeneratedValue
+	 * @ORM\Id
+	 * @ORM\Column(type="integer")
+	 * @ORM\GeneratedValue
 	 */
 	private $id;
 
@@ -28,7 +31,7 @@ class Field {
 	 * Taken from the `name` used in the `Form` module data file.
 	 *
 	 * @var string
-	 * @Column(type="string")
+	 * @ORM\Column(type="string")
 	 */
 	private $name;
 
@@ -36,21 +39,21 @@ class Field {
 	 * Taken from the `label` used in the `Form` module data file.
 	 *
 	 * @var string
-	 * @Column(type="string")
+	 * @ORM\Column(type="string")
 	 */
 	private $label;
 
 	/**
 	 * @var \DateTime
-	 * @Column(type="datetime", nullable=false)
-	 * @Timestampable(on="create")
+	 * @ORM\Column(type="datetime", nullable=false)
+	 * @Gedmo\Timestampable(on="create")
 	 */
 	private $dateCreated;
 
 	/**
 	 * @var \DateTime
-	 * @Column(type="datetime", nullable=true)
-	 * @Timestampable(on="update")
+	 * @ORM\Column(type="datetime", nullable=true)
+	 * @Gedmo\Timestampable(on="update")
 	 */
 	private $dateModified;
 

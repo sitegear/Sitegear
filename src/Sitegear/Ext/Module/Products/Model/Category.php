@@ -9,10 +9,12 @@
 namespace Sitegear\Ext\Module\Products\Model;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
- * @Entity
- * @Table(name="products_category")
+ * @ORM\Entity
+ * @ORM\Table(name="products_category")
  */
 class Category {
 
@@ -20,60 +22,60 @@ class Category {
 
 	/**
 	 * @var integer
-	 * @Id
-	 * @Column(type="integer")
-	 * @GeneratedValue
+	 * @ORM\Id
+	 * @ORM\Column(type="integer")
+	 * @ORM\GeneratedValue
 	 */
 	private $id;
 
 	/**
 	 * @var string
-	 * @Column(type="string", unique=true)
+	 * @ORM\Column(type="string", unique=true)
 	 */
 	private $urlPath;
 
 	/**
 	 * @var string
-	 * @Column(type="string", nullable=false)
+	 * @ORM\Column(type="string", nullable=false)
 	 */
 	private $name;
 
 	/**
 	 * @var string
-	 * @Column(type="string")
+	 * @ORM\Column(type="string")
 	 */
 	private $displaySequence;
 
 	/**
 	 * @var \DateTime
-	 * @Column(type="datetime", nullable=false)
-	 * @Timestampable(on="create")
+	 * @ORM\Column(type="datetime", nullable=false)
+	 * @Gedmo\Timestampable(on="create")
 	 */
 	private $dateCreated;
 
 	/**
 	 * @var \DateTime
-	 * @Column(type="datetime", nullable=true)
-	 * @Timestampable(on="update")
+	 * @ORM\Column(type="datetime", nullable=true)
+	 * @Gedmo\Timestampable(on="update")
 	 */
 	private $dateModified;
 
 	/**
 	 * @var \Doctrine\Common\Collections\Collection
-	 * @OneToMany(targetEntity="Category", mappedBy="parent")
+	 * @ORM\OneToMany(targetEntity="Category", mappedBy="parent")
 	 */
 	private $children;
 
 	/**
 	 * @var Category
-	 * @ManyToOne(targetEntity="Category", inversedBy="children")
+	 * @ORM\ManyToOne(targetEntity="Category", inversedBy="children")
 	 */
 	private $parent;
 
 	/**
 	 * @var \Doctrine\Common\Collections\Collection
-	 * @OneToMany(targetEntity="CategoryAssignment", mappedBy="category")
-	 * @OrderBy({"displaySequence"="ASC"})
+	 * @ORM\OneToMany(targetEntity="CategoryAssignment", mappedBy="category")
+	 * @ORM\OrderBy({"displaySequence"="ASC"})
 	 */
 	private $itemAssignments;
 

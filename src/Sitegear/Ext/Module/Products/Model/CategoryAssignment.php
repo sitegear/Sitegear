@@ -8,9 +8,12 @@
 
 namespace Sitegear\Ext\Module\Products\Model;
 
+use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
+
 /**
- * @Entity
- * @Table(name="products_category_assignment")
+ * @ORM\Entity
+ * @ORM\Table(name="products_category_assignment")
  */
 class CategoryAssignment {
 
@@ -18,41 +21,41 @@ class CategoryAssignment {
 
 	/**
 	 * @var integer
-	 * @Id
-	 * @Column(type="integer")
-	 * @GeneratedValue
+	 * @ORM\Id
+	 * @ORM\Column(type="integer")
+	 * @ORM\GeneratedValue
 	 */
 	private $id;
 
 	/**
 	 * @var integer
-	 * @Column(type="integer")
+	 * @ORM\Column(type="integer")
 	 */
 	private $displaySequence;
 
 	/**
 	 * @var \DateTime
-	 * @Column(type="datetime", nullable=false)
-	 * @Timestampable(on="create")
+	 * @ORM\Column(type="datetime", nullable=false)
+	 * @Gedmo\Timestampable(on="create")
 	 */
 	private $dateCreated;
 
 	/**
 	 * @var \DateTime
-	 * @Column(type="datetime", nullable=true)
-	 * @Timestampable(on="update")
+	 * @ORM\Column(type="datetime", nullable=true)
+	 * @Gedmo\Timestampable(on="update")
 	 */
 	private $dateModified;
 
 	/**
 	 * @var Item
-	 * @ManyToOne(targetEntity="Item", inversedBy="categories")
+	 * @ORM\ManyToOne(targetEntity="Item", inversedBy="categories")
 	 */
 	private $item;
 
 	/**
 	 * @var Category
-	 * @ManyToOne(targetEntity="Category", inversedBy="items")
+	 * @ORM\ManyToOne(targetEntity="Category", inversedBy="items")
 	 */
 	private $category;
 

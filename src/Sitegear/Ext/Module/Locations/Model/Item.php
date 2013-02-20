@@ -10,9 +10,12 @@ namespace Sitegear\Ext\Module\Locations\Model;
 
 use Doctrine\Common\Collections\ArrayCollection;
 
+use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
+
 /**
- * @Entity(repositoryClass="Sitegear\Ext\Module\Locations\Repository\ItemRepository")
- * @Table(name="locations_item")
+ * @ORM\Entity(repositoryClass="Sitegear\Ext\Module\Locations\Repository\ItemRepository")
+ * @ORM\Table(name="locations_item")
  */
 class Item {
 
@@ -20,113 +23,113 @@ class Item {
 
 	/**
 	 * @var int
-	 * @Id
-	 * @Column(type="integer")
-	 * @GeneratedValue
+	 * @ORM\Id
+	 * @ORM\Column(type="integer")
+	 * @ORM\GeneratedValue
 	 */
 	private $id;
 
 	/**
 	 * @var string
-	 * @Column(type="string", unique=true, nullable=false)
+	 * @ORM\Column(type="string", unique=true, nullable=false)
 	 */
 	private $urlPath;
 
 	/**
 	 * @var integer
-	 * @Column(type="integer")
+	 * @ORM\Column(type="integer")
 	 */
 	private $displaySequence;
 
 	/**
 	 * @var boolean
-	 * @Column(type="boolean")
+	 * @ORM\Column(type="boolean")
 	 */
 	private $active;
 
 	/**
 	 * @var string
-	 * @Column(type="string", nullable=false)
+	 * @ORM\Column(type="string", nullable=false)
 	 */
 	private $name;
 
 	/**
 	 * @var string
-	 * @Column(type="string", nullable=true)
+	 * @ORM\Column(type="string", nullable=true)
 	 */
 	private $streetAddress;
 
 	/**
 	 * @var string
-	 * @Column(type="string", nullable=true)
+	 * @ORM\Column(type="string", nullable=true)
 	 */
 	private $suburb;
 
 	/**
 	 * @var string
-	 * @Column(type="string", nullable=true)
+	 * @ORM\Column(type="string", nullable=true)
 	 */
 	private $postcode;
 
 	/**
 	 * @var string
-	 * @Column(type="string", nullable=true)
+	 * @ORM\Column(type="string", nullable=true)
 	 */
 	private $stateOrProvince;
 
 	/**
 	 * @var string
-	 * @Column(type="string", nullable=true)
+	 * @ORM\Column(type="string", nullable=true)
 	 */
 	private $country;
 
 	/**
 	 * @var float
-	 * @Column(type="decimal", precision=16, scale=10)
+	 * @ORM\Column(type="decimal", precision=16, scale=10)
 	 */
 	private $latitude;
 
 	/**
 	 * @var float
-	 * @Column(type="decimal", precision=16, scale=10)
+	 * @ORM\Column(type="decimal", precision=16, scale=10)
 	 */
 	private $longitude;
 
 	/**
 	 * @var array
-	 * @Column(type="json", nullable=false)
+	 * @ORM\Column(type="json", nullable=false)
 	 */
 	private $mapOptions;
 
 	/**
 	 * @var \DateTime
-	 * @Column(type="datetime", nullable=false)
-	 * @Timestampable(on="create")
+	 * @ORM\Column(type="datetime", nullable=false)
+	 * @Gedmo\Timestampable(on="create")
 	 */
 	private $dateCreated;
 
 	/**
 	 * @var \DateTime
-	 * @Column(type="datetime", nullable=true)
-	 * @Timestampable(on="update")
+	 * @ORM\Column(type="datetime", nullable=true)
+	 * @Gedmo\Timestampable(on="update")
 	 */
 	private $dateModified;
 
 	/**
 	 * @var \Doctrine\Common\Collections\Collection
-	 * @OneToMany(targetEntity="Detail", mappedBy="item")
+	 * @ORM\OneToMany(targetEntity="Detail", mappedBy="item")
 	 */
 	private $details;
 
 	/**
 	 * @var Region
-	 * @ManyToOne(targetEntity="Region", inversedBy="items")
+	 * @ORM\ManyToOne(targetEntity="Region", inversedBy="items")
 	 */
 	private $region;
 
 	/**
 	 * @var Type
-	 * @ManyToOne(targetEntity="Type", inversedBy="items")
+	 * @ORM\ManyToOne(targetEntity="Type", inversedBy="items")
 	 */
 	private $type;
 

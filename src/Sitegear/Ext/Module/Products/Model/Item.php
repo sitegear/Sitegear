@@ -9,10 +9,12 @@
 namespace Sitegear\Ext\Module\Products\Model;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
- * @Entity(repositoryClass="Sitegear\Ext\Module\Products\Repository\ItemRepository")
- * @Table(name="products_item")
+ * @ORM\Entity(repositoryClass="Sitegear\Ext\Module\Products\Repository\ItemRepository")
+ * @ORM\Table(name="products_item")
  */
 class Item {
 
@@ -20,78 +22,78 @@ class Item {
 
 	/**
 	 * @var integer
-	 * @Id
-	 * @Column(type="integer")
-	 * @GeneratedValue
+	 * @ORM\Id
+	 * @ORM\Column(type="integer")
+	 * @ORM\GeneratedValue
 	 */
 	private $id;
 
 	/**
 	 * @var string
-	 * @Column(type="string", nullable=false, unique=true)
+	 * @ORM\Column(type="string", nullable=false, unique=true)
 	 */
 	private $urlPath;
 
 	/**
 	 * @var string
-	 * @Column(type="string", nullable=false)
+	 * @ORM\Column(type="string", nullable=false)
 	 */
 	private $name;
 
 	/**
 	 * @var boolean
-	 * @Column(type="boolean")
+	 * @ORM\Column(type="boolean")
 	 */
 	private $active;
 
 	/**
 	 * @var boolean
-	 * @Column(type="boolean")
+	 * @ORM\Column(type="boolean")
 	 */
 	private $featured;
 
 	/**
 	 * @var \DateTime
-	 * @Column(type="datetime", nullable=false)
-	 * @Timestampable(on="create")
+	 * @ORM\Column(type="datetime", nullable=false)
+	 * @Gedmo\Timestampable(on="create")
 	 */
 	private $dateCreated;
 
 	/**
 	 * @var \DateTime
-	 * @Column(type="datetime", nullable=true)
-	 * @Timestampable(on="update")
+	 * @ORM\Column(type="datetime", nullable=true)
+	 * @Gedmo\Timestampable(on="update")
 	 */
 	private $dateModified;
 
 	/**
 	 * @var \Doctrine\Common\Collections\Collection
-	 * @OneToMany(targetEntity="CategoryAssignment", mappedBy="item")
-	 * @OrderBy({"displaySequence"="ASC"})
+	 * @ORM\OneToMany(targetEntity="CategoryAssignment", mappedBy="item")
+	 * @ORM\OrderBy({"displaySequence"="ASC"})
 	 */
 	private $categoryAssignments;
 
 	/**
 	 * @var \Doctrine\Common\Collections\Collection
-	 * @OneToMany(targetEntity="Relationship", mappedBy="item")
+	 * @ORM\OneToMany(targetEntity="Relationship", mappedBy="item")
 	 */
 	private $relationships;
 
 	/**
 	 * @var \Doctrine\Common\Collections\Collection
-	 * @OneToMany(targetEntity="Relationship", mappedBy="item")
+	 * @ORM\OneToMany(targetEntity="Relationship", mappedBy="item")
 	 */
 	private $inverseRelationships;
 
 	/**
 	 * @var \Doctrine\Common\Collections\Collection
-	 * @OneToMany(targetEntity="AttributeAssignment", mappedBy="item")
+	 * @ORM\OneToMany(targetEntity="AttributeAssignment", mappedBy="item")
 	 */
 	private $attributeAssignments;
 
 	/**
 	 * @var \Doctrine\Common\Collections\Collection
-	 * @OneToMany(targetEntity="Specification", mappedBy="item")
+	 * @ORM\OneToMany(targetEntity="Specification", mappedBy="item")
 	 */
 	private $specifications;
 

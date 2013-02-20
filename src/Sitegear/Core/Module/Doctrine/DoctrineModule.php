@@ -9,6 +9,16 @@
 namespace Sitegear\Core\Module\Doctrine;
 
 use Sitegear\Base\Module\AbstractConfigurableModule;
+use Gedmo\Timestampable\TimestampableListener;
+use Doctrine\Common\Annotations\AnnotationRegistry;
+use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
+use Gedmo\DoctrineExtensions;
+use Doctrine\ORM\Mapping\Driver\DriverChain;
+use Doctrine\Common\Annotations\CachedReader;
+use Doctrine\Common\Annotations\AnnotationReader;
+use Doctrine\Common\Cache\MemcacheCache;
+use Doctrine\Common\Cache\ArrayCache;
+use Doctrine\ORM\Configuration;
 use Sitegear\Base\Module\DiscreteDataModuleInterface;
 use Sitegear\Util\NameUtilities;
 use Sitegear\Util\LoggerRegistry;
@@ -65,11 +75,36 @@ class DoctrineModule extends AbstractConfigurableModule implements DiscreteDataM
 		LoggerRegistry::debug('DoctrineModule starting' . ($this->getEngine()->getEnvironmentInfo()->isDevMode() ? ' in dev mode' : ''));
 		$connectionConfig = $this->config('connection');
 		if (!empty($connectionConfig) && is_array($connectionConfig)) {
-			// Create the entity manager configuration.
-			$entityManagerConfig = Setup::createAnnotationMetadataConfiguration(
-				array( $this->getEngine()->getSitegearInfo()->getSitegearRoot() ),
-				$this->getEngine()->getEnvironmentInfo()->isDevMode()
+			// Setup Doctrine. Largely borrowed from
+			// https://github.com/l3pp4rd/DoctrineExtensions/blob/master/doc/annotations.md#em-setup
+
+			// Register Doctrine default annotations.
+			AnnotationRegistry::registerFile(
+			    $this->getEngine()->getSiteInfo()->getSiteRoot() . '/vendor/doctrine/orm/lib/Doctrine/ORM/Mapping/Driver/DoctrineAnnotations.php'
 			);
+
+			// Setup annotation metadata
+			// TODO Determine availability of Memcache / APC and use best (in non-dev)
+			$cache = $this->getEngine()->getEnvironmentInfo()->isDevMode() ? new ArrayCache() : new MemcacheCache();
+			$annotationReader = new AnnotationReader();
+			$cachedAnnotationReader = new CachedReader($annotationReader, $cache);
+			$driverChain = new DriverChain();
+			DoctrineExtensions::registerAbstractMappingIntoDriverChainORM($driverChain, $cachedAnnotationReader);
+			$annotationDriver = new AnnotationDriver($annotationReader, array( $this->getEngine()->getSitegearInfo()->getSitegearRoot() ));
+			// TODO Make model-providing modules declare their own namespaces
+			$driverChain->addDriver($annotationDriver, 'Sitegear\Ext\Module\Customer\Model');
+			$driverChain->addDriver($annotationDriver, 'Sitegear\Ext\Module\News\Model');
+			$driverChain->addDriver($annotationDriver, 'Sitegear\Ext\Module\Locations\Model');
+			$driverChain->addDriver($annotationDriver, 'Sitegear\Ext\Module\Products\Model');
+
+			// Create the entity manager configuration.
+			$entityManagerConfig = new Configuration();
+			$entityManagerConfig->setProxyDir(sys_get_temp_dir());
+			$entityManagerConfig->setProxyNamespace('Proxy');
+			$entityManagerConfig->setAutoGenerateProxyClasses($this->getEngine()->getEnvironmentInfo()->isDevMode());
+			$entityManagerConfig->setMetadataDriverImpl($driverChain);
+			$entityManagerConfig->setMetadataCacheImpl($cache);
+			$entityManagerConfig->setQueryCacheImpl($cache);
 
 			// Use lowercase-underscore database naming convention.
 			$entityManagerConfig->setNamingStrategy(new UnderscoreNamingStrategy(CASE_LOWER));
@@ -80,6 +115,9 @@ class DoctrineModule extends AbstractConfigurableModule implements DiscreteDataM
 			if (strlen($tableNamePrefix) > 0) {
 				$eventManager->addEventListener(Events::loadClassMetadata, new DoctrineTablePrefix($tableNamePrefix));
 			}
+			$timestampableListener = new TimestampableListener();
+			$timestampableListener->setAnnotationReader($cachedAnnotationReader);
+			$eventManager->addEventSubscriber($timestampableListener);
 
 			// Create the entity manager using the configured connection parameters.
 			$this->entityManager = EntityManager::create($this->config('connection'), $entityManagerConfig, $eventManager);

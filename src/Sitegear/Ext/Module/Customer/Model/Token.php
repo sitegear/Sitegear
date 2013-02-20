@@ -8,9 +8,12 @@
 
 namespace Sitegear\Ext\Module\Customer\Model;
 
+use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
+
 /**
- * @Entity
- * @Table("customer_token")
+ * @ORM\Entity
+ * @ORM\Table("customer_token")
  */
 class Token {
 
@@ -18,41 +21,41 @@ class Token {
 
 	/**
 	 * @var integer
-	 * @Id
-	 * @Column(type="integer")
-	 * @GeneratedValue
+	 * @ORM\Id
+	 * @ORM\Column(type="integer")
+	 * @ORM\GeneratedValue
 	 */
 	private $id;
 
 	/**
 	 * @var Account
-	 * @ManyToOne(targetEntity="Account", inversedBy="tokens")
+	 * @ORM\ManyToOne(targetEntity="Account", inversedBy="tokens")
 	 */
 	private $account;
 
 	/**
 	 * @var string
-	 * @Column(type="string", length=32),
+	 * @ORM\Column(type="string", length=32),
 	 */
 	private $token;
 
 	/**
 	 * @var string
-	 * @Column(type="string")
+	 * @ORM\Column(type="string")
 	 */
 	private $purpose;
 
 	/**
 	 * @var \DateTime
-	 * @Column(type="datetime", nullable=false)
-	 * @Timestampable(on="create")
+	 * @ORM\Column(type="datetime", nullable=false)
+	 * @Gedmo\Timestampable(on="create")
 	 */
 	private $dateCreated;
 
 	/**
 	 * @var \DateTime
-	 * @Column(type="datetime", nullable=true)
-	 * @Timestampable(on="update")
+	 * @ORM\Column(type="datetime", nullable=true)
+	 * @Gedmo\Timestampable(on="update")
 	 */
 	private $dateModified;
 

@@ -8,9 +8,12 @@
 
 namespace Sitegear\Ext\Module\Customer\Model;
 
+use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
+
 /**
- * @Entity
- * @Table("customer_transaction")
+ * @ORM\Entity
+ * @ORM\Table("customer_transaction")
  */
 class Transaction {
 
@@ -18,41 +21,41 @@ class Transaction {
 
 	/**
 	 * @var integer
-	 * @Id
-	 * @Column(type="integer")
-	 * @GeneratedValue
+	 * @ORM\Id
+	 * @ORM\Column(type="integer")
+	 * @ORM\GeneratedValue
 	 */
 	private $id;
 
 	/**
 	 * @var Account
-	 * @ManyToOne(targetEntity="Account", inversedBy="transactions")
+	 * @ORM\ManyToOne(targetEntity="Account", inversedBy="transactions")
 	 */
 	private $account;
 
 	/**
 	 * @var \Doctrine\Common\Collections\Collection
-	 * @OneToMany(targetEntity="TransactionItem", mappedBy="transaction")
+	 * @ORM\OneToMany(targetEntity="TransactionItem", mappedBy="transaction")
 	 */
 	private $items;
 
 	/**
 	 * @var string
-	 * @Column(type="string", length=48, nullable=false)
+	 * @ORM\Column(type="string", length=48, nullable=false)
 	 */
 	private $clientIp;
 
 	/**
 	 * @var \DateTime
-	 * @Column(type="datetime", nullable=false)
-	 * @Timestampable(on="create")
+	 * @ORM\Column(type="datetime", nullable=false)
+	 * @Gedmo\Timestampable(on="create")
 	 */
 	private $dateCreated;
 
 	/**
 	 * @var \DateTime
-	 * @Column(type="datetime", nullable=true)
-	 * @Timestampable(on="update")
+	 * @ORM\Column(type="datetime", nullable=true)
+	 * @Gedmo\Timestampable(on="update")
 	 */
 	private $dateModified;
 

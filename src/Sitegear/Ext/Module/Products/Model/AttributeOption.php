@@ -8,9 +8,12 @@
 
 namespace Sitegear\Ext\Module\Products\Model;
 
+use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
+
 /**
- * @Entity
- * @Table(name="products_attribute_option")
+ * @ORM\Entity
+ * @ORM\Table(name="products_attribute_option")
  */
 class AttributeOption {
 
@@ -18,15 +21,15 @@ class AttributeOption {
 
 	/**
 	 * @var integer
-	 * @Id
-	 * @Column(type="integer")
-	 * @GeneratedValue
+	 * @ORM\Id
+	 * @ORM\Column(type="integer")
+	 * @ORM\GeneratedValue
 	 */
 	private $id;
 
 	/**
 	 * @var string
-	 * @Column(type="string", nullable=false)
+	 * @ORM\Column(type="string", nullable=false)
 	 */
 	private $label;
 
@@ -34,33 +37,33 @@ class AttributeOption {
 	 * Price in whole cents.
 	 *
 	 * @var integer
-	 * @Column(type="integer", nullable=false)
+	 * @ORM\Column(type="integer", nullable=false)
 	 */
 	private $value;
 
 	/**
 	 * @var integer
-	 * @Column(type="integer")
+	 * @ORM\Column(type="integer")
 	 */
 	private $displaySequence;
 
 	/**
 	 * @var \DateTime
-	 * @Column(type="datetime", nullable=false)
-	 * @Timestampable(on="create")
+	 * @ORM\Column(type="datetime", nullable=false)
+	 * @Gedmo\Timestampable(on="create")
 	 */
 	private $dateCreated;
 
 	/**
 	 * @var \DateTime
-	 * @Column(type="datetime", nullable=true)
-	 * @Timestampable(on="update")
+	 * @ORM\Column(type="datetime", nullable=true)
+	 * @Gedmo\Timestampable(on="update")
 	 */
 	private $dateModified;
 
 	/**
 	 * @var Attribute
-	 * @ManyToOne(targetEntity="Attribute", inversedBy="options")
+	 * @ORM\ManyToOne(targetEntity="Attribute", inversedBy="options")
 	 */
 	private $attribute;
 

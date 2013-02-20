@@ -8,9 +8,12 @@
 
 namespace Sitegear\Ext\Module\News\Model;
 
+use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
+
 /**
- * @Entity(repositoryClass="Sitegear\Ext\Module\News\Repository\ItemRepository")
- * @Table("news_item")
+ * @ORM\Entity(repositoryClass="Sitegear\Ext\Module\News\Repository\ItemRepository")
+ * @ORM\Table("news_item")
  */
 class Item {
 
@@ -18,41 +21,41 @@ class Item {
 
 	/**
 	 * @var int
-	 * @Id
-	 * @Column(type="integer")
-	 * @GeneratedValue
+	 * @ORM\Id
+	 * @ORM\Column(type="integer")
+	 * @ORM\GeneratedValue
 	 */
 	private $id;
 
 	/**
 	 * @var string
-	 * @Column(type="string", unique=true, nullable=false)
+	 * @ORM\Column(type="string", unique=true, nullable=false)
 	 */
 	private $urlPath;
 
 	/**
 	 * @var string
-	 * @Column(type="string", nullable=false)
+	 * @ORM\Column(type="string", nullable=false)
 	 */
 	private $headline;
 
 	/**
 	 * @var \DateTime
-	 * @Column(type="datetime", nullable=true)
+	 * @ORM\Column(type="datetime", nullable=true)
 	 */
 	private $datePublished;
 
 	/**
 	 * @var \DateTime
-	 * @Column(type="datetime", nullable=false)
-	 * @Timestampable(on="create")
+	 * @ORM\Column(type="datetime", nullable=false)
+	 * @Gedmo\Timestampable(on="create")
 	 */
 	private $dateCreated;
 
 	/**
 	 * @var \DateTime
-	 * @Column(type="datetime", nullable=true)
-	 * @Timestampable(on="update")
+	 * @ORM\Column(type="datetime", nullable=true)
+	 * @Gedmo\Timestampable(on="update")
 	 */
 	private $dateModified;
 

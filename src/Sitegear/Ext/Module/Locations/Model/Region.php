@@ -9,10 +9,12 @@
 namespace Sitegear\Ext\Module\Locations\Model;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
- * @Entity
- * @Table(name="locations_region")
+ * @ORM\Entity
+ * @ORM\Table(name="locations_region")
  */
 class Region {
 
@@ -20,83 +22,83 @@ class Region {
 
 	/**
 	 * @var int
-	 * @Id
-	 * @Column(type="integer")
-	 * @GeneratedValue
+	 * @ORM\Id
+	 * @ORM\Column(type="integer")
+	 * @ORM\GeneratedValue
 	 */
 	private $id;
 
 	/**
 	 * @var string
-	 * @Column(type="string", unique=true, nullable=false)
+	 * @ORM\Column(type="string", unique=true, nullable=false)
 	 */
 	private $urlPath;
 
 	/**
 	 * @var integer
-	 * @Column(type="integer")
+	 * @ORM\Column(type="integer")
 	 */
 	private $displaySequence;
 
 	/**
 	 * @var boolean
-	 * @Column(type="boolean")
+	 * @ORM\Column(type="boolean")
 	 */
 	private $active;
 
 	/**
 	 * @var string
-	 * @Column(type="string", nullable=false)
+	 * @ORM\Column(type="string", nullable=false)
 	 */
 	private $name;
 
 	/**
 	 * @var float
-	 * @Column(type="decimal", precision=16, scale=10)
+	 * @ORM\Column(type="decimal", precision=16, scale=10)
 	 */
 	private $latitude;
 
 	/**
 	 * @var float
-	 * @Column(type="decimal", precision=16, scale=10)
+	 * @ORM\Column(type="decimal", precision=16, scale=10)
 	 */
 	private $longitude;
 
 	/**
 	 * @var array
-	 * @Column(type="json", nullable=false)
+	 * @ORM\Column(type="json", nullable=false)
 	 */
 	private $mapOptions;
 
 	/**
 	 * @var \DateTime
-	 * @Column(type="datetime", nullable=false)
-	 * @Timestampable(on="create")
+	 * @ORM\Column(type="datetime", nullable=false)
+	 * @Gedmo\Timestampable(on="create")
 	 */
 	private $dateCreated;
 
 	/**
 	 * @var \DateTime
-	 * @Column(type="datetime", nullable=true)
-	 * @Timestampable(on="update")
+	 * @ORM\Column(type="datetime", nullable=true)
+	 * @Gedmo\Timestampable(on="update")
 	 */
 	private $dateModified;
 
 	/**
 	 * @var Region
-	 * @ManyToOne(targetEntity="Region", inversedBy="children")
+	 * @ORM\ManyToOne(targetEntity="Region", inversedBy="children")
 	 */
 	private $parent;
 
 	/**
 	 * @var \Doctrine\Common\Collections\Collection
-	 * @OneToMany(targetEntity="Region", mappedBy="parent")
+	 * @ORM\OneToMany(targetEntity="Region", mappedBy="parent")
 	 */
 	private $children;
 
 	/**
 	 * @var \Doctrine\Common\Collections\Collection
-	 * @OneToMany(targetEntity="Item", mappedBy="region")
+	 * @ORM\OneToMany(targetEntity="Item", mappedBy="region")
 	 */
 	private $items;
 

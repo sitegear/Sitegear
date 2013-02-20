@@ -9,10 +9,12 @@
 namespace Sitegear\Ext\Module\Customer\Model;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
- * @Entity
- * @Table("customer_account")
+ * @ORM\Entity
+ * @ORM\Table("customer_account")
  */
 class Account {
 
@@ -20,27 +22,27 @@ class Account {
 
 	/**
 	 * @var integer
-	 * @Id
-	 * @Column(type="integer")
-	 * @GeneratedValue
+	 * @ORM\Id
+	 * @ORM\Column(type="integer")
+	 * @ORM\GeneratedValue
 	 */
 	private $id;
 
 	/**
 	 * @var \Doctrine\Common\Collections\Collection
-	 * @OneToMany(targetEntity="AccountFieldValue", mappedBy="account")
+	 * @ORM\OneToMany(targetEntity="AccountFieldValue", mappedBy="account")
 	 */
 	private $fieldValues;
 
 	/**
 	 * @var \Doctrine\Common\Collections\Collection
-	 * @OneToMany(targetEntity="Transaction", mappedBy="account")
+	 * @ORM\OneToMany(targetEntity="Transaction", mappedBy="account")
 	 */
 	private $transactions;
 
 	/**
 	 * @var \Doctrine\Common\Collections\Collection
-	 * @OneToMany(targetEntity="Token", mappedBy="account")
+	 * @ORM\OneToMany(targetEntity="Token", mappedBy="account")
 	 */
 	private $tokens;
 
@@ -48,21 +50,21 @@ class Account {
 	 * Matches the `User` package email address.
 	 *
 	 * @var string
-	 * @Column(type="string", unique=true)
+	 * @ORM\Column(type="string", unique=true)
 	 */
 	private $email;
 
 	/**
 	 * @var \DateTime
-	 * @Column(type="datetime", nullable=false)
-	 * @Timestampable(on="create")
+	 * @ORM\Column(type="datetime", nullable=false)
+	 * @Gedmo\Timestampable(on="create")
 	 */
 	private $dateCreated;
 
 	/**
 	 * @var \DateTime
-	 * @Column(type="datetime", nullable=true)
-	 * @Timestampable(on="update")
+	 * @ORM\Column(type="datetime", nullable=true)
+	 * @Gedmo\Timestampable(on="update")
 	 */
 	private $dateModified;
 

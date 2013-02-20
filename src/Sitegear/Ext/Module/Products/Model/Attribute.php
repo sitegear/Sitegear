@@ -9,10 +9,12 @@
 namespace Sitegear\Ext\Module\Products\Model;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
- * @Entity
- * @Table(name="products_attribute")
+ * @ORM\Entity
+ * @ORM\Table(name="products_attribute")
  */
 class Attribute {
 
@@ -28,15 +30,15 @@ class Attribute {
 
 	/**
 	 * @var integer
-	 * @Id
-	 * @Column(type="integer")
-	 * @GeneratedValue
+	 * @ORM\Id
+	 * @ORM\Column(type="integer")
+	 * @ORM\GeneratedValue
 	 */
 	private $id;
 
 	/**
 	 * @var string
-	 * @Column(type="string", nullable=false)
+	 * @ORM\Column(type="string", nullable=false)
 	 */
 	private $label;
 
@@ -44,33 +46,33 @@ class Attribute {
 	 * Must be one of the TYPE_* constants defined in this class.
 	 *
 	 * @var string
-	 * @Column(type="string", nullable=false)
+	 * @ORM\Column(type="string", nullable=false)
 	 */
 	private $type;
 
 	/**
 	 * @var \DateTime
-	 * @Column(type="datetime", nullable=false)
-	 * @Timestampable(on="create")
+	 * @ORM\Column(type="datetime", nullable=false)
+	 * @Gedmo\Timestampable(on="create")
 	 */
 	private $dateCreated;
 
 	/**
 	 * @var \DateTime
-	 * @Column(type="datetime", nullable=true)
-	 * @Timestampable(on="update")
+	 * @ORM\Column(type="datetime", nullable=true)
+	 * @Gedmo\Timestampable(on="update")
 	 */
 	private $dateModified;
 
 	/**
 	 * @var \Doctrine\Common\Collections\Collection
-	 * @OneToMany(targetEntity="AttributeAssignment", mappedBy="attribute")
+	 * @ORM\OneToMany(targetEntity="AttributeAssignment", mappedBy="attribute")
 	 */
 	private $products;
 
 	/**
 	 * @var \Doctrine\Common\Collections\Collection
-	 * @OneToMany(targetEntity="AttributeOption", mappedBy="attribute")
+	 * @ORM\OneToMany(targetEntity="AttributeOption", mappedBy="attribute")
 	 */
 	private $options;
 

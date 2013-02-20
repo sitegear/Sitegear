@@ -8,9 +8,12 @@
 
 namespace Sitegear\Ext\Module\Customer\Model;
 
+use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
+
 /**
- * @Entity
- * @Table("customer_transaction_item")
+ * @ORM\Entity
+ * @ORM\Table("customer_transaction_item")
  */
 class TransactionItem {
 
@@ -18,77 +21,77 @@ class TransactionItem {
 
 	/**
 	 * @var integer
-	 * @Id
-	 * @Column(type="integer")
-	 * @GeneratedValue
+	 * @ORM\Id
+	 * @ORM\Column(type="integer")
+	 * @ORM\GeneratedValue
 	 */
 	private $id;
 
 	/**
 	 * @var Transaction
-	 * @ManyToOne(targetEntity="Transaction", inversedBy="items")
+	 * @ORM\ManyToOne(targetEntity="Transaction", inversedBy="items")
 	 */
 	private $transaction;
 
 	/**
 	 * @var string
-	 * @Column(type="string", nullable=false)
+	 * @ORM\Column(type="string", nullable=false)
 	 */
 	private $module;
 
 	/**
 	 * @var string
-	 * @Column(type="string", nullable=false)
+	 * @ORM\Column(type="string", nullable=false)
 	 */
 	private $type;
 
 	/**
 	 * @var integer
-	 * @Column(type="integer", nullable=false)
+	 * @ORM\Column(type="integer", nullable=false)
 	 */
 	private $itemId;
 
 	/**
 	 * @var string
-	 * @Column(type="string", nullable=false)
+	 * @ORM\Column(type="string", nullable=false)
 	 */
 	private $label;
 
 	/**
 	 * @var string
-	 * @Column(type="string")
+	 * @ORM\Column(type="string")
 	 */
 	private $detailsUrl;
 
 	/**
 	 * @var array
-	 * @Column(type="json")
+	 * @ORM\Column(type="json")
 	 */
 	private $attributes;
 
 	/**
 	 * @var integer
-	 * @Column(type="integer", nullable=false)
+	 * @ORM\Column(type="integer", nullable=false)
 	 */
 	private $unitPrice;
 
 	/**
 	 * @var integer
-	 * @Column(type="integer", nullable=false)
+	 * @ORM\Column(type="integer", nullable=false)
 	 */
 	private $quantity;
 
 	/**
 	 * @var \DateTime
-	 * @Column(type="datetime", nullable=false)
-	 * @Timestampable(on="create")
+	 * @ORM\Column(type="datetime", nullable=false)
+	 * @Gedmo\Timestampable(on="create")
 	 */
 	private $dateCreated;
 
 	/**
 	 * @var \DateTime
-	 * @Column(type="datetime", nullable=true)
-	 * @Timestampable(on="update")
+	 * @ORM\Column(type="datetime", nullable=true)
+	 * @Gedmo\Timestampable(on="update")
 	 */
 	private $dateModified;
 

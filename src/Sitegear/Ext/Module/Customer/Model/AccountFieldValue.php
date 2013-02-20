@@ -8,9 +8,12 @@
 
 namespace Sitegear\Ext\Module\Customer\Model;
 
+use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
+
 /**
- * @Entity
- * @Table("customer_account_field_value")
+ * @ORM\Entity
+ * @ORM\Table("customer_account_field_value")
  */
 class AccountFieldValue {
 
@@ -18,41 +21,41 @@ class AccountFieldValue {
 
 	/**
 	 * @var integer
-	 * @Id
-	 * @Column(type="integer")
-	 * @GeneratedValue
+	 * @ORM\Id
+	 * @ORM\Column(type="integer")
+	 * @ORM\GeneratedValue
 	 */
 	private $id;
 
 	/**
 	 * @var Account
-	 * @ManyToOne(targetEntity="Account", inversedBy="values")
+	 * @ORM\ManyToOne(targetEntity="Account", inversedBy="values")
 	 */
 	private $account;
 
 	/**
 	 * @var Field
-	 * @ManyToOne(targetEntity="Field")
+	 * @ORM\ManyToOne(targetEntity="Field")
 	 */
 	private $field;
 
 	/**
 	 * @var string
-	 * @Column(type="string", nullable=false)
+	 * @ORM\Column(type="string", nullable=false)
 	 */
 	private $value;
 
 	/**
 	 * @var \DateTime
-	 * @Column(type="datetime", nullable=false)
-	 * @Timestampable(on="create")
+	 * @ORM\Column(type="datetime", nullable=false)
+	 * @Gedmo\Timestampable(on="create")
 	 */
 	private $dateCreated;
 
 	/**
 	 * @var \DateTime
-	 * @Column(type="datetime", nullable=true)
-	 * @Timestampable(on="update")
+	 * @ORM\Column(type="datetime", nullable=true)
+	 * @Gedmo\Timestampable(on="update")
 	 */
 	private $dateModified;
 
