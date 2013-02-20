@@ -22,11 +22,11 @@ return array(
 		'text' => array(
 			'unknown-value' => 'TBA',
 			'no-items' => '<span class="sitegear-trolley-preview-no-items">Trolley is empty</span>',
-			'details-link' => '<a href="%s" class="sitegear-trolley-preview-details-link">Details</a>',
-			'checkout-link' => '<a href="%s" class="sitegear-trolley-preview-checkout-link">Checkout</a>',
+			'details-link' => '<a href="%detailsUrl%" class="sitegear-trolley-preview-details-link">Details</a>',
+			'checkout-link' => '<a href="%checkoutUrl%" class="sitegear-trolley-preview-checkout-link">Checkout</a>',
 			'items-count' => array(
-				'<span class="sitegear-trolley-preview-items-count">Trolley contains %d item</span>',
-				'<span class="sitegear-trolley-preview-items-count">Trolley contains %d items</span>'
+				'<span class="sitegear-trolley-preview-items-count">Trolley contains %count% item</span>',
+				'<span class="sitegear-trolley-preview-items-count">Trolley contains %count% items</span>'
 			)
 		)
 	),

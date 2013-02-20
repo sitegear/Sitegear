@@ -70,9 +70,11 @@ return array(
 			'date-format' => 'Y-m-d',
 
 			/**
-			 * Format for published date, the single token is replaced by the formatted published date.
+			 * Format for published date.  Tokens:
+			 *
+			 * %publishedDate% -- The date formatted according to 'date-format' configuration setting.
 			 */
-			'published' => 'Published: %s',
+			'published' => 'Published: %publishedDate%',
 
 			/**
 			 * Number of news items to show.
@@ -102,14 +104,18 @@ return array(
 			'date-format' => 'Y-m-d',
 
 			/**
-			 * Format for published date, the single token is replaced by the formatted published date.
+			 * Format for published date.  Tokens:
+			 *
+			 * %publishedDate% -- the date formatted according to 'date-format' configuration setting.
 			 */
-			'published' => 'Published: %s',
+			'published' => 'Published: %publishedDate%',
 
 			/**
-			 * Format for the "back to index" link, the single token is replaced by the root URL for the module.
+			 * Format for the "back to index" link.  Tokens:
+			 *
+			 * %rootUrl% -- the URL of the top-level news landing page.
 			 */
-			'back-link' => 'Back to <a href="%s">news index</a>.'
+			'back-link' => 'Back to <a href="%rootUrl%">news index</a>.'
 
 		)
 	),
@@ -130,9 +136,11 @@ return array(
 			'date-format' => null,
 
 			/**
-			 * Format for published date, the single token is replaced by the formatted published date.
+			 * Format for published date.  Tokens:
+			 *
+			 * %publishedDate% -- the date formatted according to 'date-format' configuration setting.
 			 */
-			'published' => '%s',
+			'published' => '%publishedDate%',
 
 			/**
 			 * Number of news items to show.

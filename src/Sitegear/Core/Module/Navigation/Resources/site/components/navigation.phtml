@@ -10,7 +10,7 @@ $listAttributes = \Sitegear\Util\HtmlUtilities::attributes($listAttributes, arra
 $itemAttributes = $view['item-attributes'];
 $itemAdditionalClass = isset($itemAttributes['class']) ? $itemAttributes['class'] : '';
 $itemAttributes = \Sitegear\Util\HtmlUtilities::attributes($itemAttributes, array( 'id', 'class' ));
-$linkText = $view['link-text'];
+$linkFormat = $view['link-format'];
 echo sprintf('%s<ul class="%s %s-%s %s"%s>', str_repeat("\t", $view['indent']), $view['classes']['list'], $view['classes']['list'], $pathDepthSuffix, $listAdditionalClass, $listAttributes), PHP_EOL;
 foreach ($data as $index => $navigationItem) {
 	$itemUrl = isset($navigationItem['url']) ? $navigationItem['url'] : null;
@@ -20,7 +20,12 @@ foreach ($data as $index => $navigationItem) {
 			$navigationItem['url-class-suffix'] :
 			(($itemUrl === '.' || $itemUrl === '') ? $view['classes']['index'] : preg_replace('/\//', '-', trim($itemUrl, '/')));
 	$tooltip = $view['display-tooltips'] && isset($navigationItem['tooltip']) ? sprintf(' title="%s"', htmlentities($navigationItem['tooltip'])) : '';
-	$label = sprintf($linkText, (isset($navigationItem['label']) ? $navigationItem['label'] : $navigationItem['url']));
+	$label = \Sitegear\Util\TokenUtilities::replaceTokens(
+		$linkFormat,
+		array(
+			'label' => isset($navigationItem['label']) ? $navigationItem['label'] : $navigationItem['url']
+		)
+	);
 	echo sprintf('%s<li class="%s %s %s %s-%s %s-%s %s %s"%s>', str_repeat("\t", $view['indent'] + 1), $view['classes']['item'], $currentPrefix, $currentPagePrefix, $view['classes']['item'], $urlClassSuffix, $view['classes']['item'], $pathDepthSuffix, (is_null($itemUrl) ? $view['classes']['heading'] : ''), $itemAdditionalClass, $itemAttributes), PHP_EOL;
 	if (!is_null($itemUrl)) {
 		echo sprintf('%s<a href="%s" class="%s %s-%s %s-%s"%s>%s</a>', str_repeat("\t", $view['indent'] + 2), $itemUrl, $view['classes']['link'], $view['classes']['link'], $urlClassSuffix, $view['classes']['link'], $pathDepthSuffix, $tooltip, $label), PHP_EOL;

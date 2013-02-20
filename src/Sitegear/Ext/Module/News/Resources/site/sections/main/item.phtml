@@ -3,8 +3,20 @@
 /** @var \Sitegear\Ext\Module\News\Model\Item $item */
 $item = $view['item'];
 $view->getStringsManager()->prepend('title', $view['title'])->prepend('title', $item->getHeadline());
+$published = \Sitegear\Util\TokenUtilities::replaceTokens(
+	$view['published'],
+	array(
+		'publishedDate' => $item->getDatePublished()->format($view['date-format'])
+	)
+);
+$backLink = \Sitegear\Util\TokenUtilities::replaceTokens(
+	$view['back-link'],
+	array(
+		'rootUrl' => $view['root-url']
+	)
+);
 ?>
 <h1><?php echo $item->getHeadline() ?></h1>
 <?php echo $view->news()->item('items/' . $item->getUrlPath()); ?>
-<p><?php echo sprintf($view['published'], $item->getDatePublished()->format($view['date-format'])); ?></p>
-<p><?php echo sprintf($view['back-link'], $view['root-url']); ?></p>
+<p><?php echo $published; ?></p>
+<p><?php echo $backLink; ?></p>

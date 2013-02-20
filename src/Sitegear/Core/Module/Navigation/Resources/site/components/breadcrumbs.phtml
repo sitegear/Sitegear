@@ -2,21 +2,41 @@
 /** @var \Sitegear\Core\View\View $view */
 $trail = array();
 foreach (array_slice($view['trail'], 0, -1) as $crumb) {
-	$trail[] = sprintf($view['formats']['link'], $crumb['url'], $view['classes']['link'], $crumb['label']);
+	$trail[] = \Sitegear\Util\TokenUtilities::replaceTokens(
+		$view['formats']['link'],
+		array(
+			'url' => $crumb['url'],
+			'classes' => $view['classes']['link'],
+			'label' => $crumb['label']
+		)
+	);
 }
 $currentPageCrumb = $view['trail'][max(0, sizeof($view['trail']) - 1)];
 switch ($view['current-page-style']) {
-	case 'label':
-		$trail[] = sprintf($view['formats']['label'], $view['classes']['current-page'], $currentPageCrumb['label']);
-		break;
 	case 'link':
-		$trail[] = sprintf($view['formats']['link'], $currentPageCrumb['url'], $view['classes']['link'] . ' ' . $view['classes']['current-page'], $currentPageCrumb['label']);
+		$trail[] = \Sitegear\Util\TokenUtilities::replaceTokens(
+			$view['formats']['link'],
+			array(
+				'url' => $currentPageCrumb['url'],
+				'classes' => $view['classes']['link'] . ' ' . $view['classes']['current-page'],
+				'label' => $currentPageCrumb['label']
+			)
+		);
+		break;
+	case 'label':
+		$trail[] = \Sitegear\Util\TokenUtilities::replaceTokens(
+			$view['formats']['label'],
+			array(
+				'classes' => $view['classes']['link'],
+				'label' => $currentPageCrumb['label']
+			)
+		);
 		break;
 	case false:
 		// Don't display the trailing separator.
 		break;
 	default:
-		// Display the trailing separator.
+		// Display the trailing separator, but no text after it (normally as a "lead-in" to the H1).
 		$trail[] = '';
 }
 echo implode($view['separator'], $trail), PHP_EOL;

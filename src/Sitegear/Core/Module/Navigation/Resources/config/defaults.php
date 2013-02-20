@@ -32,9 +32,11 @@ return array(
 			'item-attributes' => array(),
 
 			/**
-			 * Format for link text, the single token is replaced by the "label" from the navigation data.
+			 * Format for link text.  Tokens:
+			 *
+			 * %label% -- the label from the navigation data.
 			 */
-			'link-text' => '%s',
+			'link-format' => '%label%',
 
 			/**
 			 * Whether or not to display tooltips (title attributes) on navigation items.
@@ -143,13 +145,21 @@ return array(
 
 				/**
 				 * Format mask for link elements.  The placeholders are the link URL, classname(s) and label text.
+				 * Tokens:
+				 *
+				 * %url% -- the URL of the link
+				 * %class% -- CSS class names as determined programmatically
+				 * %text% -- text for the link
 				 */
-				'link' => '<a href="%s" class="%s">%s</a>',
+				'link' => '<a href="%url%" class="%class%">%text%</a>',
 
 				/**
-				 * Format mask for non-link elements.  The placeholders are the classname(s) and label text.
+				 * Format mask for non-link elements.  The placeholders are the classname(s) and label text.  Tokens:
+				 *
+				 * %class% -- CSS class names as determined programmatically
+				 * %text% -- text for the label
 				 */
-				'label' => '<span class="%s">%s</span>'
+				'label' => '<span class="%class%">%text%</span>'
 			)
 		)
 	)

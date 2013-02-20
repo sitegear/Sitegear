@@ -14,11 +14,21 @@ if ($showDetailsLink || $showCheckoutLink) {
 		echo sprintf('<%s%s>', $linkWrapper, \Sitegear\Util\HtmlUtilities::attributes($view['links']['wrapper']['attributes']));
 	}
 	if ($showDetailsLink) {
-		echo sprintf($view['text']['details-link'], sprintf('%s/trolley', $view['root-url']));
+		echo \Sitegear\Util\TokenUtilities::replaceTokens(
+			$view['text']['details-link'],
+			array(
+				'detailsUrl' => sprintf('%s/trolley', $view['root-url'])
+			)
+		);
 	}
 	echo $view['links']['separator'];
 	if ($showCheckoutLink) {
-		echo sprintf($view['text']['checkout-link'], sprintf('%s/checkout', $view['root-url']));
+		echo \Sitegear\Util\TokenUtilities::replaceTokens(
+			$view['text']['checkout-link'],
+			array(
+				'checkoutUrl' => sprintf('%s/checkout', $view['root-url'])
+			)
+		);
 	}
 	if (is_string($linkWrapper)) {
 		echo sprintf('</%s>', $linkWrapper);

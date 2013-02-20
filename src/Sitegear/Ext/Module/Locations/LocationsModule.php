@@ -9,6 +9,7 @@
 namespace Sitegear\Ext\Module\Locations;
 
 use Sitegear\Base\Module\AbstractUrlMountableModule;
+use Sitegear\Util\TokenUtilities;
 use Sitegear\Base\View\ViewInterface;
 use Sitegear\Util\LoggerRegistry;
 
@@ -142,7 +143,12 @@ class LocationsModule extends AbstractUrlMountableModule {
 		$this->applyViewDefaults($view);
 		$this->applyConfigToView('page.search', $view);
 		// TODO Another parameter, region, to restrict results to that region (and its children)
-		$query = sprintf($this->config('search.query-mask'), $request->query->get('query', null));
+		$query = \Sitegear\Util\TokenUtilities::replaceTokens(
+			$this->config('search.query-mask'),
+			array(
+				'query' => $request->query->get('query', null)
+			)
+		);
 		$location = $this->getEngine()->google()->geocodeLocation($query);
 		$radius = $request->query->get('radius', $this->getDefaultRadius());
 		$view['items'] = $this->getRepository('Item')->findInRadius($location, $radius);
@@ -196,11 +202,16 @@ class LocationsModule extends AbstractUrlMountableModule {
 		$result = array();
 		foreach ($this->getRepository('Region')->findByParent($parent) as $region) {
 			/** @var \Sitegear\Ext\Module\Locations\Model\Region $region */
+			$tooltip = TokenUtilities::replaceTokens(
+				$this->config('navigation.tooltip-format'),
+				array(
+					'regionName' => $region->getName()
+				)
+			);
 			$regionResult = array(
 				'url' => sprintf('%s/%s/%s', $this->getMountedUrl(), $this->config('routes.region'), $region->getUrlPath()),
 				'label' => $region->getName(),
-				// TODO Make this configurable
-				'tooltip' => sprintf('Find locations in "%s"', $region->getName())
+				'tooltip' => $tooltip
 			);
 			if ($mode === self::NAVIGATION_DATA_MODE_EXPANDED || $maxDepth !== 1) { // >1 means more levels before the limit is reached, <=0 means no limit
 				$subRegions = $this->buildNavigationDataImpl($mode, max(0, $maxDepth - 1), $region);

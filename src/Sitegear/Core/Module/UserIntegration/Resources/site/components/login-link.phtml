@@ -1,3 +1,8 @@
 <?php
 /** @var \Sitegear\Core\View\View $view */
-echo sprintf($view['not-logged-in-message'], $view['url']);
+echo \Sitegear\Util\TokenUtilities::replaceTokens(
+	$view['not-logged-in-message'],
+	array(
+		'loginUrl' => $view['login-url']
+	)
+);

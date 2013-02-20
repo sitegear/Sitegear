@@ -73,11 +73,12 @@ class UserIntegrationModule extends AbstractUrlMountableModule {
 		LoggerRegistry::debug('UserIntegrationModule::authenticationLinkComponent');
 		$this->applyConfigToView('authentication-link', $view);
 		if ($this->getEngine()->getUserManager()->isLoggedIn()) {
-			$view['url'] = $this->getAuthenticationLinkUrl('logout', $request->getUri());
+			$view['customer-profile-url'] = $this->getEngine()->getModuleMountedUrl('customer');
+			$view['logout-url'] = $this->getAuthenticationLinkUrl('logout', $request->getUri());
 			$view['user'] = $this->getEngine()->getUserManager()->getUser();
 			return 'logout-link';
 		} else {
-			$view['url'] = $this->getAuthenticationLinkUrl('login', $request->getUri());
+			$view['login-url'] = $this->getAuthenticationLinkUrl('login', $request->getUri());
 			return 'login-link';
 		}
 	}

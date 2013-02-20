@@ -9,8 +9,14 @@ if (empty($view['items'])) {
 <section class="news-item-preview">
 <?php
 if ($view['date-format']) {
+	$published = \Sitegear\Util\TokenUtilities::replaceTokens(
+		$view['published'],
+		array(
+			'publishedDate' => $item->getDatePublished()->format($view['date-format'])
+		)
+	);
 ?>
-	<div class="date-published"><?php echo sprintf($view['published'], $item->getDatePublished()->format($view['date-format'])); ?></div>
+	<div class="date-published"><?php echo $published; ?></div>
 <?php
 }
 ?>

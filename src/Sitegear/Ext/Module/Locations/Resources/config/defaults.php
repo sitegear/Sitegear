@@ -61,18 +61,25 @@ return array(
 		/**
 		 * Maximum number of levels to show in navigation; 0 to show all region levels.
 		 */
-		'max-depth' => 1
+		'max-depth' => 1,
+
+		/**
+		 * Format to use for navigation item tooltips.  Tokens:
+		 *
+		 * %regionName% -- The name of the region.
+		 */
+		'tooltip-format' => 'Find locations in "%regionName%"'
 
 	),
 
 	'search' => array(
 
 		/**
-		 * An sprintf() mask which allows addition of boilerplate to provided queries.  The single placeholder is
-		 * replaced by the query entered by the user.  For example "%s, Australia" will explicitly add ", Australia"
-		 * to the end of every query.
+		 * An sprintf() mask which allows addition of boilerplate to provided queries.  Tokens:
+		 *
+		 * %query% -- the original query as entered
 		 */
-		'query-mask' => '%s'
+		'query-mask' => '%query%'
 
 	),
 

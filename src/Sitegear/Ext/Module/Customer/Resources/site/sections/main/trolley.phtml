@@ -9,7 +9,12 @@ $trolleyEmpty = !isset($view['trolley-data']) || empty($view['trolley-data']);
 if ($trolleyEmpty) {
 	echo $view['text']['no-items'];
 } else {
-	echo sprintf(sizeof($view['trolley-data']) === 1 ? $view['text']['items-count'][0] : $view['text']['items-count'][1], sizeof($view['trolley-data']));
+	echo \Sitegear\Util\TokenUtilities::replaceTokens(
+		sizeof($view['trolley-data']) === 1 ? $view['text']['items-count'][0] : $view['text']['items-count'][1],
+		array(
+			'count' => sizeof($view['trolley-data'])
+		)
+	);
 ?>
 </p>
 <table>

@@ -414,9 +414,13 @@ class CustomerModule extends AbstractUrlMountableModule {
 			}
 			$labelFormat = $this->config('trolley-form.value-format');
 			foreach ($attribute['options'] as $option) {
-				$label = $labelFormat;
-				$label = str_replace('%label%', $option['label'], $label);
-				$label = str_replace('%value%', sprintf('$%s', number_format($option['value'] / 100, 2)), $label);
+				$label = \Sitegear\Util\TokenUtilities::replaceTokens(
+					$labelFormat,
+					array(
+						'label' => $option['label'],
+						'value' => sprintf('$%s', number_format($option['value'] / 100, 2))
+					)
+				);
 				$options[] = array(
 					'value' => $option['id'],
 					'label' => $label
