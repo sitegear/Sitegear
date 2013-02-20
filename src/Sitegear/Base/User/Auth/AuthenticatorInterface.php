@@ -24,13 +24,12 @@ interface AuthenticatorInterface {
 	/**
 	 * Check the given credentials.
 	 *
+	 * @param string $email Email address.
 	 * @param array $credentials Array of credentials.
-	 *
-	 * @return integer Identifier of the user whose credentials matched.
 	 *
 	 * @throw \InvalidArgumentException If the credentials is not of the correct type or syntax.
 	 * @throw \RuntimeException If the credentials are invalid.
 	 */
-	public function checkCredentials(array $credentials);
+	public function checkCredentials($email, array $credentials);
 
 }

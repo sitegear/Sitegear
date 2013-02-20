@@ -1,14 +1,12 @@
 <?php
 /**
  * @var \Sitegear\Core\View\View $view
- * @var \Sitegear\Base\User\UserInterface $user
  */
-$user = $view['user'];
 echo \Sitegear\Util\TokenUtilities::replaceTokens(
 	$view['logged-in-message'],
 	array(
 		'customerProfileUrl' => $view['customer-profile-url'],
-		'userName' => $user->getName(),
+		'userEmail' => $view['user-email'],
 		'logoutUrl' => $view['logout-url']
 	)
 );

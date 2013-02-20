@@ -41,7 +41,8 @@ class UserIntegrationModule extends AbstractUrlMountableModule {
 		if ($request->isMethod('post')) {
 			$returnUrl = $request->request->get('return-url');
 			$userManager = $this->getEngine()->getUserManager();
-			if ($userManager->login($request->request->all())) {
+			// TODO Anything with this 'email'?  Constant?
+			if ($userManager->login($request->request->get('email'), $request->request->all())) {
 				return new RedirectResponse($returnUrl ?: $request->getBaseUrl());
 			} else {
 				$view['error-message'] = 'Invalid credentials supplied, please try again.';
@@ -49,6 +50,7 @@ class UserIntegrationModule extends AbstractUrlMountableModule {
 		} else {
 			$returnUrl = UrlUtilities::getReturnUrl($request->getUri());
 		}
+		$this->applyConfigToView('pages.login', $view);
 		$view['return-url'] = $returnUrl;
 		$view['form-url'] = $this->getAuthenticationLinkUrl('login', $returnUrl);
 		return null;
@@ -71,11 +73,11 @@ class UserIntegrationModule extends AbstractUrlMountableModule {
 	 */
 	public function authenticationLinkComponent(ViewInterface $view, Request $request) {
 		LoggerRegistry::debug('UserIntegrationModule::authenticationLinkComponent');
-		$this->applyConfigToView('authentication-link', $view);
+		$this->applyConfigToView('components.authentication-link', $view);
 		if ($this->getEngine()->getUserManager()->isLoggedIn()) {
 			$view['customer-profile-url'] = $this->getEngine()->getModuleMountedUrl('customer');
 			$view['logout-url'] = $this->getAuthenticationLinkUrl('logout', $request->getUri());
-			$view['user'] = $this->getEngine()->getUserManager()->getUser();
+			$view['user-email'] = $this->getEngine()->getUserManager()->getLoggedInUserEmail();
 			return 'logout-link';
 		} else {
 			$view['login-url'] = $this->getAuthenticationLinkUrl('login', $request->getUri());

@@ -14,99 +14,78 @@ namespace Sitegear\Base\User\Storage;
 interface UserStorageInterface {
 
 	/**
-	 * Create a new user, which has a new unique identifier.
+	 * Create a new user with the given email address and initial data.
 	 *
+	 * @param string $email
 	 * @param array $data
-	 *
-	 * @return integer Identifier of the created user.
 	 */
-	public function createUser(array $data);
+	public function createUser($email, array $data);
 
 	/**
 	 * Delete the specified user completely.
 	 *
-	 * @param integer $id
+	 * @param string $email
 	 */
-	public function deleteUser($id);
+	public function deleteUser($email);
 
 	/**
 	 * Determine whether the given user id exists.
 	 *
-	 * @param integer $id
+	 * @param string $email
 	 *
 	 * @return boolean
 	 */
-	public function hasUser($id);
+	public function hasUser($email);
 
 	/**
 	 * Get the data set for the given user id.
 	 *
-	 * @param integer $id
+	 * @param string $email
 	 *
 	 * @return array
 	 */
-	public function getData($id);
+	public function getData($email);
 
 	/**
 	 * Completely replace the given user's data set.  This removes all existing data and replaces it with the given
 	 * replacement data array.
 	 *
-	 * @param integer $id
+	 * @param string $email
 	 * @param array $data
 	 */
-	public function setData($id, array $data);
+	public function setData($email, array $data);
 
 	/**
 	 * Get the list of privileges assigned to the user with the given id.
 	 *
-	 * @param integer $id
+	 * @param string $email
 	 *
 	 * @return string[]
 	 */
-	public function getPrivileges($id);
+	public function getPrivileges($email);
 
 	/**
 	 * Completely replace the privileges assigned to the user with the given id.
 	 *
-	 * @param integer $id
+	 * @param string $email
 	 * @param string[] $privileges
 	 */
-	public function setPrivileges($id, array $privileges);
+	public function setPrivileges($email, array $privileges);
 
 	/**
 	 * Grant the given privilege to the specified user.
 	 *
-	 * @param integer $id
+	 * @param string $email
 	 * @param string $privilege
 	 */
-	public function grantPrivilege($id, $privilege);
+	public function grantPrivilege($email, $privilege);
 
 	/**
 	 * Revoke the given privilege from the specific user.
 	 *
-	 * @param integer $id
+	 * @param string $email
 	 * @param string $privilege
 	 */
-	public function revokePrivilege($id, $privilege);
-
-	/**
-	 * Retrieve a single record which has the specified value in the specified field.
-	 *
-	 * @param string $field Field name.
-	 * @param mixed $value Value to find.
-	 *
-	 * @return integer|null Identifier of the single located user, or null if no user matches.
-	 */
-	public function findOneUser($field, $value);
-
-	/**
-	 * Retrieve any number of users which match the specified value in the specified field.
-	 *
-	 * @param string $field Field name.
-	 * @param mixed $value Value to find.
-	 *
-	 * @return integer[] Array of identifiers.  If no user matches, this will be an empty array.
-	 */
-	public function findUsers($field, $value);
+	public function revokePrivilege($email, $privilege);
 
 }

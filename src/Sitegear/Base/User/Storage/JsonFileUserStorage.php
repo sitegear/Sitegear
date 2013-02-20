@@ -51,112 +51,84 @@ class JsonFileUserStorage implements UserStorageInterface {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function hasUser($id) {
-		return isset($this->users[$id]);
+	public function hasUser($email) {
+		return isset($this->users[$email]);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public function createUser(array $data) {
+	public function createUser($email, array $data) {
 		LoggerRegistry::debug('JsonFileUserStorage creating user');
-		$id = sizeof($this->users);
-		array_push($this->users, array(
+		if (array_key_exists($email, $this->users)) {
+			throw new \InvalidArgumentException(sprintf('JsonFileUserStorage cannot create user with email address "%s", that email address is already registered.', $email));
+		}
+		$this->users[$email] = array(
 			'data' => $data,
 			'privileges' => array(),
 			'active' => true
-		));
+		);
 		$this->store();
-		return $id;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public function deleteUser($id) {
+	public function deleteUser($email) {
 		LoggerRegistry::debug('JsonFileUserStorage deleting user');
-		// Don't actually remove the user, just overwrite it with a placeholder.  Otherwise the id values change.
-		$this->users[$id]['active'] = false;
-		$this->users[$id]['data-before-deletion'] = $this->users[$id]['data'];
-		$this->users[$id]['data'] = null;
-		$this->users[$id]['privileges'] = null;
+		if (!array_key_exists($email, $this->users)) {
+			throw new \InvalidArgumentException(sprintf('JsonFileUserStorage cannot delete user with email address "%s", that email address is not registered.', $email));
+		}
+		unset($this->users[$email]);
 		$this->store();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public function getData($id) {
-		return $this->users[$id]['data'];
+	public function getData($email) {
+		return $this->users[$email]['data'];
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public function setData($id, array $data) {
-		$this->users[$id]['data'] = $data;
+	public function setData($email, array $data) {
+		$this->users[$email]['data'] = $data;
 		$this->store();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public function getPrivileges($id) {
-		return $this->users[$id]['privileges'];
+	public function getPrivileges($email) {
+		return $this->users[$email]['privileges'];
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public function setPrivileges($id, array $privileges) {
-		$this->users[$id]['privileges'] = $privileges;
+	public function setPrivileges($email, array $privileges) {
+		$this->users[$email]['privileges'] = $privileges;
 		$this->store();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public function grantPrivilege($id, $privilege) {
-		$this->users[$id]['privileges'][] = $privilege;
+	public function grantPrivilege($email, $privilege) {
+		$this->users[$email]['privileges'][] = $privilege;
 		$this->store();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public function revokePrivilege($id, $privilege) {
-		$this->users[$id]['privileges'] = array_filter($this->getPrivileges($id), function($item) use ($privilege) {
+	public function revokePrivilege($email, $privilege) {
+		$this->users[$email]['privileges'] = array_filter($this->getPrivileges($email), function($item) use ($privilege) {
 			return ($item !== $privilege);
 		});
 		$this->store();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function findOneUser($field, $value) {
-		LoggerRegistry::info('JsonFileUserStorage looking for one user with ' . $field . ' = ' . $value);
-		LoggerRegistry::info('data = ' . print_r($this->users, true));
-		$result = null;
-		foreach ($this->users as $id => $user) {
-			if (isset($user['data'][$field]) && $user['data'][$field] === $value) {
-				$result = $id;
-			}
-		}
-		return $result;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function findUsers($field, $value) {
-		$result = array();
-		foreach ($this->users as $id => $user) {
-			if (isset($user[$field]) && $user[$field] === $value) {
-				$result[] = $id;
-			}
-		}
-		return $result;
 	}
 
 	//-- Internal Methods --------------------

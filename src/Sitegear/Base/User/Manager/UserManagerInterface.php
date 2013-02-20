@@ -11,7 +11,7 @@ namespace Sitegear\Base\User\Manager;
 interface UserManagerInterface {
 
 	/**
-	 * @return \Sitegear\Base\User\Auth\EmailPasswordAuthenticator
+	 * @return \Sitegear\Base\User\Auth\PasswordAuthenticator
 	 */
 	public function getAuthenticator();
 
@@ -22,8 +22,6 @@ interface UserManagerInterface {
 
 	/**
 	 * @param \Symfony\Component\HttpFoundation\Session\SessionInterface $session
-	 *
-	 * @return \Sitegear\Base\User\UserInterface
 	 */
 	public function setSession($session);
 
@@ -33,18 +31,19 @@ interface UserManagerInterface {
 	public function isLoggedIn();
 
 	/**
-	 * @return \Sitegear\Base\User\UserInterface|null
+	 * @return string
 	 */
-	public function getUser();
+	public function getLoggedInUserEmail();
 
 	/**
-	 * Attempt to login using the given credentials.
+	 * Attempt to login the user with the given email address using the given credentials.
 	 *
+	 * @param string $email
 	 * @param array $credentials
 	 *
 	 * @return boolean Whether or not login was successful.
 	 */
-	public function login(array $credentials);
+	public function login($email, array $credentials);
 
 	/**
 	 * Ensure the user is logged out.

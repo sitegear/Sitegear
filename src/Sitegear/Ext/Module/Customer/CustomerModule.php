@@ -93,7 +93,7 @@ class CustomerModule extends AbstractUrlMountableModule {
 		LoggerRegistry::debug('CustomerModule::indexController');
 		$this->applyConfigToView('pages.index', $view);
 		if ($this->getEngine()->getUserManager()->isLoggedIn()) {
-			$email = $this->getEngine()->getUserManager()->getUser()->getEmail();
+			$email = $this->getEngine()->getUserManager()->getLoggedInUserEmail()->getData('email');
 			$account = $this->getRepository('Account')->findOneBy(array( 'email' => $email ));
 			if (is_null($account)) {
 				$account = new Account();
