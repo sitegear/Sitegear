@@ -20,13 +20,14 @@ return array(
 		 * Text fragments.
 		 */
 		'text' => array(
+			'unknown-value' => 'TBA',
 			'no-items' => '<span class="sitegear-trolley-preview-no-items">Trolley is empty</span>',
+			'details-link' => '<a href="%s" class="sitegear-trolley-preview-details-link">Details</a>',
+			'checkout-link' => '<a href="%s" class="sitegear-trolley-preview-checkout-link">Checkout</a>',
 			'items-count' => array(
 				'<span class="sitegear-trolley-preview-items-count">Trolley contains %d item</span>',
 				'<span class="sitegear-trolley-preview-items-count">Trolley contains %d items</span>'
-			),
-			'details-link' => '<a href="%s" class="sitegear-trolley-preview-details-link">Details</a>',
-			'checkout-link' => '<a href="%s" class="sitegear-trolley-preview-checkout-link">Checkout</a>'
+			)
 		)
 	),
 
@@ -108,9 +109,11 @@ return array(
 			 * Text used in the trolley preview component.
 			 */
 			'text' => array(
+				'unknown-value' => '{{ config:common.text.unknown-value }}',
 				'no-items' => '{{ config:common.text.no-items }}',
 				'items-count' => '{{ config:common.text.items-count }}',
 				'checkout-link' => '{{ config:common.text.checkout-link }}',
+				'remove-button' => 'Remove',
 				'table-headings' => array(
 					'item' => 'Item',
 					'details' => 'Details',
@@ -118,6 +121,11 @@ return array(
 					'quantity' => 'Quantity',
 					'total' => 'Total',
 					'actions' => 'Actions'
+				),
+				'table-total-labels' => array(
+					'subtotal' => 'Subtotal',
+					'additional' => 'Tax &amp; Shipping',
+					'total' => 'Total'
 				)
 			)
 		)

@@ -48,7 +48,7 @@ if ($trolleyEmpty) {
 			<form method="post" action="<?php echo sprintf('%s/remove-trolley-item', $view['root-url']); ?>" class="minimal">
 				<input type="hidden" name="form-url" value="<?php echo sprintf('%s/trolley', $view['root-url']); ?>" />
 				<input type="hidden" name="index" value="<?php echo $index; ?>" />
-				<input type="submit" value="Remove" />
+				<input type="submit" value="<?php echo $view['text']['remove-button']; ?>" />
 			</form>
 		</td>
 	</tr>
@@ -56,23 +56,19 @@ if ($trolleyEmpty) {
 	}
 ?>
 	<tr>
-		<td colspan="4">Subtotal</td>
+		<td colspan="4"><?php echo $view['text']['table-total-labels']['subtotal']; ?></td>
 		<td>$<?php echo number_format($totalPrice / 100, 2); ?></td>
 		<td></td>
 	</tr>
 	<tr>
-		<td colspan="4">Tax and Shipping</td>
-		<td>TBA</td>
+		<td colspan="4"><?php echo $view['text']['table-total-labels']['additional']; ?></td>
+		<td><?php echo $view['text']['unknown-value']; ?></td>
 		<td></td>
 	</tr>
 	<tr>
-		<td colspan="4">Total</td>
-		<td>TBA</td>
-		<td>
-			<form method="get" action="<?php echo sprintf('%s/checkout', $view['root-url']); ?>" class="minimal">
-				<input type="submit" value="Checkout" />
-			</form>
-		</td>
+		<td colspan="4"><?php echo $view['text']['table-total-labels']['total']; ?></td>
+		<td><?php echo $view['text']['unknown-value']; ?></td>
+		<td><?php echo sprintf($view['text']['checkout-link'], sprintf('%s/checkout', $view['root-url'])); ?></td>
 	</tr>
 	</tbody>
 </table>
