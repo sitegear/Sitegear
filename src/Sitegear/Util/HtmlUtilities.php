@@ -98,10 +98,11 @@ final class HtmlUtilities {
 	/**
 	 * Retrieve a textual description of the given Exception, or FlattenException (as passed by Symfony HttpKernel).
 	 *
-	 * @param string $heading
 	 * @param \Symfony\Component\HttpKernel\Exception\FlattenException|\Exception $exception
 	 * @param string|null $adminName
 	 * @param string|null $adminEmail
+	 * @param string $heading
+	 * @param null $stackTraceHeading
 	 *
 	 * @return string
 	 */
