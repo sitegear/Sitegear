@@ -231,8 +231,6 @@ class View extends AbstractView {
 		return $content ?: '';
 	}
 
-	//-- ViewInterface Methods --------------------
-
 	/**
 	 * {@inheritDoc}
 	 */
