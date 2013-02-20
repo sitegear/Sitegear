@@ -71,11 +71,6 @@ abstract class AbstractEngine implements EngineInterface {
 	private $memcache;
 
 	/**
-	 * @var \Sitegear\Base\User\UserInterface
-	 */
-	private $loggedInUser;
-
-	/**
 	 * @var \Sitegear\Base\User\Manager\UserManagerInterface
 	 */
 	private $userManager;
@@ -109,7 +104,6 @@ abstract class AbstractEngine implements EngineInterface {
 		$this->userManager = $userManager;
 		$this->session = null;
 		$this->memcache = null;
-		$this->loggedInUser = null;
 		$this->modules = array();
 		$this->compiledRouteCollection = null;
 		$this->compiledTemplateMap = null;
