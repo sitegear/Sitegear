@@ -9,16 +9,6 @@
 namespace Sitegear\Core\Module\Doctrine;
 
 use Sitegear\Base\Module\AbstractConfigurableModule;
-use Gedmo\Timestampable\TimestampableListener;
-use Doctrine\Common\Annotations\AnnotationRegistry;
-use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
-use Gedmo\DoctrineExtensions;
-use Doctrine\ORM\Mapping\Driver\DriverChain;
-use Doctrine\Common\Annotations\CachedReader;
-use Doctrine\Common\Annotations\AnnotationReader;
-use Doctrine\Common\Cache\MemcacheCache;
-use Doctrine\Common\Cache\ArrayCache;
-use Doctrine\ORM\Configuration;
 use Sitegear\Base\Module\DiscreteDataModuleInterface;
 use Sitegear\Util\NameUtilities;
 use Sitegear\Util\LoggerRegistry;
@@ -26,11 +16,21 @@ use Sitegear\Util\LoggerRegistry;
 use Symfony\Component\HttpFoundation\Request;
 
 use Doctrine\Common\EventManager;
-use Doctrine\ORM\Mapping\UnderscoreNamingStrategy;
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Tools\Setup;
-use Doctrine\ORM\Events;
+use Doctrine\Common\Annotations\AnnotationRegistry;
+use Doctrine\Common\Annotations\CachedReader;
+use Doctrine\Common\Annotations\AnnotationReader;
+use Doctrine\Common\Cache\MemcacheCache;
+use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\DBAL\Types\Type;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Configuration;
+use Doctrine\ORM\Events;
+use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
+use Doctrine\ORM\Mapping\Driver\DriverChain;
+use Doctrine\ORM\Mapping\UnderscoreNamingStrategy;
+
+use Gedmo\Timestampable\TimestampableListener;
+use Gedmo\DoctrineExtensions;
 
 /**
  * Wrapper around a Doctrine entity manager.
@@ -115,6 +115,8 @@ class DoctrineModule extends AbstractConfigurableModule implements DiscreteDataM
 			if (strlen($tableNamePrefix) > 0) {
 				$eventManager->addEventListener(Events::loadClassMetadata, new DoctrineTablePrefix($tableNamePrefix));
 			}
+
+			// Setup the Gedmo Timestampable subscriber.  TODO Move this to configuration
 			$timestampableListener = new TimestampableListener();
 			$timestampableListener->setAnnotationReader($cachedAnnotationReader);
 			$eventManager->addEventSubscriber($timestampableListener);
