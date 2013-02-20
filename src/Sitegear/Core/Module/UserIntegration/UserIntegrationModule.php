@@ -102,9 +102,17 @@ class UserIntegrationModule extends AbstractUrlMountableModule {
 		return array();
 	}
 
-	//-- Internal Methods --------------------
+	//-- Public Methods --------------------
 
-	protected function getAuthenticationLinkUrl($key, $returnUrl) {
+	/**
+	 * Get the URL for a login or logout link according to the specified key.
+	 *
+	 * @param string $key Either 'login' or 'logout'.
+	 * @param string $returnUrl The URL to return to, after completing the action.
+	 *
+	 * @return string Generated URL.
+	 */
+	public function getAuthenticationLinkUrl($key, $returnUrl) {
 		$url = sprintf(
 			'%s/%s/%s',
 			$this->getEngine()->config('system.command-url.root'),
