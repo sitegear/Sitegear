@@ -32,10 +32,22 @@ class TokenUtilitiesTest extends AbstractSitegearTestCase {
 
 	public function testReplaceTokens() {
 		// Base case
-		$this->assertEquals('', TokenUtilities::replaceTokens('', array()));
+		$this->assertEquals('', TokenUtilities::replaceTokens(
+			'',
+			array()
+		));
 
 		// Base case with ignored tokens
-		$this->assertEquals('', TokenUtilities::replaceTokens('', array( 'foo' => 'bar', 'baz' => 'xyzzy' )));
+		$this->assertEquals('', TokenUtilities::replaceTokens(
+			'',
+			array( 'foo' => 'bar', 'baz' => 'xyzzy' )
+		));
+
+		// No change for no tokens.
+		$this->assertEquals('This %foo% has 3 %bar% and is %baz%', TokenUtilities::replaceTokens(
+			'This %foo% has 3 %bar% and is %baz%',
+			array()
+		));
 
 		// Normal case
 		$this->assertEquals('This sentence has 3 tokens and is well tested', TokenUtilities::replaceTokens(
@@ -71,6 +83,15 @@ class TokenUtilitiesTest extends AbstractSitegearTestCase {
 			)
 		));
 
+		// Ignored tokens.
+		$this->assertEquals('This %foo% has 3 tokens and is well tested', TokenUtilities::replaceTokens(
+			'This %foo% has 3 %bar% and is %baz%',
+			array(
+				'foo' => array( 'ignored' => 'sentence' ),
+				'bar' => 'tokens',
+				'baz' => 'well tested'
+			)
+		));
 	}
 
 }
