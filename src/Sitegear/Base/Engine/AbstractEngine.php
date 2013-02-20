@@ -66,9 +66,9 @@ abstract class AbstractEngine implements EngineInterface {
 	private $session;
 
 	/**
-	 * @var \Memcached
+	 * @var \Memcache
 	 */
-	private $memcached;
+	private $memcache;
 
 	/**
 	 * @var \Sitegear\Base\User\UserInterface
@@ -108,7 +108,7 @@ abstract class AbstractEngine implements EngineInterface {
 		$this->viewFactory = $viewFactory;
 		$this->userManager = $userManager;
 		$this->session = null;
-		$this->memcached = null;
+		$this->memcache = null;
 		$this->loggedInUser = null;
 		$this->modules = array();
 		$this->compiledRouteCollection = null;
@@ -141,7 +141,7 @@ abstract class AbstractEngine implements EngineInterface {
 			$this->session->start();
 		}
 		// Setup memcached connection.
-		$this->memcached = $this->initMemcached();
+		$this->memcache = $this->initMemcache();
 		// Get logged in user.
 		$this->getUserManager()->setSession($this->session);
 	}
@@ -274,8 +274,8 @@ abstract class AbstractEngine implements EngineInterface {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function getMemcached() {
-		return $this->memcached;
+	public function getMemcache() {
+		return $this->memcache;
 	}
 
 	/**
@@ -334,9 +334,9 @@ abstract class AbstractEngine implements EngineInterface {
 	}
 
 	/**
-	 * Initialise the memcached connection.
+	 * Initialise the memcache object (or fake object).
 	 */
-	protected abstract function initMemcached();
+	protected abstract function initMemcache();
 
 	/**
 	 * Get the route mappings according to implementation.

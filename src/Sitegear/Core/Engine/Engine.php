@@ -23,7 +23,7 @@ use Sitegear\Core\View\ViewFactory;
 use Sitegear\Util\ExtensionMimeTypeGuesser;
 use Sitegear\Util\NameUtilities;
 use Sitegear\Util\TypeUtilities;
-use Sitegear\Util\FakeMemcached;
+use Sitegear\Util\FakeMemcache;
 use Sitegear\Util\LoggerRegistry;
 
 use Symfony\Component\HttpFoundation\Request;
@@ -233,19 +233,23 @@ class Engine extends AbstractConfigurableEngine {
 	/**
 	 * {@inheritDoc}
 	 */
-	protected function initMemcached() {
-		$memcached = null;
-		if ($this->config('memcached.enabled')) {
-			$memcached = new \Memcached();
-			foreach ($this->config('memcached.servers') as $server) {
-				if (isset($server['host']) && isset($server['port'])) {
-					$memcached->addServer($server['host'], $server['port']);
+	protected function initMemcache() {
+		$memcache = null;
+		if ($this->config('memcache.enabled')) {
+			$memcache = new \Memcache();
+			foreach ($this->config('memcache.servers') as $server) {
+				if (isset($server['host'])) {
+					if (isset($server['port'])) {
+						$memcache->addServer($server['host'], $server['port']);
+					} else {
+						$memcache->addServer($server['host']);
+					}
 				} else {
-					throw new \InvalidArgumentException('Engine cannot connect to memcached server without both "host" and "port" specified.');
+					throw new \InvalidArgumentException('Engine cannot connect to memcache without specifying at least the host to connect to.');
 				}
 			}
 		}
-		return $memcached ?: new FakeMemcached();
+		return $memcache ?: new FakeMemcache();
 	}
 
 	/**

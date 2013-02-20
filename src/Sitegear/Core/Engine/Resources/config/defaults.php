@@ -266,19 +266,19 @@ return array(
 	),
 
 	/**
-	 * Memcached settings.
+	 * Memcache settings.
 	 */
-	'memcached' => array(
+	'memcache' => array(
 
 		/**
-		 * Whether to enable Memcached.  It is strongly recommended this is set to true, it can cut page load times
+		 * Whether to enable Memcache.  It is strongly recommended this is set to true, it can cut page load times
 		 * significantly.
 		 */
 		'enabled' => true,
 
 		/**
-		 * Memcached servers.  Array of key-value arrays, each key-value array has 'host' and 'port' keys.  Both are
-		 * required, a default port setting is not provided.
+		 * Memcache servers.  Array of key-value arrays, each key-value array has 'host' and 'port' keys.  If 'port'
+		 * is omitted, the default is used (11211).
 		 */
 		'servers' => array(
 			array(

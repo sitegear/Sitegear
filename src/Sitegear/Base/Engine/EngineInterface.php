@@ -152,11 +152,11 @@ interface EngineInterface extends ModuleResolverInterface, ModuleContainerInterf
 	public function getSession();
 
 	/**
-	 * Retrieve the memcached connection object.
+	 * Retrieve the memcache object.
 	 *
-	 * @return \Memcached
+	 * @return \Memcache
 	 */
-	public function getMemcached();
+	public function getMemcache();
 
 	/**
 	 * Get the user manager for this engine.
