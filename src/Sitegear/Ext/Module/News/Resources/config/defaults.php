@@ -100,6 +100,8 @@ return array(
 
 			/**
 			 * How to show dates, null to hide completely.
+			 *
+			 * TODO Centralise this
 			 */
 			'date-format' => 'Y-m-d',
 
@@ -132,6 +134,8 @@ return array(
 
 			/**
 			 * How to show dates, null to hide completely.
+			 *
+			 * TODO Centralise this
 			 */
 			'date-format' => null,
 
