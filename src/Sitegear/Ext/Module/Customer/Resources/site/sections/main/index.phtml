@@ -2,21 +2,88 @@
 /**
  * @var \Sitegear\Core\View\View $view
  * @var \Sitegear\Ext\Module\Customer\Model\Account $account
+ * @var \Sitegear\Ext\Module\Customer\Model\Transaction $transaction
+ * @var \Sitegear\Ext\Module\Customer\Model\TransactionItem $item
+ * @var \Sitegear\Ext\Module\Customer\Model\Field $field
  */
-if ($view['account']) {
-	$account = $view['account'];
+$account = $view['account'];
+$view->getStringsManager()->prepend('title', $view['title']);
 ?>
-<h1>Customer Profile</h1>
+<h1><?php echo $view['heading']; ?></h1>
 <p>
 You are logged in as <strong><?php echo $account->getEmail() ?></strong>.
+</p>
+<h2>Your Details</h2>
+<?php
+if ($account->getFieldValues()->count() === 0) {
+?>
+<p>
+You do not yet have any stored details.
 </p>
 <?php
 } else {
 ?>
-<h1>Not Logged In</h1>
 <p>
-You need to be <a href="<?php echo $view['login-url']; ?>">logged in</a> to view this page.
+Here are your details according to your most recent transaction or update.
 </p>
+<dl>
+<?php
+	foreach ($view['fields'] as $field) {
+		$fieldValue = $account->getFieldValues()->filter(function(\Sitegear\Ext\Module\Customer\Model\AccountFieldValue $fieldValue) use ($field) {
+			return $fieldValue->getField() === $field;
+		});
+?>
+	<dt><?php echo $field->getLabel(); ?></dt>
+	<dd><?php echo $fieldValue->count() > 0 ? $fieldValue->get(0)->getValue() : '&lt;not set&gt;'; ?></dd>
+<?php
+	}
+?>
+</dl>
 <?php
 }
+
+if ($view['transaction-count'] > 0) {
+	$transactionCount = min($view['transaction-count'], $account->getTransactions()->count());
 ?>
+<h2>Your Recent Transactions</h2>
+<?php
+	if ($transactionCount === 0) {
+?>
+<p>
+You do not yet have any transactions.
+</p>
+<?php
+	} else {
+?>
+<p>
+Here are your most recent <?php echo $transactionCount; ?> transactions.
+</p>
+<table>
+	<thead>
+	<tr>
+		<th>Transaction Date</th>
+		<th>Items Purchased</th>
+		<th>Total Price</th>
+	</tr>
+	</thead>
+	<tbody>
+<?php
+		foreach (array_slice($account->getTransactions()->toArray(), 0, $transactionCount) as $transaction) {
+			$totalPrice = 0;
+			foreach ($transaction->getItems() as $item) {
+				$totalPrice += $item->getUnitPrice() * $item->getQuantity();
+			}
+?>
+	<tr>
+		<td><?php echo $transaction->getDatePurchased()->format($view['date-format']); ?></td>
+		<td><?php echo $transaction->getItems()->count(); ?></td>
+		<td><?php echo sprintf('$%s', number_format($totalPrice / 100, 2)); ?></td>
+	</tr>
+<?php
+		}
+?>
+	</tbody>
+</table>
+<?php
+	}
+}

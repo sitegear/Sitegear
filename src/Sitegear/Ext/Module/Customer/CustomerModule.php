@@ -92,18 +92,18 @@ class CustomerModule extends AbstractUrlMountableModule {
 	public function indexController(ViewInterface $view, Request $request) {
 		LoggerRegistry::debug('CustomerModule::indexController');
 		$this->applyConfigToView('pages.index', $view);
-		if ($this->getEngine()->getUserManager()->isLoggedIn()) {
-			$email = $this->getEngine()->getUserManager()->getLoggedInUserEmail()->getData('email');
-			$account = $this->getRepository('Account')->findOneBy(array( 'email' => $email ));
-			if (is_null($account)) {
-				$account = new Account();
-				$account->setEmail($email);
-				$this->getEngine()->doctrine()->getEntityManager()->persist($account);
-			}
-			$view['account'] = $account;
-		} else {
-			$view['login-url'] = $this->getEngine()->userIntegration()->getAuthenticationLinkUrl('login', $request->getUri());
+		if (!$this->getEngine()->getUserManager()->isLoggedIn()) {
+			return new RedirectResponse($this->getEngine()->userIntegration()->getAuthenticationLinkUrl('login', $request->getUri()));
 		}
+		$email = $this->getEngine()->getUserManager()->getLoggedInUserEmail();
+		$account = $this->getRepository('Account')->findOneBy(array( 'email' => $email ));
+		if (is_null($account)) {
+			$account = new Account();
+			$account->setEmail($email);
+			$this->getEngine()->doctrine()->getEntityManager()->persist($account);
+		}
+		$view['account'] = $account;
+		$view['fields'] = $this->getRepository('Field')->findAll();
 	}
 
 	/**

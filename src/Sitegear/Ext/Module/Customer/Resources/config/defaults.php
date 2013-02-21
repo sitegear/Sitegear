@@ -91,7 +91,36 @@ return array(
 	'pages' => array(
 
 		/**
-		 * Settings for the trolley preview component.
+		 * Settings for the customer profile page.
+		 */
+		'index' => array(
+
+			/**
+			 * Page title.
+			 */
+			'title' => 'Your Customer Profile',
+
+			/**
+			 * Page heading.
+			 */
+			'heading' => 'Your Customer Profile',
+
+			/**
+			 * Number of transactions to show.
+			 */
+			'transaction-count' => 3,
+
+			/**
+			 * How to show dates, null to hide completely.
+			 *
+			 * TODO Centralise this
+			 */
+			'date-format' => 'Y-m-d'
+
+		),
+
+		/**
+		 * Settings for the trolley details page.
 		 */
 		'trolley' => array(
 

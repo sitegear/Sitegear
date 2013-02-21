@@ -48,6 +48,12 @@ class Transaction {
 	/**
 	 * @var \DateTime
 	 * @ORM\Column(type="datetime", nullable=false)
+	 */
+	private $datePurchased;
+
+	/**
+	 * @var \DateTime
+	 * @ORM\Column(type="datetime", nullable=false)
 	 * @Gedmo\Timestampable(on="create")
 	 */
 	private $dateCreated;
@@ -108,6 +114,20 @@ class Transaction {
 	 */
 	public function getItems() {
 		return $this->items;
+	}
+
+	/**
+	 * @return \DateTime
+	 */
+	public function getDatePurchased() {
+		return $this->datePurchased;
+	}
+
+	/**
+	 * @param \DateTime $datePurchased
+	 */
+	public function setDatePurchased($datePurchased) {
+		$this->datePurchased = $datePurchased;
 	}
 
 	/**
