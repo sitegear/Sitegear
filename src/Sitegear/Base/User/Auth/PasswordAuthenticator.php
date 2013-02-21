@@ -24,10 +24,10 @@ class PasswordAuthenticator extends AbstractStorageBackedAuthenticator {
 			throw new \InvalidArgumentException('PasswordAuthenticator expects "password" credential key, insufficient credentials supplied.');
 		}
 		$result = null;
-		if (!$this->getStorage()->hasUser($email)) {
+		if ($this->getStorage()->hasUser($email)) {
 			$data = $this->getStorage()->getData($email);
 			// TODO Not this
-			if ($data['password'] === $credentials['password']) {
+			if (isset($data['password']) && ($data['password'] === $credentials['password'])) {
 				$result = $email;
 			}
 		}
