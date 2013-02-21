@@ -149,17 +149,17 @@ return array(
 				 *
 				 * %url% -- the URL of the link
 				 * %class% -- CSS class names as determined programmatically
-				 * %text% -- text for the link
+				 * %label% -- text for the link
 				 */
-				'link' => '<a href="%url%" class="%class%">%text%</a>',
+				'link' => '<a href="%url%" class="%class%">%label%</a>',
 
 				/**
 				 * Format mask for non-link elements.  The placeholders are the classname(s) and label text.  Tokens:
 				 *
 				 * %class% -- CSS class names as determined programmatically
-				 * %text% -- text for the label
+				 * %label% -- text for the label
 				 */
-				'label' => '<span class="%class%">%text%</span>'
+				'label' => '<span class="%class%">%label%</span>'
 			)
 		)
 	)
