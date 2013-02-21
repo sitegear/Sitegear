@@ -8,6 +8,9 @@
 
 namespace Sitegear\Base\User\Manager;
 
+/**
+ * Defines the behaviour of the main user manager, which is a container for an Authenticator, AccessController and
+ */
 interface UserManagerInterface {
 
 	/**

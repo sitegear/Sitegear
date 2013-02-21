@@ -29,7 +29,7 @@ interface UserStorageInterface {
 	public function deleteUser($email);
 
 	/**
-	 * Determine whether the given user id exists.
+	 * Determine whether the given user email address exists.
 	 *
 	 * @param string $email
 	 *
@@ -38,7 +38,7 @@ interface UserStorageInterface {
 	public function hasUser($email);
 
 	/**
-	 * Get the data set for the given user id.
+	 * Get the data set for the given email address.
 	 *
 	 * @param string $email
 	 *
@@ -56,7 +56,7 @@ interface UserStorageInterface {
 	public function setData($email, array $data);
 
 	/**
-	 * Get the list of privileges assigned to the user with the given id.
+	 * Get the list of privileges assigned to the user with the given email address.
 	 *
 	 * @param string $email
 	 *
@@ -65,7 +65,7 @@ interface UserStorageInterface {
 	public function getPrivileges($email);
 
 	/**
-	 * Completely replace the privileges assigned to the user with the given id.
+	 * Completely replace the privileges assigned to the user with the given email address.
 	 *
 	 * @param string $email
 	 * @param string[] $privileges
