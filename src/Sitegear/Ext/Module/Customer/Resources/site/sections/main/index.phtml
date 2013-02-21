@@ -5,6 +5,7 @@
  * @var \Sitegear\Ext\Module\Customer\Model\Transaction $transaction
  * @var \Sitegear\Ext\Module\Customer\Model\TransactionItem $item
  * @var \Sitegear\Ext\Module\Customer\Model\Field $field
+ * @var \Sitegear\Ext\Module\Customer\Model\AccountFieldValue $accountFieldValue
  */
 $account = $view['account'];
 $view->getStringsManager()->prepend('title', $view['title']);
@@ -26,19 +27,24 @@ You do not yet have any stored details.
 <p>
 Here are your details according to your most recent transaction or update.
 </p>
-<dl>
+<table>
+	<tbody>
 <?php
 	foreach ($view['fields'] as $field) {
-		$fieldValue = $account->getFieldValues()->filter(function(\Sitegear\Ext\Module\Customer\Model\AccountFieldValue $fieldValue) use ($field) {
-			return $fieldValue->getField() === $field;
-		});
+		foreach ($account->getFieldValues() as $accountFieldValue) {
+			if ($accountFieldValue->getField()->getId() === $field->getId()) {
 ?>
-	<dt><?php echo $field->getLabel(); ?></dt>
-	<dd><?php echo $fieldValue->count() > 0 ? $fieldValue->get(0)->getValue() : '&lt;not set&gt;'; ?></dd>
+	<tr>
+		<td class="label"><?php echo $field->getLabel(); ?></td>
+		<td class="value"><?php echo $accountFieldValue->getValue() ?: '<i>{empty}</i>'; ?></td>
+	</tr>
 <?php
+			}
+		}
 	}
 ?>
-</dl>
+	</tbody>
+</table>
 <?php
 }
 

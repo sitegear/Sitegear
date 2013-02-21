@@ -104,6 +104,7 @@ class CustomerModule extends AbstractUrlMountableModule {
 		}
 		$view['account'] = $account;
 		$view['fields'] = $this->getRepository('Field')->findAll();
+		return null;
 	}
 
 	/**
