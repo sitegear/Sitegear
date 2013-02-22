@@ -135,7 +135,7 @@ return array(
 			'heading' => 'Your Trolley',
 
 			/**
-			 * Text used in the trolley preview component.
+			 * Text used on the trolley details page.
 			 */
 			'text' => array(
 				'unknown-value' => '{{ config:common.text.unknown-value }}',
@@ -158,6 +158,23 @@ return array(
 					'total' => 'Total'
 				)
 			)
+		),
+
+		/**
+		 * Settings for the checkout page.
+		 */
+		'checkout' => array(
+
+			/**
+			 * Page title.
+			 */
+			'title' => 'Checkout',
+
+			/**
+			 * Page heading.
+			 */
+			'heading' => 'Checkout'
+
 		)
 	),
 
@@ -165,6 +182,11 @@ return array(
 	 * Settings for the generated "add to trolley" form.
 	 */
 	'trolley-form' => array(
+
+		/**
+		 * Form key to use for the "add to trolley" form.
+		 */
+		'form-key' => 'trolley',
 
 		/**
 		 * Text to display on the no-value option.  Set to an empty string to display no text, or to null to omit the
