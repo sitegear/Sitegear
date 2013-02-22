@@ -34,7 +34,7 @@ class SiteInfoProvider implements SiteInfoProviderInterface {
 
 	public function __construct(Engine $engine, $siteRoot) {
 		$this->engine = $engine;
-		$this->siteRoot = trim(rtrim($siteRoot, '/')) . '/';
+		$this->siteRoot = trim(rtrim($siteRoot, '/'));
 	}
 
 	//-- SiteInfoProviderInterface --------------------
