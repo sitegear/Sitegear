@@ -39,11 +39,6 @@ class CustomerModule extends AbstractUrlMountableModule {
 	 */
 	const SESSION_KEY_TROLLEY = 'customer.trolley';
 
-	/**
-	 * Form key to use for the generated "add to trolley" form.
-	 */
-	const FORM_KEY_TROLLEY = 'trolley';
-
 	//-- ModuleInterface Methods --------------------
 
 	/**
@@ -121,9 +116,10 @@ class CustomerModule extends AbstractUrlMountableModule {
 		$type = $request->request->get('type');
 		$id = $request->request->get('id');
 		// Setup the generated form.
-		$this->getEngine()->forms()->registerForm(self::FORM_KEY_TROLLEY, $this->buildTrolleyForm($moduleName, $type, $id));
+		$formKey = $this->config('trolley-form.form-key');
+		$this->getEngine()->forms()->registerForm($formKey, $this->buildTrolleyForm($moduleName, $type, $id));
 		// Validate the data against the generated form, and add the trolley item if valid.
-		if ($valid = $this->getEngine()->forms()->validatePage(self::FORM_KEY_TROLLEY, 0, $request->request->all())) {
+		if ($valid = $this->getEngine()->forms()->validatePage($formKey, 0, $request->request->all())) {
 			$attributeValues = array();
 			foreach ($request->request->all() as $key => $value) {
 				if (strstr($key, 'attr_') !== false) {
@@ -189,6 +185,7 @@ class CustomerModule extends AbstractUrlMountableModule {
 	 */
 	public function checkoutController(ViewInterface $view) {
 		LoggerRegistry::debug('CustomerModule::checkoutController');
+		$this->applyConfigToView('pages.checkout', $view);
 		// TODO Checkout page
 	}
 
@@ -217,9 +214,8 @@ class CustomerModule extends AbstractUrlMountableModule {
 	public function trolleyFormComponent(ViewInterface $view, $moduleName, $type, $id) {
 		LoggerRegistry::debug('CustomerModule::trolleyFormComponent');
 		// Setup the generated form.
-		$this->getEngine()->forms()->registerForm(self::FORM_KEY_TROLLEY, $this->buildTrolleyForm($moduleName, $type, $id));
-		// Set the form key for the view to use.
-		$view['form-key'] = self::FORM_KEY_TROLLEY;
+		$formKey = $view['form-key'] = $this->config('trolley-form.form-key');
+		$this->getEngine()->forms()->registerForm($formKey, $this->buildTrolleyForm($moduleName, $type, $id));
 	}
 
 	//-- Public Methods --------------------

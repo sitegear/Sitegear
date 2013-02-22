@@ -1,4 +1,5 @@
 <?php
 /** @var \Sitegear\Core\View\View $view */
+$view->getStringsManager()->prepend('title', $view['title']);
 ?>
-<h1>Checkout</h1>
+<h1><?php echo $view['heading']; ?></h1>
