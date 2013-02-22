@@ -33,6 +33,26 @@ class ArrayTokenProcessor extends AbstractPrefixedTokenProcessor {
 		$this->array = $array;
 	}
 
+	//-- Public Methods --------------------
+
+	/**
+	 * Get a copy of the data array.
+	 *
+	 * @return array
+	 */
+	public function getArray() {
+		return $this->array;
+	}
+
+	/**
+	 * Change the data array.
+	 *
+	 * @param array $array
+	 */
+	public function setArray(array $array) {
+		$this->array = $array;
+	}
+
 	//-- AbstractPrefixedTokenProcessor Methods --------------------
 
 	/**
