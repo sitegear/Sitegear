@@ -25,6 +25,7 @@ use Sitegear\Base\Engine\EngineInterface;
 use Sitegear\Util\ArrayUtilities;
 use Sitegear\Util\NameUtilities;
 use Sitegear\Util\UrlUtilities;
+use Sitegear\Util\LoggerRegistry;
 
 /**
  * Core FormBuilderInterface implementation.  Maps the format defined by the Forms module data files into the Form
@@ -66,6 +67,7 @@ class FormBuilder implements FormBuilderInterface {
 	 * {@inheritDoc}
 	 */
 	public function buildForm($formData, callable $valueCallback, callable $errorsCallback, array $options) {
+		LoggerRegistry::debug('FormBuilder::buildForm()');
 		$submitUrl = UrlUtilities::generateLinkWithReturnUrl(
 			isset($formData['submit-url']) ? $formData['submit-url'] : $options['submit-url'],
 			$options['form-url'],
@@ -101,6 +103,7 @@ class FormBuilder implements FormBuilderInterface {
 	 * @return \Sitegear\Base\Form\Field\FieldInterface
 	 */
 	private function buildField($name, array $fieldData, $value=null, array $constraintLabelMarkers=null, array $errors=null) {
+		LoggerRegistry::debug('FormBuilder::buildField()');
 		$fieldType = $fieldData['type'];
 		$fieldTypeClass = new \ReflectionClass(
 			isset($fieldData['class']) ?
@@ -147,6 +150,7 @@ class FormBuilder implements FormBuilderInterface {
 	 * @return \Symfony\Component\Validator\Constraint
 	 */
 	private function buildConstraint(array $constraintData) {
+		LoggerRegistry::debug('FormBuilder::buildConstraint()');
 		$constraintClass = new \ReflectionClass(
 			isset($constraintData['class']) ?
 					$constraintData['class'] :
@@ -163,6 +167,7 @@ class FormBuilder implements FormBuilderInterface {
 	 * @return \Sitegear\Base\Form\StepInterface
 	 */
 	private function buildStep(FormInterface $form, array $formData, $stepIndex) {
+		LoggerRegistry::debug('FormBuilder::buildStep()');
 		$stepData = $formData['steps'][$stepIndex];
 		$processors = array();
 		if (isset($stepData['processors'])) {
@@ -183,6 +188,7 @@ class FormBuilder implements FormBuilderInterface {
 	 * @return \Sitegear\Base\Config\Processor\ProcessorInterface
 	 */
 	private function buildProcessor(array $processorData) {
+		LoggerRegistry::debug('FormBuilder::buildProcessor()');
 		/** TODO Configurable processor class? */
 		return new ModuleProcessor(
 			$processorData['arguments'],
@@ -199,6 +205,7 @@ class FormBuilder implements FormBuilderInterface {
 	 * @return \Sitegear\Base\Form\Element\FormElement
 	 */
 	private function buildFormElement(StepInterface $step, array $formData, array $stepData) {
+		LoggerRegistry::debug('FormBuilder::buildFormElement()');
 		$formElement = new FormElement($step, isset($formData['attributes']) ? $formData['attributes'] : array());
 		foreach ($stepData['fieldsets'] as $fieldsetData) {
 			$formElement->addChild($this->buildFieldsetElement($step, $fieldsetData));
@@ -214,6 +221,7 @@ class FormBuilder implements FormBuilderInterface {
 	 * @return \Sitegear\Base\Form\Element\FieldsetElement
 	 */
 	private function buildFieldsetElement(StepInterface $step, array $fieldsetData) {
+		LoggerRegistry::debug('FormBuilder::buildFieldsetElement()');
 		$fieldsetElement = new FieldsetElement($step, isset($formData['attributes']) ? $formData['attributes'] : array());
 		foreach ($fieldsetData['fields'] as $fieldReferenceData) {
 			$fieldsetElement->addChild($this->buildFieldContainerElement($step, $fieldReferenceData));
@@ -228,6 +236,7 @@ class FormBuilder implements FormBuilderInterface {
 	 * @return \Sitegear\Base\Form\Element\FieldContainerElement
 	 */
 	private function buildFieldContainerElement(StepInterface $step, $fieldReferenceData) {
+		LoggerRegistry::debug('FormBuilder::buildFieldContainerElement()');
 		if (!is_array($fieldReferenceData)) {
 			$fieldReferenceData = array( 'field' => $fieldReferenceData );
 		}
