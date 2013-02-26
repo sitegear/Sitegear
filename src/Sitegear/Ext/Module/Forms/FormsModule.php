@@ -124,8 +124,9 @@ class FormsModule extends AbstractUrlMountableModule {
 			$currentStep = max(0, $currentStep - 1);
 			$this->getEngine()->getSession()->set($currentStepSessionKey, $currentStep);
 		} else {
-			// Perform validation, and execute processors if no errors occur
+			// Perform validation
 			if ($valid = $this->validate($formKey, $fields, $data)) {
+				// No errors, so execute processors
 				foreach ($step->getProcessors() as $processor) {
 					$arguments = $this->parseProcessorArguments($processor, $data);
 					TypeUtilities::invokeCallable($processor->getCallable(), null, array( $request ), $arguments);
