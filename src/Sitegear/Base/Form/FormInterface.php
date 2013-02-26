@@ -79,6 +79,24 @@ interface FormInterface {
 	public function setResetButtonAttributes(array $resetButtonAttributes);
 
 	/**
+	 * This only applies to multi-step forms and will sometimes be disabled (e.g. first page, or previous step is
+	 * marked "one-way")
+	 *
+	 * @return string
+	 */
+	public function getBackButtonAttributes();
+
+	/**
+	 * This only applies to multi-step forms and will sometimes be disabled (e.g. first page, or previous step is
+	 * marked "one-way")
+	 *
+	 * @param string[] $backButtonAttributes
+	 *
+	 * @return self
+	 */
+	public function setBackButtonAttributes(array $backButtonAttributes);
+
+	/**
 	 * @param string $name
 	 *
 	 * @return FieldInterface
@@ -117,7 +135,7 @@ interface FormInterface {
 	 *
 	 * @return self
 	 */
-	public function addStep($step, $index=null);
+	public function addStep(StepInterface $step, $index=null);
 
 	/**
 	 * @param integer|StepInterface $step

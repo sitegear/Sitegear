@@ -19,13 +19,27 @@ class ButtonsElementRenderer extends AbstractContainerElementRenderer {
 	 */
 	protected function renderChildren(array $options) {
 		$result = array();
+		$backButtonAttributes = $this->getElement()->getStep()->getForm()->getBackButtonAttributes();
+		if (is_array($backButtonAttributes)) {
+			$backButtonAttributes['type'] = 'submit';
+			$backButtonAttributes['name'] = 'back';
+			if (!isset($backButtonAttributes['value'])) {
+				$backButtonAttributes['value'] = 'Back';
+			}
+			if ($this->getElement()->getStep()->getStepIndex() < 1) {
+				$backButtonAttributes['disabled'] = true;
+			}
+			$result[] = sprintf('<input%s />', HtmlUtilities::attributes($backButtonAttributes));
+		}
 		$submitButtonAttributes = $this->getElement()->getStep()->getForm()->getSubmitButtonAttributes();
 		if (is_array($submitButtonAttributes)) {
-			$result[] = sprintf('<input type="submit"%s />', HtmlUtilities::attributes($submitButtonAttributes, array( 'type' )));
+			$submitButtonAttributes['type'] = 'submit';
+			$result[] = sprintf('<input%s />', HtmlUtilities::attributes($submitButtonAttributes));
 		}
 		$resetButtonAttributes = $this->getElement()->getStep()->getForm()->getResetButtonAttributes();
 		if (is_array($resetButtonAttributes)) {
-			$result[] = sprintf('<input type="reset"%s />', HtmlUtilities::attributes($resetButtonAttributes, array( 'type' )));
+			$resetButtonAttributes['type'] = 'reset';
+			$result[] = sprintf('<input%s />', HtmlUtilities::attributes($resetButtonAttributes));
 		}
 		return $result;
 	}

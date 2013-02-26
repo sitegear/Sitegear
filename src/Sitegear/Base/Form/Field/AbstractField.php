@@ -65,9 +65,6 @@ abstract class AbstractField implements FieldInterface {
 	 * @param array $settings
 	 */
 	public function __construct($name, $value=null, $labelText=null, array $labelMarkers=null, array $constraints=null, array $errors=null, array $settings=null) {
-
-		LoggerRegistry::warn(sprintf('Creating field of type "%s" with name = "%s" and value = "%s"', get_class($this), $name, $value));
-
 		$this->name = $name;
 		$this->value = $value;
 		$this->labelText = $labelText;

@@ -74,7 +74,8 @@ class FormsModule extends AbstractUrlMountableModule {
 	 */
 	protected function buildRoutes() {
 		$routes = new RouteCollection();
-		$routes->add('form', new Route(sprintf('%s/{slug}', $this->getMountedUrl())));
+		$routes->add('form', new Route(sprintf('%s/form/{slug}', $this->getMountedUrl())));
+		$routes->add('reset', new Route(sprintf('%s/reset/{slug}', $this->getMountedUrl())));
 		return $routes;
 	}
 
@@ -102,24 +103,71 @@ class FormsModule extends AbstractUrlMountableModule {
 		// Get the form and submission details
 		$formKey = $request->attributes->get('slug');
 		$form = $this->getForm($formKey, $request);
-		$currentStep = 0; // TODO Multiple steps
-		$data = $request->request->all();
-
-		// Perform validation, and execute processors if no errors occur
+		$formUrl = $request->getUriForPath('/' . $request->query->get('form-url', ''));
+		$targetUrl = null;
+		$currentStep = $request->request->get('step', 0);
+		$currentStepSessionKey = $this->getSessionKey($formKey, 'step');
+		$back = $request->request->get('back');
 		$step = $form->getStep($currentStep);
 		$fields = $step->getRootElement()->getAncestorFields();
-		if ($valid = $this->validate($formKey, $fields, $data)) {
-			foreach ($step->getProcessors() as $processor) {
-				$arguments = $this->parseProcessorArguments($processor, $data);
-				TypeUtilities::invokeCallable($processor->getCallable(), null, array( $request ), $arguments);
+		$data = $request->request->all();
+		unset($data['step']);
+		unset($data['back']);
+
+		// Set the values into the session so they can be displayed after redirecting, and clear previous errors.
+		$session = $this->getEngine()->getSession();
+		$valuesSessionKey = $this->getSessionKey($formKey, 'values');
+		$session->set($valuesSessionKey, array_merge($session->get($valuesSessionKey, array()), $data));
+
+		if ($back) {
+			// The "back" button was clicked
+			$currentStep = max(0, $currentStep - 1);
+			$this->getEngine()->getSession()->set($currentStepSessionKey, $currentStep);
+		} else {
+			// Perform validation, and execute processors if no errors occur
+			if ($valid = $this->validate($formKey, $fields, $data)) {
+				foreach ($step->getProcessors() as $processor) {
+					$arguments = $this->parseProcessorArguments($processor, $data);
+					TypeUtilities::invokeCallable($processor->getCallable(), null, array( $request ), $arguments);
+				}
+				// Redirect to the target URL, which is either the actual target-url, if the form is finished and there
+				// is one set, or to the form URL, or to the home page as a fallback
+				if (++$currentStep >= $form->getStepsCount()) {
+					$this->resetForm($formKey);
+					$targetUrl = $request->getUriForPath('/' . (!is_null($form->getTargetUrl()) ? $form->getTargetUrl() : ''));
+				} else {
+					$this->getEngine()->getSession()->set($currentStepSessionKey, $currentStep);
+				}
 			}
 		}
+		return new RedirectResponse($targetUrl ?: $formUrl);
+	}
 
-		// Redirect to the target URL, which is either the actual target-url, if the form is finished and there is one
-		// set, or the form-url GET parameter, if one is set (which it should be), or to the home page as a fallback.
-		$finished = $valid && !is_null($form->getTargetUrl()) && (++$currentStep >= $form->getStepsCount());
-		$targetUrl = $finished ? $request->getUriForPath('/' . $form->getTargetUrl()) : $request->query->get('form-url', $request->getUriForPath(''));
-		return new RedirectResponse($targetUrl);
+	/**
+	 * Reset the given form and optionally set request query (GET) parameters into the form values, then redirect to
+	 * the form URL, which must be supplied as a query (GET) parameter or the home page will be used as a default.
+	 *
+	 * @param \Symfony\Component\HttpFoundation\Request $request
+	 *
+	 * @return \Symfony\Component\HttpFoundation\RedirectResponse
+	 */
+	public function resetController(Request $request) {
+		$formKey = $request->attributes->get('slug');
+		$this->resetForm($formKey);
+		$form = $this->getForm($formKey, $request);
+		$formUrl = $request->getUriForPath('/' . $request->query->get('form-url', ''));
+		$data = array();
+		foreach ($request->query->all() as $key => $value) {
+			if (($key !== 'form-url') && !is_null($form->getField($key))) {
+				$field = $form->getField($key);
+				if (!is_null($field)) {
+					$field->setValue($value);
+					$data[$key] = $value;
+				}
+			}
+		}
+		$this->getEngine()->getSession()->set($this->getSessionKey($formKey, 'values'), $data);
+		return new RedirectResponse($formUrl);
 	}
 
 	//-- Component Controller Methods --------------------
@@ -135,8 +183,9 @@ class FormsModule extends AbstractUrlMountableModule {
 	public function formComponent(ViewInterface $view, Request $request, $formKey) {
 		LoggerRegistry::debug('FormsModule::formComponent');
 		$view['form'] = $this->getForm($formKey, $request);
-		$view['current-step'] = 0; // TODO Multiple steps
+		$view['current-step'] = $this->getEngine()->getSession()->get($this->getSessionKey($formKey, 'step'), 0);
 		$view['renderer-factory'] = new NamespaceFormRendererFactory(); // TODO Configurable renderer factory??
+		$this->getEngine()->getSession()->remove($this->getSessionKey($formKey, 'errors'));
 	}
 
 	//-- Public Methods --------------------
@@ -175,28 +224,36 @@ class FormsModule extends AbstractUrlMountableModule {
 				throw new \InvalidArgumentException(sprintf('FormsModule received unknown form key "%s"', $formKey));
 			}
 			$formData = json_decode(file_get_contents($path), true);
-			$module = $this;
-			$session = $module->getEngine()->getSession();
-			$valueCallback = function($name) use ($module, $session, $formKey) {
-				$sessionKey = $module->getSessionKey($formKey, $name, 'value');
-				$value = $session->get($sessionKey);
-				$session->remove($sessionKey);
-				return $value;
+			$me = $this;
+			$session = $me->getEngine()->getSession();
+			$valueCallback = function($name) use ($me, $session, $formKey) {
+				$values = $session->get($me->getSessionKey($formKey, 'values'));
+				return isset($values[$name]) ? $values[$name] : null;
 			};
-			$errorsCallback = function($name) use ($module, $session, $formKey) {
-				$sessionKey = $module->getSessionKey($formKey, $name, 'errors');
-				$value = $session->get($sessionKey);
-				$session->remove($sessionKey);
-				return $value;
+			$errorsCallback = function($name) use ($me, $session, $formKey) {
+				$errors = $session->get($me->getSessionKey($formKey, 'errors'));
+				return isset($errors[$name]) ? $errors[$name] : array();
 			};
 			$options = array_merge($this->config('form-builder'), array(
-				'form-url' => $request->getUri(),
-				'submit-url' => sprintf('%s/%s', $this->getMountedUrl(), $formKey),
+				'form-url' => ltrim($request->getPathInfo(), '/'),
+				'submit-url' => sprintf('%s/form/%s', $this->getMountedUrl(), $formKey),
 				'constraint-label-markers' => $this->config('constraints.label-markers'),
 			));
 			$this->forms[$formKey] = $this->builder->buildForm($formData, $valueCallback, $errorsCallback, $options);
 		}
 		return $this->forms[$formKey];
+	}
+
+	/**
+	 * Remove all current values, error messages and progress from the specified form.
+	 *
+	 * @param string $formKey
+	 */
+	public function resetForm($formKey) {
+		$session = $this->getEngine()->getSession();
+		$session->remove($this->getSessionKey($formKey, 'step'));
+		$session->remove($this->getSessionKey($formKey, 'values'));
+		$session->remove($this->getSessionKey($formKey, 'errors'));
 	}
 
 	/**
@@ -209,7 +266,8 @@ class FormsModule extends AbstractUrlMountableModule {
 	 * @param FieldInterface[] $fields
 	 * @param array $data
 	 *
-	 * @return boolean Whether or not the given data is valid.
+	 * @return boolean|\Symfony\Component\Validator\ConstraintViolationListInterface True if the data is valid, or a
+	 *   list of violations.
 	 */
 	public function validate($formKey, array $fields, array $data) {
 		$validator = Validation::createValidator();
@@ -217,27 +275,16 @@ class FormsModule extends AbstractUrlMountableModule {
 		$violations = $validator->validateValue($data, $constraints);
 		$valid = ($violations->count() === 0);
 		if (!$valid) {
-			// An error occurred.
-			$session = $this->getEngine()->getSession();
-
-			// Set the values into the session so they can be displayed after redirecting.
-			foreach ($fields as $field) {
-				$session->set($this->getSessionKey($formKey, $field->getName(), 'value'), $data[$field->getName()]);
-			}
-
-			// Set the error messages into the session so they can be displayed after redirecting.
 			$errors = array();
 			foreach ($violations as $violation) { /** @var \Symfony\Component\Validator\ConstraintViolationInterface $violation */
-				$field = trim($violation->getPropertyPath(), '[]');
-				if (!isset($errors[$field])) {
-					$errors[$field] = array();
+				$fieldName = trim($violation->getPropertyPath(), '[]');
+				if (!isset($errors[$fieldName])) {
+					$errors[$fieldName] = array();
 				}
-				$errors[$field][] = $violation->getMessage();
+				$errors[$fieldName][] = $violation->getMessage();
 			}
-			foreach ($errors as $field => $fieldErrors) {
-				$session->set($this->getSessionKey($formKey, $field, 'errors'), $fieldErrors);
-				LoggerRegistry::debug(sprintf('Set validation violation for field "%s"; got %d error messages', $field, sizeof($fieldErrors)));
-			}
+			$session = $this->getEngine()->getSession();
+			$session->set($this->getSessionKey($formKey, 'errors'), $errors);
 		}
 		return $valid;
 	}
@@ -245,16 +292,15 @@ class FormsModule extends AbstractUrlMountableModule {
 	//-- Internal Methods --------------------
 
 	/**
-	 * Retrieve the session key to store details about the given field in the given form.
+	 * Retrieve the session key to store a subset of data about the given form.
 	 *
 	 * @param string $formKey
-	 * @param string $fieldName
 	 * @param string $subKey
 	 *
 	 * @return string Session key
 	 */
-	protected function getSessionKey($formKey, $fieldName, $subKey) {
-		return sprintf('forms.%s.%s.%s', $formKey, $fieldName, $subKey);
+	protected function getSessionKey($formKey, $subKey) {
+		return sprintf('forms.%s.%s', $formKey, $subKey);
 	}
 
 	/**

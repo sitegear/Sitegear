@@ -33,7 +33,6 @@ class MultipleInputFieldRenderer extends AbstractFieldRenderer {
 		$labelFirst = isset($options['label-first']) && $options['label-first'];
 		$result = array();
 		$result[] = sprintf('<%s%s>', $outerWrapperElement, HtmlUtilities::attributes($outerWrapperAttributes));
-		$result[] = sprintf('<input type="hidden" name="%s" value="%s" />', $this->getField()->getName(), $value);
 		foreach ($this->getField()->getValues() as $option) {
 			$optionId = sprintf('%s-%s', $innerIdPrefix, preg_replace('/\s+/', '', $option['value']));
 			$optionAttributes = $attributes;

@@ -24,6 +24,11 @@ class Step implements StepInterface {
 	private $form;
 
 	/**
+	 * @var integer
+	 */
+	private $stepIndex;
+
+	/**
 	 * @var ElementInterface
 	 */
 	private $root;
@@ -47,12 +52,14 @@ class Step implements StepInterface {
 
 	/**
 	 * @param FormInterface $form
+	 * @param integer $stepIndex
 	 * @param string|null $heading
 	 * @param string|null $errorHeading
 	 * @param array|null $processors
 	 */
-	public function __construct(FormInterface $form, $heading=null, $errorHeading=null, array $processors=null) {
+	public function __construct(FormInterface $form, $stepIndex, $heading=null, $errorHeading=null, array $processors=null) {
 		$this->form = $form;
+		$this->stepIndex = intval($stepIndex);
 		$this->heading = $heading;
 		$this->errorHeading = $errorHeading;
 		$this->processors = $processors ?: array();
@@ -66,6 +73,13 @@ class Step implements StepInterface {
 	 */
 	public function getForm() {
 		return $this->form;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function getStepIndex() {
+		return $this->stepIndex;
 	}
 
 	/**

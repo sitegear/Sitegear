@@ -9,14 +9,8 @@
 namespace Sitegear\Base\Form\Element;
 
 use Sitegear\Base\Form\StepInterface;
-use Sitegear\Base\Form\Field\InputField;
 
 class ButtonsElement extends AbstractContainerElement {
-
-	//-- Attributes --------------------
-
-	private $submitButton;
-	private $cancelButton;
 
 	//-- Constructor --------------------
 
@@ -26,22 +20,6 @@ class ButtonsElement extends AbstractContainerElement {
 			'class' => 'buttons'
 		);
 		parent::__construct($step, $elementName, $defaultAttributes, null);
-		$submitButtonAttributes = $step->getForm()->getSubmitButtonAttributes();
-		if (!is_array($submitButtonAttributes)) {
-			$submitButtonAttributes = array( 'value' => $submitButtonAttributes );
-		}
-		$submitButtonValue = isset($submitButtonAttributes['value']) ? $submitButtonAttributes['value'] : null;
-		$this->submitButton = new InputField(null, $submitButtonValue);
-		$resetButtonAttributes = $step->getForm()->getResetButtonAttributes();
-		if ($resetButtonAttributes) {
-			if (!is_array($resetButtonAttributes)) {
-				$resetButtonAttributes = array( 'value' => $resetButtonAttributes );
-			}
-			$resetButtonValue = isset($resetButtonAttributes['value']) ? $resetButtonAttributes['value'] : null;
-			$this->resetButton = new InputField(null, $resetButtonValue);
-		} else {
-			$this->resetButton = null;
-		}
 	}
 
 	//-- ElementInterface Methods --------------------
@@ -57,14 +35,14 @@ class ButtonsElement extends AbstractContainerElement {
 	 * {@inheritDoc}
 	 */
 	public function addChild(ElementInterface $child, $index = null) {
-		throw new \LogicException(sprintf('%s does not support dynamic children', get_class($this)));
+		throw new \LogicException(sprintf('%s does not support children', get_class($this)));
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public function removeChild($child) {
-		throw new \LogicException(sprintf('%s does not support dynamic children', get_class($this)));
+		throw new \LogicException(sprintf('%s does not support children', get_class($this)));
 	}
 
 	/**

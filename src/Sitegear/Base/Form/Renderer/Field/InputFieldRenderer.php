@@ -19,9 +19,6 @@ class InputFieldRenderer extends AbstractFieldRenderer {
 	 * {@inheritDoc}
 	 */
 	public function render(array $options, $value) {
-
-		\Sitegear\Util\LoggerRegistry::warn(sprintf('InputFieldRenderer rendering field with name "%s" and value "%s"', $this->getField()->getName(), $value));
-
 		$attributes = isset($options['attributes']) ? $options['attributes'] : array();
 		$attributes['type'] = $this->getField()->getType();
 		$attributes['id'] = isset($attributes['id']) ? $attributes['id'] : $this->getField()->getName();

@@ -76,14 +76,15 @@ class FormBuilder implements FormBuilderInterface {
 			isset($formData['target-url']) ? $formData['target-url'] : (isset($options['target-url']) ? $options['target-url'] : null),
 			isset($formData['cancel-url']) ? $formData['cancel-url'] : (isset($options['cancel-url']) ? $options['cancel-url'] : null),
 			isset($formData['submit-button']) ? $formData['submit-button'] : (isset($options['submit-button']) ? $options['submit-button'] : null),
-			isset($formData['reset-button']) ? $formData['reset-button'] : (isset($options['reset-button']) ? $options['reset-button'] : null)
+			isset($formData['reset-button']) ? $formData['reset-button'] : (isset($options['reset-button']) ? $options['reset-button'] : null),
+			isset($formData['back-button']) ? $formData['back-button'] : (isset($options['back-button']) ? $options['back-button'] : null)
 		);
 		$constraintLabelMarkers = isset($options['constraint-label-markers']) ? $options['constraint-label-markers'] : array();
 		foreach ($formData['fields'] as $name => $fieldData) {
 			$form->addField($this->buildField($name, $fieldData, $valueCallback($name), $constraintLabelMarkers, $errorsCallback($name)));
 		}
-		foreach ($formData['steps'] as $stepData) {
-			$form->addStep($this->buildStep($form, $formData, $stepData));
+		for ($i=0, $l=sizeof($formData['steps']); $i<$l; ++$i) {
+			$form->addStep($this->buildStep($form, $formData, $i));
 		}
 		return $form;
 	}
@@ -157,11 +158,12 @@ class FormBuilder implements FormBuilderInterface {
 	/**
 	 * @param FormInterface $form
 	 * @param array $formData
-	 * @param array $stepData
+	 * @param integer $stepIndex
 	 *
 	 * @return \Sitegear\Base\Form\StepInterface
 	 */
-	private function buildStep(FormInterface $form, array $formData, array $stepData) {
+	private function buildStep(FormInterface $form, array $formData, $stepIndex) {
+		$stepData = $formData['steps'][$stepIndex];
 		$processors = array();
 		if (isset($stepData['processors'])) {
 			foreach ($stepData['processors'] as $processorData) {
@@ -170,7 +172,7 @@ class FormBuilder implements FormBuilderInterface {
 		}
 		$heading = isset($stepData['heading']) ? $stepData['heading'] : null;
 		$errorHeading = isset($stepData['error-heading']) ? $stepData['error-heading'] : null;
-		$step = new Step($form, $heading, $errorHeading, $processors);
+		$step = new Step($form, $stepIndex, $heading, $errorHeading, $processors);
 		$step->setRootElement($this->buildFormElement($step, $formData, $stepData));
 		return $step;
 	}

@@ -24,6 +24,11 @@ interface StepInterface {
 	public function getForm();
 
 	/**
+	 * @return integer The index of this step within the form.
+	 */
+	public function getStepIndex();
+
+	/**
 	 * @return string
 	 */
 	public function getHeading();

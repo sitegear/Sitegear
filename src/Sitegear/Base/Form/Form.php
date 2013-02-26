@@ -33,14 +33,19 @@ class Form implements FormInterface {
 	private $cancelUrl;
 
 	/**
-	 * @var string|null
+	 * @var string[]|null
 	 */
 	private $submitButtonAttributes;
 
 	/**
-	 * @var string|null
+	 * @var string[]|null
 	 */
 	private $resetButtonAttributes;
+
+	/**
+	 * @var string[]|null
+	 */
+	private $backButtonAttributes;
 
 	/**
 	 * @var FieldInterface[]
@@ -58,16 +63,19 @@ class Form implements FormInterface {
 	 * @param string $submitUrl
 	 * @param string|null $targetUrl
 	 * @param string|null $cancelUrl
-	 * @param array|null $submitButtonAttributes
-	 * @param array|null $resetButtonAttributes
+	 * @param string[]|null $submitButtonAttributes
+	 * @param string[]|null $resetButtonAttributes
+	 * @param string[]|null $backButtonAttributes
 	 */
-	public function __construct($submitUrl, $targetUrl=null, $cancelUrl=null, $submitButtonAttributes=null, $resetButtonAttributes=null) {
+	public function __construct($submitUrl, $targetUrl=null, $cancelUrl=null, $submitButtonAttributes=null, $resetButtonAttributes=null, $backButtonAttributes=null) {
 		$this->submitUrl = $submitUrl;
 		$this->targetUrl = $targetUrl;
 		$this->cancelUrl = $cancelUrl;
 		$this->submitButtonAttributes = is_array($submitButtonAttributes) ? $submitButtonAttributes : array( 'value' => $submitButtonAttributes );
-		$this->resetButtonAttributes = is_array($resetButtonAttributes) ? $resetButtonAttributes :
-				(is_string($resetButtonAttributes) ? array( 'value' => $resetButtonAttributes ) : $resetButtonAttributes);
+		$this->resetButtonAttributes = is_array($resetButtonAttributes) || !is_string($resetButtonAttributes) ?
+				$resetButtonAttributes : array( 'value' => $resetButtonAttributes );
+		$this->backButtonAttributes = is_array($backButtonAttributes) || !is_string($backButtonAttributes) ?
+				$backButtonAttributes : array( 'value' => $backButtonAttributes );
 		$this->fields = array();
 		$this->steps = array();
 	}
@@ -152,8 +160,23 @@ class Form implements FormInterface {
 	/**
 	 * {@inheritDoc}
 	 */
+	public function getBackButtonAttributes() {
+		return $this->backButtonAttributes;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function setBackButtonAttributes(array $backButtonAttributes) {
+		$this->backButtonAttributes = $backButtonAttributes;
+		return $this;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public function getField($name) {
-		return $this->fields[$name];
+		return isset($this->fields[$name]) ? $this->fields[$name] : null;
 	}
 
 	/**
@@ -190,7 +213,7 @@ class Form implements FormInterface {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function addStep($step, $index=null) {
+	public function addStep(StepInterface $step, $index=null) {
 		if (is_null($index)) {
 			$this->steps[] = $step;
 		} else {
