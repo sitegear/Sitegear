@@ -32,7 +32,7 @@ class InputField extends AbstractField {
 	 * @param string $type
 	 */
 	public function setType($type) {
-		return $this->setSetting('type', $type);
+		$this->setSetting('type', $type);
 	}
 
 }
