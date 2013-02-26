@@ -119,7 +119,7 @@ class CustomerModule extends AbstractUrlMountableModule {
 		$formKey = $this->config('trolley-form.form-key');
 		$this->getEngine()->forms()->registerForm($formKey, $this->buildTrolleyForm($moduleName, $type, $id));
 		// Validate the data against the generated form, and add the trolley item if valid.
-		if ($valid = $this->getEngine()->forms()->validatePage($formKey, 0, $request->request->all())) {
+		if ($valid = $this->getEngine()->forms()->validate($formKey, 0, $request->request->all())) {
 			$attributeValues = array();
 			foreach ($request->request->all() as $key => $value) {
 				if (strstr($key, 'attr_') !== false) {

@@ -12,13 +12,6 @@
 return array(
 
 	'constraints' => array(
-		'class-map' => array(
-		),
-		'namespaces' => array(
-			'\\Symfony\\Component\\Validator\\Constraints'
-		),
-		'class-name-prefix' => '',
-		'class-name-suffix' => '',
 		'label-markers' => array(
 			'not-blank' => ' <span class="required-marker">*</span>'
 		)
@@ -37,63 +30,43 @@ return array(
 	),
 
 	/**
-	 * Configuration of components.
+	 * Default configuration for the form builder.
 	 */
-	'components' => array(
+	'form-builder' => array(
 
 		/**
-		 * Default configuration for the form component.
+		 * Attributes for the form element.
 		 */
-		'form' => array(
-
-			/**
-			 * Attributes for the form element.
-			 */
-			'attributes' => array(
-				'class' => 'form'
-			),
-
-			/**
-			 * Attributes for the fieldset elements.
-			 */
-			'fieldset-attributes' => array(),
-
-			/**
-			 * Attributes for the buttons container element.
-			 */
-			'buttons-attributes' => array(
-				'class' => 'buttons'
-			),
-
-			/**
-			 * Submit button text, or null to use browser default (omit the value attribute).
-			 */
-			'submit-button' => 'Submit',
-
-			/**
-			 * Reset button text, or null to use the browser default, or false to not show the reset button.
-			 */
-			'reset-button' => 'Reset'
-
+		'attributes' => array(
+			'class' => 'form'
 		),
 
 		/**
-		 * Default configuration for the field wrapper elements.
+		 * Attributes for the fieldset elements.
 		 */
-		'field-wrapper' => array(
+		'fieldset-attributes' => array(),
 
-			/**
-			 * Element to use for wrappers.
-			 */
+		/**
+		 * Attributes for the buttons container element.
+		 */
+		'buttons-container' => array(
 			'element' => 'div',
-
-			/**
-			 * Attributes for the field container element.
-			 */
-			'field-attributes' => array(
-				'class' => 'field'
+			'attributes' => array(
+				'class' => 'buttons'
 			)
+		),
 
-		)
+		/**
+		 * Submit button attributes, or a single string value to specify only the `value` attribute.
+		 */
+		'submit-button' => 'Submit',
+
+		/**
+		 * Reset button attributes, or a string value to specify only the `value` attribute, or false/null to exclude
+		 * the reset button completely.
+		 */
+		'reset-button' => false
+
 	)
+
 );

@@ -1,28 +1,10 @@
 <?php
-/** @var \Sitegear\Core\View\View $view */
-$formKey = $view['form-key'];
-$attributes = array_merge($view['attributes'], array(
-	'id' => isset($view['form-id']) ? $view['form-id'] : sprintf('%s%s', $view['form-id-prefix'], $formKey),
-	'name' => $formKey,
-	'action' => $view['action-url'],
-	'method' => 'post'
-));
-// TODO Merge "class" attributes properly
-echo sprintf('<form%s>', \Sitegear\Util\HtmlUtilities::attributes($attributes)), PHP_EOL;
-echo $view->forms()->input('form-url', array( 'attributes' => array( 'type' => 'hidden' ) ), $view['form-url']);
-$fieldDefinitions = $view['field-definitions'];
-foreach ($view['page']['fieldsets'] as $fieldset) {
-	$fieldsetAttributes = array_merge($view['fieldset-attributes'], $fieldset['attributes']);
-	echo sprintf('<fieldset%s>', \Sitegear\Util\HtmlUtilities::attributes($fieldsetAttributes)), PHP_EOL;
-	foreach ($fieldset['fields'] as $field) {
-		echo $view->forms()->fieldWrapper($formKey, $field);
-	}
-	echo '</fieldset>', PHP_EOL;
-}
-echo sprintf('<div%s>', \Sitegear\Util\HtmlUtilities::attributes($view['buttons-attributes']));
-echo sprintf('<input type="submit"%s />', (isset($view['submit-button']) ? sprintf(' value="%s"', $view['submit-button']) : ''));
-if ($view['reset-button'] !== false) {
-	echo sprintf('<input type="reset"%s />', (isset($view['reset-button']) ? sprintf(' value="%s"', $view['reset-button']) : ''));
-}
-echo '</div>', PHP_EOL;
-echo '</form>', PHP_EOL;
+/**
+ * @var \Sitegear\Core\View\View $view
+ * @var \Sitegear\Base\Form\FormInterface $form
+ * @var \Sitegear\Base\Form\Renderer\Factory\FormRendererFactoryInterface $rendererFactory
+ */
+$form = $view['form'];
+$rendererFactory = $view['renderer-factory'];
+$options = array(); // TODO Options??
+echo implode(PHP_EOL, $rendererFactory->getElementRenderer($form->getStep($view['current-step'])->getRootElement())->render($options)), PHP_EOL;

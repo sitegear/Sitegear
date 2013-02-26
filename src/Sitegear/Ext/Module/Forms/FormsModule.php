@@ -12,9 +12,14 @@ use Sitegear\Base\Module\AbstractUrlMountableModule;
 use Sitegear\Base\Config\Processor\ArrayTokenProcessor;
 use Sitegear\Base\Config\Processor\ConfigTokenProcessor;
 use Sitegear\Base\Config\Container\SimpleConfigContainer;
+use Sitegear\Base\Engine\EngineInterface;
 use Sitegear\Base\Resources\ResourceLocations;
 use Sitegear\Base\View\ViewInterface;
-use Sitegear\Base\Engine\EngineInterface;
+use Sitegear\Base\Form\FormInterface;
+use Sitegear\Base\Form\Field\FieldInterface;
+use Sitegear\Base\Form\Renderer\Factory\NamespaceFormRendererFactory;
+use Sitegear\Base\Form\Processor\FormProcessorInterface;
+use Sitegear\Core\Form\Builder\FormBuilder;
 use Sitegear\Util\NameUtilities;
 use Sitegear\Util\TypeUtilities;
 use Sitegear\Util\LoggerRegistry;
@@ -36,15 +41,21 @@ class FormsModule extends AbstractUrlMountableModule {
 	//-- Attributes --------------------
 
 	/**
-	 * @var array[]|null
+	 * @var \Sitegear\Core\Form\Builder\FormBuilder
 	 */
-	private $data;
+	private $builder;
+
+	/**
+	 * @var FormInterface[]
+	 */
+	private $forms;
 
 	//-- Constructor --------------------
 
 	public function __construct(EngineInterface $engine) {
 		parent::__construct($engine);
-		$this->data = null;
+		$this->builder = new FormBuilder($engine);
+		$this->forms = array();
 	}
 
 	//-- ModuleInterface Methods --------------------
@@ -90,26 +101,25 @@ class FormsModule extends AbstractUrlMountableModule {
 
 		// Get the form and submission details
 		$formKey = $request->attributes->get('slug');
-		$form = $this->getData($formKey);
-		// TODO Multiple pages
-		$currentPage = 0;
+		$form = $this->getForm($formKey, $request);
+		$currentStep = 0; // TODO Multiple steps
 		$data = $request->request->all();
 
-		// Perform validation, only continue if no errors
-		if ($valid = $this->validatePage($formKey, $currentPage, $data)) {
-			// Execute configured processors
-			if (isset($form['pages'][$currentPage]['processors'])) {
-				foreach ($form['pages'][$currentPage]['processors'] as $processor) {
-					$this->executeProcessor($processor, $data, $request);
-				}
+		// Perform validation, and execute processors if no errors occur
+		$step = $form->getStep($currentStep);
+		$fields = $step->getRootElement()->getAncestorFields();
+		if ($valid = $this->validate($formKey, $fields, $data)) {
+			foreach ($step->getProcessors() as $processor) {
+				$arguments = $this->parseProcessorArguments($processor, $data);
+				TypeUtilities::invokeCallable($processor->getCallable(), null, array( $request ), $arguments);
 			}
 		}
 
-		// Redirect to the target page, which is either the actual target-url, if the form is finished and there is one
-		// set, or the form-url, if one is set (which it should be!), or to the home page as a fallback.
-		$finished = ($valid && isset($form['target-url']) && (++$currentPage >= sizeof($form['pages'])));
-		$targetUrl = $finished ? $form['target-url'] : $request->request->get('form-url', $request->getBaseUrl());
-		return new RedirectResponse($request->getUriForPath('/' . $targetUrl));
+		// Redirect to the target URL, which is either the actual target-url, if the form is finished and there is one
+		// set, or the form-url GET parameter, if one is set (which it should be), or to the home page as a fallback.
+		$finished = $valid && !is_null($form->getTargetUrl()) && (++$currentStep >= $form->getStepsCount());
+		$targetUrl = $finished ? $request->getUriForPath('/' . $form->getTargetUrl()) : $request->query->get('form-url', $request->getUriForPath(''));
+		return new RedirectResponse($targetUrl);
 	}
 
 	//-- Component Controller Methods --------------------
@@ -124,118 +134,86 @@ class FormsModule extends AbstractUrlMountableModule {
 	 */
 	public function formComponent(ViewInterface $view, Request $request, $formKey) {
 		LoggerRegistry::debug('FormsModule::formComponent');
-		$this->applyConfigToView('components.form', $view);
-		$form = $this->getData($formKey);
-		// TODO Multiple pages
-		$currentPage = 0;
-		$view['current-page'] = $currentPage;
-		$view['page-count'] = sizeof($form['pages']);
-		$view['form-key'] = $formKey;
-		$view['field-definitions'] = $form['fields'];
-		$view['page'] = $form['pages'][$currentPage];
-		foreach (array( 'attributes', 'fieldset-attributes', 'submit-button', 'reset-button' ) as $key) {
-			if (isset($form[$key])) {
-				$view[$key] = $form[$key];
-			}
-		}
-		$view['action-url'] = isset($form['action-url']) ? $form['action-url'] : sprintf('%s/%s', $this->getMountedUrl(), $formKey);
-		$view['form-url'] = ltrim($request->getPathInfo(), '/');
-	}
-
-	/**
-	 * Display a field wrapper, with its label and the relevant form input element.
-	 *
-	 * @param \Sitegear\Base\View\ViewInterface $view
-	 * @param string $formKey Note this is only used here as a session key.
-	 * @param array $field Must include 'field', 'mode' and 'definition' keys.  The 'definition' key must be an
-	 *   associative array with at least keys 'component', 'label', and 'default'.
-	 */
-	public function fieldWrapperComponent(ViewInterface $view, $formKey, array $field) {
-		LoggerRegistry::debug('FormsModule::fieldWrapperComponent');
-		$this->applyConfigToView('components.field-wrapper', $view);
-		$view['form-key'] = $formKey;
-		$view['field'] = $field;
-	}
-
-	/**
-	 * Display a regular, single <input> element form field.
-	 *
-	 * @param \Sitegear\Base\View\ViewInterface $view
-	 * @param string $name
-	 * @param array $field
-	 * @param null $value
-	 */
-	public function inputComponent(ViewInterface $view, $name, array $field, $value=null) {
-		$view['name'] = $name;
-		$view['field'] = $field;
-		$view['value'] = $value;
-	}
-
-	/**
-	 * Display a set of checkbox or radio button <input> elements as a single form field.
-	 *
-	 * @param \Sitegear\Base\View\ViewInterface $view
-	 * @param string $name
-	 * @param array $field
-	 * @param null $value
-	 */
-	public function checkboxesComponent(ViewInterface $view, $name, array $field, $value=null) {
-		$view['name'] = $name;
-		$view['field'] = $field;
-		$view['value'] = $value;
-	}
-
-	/**
-	 * Display a <select> element for single or multiple selections.
-	 *
-	 * @param \Sitegear\Base\View\ViewInterface $view
-	 * @param string $name
-	 * @param array $field
-	 * @param null $value
-	 */
-	public function selectComponent(ViewInterface $view, $name, array $field, $value=null) {
-		$view['name'] = $name;
-		$view['field'] = $field;
-		$view['value'] = $value;
-	}
-
-	/**
-	 * Display a <textarea> form field element.
-	 *
-	 * @param \Sitegear\Base\View\ViewInterface $view
-	 * @param string $name
-	 * @param array $field
-	 * @param null $value
-	 */
-	public function textareaComponent(ViewInterface $view, $name, array $field, $value=null) {
-		$view['name'] = $name;
-		$view['field'] = $field;
-		$view['value'] = $value;
+		$view['form'] = $this->getForm($formKey, $request);
+		$view['current-step'] = 0; // TODO Multiple steps
+		$view['renderer-factory'] = new NamespaceFormRendererFactory(); // TODO Configurable renderer factory??
 	}
 
 	//-- Public Methods --------------------
 
-	public function registerForm($formKey, $form) {
-		$this->data[$formKey] = $form;
+	/**
+	 * Register the given form against the given key.  Registering the same form key twice is an error.
+	 *
+	 * @param string $formKey
+	 * @param \Sitegear\Base\Form\FormInterface $form
+	 *
+	 * @return \Sitegear\Base\Form\FormInterface
+	 *
+	 * @throws \DomainException
+	 */
+	public function registerForm($formKey, FormInterface $form) {
+		if (isset($this->forms[$formKey])) {
+			throw new \DomainException(sprintf('FormsModule cannot register form key "%s" twice', $formKey));
+		}
+		return $this->forms[$formKey] = $form;
 	}
 
 	/**
-	 * Validate a single page of the given form against the given data.
+	 * Retrieve the form with the given key.
+	 *
+	 * @param string $formKey
+	 * @param Request $request
+	 *
+	 * @return \Sitegear\Base\Form\FormInterface
+	 *
+	 * @throws \InvalidArgumentException
+	 */
+	public function getForm($formKey, Request $request) {
+		if (!isset($this->forms[$formKey])) {
+			$path = $this->getEngine()->getSiteInfo()->getSitePath(ResourceLocations::RESOURCE_LOCATION_SITE, $this, sprintf('%s.json', $formKey));
+			if (!file_exists($path)) {
+				throw new \InvalidArgumentException(sprintf('FormsModule received unknown form key "%s"', $formKey));
+			}
+			$formData = json_decode(file_get_contents($path), true);
+			$module = $this;
+			$session = $module->getEngine()->getSession();
+			$valueCallback = function($name) use ($module, $session, $formKey) {
+				$sessionKey = $module->getSessionKey($formKey, $name, 'value');
+				$value = $session->get($sessionKey);
+				$session->remove($sessionKey);
+				return $value;
+			};
+			$errorsCallback = function($name) use ($module, $session, $formKey) {
+				$sessionKey = $module->getSessionKey($formKey, $name, 'errors');
+				$value = $session->get($sessionKey);
+				$session->remove($sessionKey);
+				return $value;
+			};
+			$options = array_merge($this->config('form-builder'), array(
+				'form-url' => $request->getUri(),
+				'submit-url' => sprintf('%s/%s', $this->getMountedUrl(), $formKey),
+				'constraint-label-markers' => $this->config('constraints.label-markers'),
+			));
+			$this->forms[$formKey] = $this->builder->buildForm($formData, $valueCallback, $errorsCallback, $options);
+		}
+		return $this->forms[$formKey];
+	}
+
+	/**
+	 * Validate the given set of fields against the given data.
 	 *
 	 * If there are any violations, store the supplied values and the error messages in the session against the
 	 * relevant field names.
 	 *
-	 * @param $formKey
-	 * @param $currentPage
+	 * @param string $formKey
+	 * @param FieldInterface[] $fields
 	 * @param array $data
 	 *
 	 * @return boolean Whether or not the given data is valid.
 	 */
-	public function validatePage($formKey, $currentPage, array $data) {
-		$form = $this->getData($formKey);
-		$page = $form['pages'][$currentPage];
+	public function validate($formKey, array $fields, array $data) {
 		$validator = Validation::createValidator();
-		$constraints = $this->getConstraints($page['fieldsets'], $form['fields']);
+		$constraints = $this->getConstraints($fields);
 		$violations = $validator->validateValue($data, $constraints);
 		$valid = ($violations->count() === 0);
 		if (!$valid) {
@@ -243,192 +221,62 @@ class FormsModule extends AbstractUrlMountableModule {
 			$session = $this->getEngine()->getSession();
 
 			// Set the values into the session so they can be displayed after redirecting.
-			foreach ($page['fieldsets'] as $fieldset) {
-				foreach ($fieldset['fields'] as $fieldSpec) {
-					if ($fieldSpec['mode'] === 'field') {
-						$field = $fieldSpec['field'];
-						$session->set($this->getSessionKey($formKey, $field, 'value'), $data[$field]);
-					}
-				}
+			foreach ($fields as $field) {
+				$session->set($this->getSessionKey($formKey, $field->getName(), 'value'), $data[$field->getName()]);
 			}
 
 			// Set the error messages into the session so they can be displayed after redirecting.
+			$errors = array();
 			foreach ($violations as $violation) { /** @var \Symfony\Component\Validator\ConstraintViolationInterface $violation */
-				$field = $violation->getPropertyPath();
-				$session->set($this->getSessionKey($formKey, $field, 'violation'), $violation->getMessage());
-				LoggerRegistry::debug(sprintf('Set validation violation for field "%s" to "%s"', $field, $violation->getMessage()));
+				$field = trim($violation->getPropertyPath(), '[]');
+				if (!isset($errors[$field])) {
+					$errors[$field] = array();
+				}
+				$errors[$field][] = $violation->getMessage();
+			}
+			foreach ($errors as $field => $fieldErrors) {
+				$session->set($this->getSessionKey($formKey, $field, 'errors'), $fieldErrors);
+				LoggerRegistry::debug(sprintf('Set validation violation for field "%s"; got %d error messages', $field, sizeof($fieldErrors)));
 			}
 		}
 		return $valid;
 	}
 
-	/**
-	 * Get the error for the given field in the given form, and clear the error message from the session.
-	 *
-	 * If this method is called twice in a row with the same parameters, the second call will return null.
-	 *
-	 * @param string $form
-	 * @param string $field
-	 * @param string $subKey
-	 * @param mixed $default
-	 *
-	 * @return mixed
-	 */
-	public function extractFieldSessionData($form, $field, $subKey, $default=null) {
-		$sessionKey = $this->getSessionKey($form, $field, $subKey);
-		$session = $this->getEngine()->getSession();
-		$value = $session->get($sessionKey, $default);
-		$session->remove($sessionKey);
-		return $value;
-	}
-
 	//-- Internal Methods --------------------
-
-	/**
-	 * Get the data for the given form key, loading the data file first if necessary.
-	 *
-	 * @param string $formKey
-	 *
-	 * @return array
-	 *
-	 * @throws \InvalidArgumentException If the form key cannot be found or loaded.
-	 */
-	protected function getData($formKey) {
-		if (is_null($this->data)) {
-			// The main data array is uninitialised, load the main file if it exists.
-			$path = $this->getEngine()->getSiteInfo()->getSitePath(ResourceLocations::RESOURCE_LOCATION_SITE, $this, 'forms.json');
-			$this->data = file_exists($path) ? json_decode(file_get_contents($path), true) : array();
-		}
-		if (!isset($this->data[$formKey])) {
-			// The data array does not currently contain the given key, look for a form-specific file and load it.
-			$pathWithKey = $this->getEngine()->getSiteInfo()->getSitePath(ResourceLocations::RESOURCE_LOCATION_SITE, $this, sprintf('%s.json', $formKey));
-			if (file_exists($pathWithKey)) {
-				$this->data[$formKey] = json_decode(file_get_contents($pathWithKey), true);
-			}
-		}
-		if (!isset($this->data[$formKey])) {
-			// The data array still does not contain the given key, which means the form is unavailable.
-			throw new \InvalidArgumentException(sprintf('FormsModule received unknown form key "%s"', $formKey));
-
-		}
-		$this->normaliseData();
-		return $this->data[$formKey];
-	}
-
-	/**
-	 * Normalise all the data that has currently been loaded.  This is safe to call repeatedly and it will not perform
-	 * any processing on already normalised data.
-	 */
-	protected function normaliseData() {
-		foreach ($this->data as $formKey => $form) {
-			if (!isset($form['_normalised'])) {
-				// Normalise field definitions
-				foreach ($form['fields'] as $fieldIndex => $field) {
-					if (!isset($field['default'])) {
-						$field['default'] = null;
-					}
-					$form['fields'][$fieldIndex] = $this->data[$formKey]['fields'][$fieldIndex] = $field;
-				}
-				// Normalise page and fieldset definitions and field specifications
-				foreach ($form['pages'] as $pageIndex => $page) {
-					foreach ($page['fieldsets'] as $fieldsetIndex => $fieldset) {
-						foreach ($fieldset['fields'] as $fieldIndex => $field) {
-							if (!is_array($field)) {
-								$field = array( 'field' => $field );
-							}
-							if (!isset($field['mode'])) {
-								$field['mode'] = 'field';
-							}
-							// Allow fields to specify label markers.
-							if (!isset($field['label-markers'])) {
-								$field['label-markers'] = array();
-							} elseif (!is_array($field['label-markers'])) {
-								$field['label-markers'] = array( $field['label-markers'] );
-							}
-							// Allow field definitions to specify label markers.
-							$fieldDefinition = $form['fields'][$field['field']];
-							if (isset($fieldDefinition['label-markers'])) {
-								$field['label-markers'] = array_merge(
-									is_array($fieldDefinition['label-markers']) ? $fieldDefinition['label-markers'] : array( $fieldDefinition['label-markers'] ),
-									$field['label-markers']
-								);
-							}
-							// Allow validators to specify label markers.
-							if (isset($fieldDefinition['validators'])) {
-								foreach ($fieldDefinition['validators'] as $validatorSpec) {
-									$validatorMarkers = $this->config(sprintf('constraints.label-markers.%s', NameUtilities::convertToDashedLower($validatorSpec['constraint'])), array());
-									$field['label-markers'] = array_merge(
-										is_array($validatorMarkers) ? $validatorMarkers : array( $validatorMarkers ),
-										$field['label-markers']
-									);
-								}
-							}
-							// Add the definition to the field specification.
-							$field['definition'] = $fieldDefinition;
-							// Merge back.
-							$this->data[$formKey]['pages'][$pageIndex]['fieldsets'][$fieldsetIndex]['fields'][$fieldIndex] = $field;
-						}
-						if (!isset($fieldset['attributes'])) {
-							$this->data[$formKey]['pages'][$pageIndex]['fieldsets'][$fieldsetIndex]['attributes'] = array();
-						}
-					}
-				}
-				$this->data[$formKey]['_normalised'] = true;
-			}
-		}
-	}
 
 	/**
 	 * Retrieve the session key to store details about the given field in the given form.
 	 *
-	 * @param string $form
-	 * @param string $field
+	 * @param string $formKey
+	 * @param string $fieldName
 	 * @param string $subKey
 	 *
 	 * @return string Session key
 	 */
-	protected function getSessionKey($form, $field, $subKey) {
-		return sprintf('forms.%s.%s.%s', $form, $field, $subKey);
+	protected function getSessionKey($formKey, $fieldName, $subKey) {
+		return sprintf('forms.%s.%s.%s', $formKey, $fieldName, $subKey);
 	}
 
 	/**
 	 * Get the validation constraints from the given fieldset collection.
 	 *
-	 * @param array $fieldsets
-	 * @param array $fields
+	 * @param FieldInterface[] $fields
 	 *
 	 * @return \Symfony\Component\Validator\Constraints\Collection
 	 */
-	protected function getConstraints(array $fieldsets, array $fields) {
+	protected function getConstraints(array $fields) {
 		$constraints = array();
-		foreach ($fieldsets as $fieldset) {
-			foreach ($fieldset['fields'] as $fieldSpec) {
-				// Store the value in the session for the next page load
-				$fieldDefinition = $fields[$fieldSpec['field']];
-				if (isset($fieldDefinition['validators'])) {
-					$fieldConstraints = array();
-					foreach ($fieldDefinition['validators'] as $validator) {
-						$fieldConstraints[] = TypeUtilities::buildTypeCheckedObject(
-							$this->getConstraintClassName($validator['constraint']),
-							'constraint',
-							'\\Symfony\\Component\\Validator\\Constraint',
-							null,
-							array( isset($validator['options']) ? $validator['options'] : null )
-						);
-						// The above is used to pass custom messages to the validation constraints, however this breaks
-						// the built-in translations.
-						// TODO Don't pass validation error messages directly; override the built-in translations.
-					}
-					switch (sizeof($fieldConstraints)) {
-						case 0:
-							break;
-						case 1:
-							$constraints[$fieldSpec['field']] = $fieldConstraints[0];
-							break;
-						default:
-							$constraints[$fieldSpec['field']] = $fieldConstraints;
-					}
-				}
+		foreach ($fields as $field) {
+			// Store the value in the session for the next page load
+			$fieldConstraints = $field->getConstraints();
+			switch (sizeof($fieldConstraints)) {
+				case 0:
+					break;
+				case 1:
+					$constraints[$field->getName()] = $fieldConstraints[0];
+					break;
+				default:
+					$constraints[$field->getName()] = $fieldConstraints;
 			}
 		}
 		return new Collection(array(
@@ -439,67 +287,21 @@ class FormsModule extends AbstractUrlMountableModule {
 	}
 
 	/**
-	 * Get the class name for the constraint validator implementation with the given name.
+	 * Execute configured processors for the given step, using the configuration library to process tokens in the
+	 * processor's argument defaults using the specified data.
 	 *
-	 * @param string $name
+	 * @param FormProcessorInterface $processor
+	 * @param string[] $data
 	 *
-	 * @return null|string
+	 * @return array
 	 */
-	protected function getConstraintClassName($name) {
-		$name = NameUtilities::convertToStudlyCaps($name);
-		$classMap = $this->config('constraints.class-map', array());
-		if (isset($classMap[$name])) {
-			return $classMap[$name];
-		} else {
-			foreach ($this->config('constraints.namespaces') as $namespace) {
-				$prefix = $this->config('constraints.class-name-prefix');
-				$suffix = $this->config('constraints.class-name-suffix');
-				$className = sprintf('%s\\%s%s%s', $namespace, $prefix, $name, $suffix);
-				if (class_exists($className)) {
-					return $className;
-				}
-			}
-		}
-		return null;
-	}
-
-	/**
-	 * Execute a single processor with the given specification.
-	 *
-	 * @param array $processor Processor specification.
-	 * @param array $data Data for replacements.
-	 * @param Request $request
-	 *
-	 * @throws \RuntimeException If any processor fails.
-	 */
-	protected function executeProcessor(array $processor, array $data, Request $request) {
-		// TODO Processor conditions
-		// Determine the module and method to call.
-		$moduleName = $processor['module'];
-		$methodName = $processor['method'];
-		$module = $this->getEngine()->getModule($moduleName);
-		if (is_null($module)) {
-			throw new \RuntimeException(sprintf('FormsModule encountered invalid processor with unknown module "%s", method "%s"', $moduleName, $methodName));
-		}
-		$method = new \ReflectionMethod($module, NameUtilities::convertToCamelCase($methodName));
-
-		// Use the configuration library to process tokens in the processor arguments data.
+	protected function parseProcessorArguments(FormProcessorInterface $processor, array $data) {
 		$argumentsContainer = new SimpleConfigContainer($this->getConfigLoader());
 		$argumentsContainer->addProcessor(new ConfigTokenProcessor($this, 'config'));
 		$argumentsContainer->addProcessor(new ConfigTokenProcessor($this->getEngine(), 'engine-config'));
 		$argumentsContainer->addProcessor(new ArrayTokenProcessor($data, 'data'));
-		$argumentsContainer->merge($processor['arguments']);
-
-		// Determine arguments to pass to the processor method.
-		$arguments = TypeUtilities::getArguments(
-			$method,
-			null,
-			array( $request ),
-			$argumentsContainer->get('', array())
-		);
-
-		// Run the processor.  This might throw an exception to indicate failure; any return value is ignored.
-		$method->invokeArgs($module, $arguments);
+		$argumentsContainer->merge($processor->getArgumentDefaults());
+		return $argumentsContainer->get('');
 	}
 
 }

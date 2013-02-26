@@ -2,6 +2,7 @@
 /** @var \Sitegear\Core\View\View $view */
 $view->getStringsManager()->prepend('Login', 'title');
 $view->getResourcesManager()->activate('styles:sitegear:utilities');
+// TODO Convert to using Forms package
 ?>
 <h1>Login</h1>
 <form action="<?php echo $view['form-url']; ?>" method="post">
