@@ -138,11 +138,7 @@ class FormBuilder implements FormBuilderInterface {
 				$labelMarkers[] = $fieldData['label-markers'];
 			}
 		}
-		// TODO Better method of determining settings
 		$settings = isset($fieldData['settings']) ? $fieldData['settings'] : array();
-		if (isset($fieldData['values'])) {
-			$settings['values'] = $fieldData['values'];
-		}
 		return $fieldTypeClass->newInstance($name, $value ?: $defaultValue, $labelText, $labelMarkers, $constraints, $errors, $settings);
 	}
 
