@@ -49,14 +49,6 @@ class FormsModule extends AbstractUrlMountableModule {
 	 */
 	private $forms;
 
-	//-- Constructor --------------------
-
-	public function __construct(EngineInterface $engine) {
-		parent::__construct($engine);
-		$this->builder = new FormBuilder($engine);
-		$this->forms = array();
-	}
-
 	//-- ModuleInterface Methods --------------------
 
 	/**
@@ -64,6 +56,14 @@ class FormsModule extends AbstractUrlMountableModule {
 	 */
 	public function getDisplayName() {
 		return 'Web Forms';
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function start() {
+		$this->builder = new FormBuilder($this->getEngine());
+		$this->forms = array();
 	}
 
 	//-- AbstractUrlMountableModule Methods --------------------
