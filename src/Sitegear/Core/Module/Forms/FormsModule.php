@@ -97,7 +97,7 @@ class FormsModule extends AbstractUrlMountableModule {
 	 * @throws \RuntimeException
 	 */
 	public function formController(Request $request) {
-		LoggerRegistry::debug('FormsModule::formController');
+		LoggerRegistry::debug('FormsModule::formController()');
 
 		// Get the form and submission details
 		$formKey = $request->attributes->get('slug');
@@ -152,6 +152,7 @@ class FormsModule extends AbstractUrlMountableModule {
 	 * @return \Symfony\Component\HttpFoundation\RedirectResponse
 	 */
 	public function resetController(Request $request) {
+		LoggerRegistry::debug('FormsModule::resetController()');
 		$formKey = $request->attributes->get('slug');
 		$this->resetForm($formKey);
 		$form = $this->getForm($formKey, $request);
@@ -181,7 +182,7 @@ class FormsModule extends AbstractUrlMountableModule {
 	 *   form data, if it is not supplied directly.
 	 */
 	public function formComponent(ViewInterface $view, Request $request, $formKey) {
-		LoggerRegistry::debug('FormsModule::formComponent');
+		LoggerRegistry::debug('FormsModule::formComponent()');
 		$view['form'] = $this->getForm($formKey, $request);
 		$view['current-step'] = $this->getEngine()->getSession()->get($this->getSessionKey($formKey, 'step'), 0);
 		$view['renderer-factory'] = $this->createRendererFactory();
@@ -201,6 +202,7 @@ class FormsModule extends AbstractUrlMountableModule {
 	 * @throws \DomainException
 	 */
 	public function registerForm($formKey, FormInterface $form) {
+		LoggerRegistry::debug(sprintf('FormsModule::registerForm(%s)', $formKey));
 		if (isset($this->forms[$formKey])) {
 			throw new \DomainException(sprintf('FormsModule cannot register form key "%s" twice', $formKey));
 		}
@@ -218,6 +220,7 @@ class FormsModule extends AbstractUrlMountableModule {
 	 * @throws \InvalidArgumentException
 	 */
 	public function getForm($formKey, Request $request) {
+		LoggerRegistry::debug(sprintf('FormsModule::getForm(%s)', $formKey));
 		if (!isset($this->forms[$formKey])) {
 			$path = $this->getEngine()->getSiteInfo()->getSitePath(ResourceLocations::RESOURCE_LOCATION_SITE, $this, sprintf('%s.json', $formKey));
 			if (!file_exists($path)) {
@@ -250,6 +253,7 @@ class FormsModule extends AbstractUrlMountableModule {
 	 * @param string $formKey
 	 */
 	public function resetForm($formKey) {
+		LoggerRegistry::debug(sprintf('FormsModule::resetForm(%s)', $formKey));
 		$session = $this->getEngine()->getSession();
 		$session->remove($this->getSessionKey($formKey, 'step'));
 		$session->remove($this->getSessionKey($formKey, 'values'));
@@ -270,6 +274,7 @@ class FormsModule extends AbstractUrlMountableModule {
 	 *   list of violations.
 	 */
 	public function validate($formKey, array $fields, array $data) {
+		LoggerRegistry::debug(sprintf('FormsModule::validate(%s)', $formKey));
 		$validator = Validation::createValidator();
 		$constraints = $this->getConstraints($fields);
 		$violations = $validator->validateValue($data, $constraints);
