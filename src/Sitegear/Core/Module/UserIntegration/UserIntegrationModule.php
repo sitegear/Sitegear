@@ -53,7 +53,11 @@ class UserIntegrationModule extends AbstractUrlMountableModule {
 			// TODO Validate form, populate $errors
 			$returnUrl = $request->request->get('return-url');
 			$userManager = $this->getEngine()->getUserManager();
-			if ($userManager->login($request->request->get('email'), $request->request->all())) {
+			$credentials = $request->request->all();
+			unset($credentials['email']);
+			unset($credentials['return-url']);
+			unset($credentials['step']);
+			if ($userManager->login($request->request->get('email'), $credentials)) {
 				return new RedirectResponse($returnUrl ?: $request->getBaseUrl());
 			} else {
 				$errors['email'] = array( 'Invalid credentials supplied, please try again.' );
