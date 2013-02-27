@@ -172,7 +172,7 @@ return array(
 	 */
 	'script:sitegear:utilities' => array(
 		'type' => 'script',
-		'url' => '{{ config:system.command-url.root }}/{{ config:system.command-url.resources }}/engine/sitegear/utilities/sitegear.utilities.js',
+		'url' => '{{ config:system.command-url.root }}/{{ config:system.command-url.resources }}/engine/utilities/sitegear.utilities.js',
 		'requires' => array(
 			'script:vendor:jquery-ui',
 			'styles:sitegear:utilities'
@@ -184,7 +184,7 @@ return array(
 	 */
 	'styles:sitegear:utilities' => array(
 		'type' => 'styles',
-		'url' => '{{ config:system.command-url.root }}/{{ config:system.command-url.resources }}/engine/sitegear/utilities/sitegear.utilities.css',
+		'url' => '{{ config:system.command-url.root }}/{{ config:system.command-url.resources }}/engine/utilities/sitegear.utilities.css',
 		array(
 			'styles:vendor:jquery-ui'
 		)
@@ -195,7 +195,7 @@ return array(
 	 */
 	'script:sitegear:base' => array(
 		'type' => 'script',
-		'url' => '{{ config:system.command-url.root }}/{{ config:system.command-url.resources }}/engine/sitegear/base/sitegear.base.js',
+		'url' => '{{ config:system.command-url.root }}/{{ config:system.command-url.resources }}/engine/base/sitegear.base.js',
 		'requires' => array(
 			'script:sitegear:utilities',
 			'styles:sitegear:base'
@@ -207,7 +207,7 @@ return array(
 	 */
 	'styles:sitegear:base' => array(
 		'type' => 'styles',
-		'url' => '{{ config:system.command-url.root }}/{{ config:system.command-url.resources }}/engine/sitegear/base/sitegear.base.css',
+		'url' => '{{ config:system.command-url.root }}/{{ config:system.command-url.resources }}/engine/base/sitegear.base.css',
 		array(
 			'styles:sitegear:utilities'
 		)
@@ -218,7 +218,7 @@ return array(
 	 */
 	'script:sitegear:cookie-dialog' => array(
 		'type' => 'script',
-		'url' => '{{ config:system.command-url.root }}/{{ config:system.command-url.resources }}/engine/sitegear/cookie-dialog/sitegear.cookie-dialog.js',
+		'url' => '{{ config:system.command-url.root }}/{{ config:system.command-url.resources }}/engine/cookie-dialog/sitegear.cookie-dialog.js',
 		'requires' => array(
 			'script:vendor:jquery-ui',
 			'script:vendor:cookie'
@@ -230,7 +230,7 @@ return array(
 	 */
 	'script:sitegear:tree-panel-dialog' => array(
 		'type' => 'styles',
-		'url' => '{{ config:system.command-url.root }}/{{ config:system.command-url.resources }}/engine/sitegear/tree-panel-dialog/sitegear.tree-panel-dialog.js',
+		'url' => '{{ config:system.command-url.root }}/{{ config:system.command-url.resources }}/engine/tree-panel-dialog/sitegear.tree-panel-dialog.js',
 		'requires' => array(
 			'script:vendor:cookie-dialog',
 			'script:vendor:splitter',
@@ -243,7 +243,7 @@ return array(
 	 */
 	'script:sitegear:data-editor' => array(
 		'type' => 'script',
-		'url' => '{{ config:system.command-url.root }}/{{ config:system.command-url.resources }}/engine/sitegear/data-editor/sitegear.data-editor.js',
+		'url' => '{{ config:system.command-url.root }}/{{ config:system.command-url.resources }}/engine/data-editor/sitegear.data-editor.js',
 		'requires' => array(
 			'script:sitegear:base',
 			'styles:sitegear:data-editor'
@@ -255,7 +255,7 @@ return array(
 	 */
 	'styles:sitegear:data-editor' => array(
 		'type' => 'styles',
-		'url' => '{{ config:system.command-url.root }}/{{ config:system.command-url.resources }}/engine/sitegear/data-editor/sitegear.data-editor.css',
+		'url' => '{{ config:system.command-url.root }}/{{ config:system.command-url.resources }}/engine/data-editor/sitegear.data-editor.css',
 		'requires' => array(
 			'styles:vendor:jquery-ui'
 		)
@@ -266,7 +266,7 @@ return array(
 	 */
 	'script:sitegear:command-dialog' => array(
 		'type' => 'script',
-		'url' => '{{ config:system.command-url.root }}/{{ config:system.command-url.resources }}/engine/sitegear/command-dialog/sitegear.command-dialog.js',
+		'url' => '{{ config:system.command-url.root }}/{{ config:system.command-url.resources }}/engine/command-dialog/sitegear.command-dialog.js',
 		'requires' => array(
 			'script:vendor:cookie-dialog',
 			'script:sitegear:base'
@@ -278,7 +278,7 @@ return array(
 	 */
 	'script:sitegear:content-editor' => array(
 		'type' => 'script',
-		'url' => '{{ config:system.command-url.root }}/{{ config:system.command-url.resources }}/engine/sitegear/content-editor/sitegear.content-editor.js',
+		'url' => '{{ config:system.command-url.root }}/{{ config:system.command-url.resources }}/engine/content-editor/sitegear.content-editor.js',
 		'requires' => array(
 			'script:vendor:toolbar'
 		)
@@ -289,7 +289,7 @@ return array(
 	 */
 	'script:sitegear:file-manager' => array(
 		'type' => 'script',
-		'url' => '{{ config:system.command-url.root }}/{{ config:system.command-url.resources }}/engine/sitegear/file-manager/sitegear.file-manager.js',
+		'url' => '{{ config:system.command-url.root }}/{{ config:system.command-url.resources }}/engine/file-manager/sitegear.file-manager.js',
 		'requires' => array(
 			'script:vendor:tree-panel-dialog',
 			'script:sitegear:base'
@@ -301,7 +301,7 @@ return array(
 	 */
 	'script:sitegear:upload-manager' => array(
 		'type' => 'script',
-		'url' => '{{ config:system.command-url.root }}/{{ config:system.command-url.resources }}/engine/sitegear/upload-manager/sitegear.upload-manager.js',
+		'url' => '{{ config:system.command-url.root }}/{{ config:system.command-url.resources }}/engine/upload-manager/sitegear.upload-manager.js',
 		'requires' => array(
 			'script:vendor:jquery',
 			'script:vendor:jquery-ui',
