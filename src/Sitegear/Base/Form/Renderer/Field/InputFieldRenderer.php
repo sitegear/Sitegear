@@ -22,10 +22,14 @@ class InputFieldRenderer extends AbstractFieldRenderer {
 	 */
 	public function render(array $options, $value) {
 		$attributes = isset($options['attributes']) ? $options['attributes'] : array();
-		$attributes['type'] = $this->getField()->getType();
+		if (!is_null($this->getField()->getType())) {
+			$attributes['type'] = $this->getField()->getType();
+		}
 		$attributes['id'] = isset($attributes['id']) ? $attributes['id'] : $this->getField()->getName();
 		$attributes['name'] = $this->getField()->getName();
-		$attributes['value'] = $value;
+		if (!empty($value)) {
+			$attributes['value'] = $value;
+		}
 		return array(
 			sprintf('<input%s />', HtmlUtilities::attributes($attributes) )
 		);
