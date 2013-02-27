@@ -184,13 +184,7 @@ class FormsModule extends AbstractUrlMountableModule {
 		LoggerRegistry::debug('FormsModule::formComponent');
 		$view['form'] = $this->getForm($formKey, $request);
 		$view['current-step'] = $this->getEngine()->getSession()->get($this->getSessionKey($formKey, 'step'), 0);
-		$view['renderer-factory'] = TypeUtilities::buildTypeCheckedObject(
-			$this->config('form-renderer.class'),
-			'form renderer',
-			null,
-			'\\Sitegear\\Base\\Form\\Renderer\\Factory\\FormRendererFactoryInterface',
-			$this->config('form-renderer.arguments')
-		);
+		$view['renderer-factory'] = $this->createRendererFactory();
 		$this->getEngine()->getSession()->remove($this->getSessionKey($formKey, 'errors'));
 	}
 
@@ -354,6 +348,21 @@ class FormsModule extends AbstractUrlMountableModule {
 		$argumentsContainer->addProcessor(new ArrayTokenProcessor($data, 'data'));
 		$argumentsContainer->merge($processor->getArgumentDefaults());
 		return $argumentsContainer->get('');
+	}
+
+	/**
+	 * Create a renderer factory.
+	 *
+	 * @return \Sitegear\Base\Form\Renderer\Factory\FormRendererFactoryInterface
+	 */
+	protected function createRendererFactory() {
+		return TypeUtilities::buildTypeCheckedObject(
+			$this->config('form-renderer.class'),
+			'form renderer',
+			null,
+			'\\Sitegear\\Base\\Form\\Renderer\\Factory\\FormRendererFactoryInterface',
+			$this->config('form-renderer.arguments')
+		);
 	}
 
 }
