@@ -311,7 +311,26 @@ class Engine extends AbstractConfigurableEngine {
 	 * {@inheritDoc}
 	 */
 	protected function getResourceMap() {
-		return $this->config('resources', array());
+		$resources = $this->config('resources', array());
+		$preferCdn = $this->config('system.resources.prefer-cdn');
+		if ($preferCdn === true) {
+			$preferCdn = array();
+		}
+		if (is_array($preferCdn)) {
+			$preferCdn = array_merge(array( 'default' => true, 'overrides' => array() ), $preferCdn);
+			$environment = $this->getEnvironmentInfo()->getEnvironment();
+			array_walk($resources, function(&$resource, $resourceKey) use ($preferCdn, $environment) {
+				if (isset($resource['cdn-url'])) {
+					$cdnUrl = is_array($resource['cdn-url']) ? $resource['cdn-url'] : array( 'default' => $resource['cdn-url'] );
+					if (isset($preferCdn['overrides'][$resourceKey]) ? $preferCdn['overrides'][$resourceKey] : $preferCdn['default']) {
+						$resource['url'] = isset($cdnUrl['overrides']) && isset($cdnUrl['overrides'][$environment]) ?
+								$cdnUrl['overrides'][$environment] :
+								$cdnUrl['default'];
+					}
+				}
+			});
+		}
+		return $resources;
 	}
 
 	//-- AbstractConfigurableEngine Methods --------------------

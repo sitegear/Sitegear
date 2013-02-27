@@ -53,6 +53,23 @@ return array(
 	'system' => array(
 
 		/**
+		 * Settings that control how resources and resource configuration are handled.  Not to be confused with the
+		 * 'resources' key at the root level, which specifies a resource map for automatic registration.
+		 */
+		'resources' => array(
+
+			/**
+			 * Whether CDN delivery should be preferred over local delivery of assets within the Sitegear deployed
+			 * directory structure.  This may be a boolean value, which gives the default value applied to all resource
+			 * keys.  For fully granular control, specify a key-value array with two keys, 'default' which gives the
+			 * default (boolean) value, and 'overrides' which gives a map where the keys are resource keys (like
+			 * 'script:vendor:jquery') and the values are booleans (typically the opposite of the 'default' value).
+			 */
+			'prefer-cdn' => true
+
+		),
+
+		/**
 		 * Settings for command URLs, which are special URLs handled internally by Sitegear.
 		 */
 		'command-url' => array(
@@ -321,8 +338,8 @@ return array(
 		 * Page resource types to register.
 		 */
 		'resource-types' => array(
-			'styles' => '<link rel="stylesheet" type="te'.'xt/css" href="[[ url ]]" />',
-			'script' => '<script '.'src="[[ url ]]"></script>' // prevent warning: PhpStorm 5.0.4
+			'styles' => '<link '.'rel="stylesheet" type="text/css" href="%url%" />',
+			'script' => '<script '.'src="%url%"></script>' // '.' = prevent warning: PhpStorm 5.0.4
 		),
 
 		/**

@@ -8,7 +8,7 @@
 
 /**
  * Default resources registered by the Sitegear engine.  These are available for activation anywhere.  This file is
- * intended to be included into the main configuration data.
+ * intended to be included into the main defaults.php default configuration data file.
  */
 return array(
 
@@ -17,7 +17,13 @@ return array(
 	 */
 	'script:vendor:jquery' => array(
 		'type' => 'script',
-		'url' => '{{ config:system.command-url.root }}/{{ config:system.command-url.resources }}/engine/jquery/jquery-1.8.3.js'
+		'url' => '{{ config:system.command-url.root }}/{{ config:system.command-url.resources }}/engine/jquery/jquery-1.9.1.js',
+		'cdn-url' => array(
+			'default' => 'http://code.jquery.com/jquery-1.9.1.min.js',
+			'overrides' => array(
+				'development' => 'http://code.jquery.com/jquery-1.9.1.js'
+			)
+		)
 	),
 
 	/**
@@ -25,7 +31,13 @@ return array(
 	 */
 	'script:vendor:jquery-ui' => array(
 		'type' => 'script',
-		'url' => '{{ config:system.command-url.root }}/{{ config:system.command-url.resources }}/engine/jquery/ui/jquery-ui-1.9.2.custom.js',
+		'url' => '{{ config:system.command-url.root }}/{{ config:system.command-url.resources }}/engine/jquery/ui/jquery-ui-1.10.1.custom.js',
+		'cdn-url' => array(
+			'default' => 'http://code.jquery.com/ui/1.10.1/jquery-ui.min.js',
+			'overrides' => array(
+				'development' => 'http://code.jquery.com/ui/1.10.1/jquery-ui.js'
+			)
+		),
 		'requires' => array(
 			'script:vendor:jquery',
 			'styles:vendor:jquery-ui'
@@ -37,7 +49,13 @@ return array(
 	 */
 	'styles:vendor:jquery-ui' => array(
 		'type' => 'styles',
-		'url' => '{{ config:system.command-url.root }}/{{ config:system.command-url.resources }}/engine/jquery/ui/jquery-ui-1.9.2.custom.css'
+		'url' => '{{ config:system.command-url.root }}/{{ config:system.command-url.resources }}/engine/jquery/ui/jquery-ui-1.10.1.custom.css',
+		'cdn-url' => array(
+			'default' => 'http://code.jquery.com/ui/1.10.1/jquery-ui.min.css',
+			'overrides' => array(
+				'development' => 'http://code.jquery.com/ui/1.10.1/jquery-ui.css'
+			)
+		)
 	),
 
 	/**

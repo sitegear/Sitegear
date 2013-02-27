@@ -20,6 +20,13 @@ class SimpleResourcesManager implements ResourcesManagerInterface {
 	//-- Attributes --------------------
 
 	/**
+	 * The token within the format string that is replaced by the URL of the resource.
+	 */
+	const TOKEN_URL = '%url%';
+
+	//-- Attributes --------------------
+
+	/**
 	 * @var string[]
 	 */
 	private $types;
@@ -203,14 +210,15 @@ class SimpleResourcesManager implements ResourcesManagerInterface {
 	 */
 	public function render($type) {
 		LoggerRegistry::debug(sprintf('SimpleResourcesManager rendering resources of type "%s"', $type));
+		// Check for unknown type
 		if (!$this->isTypeRegistered($type)) {
 			throw new \DomainException(sprintf('Could not render resources of type "%s" because the type has not been registered.', $type));
 		}
-		$format = $this->getFormat($type);
+		// Build a string repeatedly replacing token in format specifier for each registered URL
 		$rendered = '';
+		$format = $this->getFormat($type);
 		foreach ($this->getAllUrls($type) as $url) {
-			// Check for internal specifier, which are mapped to real URLs via config
-			$rendered .= preg_replace('/\\[\\[\s*url\s*\\]\\]/', $url, $format) . PHP_EOL;
+			$rendered .= str_replace(self::TOKEN_URL, $url, $format) . PHP_EOL;
 		}
 		return $rendered;
 	}
