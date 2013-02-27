@@ -32,7 +32,7 @@ class ButtonsElementRenderer extends AbstractContainerElementRenderer {
 				$backButtonAttributes['value'] = 'Back';
 			}
 			if ($this->getElement()->getStep()->getStepIndex() < 1) {
-				$backButtonAttributes['disabled'] = true;
+				$backButtonAttributes['disabled'] = 'disabled';
 			}
 			$result[] = sprintf('<input%s />', HtmlUtilities::attributes($backButtonAttributes));
 		}
