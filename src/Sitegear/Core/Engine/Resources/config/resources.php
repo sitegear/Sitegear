@@ -37,9 +37,9 @@ return array(
 	'script:vendor:jquery-ui' => array(
 		'type' => 'script',
 		'url' => array(
-			'default' => '{{ config:system.command-url.root }}/{{ config:system.command-url.resources }}/vendor/jquery/ui/jquery-ui.js',
+			'default' => '{{ config:system.command-url.root }}/{{ config:system.command-url.resources }}/vendor/jquery-ui/jquery-ui.js',
 			'overrides' => array(
-				'development' => '{{ config:system.command-url.root }}/{{ config:system.command-url.resources }}/vendor/jquery/ui/jquery-ui.js'
+				'development' => '{{ config:system.command-url.root }}/{{ config:system.command-url.resources }}/vendor/jquery-ui/jquery-ui.js'
 			)
 		),
 		'cdn-url' => array(
@@ -59,7 +59,7 @@ return array(
 	 */
 	'styles:vendor:jquery-ui' => array(
 		'type' => 'styles',
-		'url' => '{{ config:system.command-url.root }}/{{ config:system.command-url.resources }}/vendor/jquery/ui/jquery-ui.css',
+		'url' => '{{ config:system.command-url.root }}/{{ config:system.command-url.resources }}/vendor/jquery-ui/jquery-ui.css',
 		'cdn-url' => '//code.jquery.com/ui/1.10.1/themes/base/jquery-ui.css'
 	),
 
@@ -68,7 +68,7 @@ return array(
 	 */
 	'script:vendor:cookie' => array(
 		'type' => 'script',
-		'url' => '{{ config:system.command-url.root }}/{{ config:system.command-url.resources }}/vendor/jquery/cookie/jquery.cookie.js',
+		'url' => '{{ config:system.command-url.root }}/{{ config:system.command-url.resources }}/vendor/jquery-cookie/jquery.cookie.js',
 		'cdn-url' => array(
 			'default' => '//cdn.jsdelivr.net/jquery.cookie/1.3.1/jquery.cookie.js'
 		),
@@ -82,7 +82,7 @@ return array(
 	 */
 	'script:vendor:fileupload' => array(
 		'type' => 'script',
-		'url' => '{{ config:system.command-url.root }}/{{ config:system.command-url.resources }}/vendor/jquery/fileupload/jquery.fileupload.js',
+		'url' => '{{ config:system.command-url.root }}/{{ config:system.command-url.resources }}/vendor/jquery-fileupload/jquery.fileupload.js',
 		'requires' => array(
 			'script:vendor:jquery-ui'
 		)
@@ -93,7 +93,7 @@ return array(
 	 */
 	'script:vendor:iframe-transport' => array(
 		'type' => 'script',
-		'url' => '{{ config:system.command-url.root }}/{{ config:system.command-url.resources }}/vendor/jquery/iframe-transport/jquery.iframe-transport.js',
+		'url' => '{{ config:system.command-url.root }}/{{ config:system.command-url.resources }}/vendor/jquery-iframe-transport/jquery.iframe-transport.js',
 		'requires' => array(
 			'script:vendor:jquery'
 		)
@@ -105,9 +105,9 @@ return array(
 	'script:vendor:jstree' => array(
 		'type' => 'script',
 		'url' => array(
-			'default' => '{{ config:system.command-url.root }}/{{ config:system.command-url.resources }}/vendor/jquery/jstree/jquery-jstree.js',
+			'default' => '{{ config:system.command-url.root }}/{{ config:system.command-url.resources }}/vendor/jstree/jquery-jstree.js',
 			'overrides' => array(
-				'development' => '{{ config:system.command-url.root }}/{{ config:system.command-url.resources }}/vendor/jquery/jstree/jquery-jstree-min.js'
+				'development' => '{{ config:system.command-url.root }}/{{ config:system.command-url.resources }}/vendor/jstree/jquery-jstree-min.js'
 			)
 		),
 		'cdn-url' => array(
@@ -126,7 +126,7 @@ return array(
 	 */
 	'script:vendor:splitter' => array(
 		'type' => 'script',
-		'url' => '{{ config:system.command-url.root }}/{{ config:system.command-url.resources }}/vendor/jquery/splitter/jquery.splitter.js',
+		'url' => '{{ config:system.command-url.root }}/{{ config:system.command-url.resources }}/vendor/jquery-splitter/jquery.splitter.js',
 		'requires' => array(
 			'script:vendor:jquery-ui',
 			'styles:vendor:splitter'
@@ -138,7 +138,7 @@ return array(
 	 */
 	'styles:vendor:splitter' => array(
 		'type' => 'styles',
-		'url' => '{{ config:system.command-url.root }}/{{ config:system.command-url.resources }}/vendor/jquery/splitter/jquery.splitter.css',
+		'url' => '{{ config:system.command-url.root }}/{{ config:system.command-url.resources }}/vendor/jquery-splitter/jquery.splitter.css',
 		'requires' => array(
 			'styles:vendor:jquery-ui'
 		)
@@ -149,7 +149,7 @@ return array(
 	 */
 	'script:vendor:toolbar' => array(
 		'type' => 'script',
-		'url' => '{{ config:system.command-url.root }}/{{ config:system.command-url.resources }}/vendor/jquery/toolbar/jquery.ui.toolbar.js',
+		'url' => '{{ config:system.command-url.root }}/{{ config:system.command-url.resources }}/vendor/jquery-toolbar/jquery.ui.toolbar.js',
 		'requires' => array(
 			'script:vendor:jquery-ui',
 			'styles:vendor:toolbar'
@@ -161,7 +161,7 @@ return array(
 	 */
 	'styles:vendor:toolbar' => array(
 		'type' => 'styles',
-		'url' => '{{ config:system.command-url.root }}/{{ config:system.command-url.resources }}/vendor/jquery/toolbar/jquery.ui.toolbar.css',
+		'url' => '{{ config:system.command-url.root }}/{{ config:system.command-url.resources }}/vendor/jquery-toolbar/jquery.ui.toolbar.css',
 		'requires' => array(
 			'styles:vendor:jquery-ui'
 		)
