@@ -53,7 +53,6 @@ class UserIntegrationModule extends AbstractUrlMountableModule {
 			// TODO Validate form, populate $errors
 			$returnUrl = $request->request->get('return-url');
 			$userManager = $this->getEngine()->getUserManager();
-			// TODO Anything with this 'email'?  Constant?
 			if ($userManager->login($request->request->get('email'), $request->request->all())) {
 				return new RedirectResponse($returnUrl ?: $request->getBaseUrl());
 			} else {
