@@ -249,12 +249,15 @@ class FormBuilder implements FormBuilderInterface {
 		if (!is_array($fieldReferenceData)) {
 			$fieldReferenceData = array( 'field' => $fieldReferenceData );
 		}
-		$fieldReferenceData = ArrayUtilities::combine(array( 'element' => 'div', 'attributes' => array(), 'read-only' => false ), $fieldReferenceData);
-		$fieldContainerElement = new FieldContainerElement($step, $fieldReferenceData['element'], $fieldReferenceData['attributes']);
+		$fieldReferenceData = ArrayUtilities::combine(array( 'element' => 'div', 'attributes' => array(), 'read-only' => false, 'wrapper' => true ), $fieldReferenceData);
 		$fieldReference = new FieldReference($fieldReferenceData['field'], $fieldReferenceData['read-only']);
-		return $fieldContainerElement
-				->addChild(new LabelElement($step, $fieldReference))
-				->addChild(new FieldElement($step, $fieldReference));
+		$fieldElement = new FieldElement($step, $fieldReference);
+		if ($fieldReferenceData['wrapper']) {
+			$fieldContainerElement = new FieldContainerElement($step, $fieldReferenceData['element'], $fieldReferenceData['attributes']);
+			return $fieldContainerElement->addChild(new LabelElement($step, $fieldReference))->addChild($fieldElement);
+		}  else {
+			return $fieldElement;
+		}
 	}
 
 }
