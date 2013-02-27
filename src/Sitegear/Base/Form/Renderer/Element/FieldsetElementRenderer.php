@@ -9,7 +9,9 @@
 namespace Sitegear\Base\Form\Renderer\Element;
 
 /**
- * Renderer for a FieldsetElement.
+ * Renderer for a `FieldsetElement`.
+ *
+ * @method \Sitegear\Base\Form\Element\FieldsetElement getElement()
  */
 class FieldsetElementRenderer extends AbstractContainerElementRenderer {
 

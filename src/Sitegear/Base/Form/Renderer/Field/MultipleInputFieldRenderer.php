@@ -11,6 +11,8 @@ namespace Sitegear\Base\Form\Renderer\Field;
 use Sitegear\Util\HtmlUtilities;
 
 /**
+ * Renderer for a `MultipleInputField`.
+ *
  * @method \Sitegear\Base\Form\Field\MultipleInputField getField()
  */
 class MultipleInputFieldRenderer extends AbstractFieldRenderer {

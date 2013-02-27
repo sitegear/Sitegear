@@ -8,6 +8,9 @@
 
 namespace Sitegear\Base\Form\Field;
 
+/**
+ * A field that consists of a `<select>` element and its parent `<option>` elements.
+ */
 class SelectField extends AbstractSelectionField {
 
 	//-- FieldInterface Methods --------------------

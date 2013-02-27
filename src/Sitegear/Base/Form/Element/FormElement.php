@@ -11,7 +11,7 @@ namespace Sitegear\Base\Form\Element;
 use Sitegear\Base\Form\StepInterface;
 
 /**
- * Represents the top-level `<form>` element.
+ * Element that represents the top-level `<form>` element.
  */
 class FormElement extends AbstractContainerElement {
 

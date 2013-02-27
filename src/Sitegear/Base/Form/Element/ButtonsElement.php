@@ -10,6 +10,10 @@ namespace Sitegear\Base\Form\Element;
 
 use Sitegear\Base\Form\StepInterface;
 
+/**
+ * Element that is a simple container for one or more buttons.  This may include any combination of a "submit" button,
+ * a "reset" button and a "back" button.  The actual buttons included are determined by the related Form object.
+ */
 class ButtonsElement extends AbstractContainerElement {
 
 	//-- Constructor --------------------

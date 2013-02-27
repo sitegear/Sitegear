@@ -11,7 +11,7 @@ namespace Sitegear\Base\Form\Element;
 use Sitegear\Base\Form\StepInterface;
 
 /**
- * Represents a HTML `<fieldset>` element.
+ * Element which represents a HTML `<fieldset>` element.
  */
 class FieldsetElement extends AbstractContainerElement {
 

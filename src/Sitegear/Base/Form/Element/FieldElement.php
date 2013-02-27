@@ -8,6 +8,9 @@
 
 namespace Sitegear\Base\Form\Element;
 
+/**
+ * Element which represents an actual form field element, e.g. `<input>` or `<select>`.
+ */
 class FieldElement extends AbstractFieldElement {
 
 }

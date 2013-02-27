@@ -8,6 +8,9 @@
 
 namespace Sitegear\Base\Form\Element;
 
+/**
+ * Element that represents the `<label>` for a field element.
+ */
 class LabelElement extends AbstractFieldElement {
 
 }

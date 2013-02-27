@@ -11,6 +11,8 @@ namespace Sitegear\Base\Form\Renderer\Field;
 use Sitegear\Util\HtmlUtilities;
 
 /**
+ * Renderer for a `SelectField`.
+ *
  * @method \Sitegear\Base\Form\Field\SelectField getField()
  */
 class SelectFieldRenderer extends AbstractFieldRenderer {

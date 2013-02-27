@@ -10,6 +10,9 @@ namespace Sitegear\Base\Form\Field;
 
 use Symfony\Component\Validator\Constraint;
 
+/**
+ * A field made up of a single `<textarea>` element.
+ */
 class TextareaField extends AbstractField {
 
 	//-- FieldInterface Methods --------------------

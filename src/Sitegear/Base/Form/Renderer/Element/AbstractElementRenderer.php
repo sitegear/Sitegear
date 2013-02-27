@@ -11,6 +11,9 @@ namespace Sitegear\Base\Form\Renderer\Element;
 use Sitegear\Base\Form\Renderer\Factory\FormRendererFactoryInterface;
 use Sitegear\Base\Form\Element\ElementInterface;
 
+/**
+ * Abstract implementation of `ElementRendererInterface`.
+ */
 abstract class AbstractElementRenderer implements ElementRendererInterface {
 
 	//-- Attributes --------------------

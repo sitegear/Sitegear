@@ -11,6 +11,8 @@ namespace Sitegear\Base\Form\Renderer\Field;
 use Sitegear\Util\HtmlUtilities;
 
 /**
+ * Renderer for a `TextareaField`.
+ *
  * @method \Sitegear\Base\Form\Field\TextareaField getField()
  */
 class TextareaFieldRenderer extends AbstractFieldRenderer {

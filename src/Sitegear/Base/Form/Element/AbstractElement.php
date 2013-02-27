@@ -11,7 +11,8 @@ namespace Sitegear\Base\Form\Element;
 use Sitegear\Base\Form\StepInterface;
 
 /**
- * Partial implementation of ElementInterface.
+ * Partial implementation of `ElementInterface`.  This implementation only implements the `getStep()` method and
+ * requires a `StepInterface` implementation as constructor argument.
  */
 abstract class AbstractElement implements ElementInterface {
 

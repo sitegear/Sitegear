@@ -10,6 +10,10 @@ namespace Sitegear\Base\Form\Element;
 
 use Sitegear\Base\Form\StepInterface;
 
+/**
+ * Abstract base class representing an element which contains other elements as children.  These elements do not
+ * directly contain fields; instead they contain ancestor elements which themselves may contain fields.
+ */
 abstract class AbstractContainerElement extends AbstractElement {
 
 	//-- Attributes --------------------
@@ -19,8 +23,14 @@ abstract class AbstractContainerElement extends AbstractElement {
 	 */
 	private $children;
 
+	/**
+	 * @var string
+	 */
 	private $elementName;
 
+	/**
+	 * @var string[]
+	 */
 	private $defaultAttributes;
 
 	//-- Constructor --------------------
@@ -34,7 +44,7 @@ abstract class AbstractContainerElement extends AbstractElement {
 	public function __construct(StepInterface $step, $elementName, array $defaultAttributes=null, array $children=null) {
 		parent::__construct($step);
 		$this->elementName = $elementName;
-		$this->defaultAttributes = $defaultAttributes;
+		$this->defaultAttributes = $defaultAttributes ?: array();
 		$this->children = $children ?: array();
 	}
 

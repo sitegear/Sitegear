@@ -11,6 +11,10 @@ namespace Sitegear\Base\Form\Renderer\Field;
 use Sitegear\Base\Form\Field\FieldInterface;
 use Sitegear\Base\Form\Renderer\Factory\FormRendererFactoryInterface;
 
+/**
+ * Abstract implementation of `FieldRendererInterface`.  Implements storage of and access to the related field object
+ * and the factory object responsible for generation of renderers.
+ */
 abstract class AbstractFieldRenderer implements FieldRendererInterface {
 
 	//-- Attributes --------------------

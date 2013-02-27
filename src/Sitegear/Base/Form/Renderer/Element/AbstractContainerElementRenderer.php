@@ -11,6 +11,8 @@ namespace Sitegear\Base\Form\Renderer\Element;
 use Sitegear\Util\HtmlUtilities;
 
 /**
+ * Abstract renderer implementation for container elements.
+ *
  * @method \Sitegear\Base\Form\Element\AbstractContainerElement getElement()
  */
 abstract class AbstractContainerElementRenderer extends AbstractElementRenderer {

@@ -11,6 +11,8 @@ namespace Sitegear\Base\Form\Renderer\Field;
 use Sitegear\Util\HtmlUtilities;
 
 /**
+ * Renderer for an `InputField`.
+ *
  * @method \Sitegear\Base\Form\Field\InputField getField()
  */
 class InputFieldRenderer extends AbstractFieldRenderer {

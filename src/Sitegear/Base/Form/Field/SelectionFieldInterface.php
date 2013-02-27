@@ -8,6 +8,10 @@
 
 namespace Sitegear\Base\Form\Field;
 
+/**
+ * Defines the behaviour of a field which restricts the user to selection between a set of available values (as opposed
+ * to direct entry of a value).
+ */
 interface SelectionFieldInterface extends FieldInterface {
 
 	/**

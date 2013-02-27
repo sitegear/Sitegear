@@ -28,8 +28,8 @@ use Sitegear\Util\UrlUtilities;
 use Sitegear\Util\LoggerRegistry;
 
 /**
- * Core FormBuilderInterface implementation.  Maps the format defined by the Forms module data files into the Form
- * package objects.
+ * Core FormBuilderInterface implementation.  Maps the format defined by the `FormsModule` data files into the Form
+ * objects.
  */
 class FormBuilder implements FormBuilderInterface {
 
@@ -94,6 +94,8 @@ class FormBuilder implements FormBuilderInterface {
 	//-- Internal Methods --------------------
 
 	/**
+	 * Create a single field.
+	 *
 	 * @param string $name
 	 * @param array $fieldData
 	 * @param mixed $value
@@ -145,6 +147,8 @@ class FormBuilder implements FormBuilderInterface {
 	}
 
 	/**
+	 * Create a single constraint on a field.
+	 *
 	 * @param array $constraintData
 	 *
 	 * @return \Symfony\Component\Validator\Constraint
@@ -160,6 +164,8 @@ class FormBuilder implements FormBuilderInterface {
 	}
 
 	/**
+	 * Create a single step of the form.
+	 *
 	 * @param FormInterface $form
 	 * @param array $formData
 	 * @param integer $stepIndex
@@ -183,6 +189,8 @@ class FormBuilder implements FormBuilderInterface {
 	}
 
 	/**
+	 * Create a single processor for a step of the form.
+	 *
 	 * @param array $processorData
 	 *
 	 * @return \Sitegear\Base\Config\Processor\ProcessorInterface
@@ -198,6 +206,8 @@ class FormBuilder implements FormBuilderInterface {
 	}
 
 	/**
+	 * Create a `FormElement` instance.
+	 *
 	 * @param \Sitegear\Base\Form\StepInterface $step
 	 * @param array $formData
 	 * @param array $stepData
@@ -215,6 +225,8 @@ class FormBuilder implements FormBuilderInterface {
 	}
 
 	/**
+	 * Create a `FieldsetElement` instance.
+	 *
 	 * @param \Sitegear\Base\Form\StepInterface $step
 	 * @param array $fieldsetData
 	 *
@@ -230,6 +242,8 @@ class FormBuilder implements FormBuilderInterface {
 	}
 
 	/**
+	 * Create a `FieldContainerElement` instance.
+	 *
 	 * @param \Sitegear\Base\Form\StepInterface $step
 	 * @param $fieldReferenceData
 	 *

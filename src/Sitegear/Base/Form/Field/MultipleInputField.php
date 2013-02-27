@@ -8,6 +8,10 @@
 
 namespace Sitegear\Base\Form\Field;
 
+/**
+ * A field made up of zero or more `<input>` elements as an implementation of `SelectionFieldInterface`.  Each value is
+ * represented by either a checkbox or a radio button, depending on whether the field allows multiple values.
+ */
 class MultipleInputField extends AbstractSelectionField {
 
 	//-- FieldInterface Methods --------------------

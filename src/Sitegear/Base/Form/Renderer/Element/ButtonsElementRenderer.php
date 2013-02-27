@@ -10,6 +10,11 @@ namespace Sitegear\Base\Form\Renderer\Element;
 
 use Sitegear\Util\HtmlUtilities;
 
+/**
+ * Renderer for a `ButtonsElement`.
+ *
+ * @method \Sitegear\Base\Form\Element\ButtonsElement getElement()
+ */
 class ButtonsElementRenderer extends AbstractContainerElementRenderer {
 
 	//-- AbstractElementRenderer Methods --------------------

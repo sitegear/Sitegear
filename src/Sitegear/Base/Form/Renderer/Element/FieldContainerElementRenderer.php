@@ -9,7 +9,9 @@
 namespace Sitegear\Base\Form\Renderer\Element;
 
 /**
- * Renderer for a FieldContainerElement.
+ * Renderer for a `FieldContainerElement`.
+ *
+ * @method \Sitegear\Base\Form\Element\FieldContainerElement getElement()
  */
 class FieldContainerElementRenderer extends AbstractContainerElementRenderer {
 

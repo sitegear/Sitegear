@@ -8,6 +8,10 @@
 
 namespace Sitegear\Base\Form\Field;
 
+/**
+ * Abstract implementation of `SelectionFieldInterface` on top of `AbstractField` base class.  Implements the ability
+ * to store and manage available values.
+ */
 abstract class AbstractSelectionField extends AbstractField implements SelectionFieldInterface {
 
 	//-- SelectionFieldInterface Methods --------------------

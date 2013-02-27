@@ -8,6 +8,9 @@
 
 namespace Sitegear\Base\Form\Field;
 
+/**
+ * A single-element `<input>` type field.
+ */
 class InputField extends AbstractField {
 
 	//-- FieldInterface Methods --------------------

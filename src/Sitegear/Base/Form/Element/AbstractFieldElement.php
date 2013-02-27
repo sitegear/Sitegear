@@ -9,8 +9,12 @@
 namespace Sitegear\Base\Form\Element;
 
 use Sitegear\Base\Form\StepInterface;
+use Sitegear\Base\Form\FieldReference;
 use Sitegear\Base\Form\Field\FieldInterface;
 
+/**
+ * Abstract implementation of an element that represents a field, or part of a field.
+ */
 abstract class AbstractFieldElement extends AbstractElement {
 
 	//-- Attributes --------------------
@@ -26,7 +30,7 @@ abstract class AbstractFieldElement extends AbstractElement {
 	 * @param \Sitegear\Base\Form\StepInterface $step
 	 * @param \Sitegear\Base\Form\FieldReference $fieldReference
 	 */
-	public function __construct(StepInterface $step, $fieldReference) {
+	public function __construct(StepInterface $step, FieldReference $fieldReference) {
 		parent::__construct($step);
 		$this->fieldReference = $fieldReference;
 	}

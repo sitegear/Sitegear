@@ -11,7 +11,7 @@ namespace Sitegear\Base\Form\Renderer\Element;
 use Sitegear\Base\Form\Element\ElementInterface;
 
 /**
- * Renderer for a LabelElement.
+ * Renderer for a `LabelElement`.
  *
  * @method \Sitegear\Base\Form\Element\FieldElement getElement()
  */
