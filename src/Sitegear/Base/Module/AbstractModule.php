@@ -42,7 +42,7 @@ abstract class AbstractModule implements ModuleInterface {
 	 * {@inheritDoc}
 	 */
 	public function start() {
-		$this->engine->getViewFactory()->getResourcesManager()->registerMap($this->getResourceMap());
+		// Default implementation does nothing; this method won't be used by most modules
 	}
 
 	/**

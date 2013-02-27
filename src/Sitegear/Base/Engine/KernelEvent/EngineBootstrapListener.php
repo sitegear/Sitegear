@@ -39,23 +39,14 @@ class EngineBootstrapListener extends AbstractEngineKernelListener {
 	public function onKernelRequest(GetResponseEvent $event) {
 		LoggerRegistry::debug('EngineBootstrapListener responding to REQUEST kernel event');
 		// Start the engine.
-		$this->getEngine()->start($event->getRequest());
-		// Run all bootstrap modules.
-		$response = null; /** @var \Symfony\Component\HttpFoundation\Response $response */
-		$responder = null;
-		foreach ($this->getEngine()->getBootstrapModuleSequence() as $name) {
-			if (is_null($response)) {
-				$module = $this->getEngine()->getModule($name); /** @var \Sitegear\Base\Module\BootstrapModuleInterface $module */
-				$response = $module->bootstrap($event->getRequest());
-				$responder = $name;
-			}
-		}
+		$request = $event->getRequest(); /** @var \Symfony\Component\HttpFoundation\Request $request */
+		$response = $this->getEngine()->start($request);
 		if (!is_null($response)) {
 			// Set the response directly; prevent further processing.
 			$this->getEngine()->instrumentResponse($response);
 			$event->setResponse($response);
 			$event->stopPropagation();
-			LoggerRegistry::debug(sprintf('EngineBootstrapListener received Response [%s] from bootstrap sequence module "%s"', TypeUtilities::describe($response), $responder));
+			LoggerRegistry::debug(sprintf('EngineBootstrapListener received Response [%s] from bootstrap', TypeUtilities::describe($response)));
 		}
 	}
 

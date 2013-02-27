@@ -65,7 +65,7 @@ return array(
 			 * default (boolean) value, and 'overrides' which gives a map where the keys are resource keys (like
 			 * 'script:vendor:jquery') and the values are booleans (typically the opposite of the 'default' value).
 			 */
-			'prefer-cdn' => true
+			'prefer-cdn' => false
 
 		),
 
@@ -137,7 +137,7 @@ return array(
 	),
 
 	/**
-	 * Routing configuration.
+	 * URL to module routing configuration.
 	 */
 	'routes' => array(
 
@@ -158,7 +158,7 @@ return array(
 	),
 
 	/**
-	 * Template (page-level view script) settings.
+	 * URL to template (page-level view script) mapping configuration.
 	 */
 	'templates' => array(
 
@@ -168,10 +168,11 @@ return array(
 		'error-template' => 'default',
 
 		/**
-		 * URL to template mappings.  Each entry consists of a "pattern" key and a "template" key.  The "pattern" key
-		 * matches the URL against a pattern using ? * + ! wildcards.  Alternatively, by providing a "regex" key with a
-		 * true value, the "pattern" key is a complete regular expression.  In case of multiple patterns matching the
-		 * same URL, the later entry is always preferred.
+		 * URL to template mappings.  Each entry consists of a "pattern" key and a "template" key.
+		 *
+		 * The "pattern" key matches the URL against a pattern using ? * + ! wildcards.  Alternatively, by providing a
+		 * "regex" key with a true value, the "pattern" key is a complete regular expression.  In case of multiple
+		 * patterns matching the same URL, the later entry is always preferred.
 		 *
 		 * The default configuration maps all URLs to the default template.
 		 */
@@ -181,6 +182,30 @@ return array(
 				'template' => 'default'
 			)
 		)
+	),
+
+	/**
+	 * URL to protocol scheme mapping configuration.  This enables automatic redirection when the protocol does not
+	 * match requirements.
+	 */
+	'protocols' => array(
+
+		/**
+		 * The default protocol.  In general this should not be used unless you want to force all requests over https.
+		 * A null value indicates no protocol switching is done by default.
+		 */
+		'default' => null,
+
+		/**
+		 * List of URL pattern to protocol mappings.  Each entry consists of a "pattern" key and a "protocol" key,
+		 * which has the value 'http' or 'https', or null to indicate that the protocol should never be switched.
+		 *
+		 * The "pattern" key matches the URL against a pattern using ? * + ! wildcards.  Alternatively, by providing a
+		 * "regex" key with a true value, the "pattern" key is a complete regular expression.  In case of multiple
+		 * patterns matching the same URL, the later entry is always preferred.
+		 */
+		'map' => array()
+
 	),
 
 	/**

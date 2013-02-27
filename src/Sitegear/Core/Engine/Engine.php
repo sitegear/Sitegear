@@ -175,6 +175,50 @@ class Engine extends AbstractConfigurableEngine {
 		return $response;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	public function getResourceMap() {
+		return $this->config('resources', array());
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function normaliseResourceMap($resources) {
+		// Retrieve and normalise the preferences for CDN vs local delivery.
+		$preferCdn = $this->config('system.resources.prefer-cdn');
+		if ($preferCdn === true) {
+			$preferCdn = array();
+		} else {
+			$preferCdn = array( 'default' => null );
+		}
+		$preferCdn = array_merge(array( 'default' => true, 'overrides' => array() ), $preferCdn);
+		// Perform processing on each resource entry.
+		$environment = $this->getEnvironmentInfo()->getEnvironment();
+		array_walk($resources, function(&$resource, $resourceKey) use ($preferCdn, $environment) {
+			// If there is a 'cdn-url' key, and the preference for this resource is for CDN delivery, then copy the
+			// 'cdn-url' value to the 'url' key, and remove the 'cdn-url' key.
+			if (isset($resource['cdn-url'])) {
+				if (isset($preferCdn['overrides'][$resourceKey]) ? $preferCdn['overrides'][$resourceKey] : $preferCdn['default']) {
+					$resource['url'] = is_array($resource['cdn-url']) ? $resource['cdn-url'] : array( 'default' => $resource['cdn-url'] );
+				}
+				unset($resource['cdn-url']);
+			}
+			// Now, if the 'url' key is an array, replace it with either the default or the environment-specific
+			// override as appropriate.
+			if (is_array($resource['url'])) {
+				if (isset($resource['url']['overrides']) && isset($resource['url']['overrides'][$environment])) {
+					$resource['url'] = $resource['url']['overrides'][$environment];
+				} else {
+					$resource['url'] = $resource['url']['default'];
+				}
+			}
+		});
+		// Return the modified array.
+		return $resources;
+	}
+
 	//-- ModuleResolverInterface Methods --------------------
 
 	/**
@@ -289,6 +333,20 @@ class Engine extends AbstractConfigurableEngine {
 	/**
 	 * {@inheritDoc}
 	 */
+	protected function getDefaultProtocolScheme() {
+		return $this->config('protocols.default');
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	protected function getRawProtocolSchemeMap() {
+		return $this->config('protocols.map');
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	protected function getRenderers() {
 		return $this->config('view.renderers', array());
 	}
@@ -305,32 +363,6 @@ class Engine extends AbstractConfigurableEngine {
 	 */
 	protected function getResourceTypeMap() {
 		return $this->config('view.resource-types', array());
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	protected function getResourceMap() {
-		$resources = $this->config('resources', array());
-		$preferCdn = $this->config('system.resources.prefer-cdn');
-		if ($preferCdn === true) {
-			$preferCdn = array();
-		}
-		if (is_array($preferCdn)) {
-			$preferCdn = array_merge(array( 'default' => true, 'overrides' => array() ), $preferCdn);
-			$environment = $this->getEnvironmentInfo()->getEnvironment();
-			array_walk($resources, function(&$resource, $resourceKey) use ($preferCdn, $environment) {
-				if (isset($resource['cdn-url'])) {
-					$cdnUrl = is_array($resource['cdn-url']) ? $resource['cdn-url'] : array( 'default' => $resource['cdn-url'] );
-					if (isset($preferCdn['overrides'][$resourceKey]) ? $preferCdn['overrides'][$resourceKey] : $preferCdn['default']) {
-						$resource['url'] = isset($cdnUrl['overrides']) && isset($cdnUrl['overrides'][$environment]) ?
-								$cdnUrl['overrides'][$environment] :
-								$cdnUrl['default'];
-					}
-				}
-			});
-		}
-		return $resources;
 	}
 
 	//-- AbstractConfigurableEngine Methods --------------------

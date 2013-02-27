@@ -20,6 +20,7 @@ use Sitegear\Util\TypeUtilities;
 use Sitegear\Util\LoggerRegistry;
 
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\RouteCollection;
 
@@ -85,6 +86,16 @@ abstract class AbstractEngine implements EngineInterface {
 	 */
 	private $compiledTemplateMap;
 
+	/**
+	 * @var string
+	 */
+	private $currentProtocolScheme;
+
+	/**
+	 * @var array[]
+	 */
+	private $compiledProtocolSchemeMap;
+
 	//-- Constructor --------------------
 
 	/**
@@ -107,6 +118,8 @@ abstract class AbstractEngine implements EngineInterface {
 		$this->modules = array();
 		$this->compiledRouteCollection = null;
 		$this->compiledTemplateMap = null;
+		$this->currentProtocolScheme = null;
+		$this->compiledProtocolSchemeMap = null;
 	}
 
 	//-- EngineInterface Methods --------------------
@@ -117,12 +130,14 @@ abstract class AbstractEngine implements EngineInterface {
 	 * This implementation registers the request in the view factory, and sets up the session.
 	 */
 	public function start(Request $request) {
+		// Set the current protocol scheme from the Request.
+		$this->currentProtocolScheme = $request->getScheme();
 		// Setup view related dependencies.
 		$this->getViewFactory()->setRequest($request);
 		$this->getViewFactory()->getRendererRegistry()->register($this->getRenderers());
 		$this->getViewFactory()->getDecoratorRegistry()->registerMap($this->getDecoratorMap());
 		$this->getViewFactory()->getResourcesManager()->registerTypeMap($this->getResourceTypeMap());
-		$this->getViewFactory()->getResourcesManager()->registerMap($this->getResourceMap());
+		$this->getViewFactory()->getResourcesManager()->registerMap($this->normaliseResourceMap($this->getResourceMap()));
 		// Setup session storage.
 		if ($request->hasSession()) {
 			$this->session = $request->getSession();
@@ -138,6 +153,8 @@ abstract class AbstractEngine implements EngineInterface {
 		$this->memcache = $this->initMemcache();
 		// Get logged in user.
 		$this->getUserManager()->setSession($this->session);
+		// Now run the bootstrap sequence.
+		return $this->bootstrap($request);
 	}
 
 	/**
@@ -231,6 +248,39 @@ abstract class AbstractEngine implements EngineInterface {
 	/**
 	 * {@inheritDoc}
 	 */
+	public function getCurrentProtocolScheme() {
+		return $this->currentProtocolScheme;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function getProtocolSchemeForUrl($url) {
+		// Set the default result.
+		$result = $this->getDefaultProtocolScheme();
+		// Lazy compile the patterns.
+		if (is_null($this->compiledProtocolSchemeMap)) {
+			// Retrieve raw patterns from subclass.
+			$this->compiledProtocolSchemeMap = $this->getRawProtocolSchemeMap();
+			// Compile all wildcard patterns into regular expressions.
+			foreach ($this->compiledProtocolSchemeMap as $index => $entry) {
+				$this->compiledProtocolSchemeMap[$index]['compiled-pattern'] = (isset($entry['regex']) && $entry['regex']) ?
+						$entry['pattern'] :
+						UrlUtilities::compileWildcardUrl(trim($entry['pattern'], '/'));
+			}
+		}
+		// Now look for the match to the given URL.
+		foreach ($this->compiledProtocolSchemeMap as $entry) {
+			if (preg_match($entry['compiled-pattern'], $url)) {
+				$result = $entry['protocol'];
+			}
+		}
+		return $result;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public function getEngineRoot() {
 		$obj = new \ReflectionClass($this);
 		return dirname($obj->getFileName());
@@ -307,13 +357,39 @@ abstract class AbstractEngine implements EngineInterface {
 	public function getModule($name) {
 		$name = NameUtilities::convertToStudlyCaps($name);
 		if (!isset($this->modules[$name])) {
-			$this->modules[$name] = $this->createModule($name);
-			$this->modules[$name]->start();
+			$module = $this->createModule($name);
+			$module->start();
+			$this->getViewFactory()->getResourcesManager()->registerMap($this->normaliseResourceMap($module->getResourceMap()));
+			$this->modules[$name] = $module;
 		}
 		return $this->modules[$name];
 	}
 
 	//-- Internal Methods --------------------
+
+	/**
+	 * Perform the internal bootstrap sequence
+	 *
+	 * @param \Symfony\Component\HttpFoundation\Request $request
+	 *
+	 * @return null|\Symfony\Component\HttpFoundation\Response
+	 */
+	protected function bootstrap(Request $request) {
+		$response = null;
+		// Detect redirection based on protocol.
+		$requiredProtocolScheme = $this->getProtocolSchemeForUrl(ltrim($request->getPathInfo(), '/'));
+		if (!is_null($requiredProtocolScheme) && $this->getCurrentProtocolScheme() !== $requiredProtocolScheme) {
+			$response = new RedirectResponse(sprintf('%s://%s%s%s', $requiredProtocolScheme, $request->getHttpHost(), $request->getBasePath(), $request->getPathInfo()));
+		}
+		// Bootstrap module sequence.
+		foreach ($this->getBootstrapModuleSequence() as $name) {
+			if (is_null($response)) {
+				$module = $this->getModule($name); /** @var \Sitegear\Base\Module\BootstrapModuleInterface $module */
+				$response = $module->bootstrap($request);
+			}
+		}
+		return $response;
+	}
 
 	/**
 	 * Instantiate a module instance for this engine.
@@ -360,6 +436,20 @@ abstract class AbstractEngine implements EngineInterface {
 	protected abstract function getRawTemplateMap();
 
 	/**
+	 * Get the protocol preference used by default.
+	 *
+	 * @return string|null Either 'http' or 'https', or null to indicate no default protocol preference.
+	 */
+	protected abstract function getDefaultProtocolScheme();
+
+	/**
+	 * Get the original (uncompiled) protocol scheme mappings according to implementation.
+	 *
+	 * @return array[] Array of key-value arrays, where the keys are "pattern", "protocol" and optionally "regex".
+	 */
+	protected abstract function getRawProtocolSchemeMap();
+
+	/**
 	 * Get a flat list of class names implementing \Sitegear\Base\View\Renderer\RendererInterface.
 	 *
 	 * @return string[]
@@ -381,10 +471,12 @@ abstract class AbstractEngine implements EngineInterface {
 	protected abstract function getResourceTypeMap();
 
 	/**
-	 * Get a map of resource names to resource descriptor maps.
+	 * Normalise the raw resource map returned by the `getResourceMap()` in this class and in
 	 *
-	 * @return string[]
+	 * @param array $resources
+	 *
+	 * @return array
 	 */
-	protected abstract function getResourceMap();
+	protected abstract function normaliseResourceMap($resources);
 
 }

@@ -17,11 +17,16 @@ return array(
 	 */
 	'script:vendor:jquery' => array(
 		'type' => 'script',
-		'url' => '{{ config:system.command-url.root }}/{{ config:system.command-url.resources }}/engine/jquery/jquery-1.9.1.js',
-		'cdn-url' => array(
-			'default' => 'http://code.jquery.com/jquery-1.9.1.min.js',
+		'url' => array(
+			'default' => '{{ config:system.command-url.root }}/{{ config:system.command-url.resources }}/engine/jquery/jquery-1.9.1.js',
 			'overrides' => array(
-				'development' => 'http://code.jquery.com/jquery-1.9.1.js'
+				'development' => '{{ config:system.command-url.root }}/{{ config:system.command-url.resources }}/engine/jquery/jquery-1.9.1.min.js'
+			)
+		),
+		'cdn-url' => array(
+			'default' => '{{ engine:getCurrentProtocolScheme() }}://code.jquery.com/jquery-1.9.1.min.js',
+			'overrides' => array(
+				'development' => '{{ engine:getCurrentProtocolScheme() }}://code.jquery.com/jquery-1.9.1.js'
 			)
 		)
 	),
@@ -31,11 +36,16 @@ return array(
 	 */
 	'script:vendor:jquery-ui' => array(
 		'type' => 'script',
-		'url' => '{{ config:system.command-url.root }}/{{ config:system.command-url.resources }}/engine/jquery/ui/jquery-ui-1.10.1.custom.js',
-		'cdn-url' => array(
-			'default' => 'http://code.jquery.com/ui/1.10.1/jquery-ui.min.js',
+		'url' => array(
+			'default' => '{{ config:system.command-url.root }}/{{ config:system.command-url.resources }}/engine/jquery/ui/jquery-ui.js',
 			'overrides' => array(
-				'development' => 'http://code.jquery.com/ui/1.10.1/jquery-ui.js'
+				'development' => '{{ config:system.command-url.root }}/{{ config:system.command-url.resources }}/engine/jquery/ui/jquery-ui.js'
+			)
+		),
+		'cdn-url' => array(
+			'default' => '{{ engine:getCurrentProtocolScheme() }}://code.jquery.com/ui/1.10.1/jquery-ui.min.js',
+			'overrides' => array(
+				'development' => '{{ engine:getCurrentProtocolScheme() }}://code.jquery.com/ui/1.10.1/jquery-ui.js'
 			)
 		),
 		'requires' => array(
@@ -49,13 +59,8 @@ return array(
 	 */
 	'styles:vendor:jquery-ui' => array(
 		'type' => 'styles',
-		'url' => '{{ config:system.command-url.root }}/{{ config:system.command-url.resources }}/engine/jquery/ui/jquery-ui-1.10.1.custom.css',
-		'cdn-url' => array(
-			'default' => 'http://code.jquery.com/ui/1.10.1/jquery-ui.min.css',
-			'overrides' => array(
-				'development' => 'http://code.jquery.com/ui/1.10.1/jquery-ui.css'
-			)
-		)
+		'url' => '{{ config:system.command-url.root }}/{{ config:system.command-url.resources }}/engine/jquery/ui/1.10.1/jquery-ui.css',
+		'cdn-url' => '{{ engine:getCurrentProtocolScheme() }}://code.jquery.com/ui/1.10.1/themes/base/jquery-ui.css'
 	),
 
 	/**
@@ -64,6 +69,9 @@ return array(
 	'script:vendor:cookie' => array(
 		'type' => 'script',
 		'url' => '{{ config:system.command-url.root }}/{{ config:system.command-url.resources }}/engine/jquery/cookie/jquery.cookie.js',
+		'cdn-url' => array(
+			'default' => '{{ engine:getCurrentProtocolScheme() }}://cdn.jsdelivr.net/jquery.cookie/1.3.1/jquery.cookie.js'
+		),
 		'requires' => array(
 			'script:vendor:jquery'
 		)

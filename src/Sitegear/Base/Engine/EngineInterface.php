@@ -28,6 +28,8 @@ interface EngineInterface extends ModuleResolverInterface, ModuleContainerInterf
 	 * Start the engine.
 	 *
 	 * @param \Symfony\Component\HttpFoundation\Request $request
+	 *
+	 * @return \Symfony\Component\HttpFoundation\Response|null Return a Response to prevent further processing.
 	 */
 	public function start(Request $request);
 
@@ -74,6 +76,8 @@ interface EngineInterface extends ModuleResolverInterface, ModuleContainerInterf
 	 */
 	public function getErrorRoute();
 
+	//-- Template Mapping Methods --------------------
+
 	/**
 	 * Get the template map, which is an indexed array of associative arrays, each consisting of "compiled-pattern" and
 	 * "template" keys.  The "compiled-pattern" values are regular expressions; these can be compiled from any original
@@ -98,6 +102,24 @@ interface EngineInterface extends ModuleResolverInterface, ModuleContainerInterf
 	 * @return string Template name.
 	 */
 	public function getErrorTemplate();
+
+	//-- Protocol Mapping Methods --------------------
+
+	/**
+	 * Get the protocol scheme being used for the current request.
+	 *
+	 * @return string Either 'http' or 'https'.
+	 */
+	public function getCurrentProtocolScheme();
+
+	/**
+	 * Get the protocol scheme that should be used for the given URL.
+	 *
+	 * @param string $url URL to get the protocol scheme for.
+	 *
+	 * @return string|null Either 'http' or 'https', or null to indicate that protocol preference.
+	 */
+	public function getProtocolSchemeForUrl($url);
 
 	//-- Rendering Methods --------------------
 
@@ -194,5 +216,12 @@ interface EngineInterface extends ModuleResolverInterface, ModuleContainerInterf
 	 * @return \Sitegear\Base\Info\SitegearInfoProviderInterface
 	 */
 	public function getSitegearInfo();
+
+	/**
+	 * Get a map of resource names to resource descriptor maps.
+	 *
+	 * @return string[]
+	 */
+	public function getResourceMap();
 
 }
