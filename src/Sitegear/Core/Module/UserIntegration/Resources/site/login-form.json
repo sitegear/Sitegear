@@ -1,0 +1,57 @@
+{
+	"submit-button": "Login",
+	"fields": {
+		"return-url": {
+			"type": "input",
+			"settings": {
+				"type": "hidden"
+			}
+		},
+		"email": {
+			"type": "input",
+			"label": "Email",
+			"constraints": [
+				{
+					"name": "not-blank",
+					"options": {
+						"message": "Please provide your email address"
+					}
+				},
+				{
+					"name": "email"
+				}
+			]
+		},
+		"password": {
+			"type": "input",
+			"label": "Password",
+			"settings": {
+				"type": "password"
+			},
+			"constraints": [
+				{
+					"name": "not-blank",
+					"options": {
+						"message": "Please type your password"
+					}
+				}
+			]
+		}
+	},
+	"steps": [
+		{
+			"fieldsets": [
+				{
+					"fields": [
+						{
+							"field": "return-url",
+							"wrapper": false
+						},
+						"email",
+						"password"
+					]
+				}
+			]
+		}
+	]
+}

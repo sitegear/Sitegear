@@ -9,7 +9,9 @@
 namespace Sitegear\Core\Module\UserIntegration;
 
 use Sitegear\Base\Module\AbstractUrlMountableModule;
+use Sitegear\Base\Resources\ResourceLocations;
 use Sitegear\Base\View\ViewInterface;
+use Sitegear\Core\Form\Builder\FormBuilder;
 use Sitegear\Util\UrlUtilities;
 use Sitegear\Util\LoggerRegistry;
 
@@ -25,6 +27,13 @@ use Symfony\Component\Routing\Route;
  */
 class UserIntegrationModule extends AbstractUrlMountableModule {
 
+	//-- Constants --------------------
+
+	/**
+	 * Form key to use for the dynamic login form.
+	 */
+	const FORM_KEY_LOGIN = 'login';
+
 	//-- ModuleInterface Methods --------------------
 
 	/**
@@ -38,21 +47,26 @@ class UserIntegrationModule extends AbstractUrlMountableModule {
 
 	public function loginController(ViewInterface $view, Request $request) {
 		LoggerRegistry::debug('UserIntegrationModule::loginController');
+		$data = $request->request->all();
+		$errors = array();
 		if ($request->isMethod('post')) {
+			// TODO Validate form, populate $errors
 			$returnUrl = $request->request->get('return-url');
 			$userManager = $this->getEngine()->getUserManager();
 			// TODO Anything with this 'email'?  Constant?
 			if ($userManager->login($request->request->get('email'), $request->request->all())) {
 				return new RedirectResponse($returnUrl ?: $request->getBaseUrl());
 			} else {
-				$view['error-message'] = 'Invalid credentials supplied, please try again.';
+				$errors['email'] = array( 'Invalid credentials supplied, please try again.' );
 			}
 		} else {
 			$returnUrl = UrlUtilities::getReturnUrl($request->getUri());
+			$data['return-url'] = $returnUrl;
 		}
 		$this->applyConfigToView('pages.login', $view);
-		$view['return-url'] = $returnUrl;
-		$view['form-url'] = $this->getAuthenticationLinkUrl('login', $returnUrl);
+		$currentUrl = ltrim($request->getPathInfo(), '/');
+		$this->getEngine()->forms()->registerForm(self::FORM_KEY_LOGIN, $this->buildLoginForm($currentUrl, $currentUrl, $data, $errors));
+		$view['form-key'] = self::FORM_KEY_LOGIN;
 		return null;
 	}
 
@@ -122,6 +136,33 @@ class UserIntegrationModule extends AbstractUrlMountableModule {
 			$key
 		);
 		return UrlUtilities::generateLinkWithReturnUrl($url, $returnUrl);
+	}
+
+	//-- Internal Methods --------------------
+
+	/**
+	 * @param string $submitUrl
+	 * @param string $formUrl
+	 * @param array $data
+	 * @param array[] $errors
+	 *
+	 * @return \Sitegear\Base\Form\FormInterface
+	 */
+	private function buildLoginForm($submitUrl, $formUrl, array $data, array $errors) {
+		$formBuilder = new FormBuilder($this->getEngine());
+		$formDataFile = $this->getEngine()->getSiteInfo()->getSitePath(ResourceLocations::RESOURCE_LOCATION_MODULE, $this, 'login-form.json');
+		$valueCallback = function($name) use ($data) {
+			return isset($data[$name]) ? $data[$name] : null;
+		};
+		$errorsCallback = function($name) use ($errors) {
+			return isset($errors[$name]) ? $errors[$name] : null;
+		};
+		$options = array(
+			'submit-url' => $submitUrl,
+			'form-url' => $formUrl,
+			'constraint-label-markers' => $this->getEngine()->config('constraints.label-markers')
+		);
+		return $formBuilder->buildForm(json_decode(file_get_contents($formDataFile), true), $valueCallback, $errorsCallback, $options);
 	}
 
 }
