@@ -197,7 +197,6 @@ class FormBuilder implements FormBuilderInterface {
 	 */
 	private function buildProcessor(array $processorData) {
 		LoggerRegistry::debug('FormBuilder::buildProcessor()');
-		/** TODO Configurable processor class? */
 		return new ModuleProcessor(
 			$processorData['arguments'],
 			$this->engine->getModule($processorData['module']),

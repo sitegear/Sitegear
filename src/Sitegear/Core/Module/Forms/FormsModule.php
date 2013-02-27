@@ -237,7 +237,7 @@ class FormsModule extends AbstractUrlMountableModule {
 			$options = array_merge($this->config('form-builder'), array(
 				'form-url' => ltrim($request->getPathInfo(), '/'),
 				'submit-url' => sprintf('%s/form/%s', $this->getMountedUrl(), $formKey),
-				'constraint-label-markers' => $this->config('constraints.label-markers'),
+				'constraint-label-markers' => $this->config('constraints.label-markers')
 			));
 			$this->forms[$formKey] = $this->builder->buildForm($formData, $valueCallback, $errorsCallback, $options);
 		}
