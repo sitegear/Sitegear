@@ -59,7 +59,7 @@ return array(
 	 */
 	'styles:vendor:jquery-ui' => array(
 		'type' => 'styles',
-		'url' => '{{ config:system.command-url.root }}/{{ config:system.command-url.resources }}/engine/jquery/ui/1.10.1/jquery-ui.css',
+		'url' => '{{ config:system.command-url.root }}/{{ config:system.command-url.resources }}/engine/jquery/ui/jquery-ui.css',
 		'cdn-url' => '//code.jquery.com/ui/1.10.1/themes/base/jquery-ui.css'
 	),
 
