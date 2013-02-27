@@ -104,7 +104,18 @@ return array(
 	 */
 	'script:vendor:jstree' => array(
 		'type' => 'script',
-		'url' => '{{ config:system.command-url.root }}/{{ config:system.command-url.resources }}/engine/jquery/jstree/jquery.jstree.js',
+		'url' => array(
+			'default' => '{{ config:system.command-url.root }}/{{ config:system.command-url.resources }}/engine/jquery/jstree/jquery-jstree.js',
+			'overrides' => array(
+				'development' => '{{ config:system.command-url.root }}/{{ config:system.command-url.resources }}/engine/jquery/jstree/jquery-jstree-min.js'
+			)
+		),
+		'cdn-url' => array(
+			'default' => '//cachedcommons.org/cache/jquery-jstree/1.0.0/javascripts/jquery-jstree-min.js',
+			'overrides' => array(
+				'development' => '//cachedcommons.org/cache/jquery-jstree/1.0.0/javascripts/jquery-jstree.js'
+			)
+		),
 		'requires' => array(
 			'script:vendor:jquery-ui'
 		)
