@@ -21,6 +21,12 @@ final class ResourceLocations {
 	const RESOURCE_LOCATION_SITE = 'site';
 
 	/**
+	 * Specifies that a resource is provided by a third-party vendor and is located in the "vendor-resources"
+	 * dependency package directory.
+	 */
+	const RESOURCE_LOCATION_VENDOR = 'vendor';
+
+	/**
 	 * Specifies that a resource is in the engine scope.
 	 */
 	const RESOURCE_LOCATION_ENGINE = 'engine';

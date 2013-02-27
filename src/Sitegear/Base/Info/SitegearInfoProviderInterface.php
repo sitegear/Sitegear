@@ -51,8 +51,15 @@ interface SitegearInfoProviderInterface {
 	/**
 	 * Get the root file path of the Sitegear application framework source code (the "src" directory).
 	 *
-	 * @return mixed
+	 * @return string
 	 */
 	public function getSitegearRoot();
+
+	/**
+	 * Get the root file path of the Sitegear Vendor Resources package.
+	 *
+	 * @return string
+	 */
+	public function getSitegearVendorResourcesRoot();
 
 }

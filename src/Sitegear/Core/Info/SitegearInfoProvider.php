@@ -98,4 +98,12 @@ class SitegearInfoProvider implements SitegearInfoProviderInterface {
 		return dirname(dirname(dirname($this->engine->getEngineRoot())));
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	public function getSitegearVendorResourcesRoot() {
+		// TODO Can this be done in a way that is not so dependant on Composer's standard directory structure??
+		return $this->engine->getSiteInfo()->getSiteRoot() . '/vendor/sitegear/vendor-resources';
+	}
+
 }

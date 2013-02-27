@@ -103,6 +103,8 @@ class SiteInfoProvider implements SiteInfoProviderInterface {
 				// For the site level, the module name must be inserted
 				$resource = $module . '/' . $resource;
 				break;
+			case ResourceLocations::RESOURCE_LOCATION_VENDOR:
+				throw new \InvalidArgumentException('The "vendor" location identifier cannot be used for site paths');
 			case ResourceLocations::RESOURCE_LOCATION_MODULE:
 				if (is_string($module)) {
 					$module = $this->engine->getModule($module);
@@ -131,6 +133,9 @@ class SiteInfoProvider implements SiteInfoProviderInterface {
 		switch ($location) {
 			case ResourceLocations::RESOURCE_LOCATION_SITE:
 				$root = $this->getSiteRoot();
+				break;
+			case ResourceLocations::RESOURCE_LOCATION_VENDOR:
+				$root = $this->engine->getSitegearInfo()->getSitegearRoot();
 				break;
 			case ResourceLocations::RESOURCE_LOCATION_MODULE:
 				$root = sprintf('%s/%s', $this->engine->getModule($module)->getModuleRoot(), ResourceLocations::RESOURCES_DIRECTORY);

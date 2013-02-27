@@ -26,6 +26,18 @@ use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
  */
 class ResourcesIntegrationModule extends AbstractUrlMountableModule {
 
+	//-- Constants --------------------
+
+	/**
+	 * Special value for the "location" attribute representing the engine scope.
+	 */
+	const LOCATION_ATTRIBUTE_ENGINE = 'engine';
+
+	/**
+	 * Special value for the "location" attribute representing the vendor-resources package scope.
+	 */
+	const LOCATION_ATTRIBUTE_VENDOR = 'vendor';
+
 	//-- ModuleInterface Methods --------------------
 
 	/**
@@ -43,7 +55,16 @@ class ResourcesIntegrationModule extends AbstractUrlMountableModule {
 	public function resourceController(Request $request) {
 		LoggerRegistry::debug('ResourcesIntegrationModule::resourceController');
 		$location = $request->attributes->get('location');
-		$locationPath = ($location === 'engine') ? ResourceLocations::RESOURCE_LOCATION_ENGINE : ResourceLocations::RESOURCE_LOCATION_MODULE;
+		switch ($location) {
+			case self::LOCATION_ATTRIBUTE_ENGINE:
+				$locationPath = ResourceLocations::RESOURCE_LOCATION_ENGINE;
+				break;
+			case self::LOCATION_ATTRIBUTE_VENDOR:
+				$locationPath = ResourceLocations::RESOURCE_LOCATION_VENDOR;
+				break;
+			default:
+				$locationPath = ResourceLocations::RESOURCE_LOCATION_MODULE;
+		}
 		$path = $this->getEngine()->getSiteInfo()->getPublicPath($locationPath, $location, $request->attributes->get('path'));
 		if (!file_exists($path)) {
 			throw new FileNotFoundException($path);
