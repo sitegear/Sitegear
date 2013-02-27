@@ -17,6 +17,7 @@ use Sitegear\Util\NameUtilities;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\Route;
+use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
 
 /**
  * This module handles requests for all internal resources (/sitegear/resources/*).
@@ -44,6 +45,9 @@ class ResourcesIntegrationModule extends AbstractUrlMountableModule {
 		$location = $request->attributes->get('location');
 		$locationPath = ($location === 'engine') ? ResourceLocations::RESOURCE_LOCATION_ENGINE : ResourceLocations::RESOURCE_LOCATION_MODULE;
 		$path = $this->getEngine()->getSiteInfo()->getPublicPath($locationPath, $location, $request->attributes->get('path'));
+		if (!file_exists($path)) {
+			throw new FileNotFoundException($path);
+		}
 		return $this->getEngine()->createFileResponse($request, $path);
 	}
 
