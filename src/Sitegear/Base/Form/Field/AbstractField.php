@@ -115,9 +115,12 @@ abstract class AbstractField implements FieldInterface {
 
 	/**
 	 * {@inheritDoc}
+	 *
+	 * This implementation uses a default separator of a single whitespace character.
 	 */
-	public function getLabelMarkers($glue=null) {
-		return implode($glue ?: '', $this->labelMarkers);
+	public function getLabelMarkers($separator=null) {
+		$separator = $separator ?: ' ';
+		return $separator . implode($separator, $this->labelMarkers);
 	}
 
 	/**

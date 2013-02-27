@@ -22,9 +22,9 @@ class LabelElementRenderer extends AbstractElementRenderer {
 	 */
 	protected function startRendering(array $options) {
 		$field = $this->getElement()->getField();
-		$glue = isset($options['glue']) ? $options['glue'] : null;
+		$separator = isset($options['separator']) ? $options['separator'] : null;
 		return array(
-			sprintf('<label for="%s">%s%s</label>', $field->getName(), $field->getLabelText(), $field->getLabelMarkers($glue))
+			sprintf('<label for="%s">%s%s</label>', $field->getName(), $field->getLabelText(), $field->getLabelMarkers($separator))
 		);
 	}
 

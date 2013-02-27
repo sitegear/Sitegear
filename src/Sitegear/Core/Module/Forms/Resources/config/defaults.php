@@ -11,12 +11,14 @@
  */
 return array(
 
+	/**
+	 * Settings for constraints.
+	 */
 	'constraints' => array(
 		'label-markers' => array(
-			'not-blank' => ' <span class="required-marker">*</span>'
+			'not-blank' => '<span class="required-marker">*</span>'
 		)
 	),
-
 
 	/**
 	 * Processor conditions configuration.

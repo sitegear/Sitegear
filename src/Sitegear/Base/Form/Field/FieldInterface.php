@@ -52,11 +52,12 @@ interface FieldInterface {
 	 * Each marker indicates different validation requirements (along the lines of '* denotes a required field'); these
 	 * may be specified or introspected from the validators.
 	 *
-	 * @param string|null $glue
+	 * @param string|null $separator Text inserted before the first marker and between each marker.  If null, a default
+	 *   will be used.
 	 *
 	 * @return string HTML markers to display alongside the label as a single string.
 	 */
-	public function getLabelMarkers($glue=null);
+	public function getLabelMarkers($separator=null);
 
 	/**
 	 * @param string $labelMarker
