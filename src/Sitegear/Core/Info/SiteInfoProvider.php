@@ -135,7 +135,7 @@ class SiteInfoProvider implements SiteInfoProviderInterface {
 				$root = $this->getSiteRoot();
 				break;
 			case ResourceLocations::RESOURCE_LOCATION_VENDOR:
-				$root = $this->engine->getSitegearInfo()->getSitegearRoot();
+				$root = $this->engine->getSitegearInfo()->getSitegearVendorResourcesRoot();
 				break;
 			case ResourceLocations::RESOURCE_LOCATION_MODULE:
 				$root = sprintf('%s/%s', $this->engine->getModule($module)->getModuleRoot(), ResourceLocations::RESOURCES_DIRECTORY);
