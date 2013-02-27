@@ -248,13 +248,6 @@ abstract class AbstractEngine implements EngineInterface {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function getCurrentProtocolScheme() {
-		return $this->currentProtocolScheme;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
 	public function getProtocolSchemeForUrl($url) {
 		// Set the default result.
 		$result = $this->getDefaultProtocolScheme();
@@ -378,7 +371,7 @@ abstract class AbstractEngine implements EngineInterface {
 		$response = null;
 		// Detect redirection based on protocol.
 		$requiredProtocolScheme = $this->getProtocolSchemeForUrl(ltrim($request->getPathInfo(), '/'));
-		if (!is_null($requiredProtocolScheme) && $this->getCurrentProtocolScheme() !== $requiredProtocolScheme) {
+		if (!is_null($requiredProtocolScheme) && $request->getScheme() !== $requiredProtocolScheme) {
 			$response = new RedirectResponse(sprintf('%s://%s%s%s', $requiredProtocolScheme, $request->getHttpHost(), $request->getBasePath(), $request->getPathInfo()));
 		}
 		// Bootstrap module sequence.

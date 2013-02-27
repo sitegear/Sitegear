@@ -24,9 +24,9 @@ return array(
 			)
 		),
 		'cdn-url' => array(
-			'default' => '{{ engine:getCurrentProtocolScheme() }}://code.jquery.com/jquery-1.9.1.min.js',
+			'default' => '//code.jquery.com/jquery-1.9.1.min.js',
 			'overrides' => array(
-				'development' => '{{ engine:getCurrentProtocolScheme() }}://code.jquery.com/jquery-1.9.1.js'
+				'development' => '//code.jquery.com/jquery-1.9.1.js'
 			)
 		)
 	),
@@ -43,9 +43,9 @@ return array(
 			)
 		),
 		'cdn-url' => array(
-			'default' => '{{ engine:getCurrentProtocolScheme() }}://code.jquery.com/ui/1.10.1/jquery-ui.min.js',
+			'default' => '//code.jquery.com/ui/1.10.1/jquery-ui.min.js',
 			'overrides' => array(
-				'development' => '{{ engine:getCurrentProtocolScheme() }}://code.jquery.com/ui/1.10.1/jquery-ui.js'
+				'development' => '//code.jquery.com/ui/1.10.1/jquery-ui.js'
 			)
 		),
 		'requires' => array(
@@ -60,7 +60,7 @@ return array(
 	'styles:vendor:jquery-ui' => array(
 		'type' => 'styles',
 		'url' => '{{ config:system.command-url.root }}/{{ config:system.command-url.resources }}/engine/jquery/ui/1.10.1/jquery-ui.css',
-		'cdn-url' => '{{ engine:getCurrentProtocolScheme() }}://code.jquery.com/ui/1.10.1/themes/base/jquery-ui.css'
+		'cdn-url' => '//code.jquery.com/ui/1.10.1/themes/base/jquery-ui.css'
 	),
 
 	/**
@@ -70,7 +70,7 @@ return array(
 		'type' => 'script',
 		'url' => '{{ config:system.command-url.root }}/{{ config:system.command-url.resources }}/engine/jquery/cookie/jquery.cookie.js',
 		'cdn-url' => array(
-			'default' => '{{ engine:getCurrentProtocolScheme() }}://cdn.jsdelivr.net/jquery.cookie/1.3.1/jquery.cookie.js'
+			'default' => '//cdn.jsdelivr.net/jquery.cookie/1.3.1/jquery.cookie.js'
 		),
 		'requires' => array(
 			'script:vendor:jquery'

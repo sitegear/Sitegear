@@ -106,13 +106,6 @@ interface EngineInterface extends ModuleResolverInterface, ModuleContainerInterf
 	//-- Protocol Mapping Methods --------------------
 
 	/**
-	 * Get the protocol scheme being used for the current request.
-	 *
-	 * @return string Either 'http' or 'https'.
-	 */
-	public function getCurrentProtocolScheme();
-
-	/**
 	 * Get the protocol scheme that should be used for the given URL.
 	 *
 	 * @param string $url URL to get the protocol scheme for.
