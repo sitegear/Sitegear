@@ -12,7 +12,6 @@ use Sitegear\Base\Module\AbstractUrlMountableModule;
 use Sitegear\Base\Config\Processor\ArrayTokenProcessor;
 use Sitegear\Base\Config\Processor\ConfigTokenProcessor;
 use Sitegear\Base\Config\Container\SimpleConfigContainer;
-use Sitegear\Base\Engine\EngineInterface;
 use Sitegear\Base\Resources\ResourceLocations;
 use Sitegear\Base\View\ViewInterface;
 use Sitegear\Base\Form\FormInterface;
