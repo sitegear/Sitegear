@@ -67,6 +67,14 @@ return array(
 		 */
 		'reset-button' => false
 
+	),
+
+	/**
+	 * Details for the `FormRendererFactoryInterface` implementation.
+	 */
+	'form-renderer' => array(
+		'class' => '\\Sitegear\\Core\\Form\\Renderer\\Factory\\NamespaceFormRendererFactory',
+		'arguments' => array()
 	)
 
 );

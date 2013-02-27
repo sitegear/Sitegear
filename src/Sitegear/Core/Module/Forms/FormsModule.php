@@ -6,7 +6,7 @@
  * http://sitegear.org/
  */
 
-namespace Sitegear\Ext\Module\Forms;
+namespace Sitegear\Core\Module\Forms;
 
 use Sitegear\Base\Module\AbstractUrlMountableModule;
 use Sitegear\Base\Config\Processor\ArrayTokenProcessor;
@@ -17,7 +17,6 @@ use Sitegear\Base\Resources\ResourceLocations;
 use Sitegear\Base\View\ViewInterface;
 use Sitegear\Base\Form\FormInterface;
 use Sitegear\Base\Form\Field\FieldInterface;
-use Sitegear\Base\Form\Renderer\Factory\NamespaceFormRendererFactory;
 use Sitegear\Base\Form\Processor\FormProcessorInterface;
 use Sitegear\Core\Form\Builder\FormBuilder;
 use Sitegear\Util\NameUtilities;
@@ -185,7 +184,13 @@ class FormsModule extends AbstractUrlMountableModule {
 		LoggerRegistry::debug('FormsModule::formComponent');
 		$view['form'] = $this->getForm($formKey, $request);
 		$view['current-step'] = $this->getEngine()->getSession()->get($this->getSessionKey($formKey, 'step'), 0);
-		$view['renderer-factory'] = new NamespaceFormRendererFactory(); // TODO Configurable renderer factory??
+		$view['renderer-factory'] = TypeUtilities::buildTypeCheckedObject(
+			$this->config('form-renderer.class'),
+			'form renderer',
+			null,
+			'\\Sitegear\\Base\\Form\\Renderer\\Factory\\FormRendererFactoryInterface',
+			$this->config('form-renderer.arguments')
+		);
 		$this->getEngine()->getSession()->remove($this->getSessionKey($formKey, 'errors'));
 	}
 

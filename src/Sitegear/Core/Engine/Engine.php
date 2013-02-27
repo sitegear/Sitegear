@@ -39,6 +39,7 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
  * @method \Sitegear\Core\Module\Content\ContentModule content()
  * @method \Sitegear\Core\Module\Doctrine\DoctrineModule doctrine()
  * @method \Sitegear\Core\Module\File\FileModule file()
+ * @method \Sitegear\Core\Module\Forms\FormsModule forms()
  * @method \Sitegear\Core\Module\Navigation\NavigationModule navigation()
  * @method \Sitegear\Core\Module\ResourcesIntegration\ResourcesIntegrationModule resourcesIntegration()
  * @method \Sitegear\Core\Module\UserIntegration\UserIntegrationModule userIntegration()
@@ -47,7 +48,6 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
  * The following magic methods are defined for known extension modules:
  *
  * @method \Sitegear\Ext\Module\Customer\CustomerModule customer()
- * @method \Sitegear\Ext\Module\Forms\FormsModule forms()
  * @method \Sitegear\Ext\Module\Google\GoogleModule google()
  * @method \Sitegear\Ext\Module\Locations\LocationsModule locations()
  * @method \Sitegear\Ext\Module\MailChimp\MailChimpModule mailChimp()

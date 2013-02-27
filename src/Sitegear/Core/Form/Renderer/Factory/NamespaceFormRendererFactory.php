@@ -6,10 +6,11 @@
  * http://sitegear.org/
  */
 
-namespace Sitegear\Base\Form\Renderer\Factory;
+namespace Sitegear\Core\Form\Renderer\Factory;
 
 use Sitegear\Base\Form\Element\ElementInterface;
 use Sitegear\Base\Form\Field\FieldInterface;
+use Sitegear\Base\Form\Renderer\Factory\FormRendererFactoryInterface;
 
 /**
  * Implementation of FormRendererFactoryInterface which uses namespace convention to determine the relevant renderers
