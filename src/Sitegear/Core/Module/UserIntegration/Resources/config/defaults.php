@@ -11,6 +11,9 @@
  */
 return array(
 
+	/**
+	 * Component-specific settings.
+	 */
 	'components' => array(
 
 		/**
@@ -38,6 +41,9 @@ return array(
 		)
 	),
 
+	/**
+	 * Page-specific settings.
+	 */
 	'pages' => array(
 
 		'login' => array(
@@ -48,5 +54,37 @@ return array(
 			'submit-button-text' => 'Login'
 
 		)
+	),
+
+	/**
+	 * Settings for the login form.
+	 */
+	'login-form' => array(
+
+		/**
+		 * Form key for the login form.
+		 */
+		'key' => 'login',
+
+		/**
+		 * Filename of the login form, relative to the module root at either the site-specific or built-in level.
+		 */
+		'filename' => 'login-form.json'
+	),
+
+	/**
+	 * Error messages.
+	 */
+	'errors' => array(
+
+		/**
+		 * Error message when the login() method returns false to indicate failure.
+		 */
+		'login-failure' => 'Invalid username or password supplied, please check your credentials and try again',
+
+		/**
+		 * Error message when the logout() method returns false to indicate failure.
+		 */
+		'logout-failure' => 'Something went wrong logging you out, please try again'
 	)
 );

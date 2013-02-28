@@ -1,12 +1,6 @@
 {
 	"submit-button": "Login",
 	"fields": {
-		"return-url": {
-			"type": "input",
-			"settings": {
-				"type": "hidden"
-			}
-		},
 		"email": {
 			"type": "input",
 			"label": "Email",
@@ -43,10 +37,21 @@
 			"fieldsets": [
 				{
 					"fields": [
-						{
-							"field": "return-url",
-							"wrapper": false
-						},
+						"email",
+						"password"
+					]
+				}
+			],
+			"processors": [
+				{
+					"module": "user-integration",
+					"method": "performLogin",
+					"arguments": [
+						"{{ data:email }}",
+						"{{ data:* }}"
+					],
+					"exception-action": "fail",
+					"exception-field-names": [
 						"email",
 						"password"
 					]
