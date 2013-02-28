@@ -91,7 +91,7 @@ class LocationsModule extends AbstractUrlMountableModule {
 	 * @param \Sitegear\Base\View\ViewInterface $view
 	 */
 	public function indexController(ViewInterface $view) {
-		LoggerRegistry::debug('LocationsModule::indexController');
+		LoggerRegistry::debug('LocationsModule::indexController()');
 		$this->applyViewDefaults($view);
 		$this->applyConfigToView('page.index', $view);
 		$view['regions'] = new ArrayCollection($this->getRepository('Region')->findByParent(null));
@@ -104,7 +104,7 @@ class LocationsModule extends AbstractUrlMountableModule {
 	 * @param \Symfony\Component\HttpFoundation\Request $request
 	 */
 	public function regionController(ViewInterface $view, Request $request) {
-		LoggerRegistry::debug('LocationsModule::regionController');
+		LoggerRegistry::debug('LocationsModule::regionController()');
 		$this->applyViewDefaults($view);
 		$this->applyConfigToView('page.region', $view);
 		/** @var \Sitegear\Ext\Module\Locations\Model\Region $region */
@@ -123,7 +123,7 @@ class LocationsModule extends AbstractUrlMountableModule {
 	 * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
 	 */
 	public function itemController(ViewInterface $view, Request $request) {
-		LoggerRegistry::debug('LocationsModule::itemController');
+		LoggerRegistry::debug('LocationsModule::itemController()');
 		$this->applyViewDefaults($view);
 		$this->applyConfigToView('page.item', $view);
 		try {
@@ -140,7 +140,7 @@ class LocationsModule extends AbstractUrlMountableModule {
 	 * @param \Symfony\Component\HttpFoundation\Request $request
 	 */
 	public function searchController(ViewInterface $view, Request $request) {
-		LoggerRegistry::debug('LocationsModule::itemController');
+		LoggerRegistry::debug('LocationsModule::itemController()');
 		$this->applyViewDefaults($view);
 		$this->applyConfigToView('page.search', $view);
 		// TODO Another parameter, region, to restrict results to that region (and its children)
@@ -161,11 +161,11 @@ class LocationsModule extends AbstractUrlMountableModule {
 	 * The location search form.
 	 *
 	 * @param ViewInterface $view
-	 * @param Request $request
 	 * @param string|null $query Previous query, to populate the value.
 	 * @param string|null $radius Previous radius selection, to populate the selected option.
 	 */
-	public function searchFormComponent(ViewInterface $view, Request $request, $query=null, $radius=null) {
+	public function searchFormComponent(ViewInterface $view, $query=null, $radius=null) {
+		LoggerRegistry::debug('LocationsModule::searchFormComponent()');
 		$this->applyViewDefaults($view);
 		$this->applyConfigToView('component.search-form', $view);
 		$view['action-url'] = sprintf('%s/search', $this->getMountedUrl());
