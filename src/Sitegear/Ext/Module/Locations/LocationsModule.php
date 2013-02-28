@@ -9,6 +9,7 @@
 namespace Sitegear\Ext\Module\Locations;
 
 use Sitegear\Base\Module\AbstractUrlMountableModule;
+use Doctrine\Common\Collections\ArrayCollection;
 use Sitegear\Util\TokenUtilities;
 use Sitegear\Base\View\ViewInterface;
 use Sitegear\Util\LoggerRegistry;
@@ -93,7 +94,7 @@ class LocationsModule extends AbstractUrlMountableModule {
 		LoggerRegistry::debug('LocationsModule::indexController');
 		$this->applyViewDefaults($view);
 		$this->applyConfigToView('page.index', $view);
-		$view['regions'] = $this->getRepository('Region')->findByParent(null);
+		$view['regions'] = new ArrayCollection($this->getRepository('Region')->findByParent(null));
 	}
 
 	/**

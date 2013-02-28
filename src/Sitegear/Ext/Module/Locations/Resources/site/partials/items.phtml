@@ -6,7 +6,7 @@
  */
 $items = $view['items'];
 $excerptDecorator = sprintf('excerpt(%d, "%s")', $view['excerpt-length'], 'Region description not found.');
-if (empty($items)) {
+if ($items->count() === 0) {
 	echo $view->locations()->item(sprintf('partials/%s', $view['no-items'] ?: 'no-items'));
 } else {
 ?>
