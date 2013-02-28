@@ -194,9 +194,11 @@ class FormBuilder implements FormBuilderInterface {
 	private function buildProcessor(array $processorData) {
 		LoggerRegistry::debug('FormBuilder::buildProcessor()');
 		return new ModuleProcessor(
-			$processorData['arguments'],
 			$this->engine->getModule($processorData['module']),
-			$processorData['method']
+			$processorData['method'],
+			isset($processorData['arguments']) ? $processorData['arguments'] : array(),
+			isset($processorData['exception-field-names']) ? $processorData['exception-field-names'] : null,
+			isset($processorData['exception-action']) ? $processorData['exception-action'] : null
 		);
 	}
 

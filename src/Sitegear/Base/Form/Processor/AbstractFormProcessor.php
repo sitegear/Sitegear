@@ -20,10 +20,27 @@ abstract class AbstractFormProcessor implements FormProcessorInterface {
 	 */
 	private $argumentDefaults;
 
+	/**
+	 * @var string[]
+	 */
+	private $exceptionFieldNames;
+
+	/**
+	 * @var string
+	 */
+	private $exceptionAction;
+
 	//-- Constructor --------------------
 
-	public function __construct(array $argumentDefaults) {
+	/**
+	 * @param array $argumentDefaults
+	 * @param string[]|null $exceptionFieldNames
+	 * @param string|null $exceptionAction EXCEPTION_ACTION_RETHROW by default
+	 */
+	public function __construct(array $argumentDefaults=null, array $exceptionFieldNames=null, $exceptionAction=null) {
 		$this->argumentDefaults = $argumentDefaults ?: array();
+		$this->exceptionFieldNames = $exceptionFieldNames ?: array();
+		$this->exceptionAction = $exceptionAction ?: FormProcessorInterface::EXCEPTION_ACTION_RETHROW;
 	}
 
 	//-- FormProcessorInterface Methods --------------------
@@ -40,6 +57,36 @@ abstract class AbstractFormProcessor implements FormProcessorInterface {
 	 */
 	public function setArgumentDefaults(array $argumentDefaults) {
 		$this->argumentDefaults = $argumentDefaults;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function getExceptionFieldNames() {
+		return $this->exceptionFieldNames;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function setExceptionFieldNames(array $exceptionFieldNames) {
+		$this->exceptionFieldNames = $exceptionFieldNames;
+		return $this;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function getExceptionAction() {
+		return $this->exceptionAction;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function setExceptionAction($exceptionAction) {
+		$this->exceptionAction = $exceptionAction;
+		return $this;
 	}
 
 }

@@ -31,12 +31,14 @@ class ModuleProcessor extends AbstractFormProcessor {
 	//-- Constructor --------------------
 
 	/**
+	 * @param array|null $argumentDefaults
+	 * @param string[]|null $exceptionFieldNames
+	 * @param string|null $exceptionAction
 	 * @param \Sitegear\Base\Module\ModuleInterface $module
 	 * @param string $methodName
-	 * @param array|null $argumentDefaults
 	 */
-	public function __construct(array $argumentDefaults=null, ModuleInterface $module, $methodName) {
-		parent::__construct($argumentDefaults);
+	public function __construct(ModuleInterface $module, $methodName, array $argumentDefaults=null, array $exceptionFieldNames=null, $exceptionAction=null) {
+		parent::__construct($argumentDefaults, $exceptionFieldNames, $exceptionAction);
 		$this->module = $module;
 		$this->methodName = $methodName;
 	}
@@ -46,7 +48,7 @@ class ModuleProcessor extends AbstractFormProcessor {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function getCallable() {
+	public function getProcessorMethod() {
 		return array($this->getModule(), $this->getMethodName());
 	}
 
