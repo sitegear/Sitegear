@@ -14,6 +14,8 @@ return array(
 
 	/**
 	 * jQuery script.
+	 *
+	 * Use Google CDN; the jQuery source CDN does not support https: (certificate error).
 	 */
 	'script:vendor:jquery' => array(
 		'type' => 'script',
@@ -24,15 +26,17 @@ return array(
 			)
 		),
 		'cdn-url' => array(
-			'default' => '//code.jquery.com/jquery-1.9.1.min.js',
+			'default' => '//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js',
 			'overrides' => array(
-				'development' => '//code.jquery.com/jquery-1.9.1.js'
+				'development' => '//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js'
 			)
 		)
 	),
 
 	/**
 	 * jQueryUI script.
+	 *
+	 * Use Google CDN; the jQuery source CDN does not support https: (certificate error).
 	 */
 	'script:vendor:jquery-ui' => array(
 		'type' => 'script',
@@ -43,9 +47,9 @@ return array(
 			)
 		),
 		'cdn-url' => array(
-			'default' => '//code.jquery.com/ui/1.10.1/jquery-ui.min.js',
+			'default' => '//ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/jquery-ui.min.js',
 			'overrides' => array(
-				'development' => '//code.jquery.com/ui/1.10.1/jquery-ui.js'
+				'development' => '//ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/jquery-ui.js'
 			)
 		),
 		'requires' => array(
@@ -55,12 +59,14 @@ return array(
 	),
 
 	/**
-	 * jQueryUI CSS.
+	 * jQueryUI CSS (base theme).
+	 *
+	 * Use Google CDN; the jQuery source CDN does not support https: (certificate error).
 	 */
 	'styles:vendor:jquery-ui' => array(
 		'type' => 'styles',
 		'url' => '{{ config:system.command-url.root }}/{{ config:system.command-url.resources }}/vendor/jquery-ui/jquery-ui.css',
-		'cdn-url' => '//code.jquery.com/ui/1.10.1/themes/base/jquery-ui.css'
+		'cdn-url' => '//ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/themes/base/jquery-ui.css'
 	),
 
 	/**
