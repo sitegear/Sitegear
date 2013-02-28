@@ -101,7 +101,7 @@ class SiteInfoProvider implements SiteInfoProviderInterface {
 					$module = NameUtilities::convertToDashedLower($this->engine->getModuleName($module));
 				}
 				// For the site level, the module name must be inserted
-				$resource = $module . '/' . $resource;
+				$resource = sprintf('%s/%s', $module, $resource);
 				break;
 			case ResourceLocations::RESOURCE_LOCATION_VENDOR:
 				throw new \InvalidArgumentException('The "vendor" location identifier cannot be used for site paths');
