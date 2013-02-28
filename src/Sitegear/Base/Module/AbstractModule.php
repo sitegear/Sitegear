@@ -64,7 +64,7 @@ abstract class AbstractModule implements ModuleInterface {
 	 */
 	public function getModuleRoot() {
 		$obj = new \ReflectionClass($this);
-		return dirname($obj->getFileName()) . '/';
+		return dirname($obj->getFileName());
 	}
 
 	/**
