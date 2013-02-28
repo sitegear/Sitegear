@@ -88,6 +88,7 @@ class SessionUserManager extends AbstractUserManager {
 	public function logout() {
 		LoggerRegistry::debug('SessionUserManager logout');
 		$this->session->remove(self::SESSION_KEY_USER_EMAIL);
+		return true;
 	}
 
 }

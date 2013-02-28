@@ -50,6 +50,8 @@ interface UserManagerInterface {
 
 	/**
 	 * Ensure the user is logged out.
+	 *
+	 * @return boolean Whether or not logout was successful.
 	 */
 	public function logout();
 
