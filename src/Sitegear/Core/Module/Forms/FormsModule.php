@@ -44,6 +44,11 @@ class FormsModule extends AbstractUrlMountableModule {
 	private $builder;
 
 	/**
+	 * @var string[] Key-value array from form keys to file path of the data file for that form
+	 */
+	private $formDataPaths;
+
+	/**
 	 * @var FormInterface[]
 	 */
 	private $forms;
@@ -63,6 +68,7 @@ class FormsModule extends AbstractUrlMountableModule {
 	public function start() {
 		$this->builder = new FormBuilder($this->getEngine());
 		$this->forms = array();
+		$this->formDataPaths = array();
 	}
 
 	//-- AbstractUrlMountableModule Methods --------------------
@@ -191,6 +197,23 @@ class FormsModule extends AbstractUrlMountableModule {
 	//-- Public Methods --------------------
 
 	/**
+	 * Configure the specified form to load its data from the given data file.  This is usually done during the
+	 * bootstrap sequence, other modules should call this method to setup their forms for potential later use.
+	 *
+	 * @param $formKey
+	 * @param $path
+	 *
+	 * @throws \DomainException
+	 */
+	public function setFormPath($formKey, $path) {
+		LoggerRegistry::debug(sprintf('FormsModule::setFormPath(%s)', $formKey));
+		if (isset($this->forms[$formKey])) {
+			throw new \DomainException(sprintf('FormsModule cannot register path for form key "%s", form already exists', $formKey));
+		}
+		$this->formDataPaths[$formKey] = $path;
+	}
+
+	/**
 	 * Register the given form against the given key.  Registering the same form key twice is an error.
 	 *
 	 * @param string $formKey
@@ -221,7 +244,9 @@ class FormsModule extends AbstractUrlMountableModule {
 	public function getForm($formKey, Request $request) {
 		LoggerRegistry::debug(sprintf('FormsModule::getForm(%s)', $formKey));
 		if (!isset($this->forms[$formKey])) {
-			$path = $this->getEngine()->getSiteInfo()->getSitePath(ResourceLocations::RESOURCE_LOCATION_SITE, $this, sprintf('%s.json', $formKey));
+			$path = isset($this->formDataPaths[$formKey]) ?
+					$this->formDataPaths[$formKey] :
+					$this->getEngine()->getSiteInfo()->getSitePath(ResourceLocations::RESOURCE_LOCATION_SITE, $this, sprintf('%s.json', $formKey));
 			if (!file_exists($path)) {
 				throw new \InvalidArgumentException(sprintf('FormsModule received unknown form key "%s"', $formKey));
 			}
