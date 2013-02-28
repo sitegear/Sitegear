@@ -18,8 +18,10 @@ use Sitegear\Base\Form\FormInterface;
 use Sitegear\Base\Form\Field\FieldInterface;
 use Sitegear\Base\Form\Processor\FormProcessorInterface;
 use Sitegear\Core\Form\Builder\FormBuilder;
+use Sitegear\Util\UrlUtilities;
 use Sitegear\Util\NameUtilities;
 use Sitegear\Util\TypeUtilities;
+use Sitegear\Util\FileUtilities;
 use Sitegear\Util\LoggerRegistry;
 
 use Symfony\Component\HttpFoundation\Request;
@@ -44,7 +46,7 @@ class FormsModule extends AbstractUrlMountableModule {
 	private $builder;
 
 	/**
-	 * @var string[] Key-value array from form keys to file path of the data file for that form
+	 * @var string[][] Key-value array from form keys to array of file paths to try for the data file for that form.
 	 */
 	private $formDataPaths;
 
@@ -109,6 +111,7 @@ class FormsModule extends AbstractUrlMountableModule {
 		$form = $this->getForm($formKey, $request);
 		$formUrl = $request->getUriForPath('/' . $request->query->get('form-url', ''));
 		$targetUrl = null;
+		$response = null;
 		$currentStep = $request->request->get('step', 0);
 		$currentStepSessionKey = $this->getSessionKey($formKey, 'step');
 		$back = $request->request->get('back');
@@ -132,20 +135,38 @@ class FormsModule extends AbstractUrlMountableModule {
 			if ($valid = $this->validate($formKey, $fields, $data)) {
 				// No errors, so execute processors
 				foreach ($step->getProcessors() as $processor) {
-					$arguments = $this->parseProcessorArguments($processor, $data);
-					TypeUtilities::invokeCallable($processor->getCallable(), null, array( $request ), $arguments);
+					if (is_null($response)) {
+						$arguments = $this->parseProcessorArguments($processor, $data);
+						try {
+							$response = TypeUtilities::invokeCallable($processor->getProcessorMethod(), null, array( $request ), $arguments);
+						} catch (\RuntimeException $exception) {
+							$this->handleProcessorException($formKey, $processor, $exception);
+						}
+					}
 				}
-				// Redirect to the target URL, which is either the actual target-url, if the form is finished and there
-				// is one set, or to the form URL, or to the home page as a fallback
+			}
+			// Validation passed and all processors executed successfully (or any errors were ignored).
+			if ($valid) {
+				// Setup for redirection to the target URL, if one is set.
 				if (++$currentStep >= $form->getStepsCount()) {
 					$this->resetForm($formKey);
-					$targetUrl = $request->getUriForPath('/' . (!is_null($form->getTargetUrl()) ? $form->getTargetUrl() : ''));
+					if (!is_null($form->getTargetUrl())) {
+						$targetUrl = $request->getUriForPath('/' . $form->getTargetUrl());
+					}
 				} else {
 					$this->getEngine()->getSession()->set($currentStepSessionKey, $currentStep);
 				}
 			}
 		}
-		return new RedirectResponse($targetUrl ?: $formUrl);
+		// Return any of the following in order of preference: response returned by a processor method; redirection to
+		// the target URL; redirection to the return URL extracted from the form URL; the form URL; the home page.
+		if (is_null($response)) {
+			if (is_null($targetUrl) && !is_null($formUrl)) {
+				$targetUrl = UrlUtilities::getReturnUrl($formUrl) ?: $formUrl;
+			}
+			$response = new RedirectResponse($targetUrl ?: $request->getUriForPath(''));
+		}
+		return $response;
 	}
 
 	/**
@@ -191,10 +212,10 @@ class FormsModule extends AbstractUrlMountableModule {
 		$view['form'] = $this->getForm($formKey, $request);
 		$view['current-step'] = $this->getEngine()->getSession()->get($this->getSessionKey($formKey, 'step'), 0);
 		$view['renderer-factory'] = $this->createRendererFactory();
-		$this->getEngine()->getSession()->remove($this->getSessionKey($formKey, 'errors'));
+		$this->clearErrors($formKey);
 	}
 
-	//-- Public Methods --------------------
+	//-- Form Management Methods --------------------
 
 	/**
 	 * Configure the specified form to load its data from the given data file.  This is usually done during the
@@ -205,12 +226,15 @@ class FormsModule extends AbstractUrlMountableModule {
 	 *
 	 * @throws \DomainException
 	 */
-	public function setFormPath($formKey, $path) {
+	public function addFormPath($formKey, $path) {
 		LoggerRegistry::debug(sprintf('FormsModule::setFormPath(%s)', $formKey));
 		if (isset($this->forms[$formKey])) {
-			throw new \DomainException(sprintf('FormsModule cannot register path for form key "%s", form already exists', $formKey));
+			throw new \DomainException(sprintf('FormsModule cannot add form path for form key "%s", form already generated', $formKey));
 		}
-		$this->formDataPaths[$formKey] = $path;
+		if (!isset($this->formDataPaths[$formKey])) {
+			$this->formDataPaths[$formKey] = array();
+		}
+		$this->formDataPaths[$formKey][] = $path;
 	}
 
 	/**
@@ -244,25 +268,26 @@ class FormsModule extends AbstractUrlMountableModule {
 	public function getForm($formKey, Request $request) {
 		LoggerRegistry::debug(sprintf('FormsModule::getForm(%s)', $formKey));
 		if (!isset($this->forms[$formKey])) {
-			$path = isset($this->formDataPaths[$formKey]) ?
-					$this->formDataPaths[$formKey] :
-					$this->getEngine()->getSiteInfo()->getSitePath(ResourceLocations::RESOURCE_LOCATION_SITE, $this, sprintf('%s.json', $formKey));
-			if (!file_exists($path)) {
-				throw new \InvalidArgumentException(sprintf('FormsModule received unknown form key "%s"', $formKey));
+			// Use the first path that exists out of the paths configured with addFormPath(), plus the built-in default
+			$path = FileUtilities::firstExistingPath(array_merge(
+				isset($this->formDataPaths[$formKey]) ? $this->formDataPaths[$formKey] : array(),
+				array( $this->getEngine()->getSiteInfo()->getSitePath(ResourceLocations::RESOURCE_LOCATION_SITE, $this, sprintf('%s.json', $formKey)) )
+			));
+			if (is_null($path)) {
+				throw new \InvalidArgumentException(sprintf('FormsModule received form key "%s" with no available data file', $formKey));
 			}
 			$formData = json_decode(file_get_contents($path), true);
-			$me = $this;
-			$session = $me->getEngine()->getSession();
-			$valueCallback = function($name) use ($me, $session, $formKey) {
-				$values = $session->get($me->getSessionKey($formKey, 'values'));
+			$module = $this;
+			$valueCallback = function($name) use ($module, $formKey) {
+				$values = $module->getEngine()->getSession()->get($module->getSessionKey($formKey, 'values'));
 				return isset($values[$name]) ? $values[$name] : null;
 			};
-			$errorsCallback = function($name) use ($me, $session, $formKey) {
-				$errors = $session->get($me->getSessionKey($formKey, 'errors'));
+			$errorsCallback = function($name) use ($module, $formKey) {
+				$errors = $module->getEngine()->getSession()->get($module->getSessionKey($formKey, 'errors'));
 				return isset($errors[$name]) ? $errors[$name] : array();
 			};
 			$options = array_merge($this->config('form-builder'), array(
-				'form-url' => ltrim($request->getPathInfo(), '/'),
+				'form-url' => sprintf('%s?%s', ltrim($request->getPathInfo(), '/'), $request->getQueryString()),
 				'submit-url' => sprintf('%s/form/%s', $this->getMountedUrl(), $formKey),
 				'constraint-label-markers' => $this->config('constraints.label-markers')
 			));
@@ -278,10 +303,9 @@ class FormsModule extends AbstractUrlMountableModule {
 	 */
 	public function resetForm($formKey) {
 		LoggerRegistry::debug(sprintf('FormsModule::resetForm(%s)', $formKey));
-		$session = $this->getEngine()->getSession();
-		$session->remove($this->getSessionKey($formKey, 'step'));
-		$session->remove($this->getSessionKey($formKey, 'values'));
-		$session->remove($this->getSessionKey($formKey, 'errors'));
+		$this->getEngine()->getSession()->remove($this->getSessionKey($formKey, 'step'));
+		$this->clearValues($formKey);
+		$this->clearErrors($formKey);
 	}
 
 	/**
@@ -312,10 +336,151 @@ class FormsModule extends AbstractUrlMountableModule {
 				}
 				$errors[$fieldName][] = $violation->getMessage();
 			}
-			$session = $this->getEngine()->getSession();
-			$session->set($this->getSessionKey($formKey, 'errors'), $errors);
+			$this->getEngine()->getSession()->set($this->getSessionKey($formKey, 'errors'), $errors);
 		}
 		return $valid;
+	}
+
+	//-- Form Accessor Methods --------------------
+
+	/**
+	 * Retrieve the currently set values for the given form.
+	 *
+	 * @param string $formKey
+	 *
+	 * @return array
+	 */
+	public function getValues($formKey) {
+		return $this->getEngine()->getSession()->get($this->getSessionKey($formKey, 'values'));
+	}
+
+	/**
+	 * Manually override the form values for the given form.
+	 *
+	 * @param string $formKey
+	 * @param array $values
+	 */
+	public function setValues($formKey, array $values) {
+		$this->getEngine()->getSession()->set($this->getSessionKey($formKey, 'values'), $values);
+	}
+
+	/**
+	 * Manually remove all form values from the given form.
+	 *
+	 * @param string $formKey
+	 */
+	public function clearValues($formKey) {
+		$this->getEngine()->getSession()->remove($this->getSessionKey($formKey, 'values'));
+	}
+
+	/**
+	 * Retrieve a single specified field value from the specified form.
+	 *
+	 * @param string $formKey
+	 * @param string $fieldName
+	 *
+	 * @return mixed|null Value, or null if no such value is set.
+	 */
+	public function getFieldValue($formKey, $fieldName) {
+		$values = $this->getValues($formKey);
+		return isset($values[$fieldName]) ? $values[$fieldName] : null;
+	}
+
+	/**
+	 * Override a single specified field value from the specified form with the given value.
+	 *
+	 * @param string $formKey
+	 * @param string $fieldName
+	 * @param mixed $value
+	 */
+	public function setFieldValue($formKey, $fieldName, $value) {
+		$values = $this->getValues($formKey);
+		$values[$fieldName] = $value;
+		$this->setValues($formKey, $values);
+	}
+
+	/**
+	 * Retrieve the errors currently set for the given form key.
+	 *
+	 * @param string $formKey
+	 *
+	 * @return array[]
+	 */
+	public function getErrors($formKey) {
+		return $this->getEngine()->getSession()->get($this->getSessionKey($formKey, 'errors'));
+	}
+
+	/**
+	 * Manually override the given errors for the specified form.
+	 *
+	 * @param string $formKey
+	 * @param array $errors
+	 */
+	public function setErrors($formKey, array $errors) {
+		$this->getEngine()->getSession()->set($this->getSessionKey($formKey, 'errors'), $errors);
+	}
+
+	/**
+	 * Manually remove all errors for the specified form.
+	 *
+	 * @param string $formKey
+	 */
+	public function clearErrors($formKey) {
+		$this->getEngine()->getSession()->remove($this->getSessionKey($formKey, 'errors'));
+	}
+
+	/**
+	 * Get the errors, if any, for the specified field in the specified form.
+	 *
+	 * @param string $formKey
+	 * @param string $fieldName
+	 *
+	 * @return string[]
+	 */
+	public function getFieldErrors($formKey, $fieldName) {
+		$errors = $this->getErrors($formKey);
+		return isset($errors[$fieldName]) ? $errors[$fieldName] : array();
+	}
+
+	/**
+	 * Manually override the field errors for a single field in the specified form.
+	 *
+	 * @param string $formKey
+	 * @param string $fieldName
+	 * @param string[] $fieldErrors
+	 */
+	public function setFieldErrors($formKey, $fieldName, array $fieldErrors) {
+		$errors = $this->getErrors($formKey);
+		$errors[$fieldName] = $fieldErrors;
+		$this->setErrors($formKey, $errors);
+	}
+
+	/**
+	 * Add an error to the specified field in the specified form.
+	 *
+	 * @param string $formKey
+	 * @param string $fieldName
+	 * @param string $error
+	 */
+	public function addFieldError($formKey, $fieldName, $error) {
+		$errors = $this->getErrors($formKey);
+		if (!isset($errors[$fieldName])) {
+			$errors[$fieldName] = array();
+		}
+		$errors[$fieldName][] = $error;
+		$this->setErrors($formKey, $errors);
+	}
+
+	/**
+	 * Manually remove all errors from the specified field in the specified form.
+	 *
+	 * @param string $formKey
+	 * @param string $fieldName
+	 */
+	public function clearFieldErrors($formKey, $fieldName) {
+		$errors = $this->getErrors($formKey);
+		unset($errors[$fieldName]);
+		$this->setErrors($formKey, $errors);
 	}
 
 	//-- Internal Methods --------------------
@@ -377,6 +542,35 @@ class FormsModule extends AbstractUrlMountableModule {
 		$argumentsContainer->addProcessor(new ArrayTokenProcessor($data, 'data'));
 		$argumentsContainer->merge($processor->getArgumentDefaults());
 		return $argumentsContainer->get('');
+	}
+
+	/**
+	 * Handle the given exception, which was raised by the given processor.
+	 *
+	 * @param string $formKey
+	 * @param \Sitegear\Base\Form\Processor\FormProcessorInterface $processor
+	 * @param \RuntimeException $exception
+	 *
+	 * @return boolean
+	 *
+	 * @throws \RuntimeException
+	 */
+	protected function handleProcessorException($formKey, FormProcessorInterface $processor, \RuntimeException $exception) {
+		$result = true;
+		foreach ($processor->getExceptionFieldNames() as $fieldName) {
+			$this->addFieldError($formKey, $fieldName, $exception->getMessage());
+		}
+		switch ($processor->getExceptionAction()) {
+			case FormProcessorInterface::EXCEPTION_ACTION_RETHROW:
+				throw $exception;
+				break;
+			case FormProcessorInterface::EXCEPTION_ACTION_FAIL:
+				$result = false;
+				break;
+			case FormProcessorInterface::EXCEPTION_ACTION_IGNORE:
+				break;
+		}
+		return $result;
 	}
 
 	/**
