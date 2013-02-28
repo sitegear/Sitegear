@@ -119,12 +119,12 @@ class NavigationModule extends AbstractConfigurableModule {
 	 * @return boolean
 	 */
 	public function isCurrentOrAncestorUrl($url, $markUrl) {
-		$result = false;
+		$result = true;
 		$data = $this->getData(MountableModuleInterface::NAVIGATION_DATA_MODE_EXPANDED);
 		$urlPath = $this->getNavigationPath($url, $data);
 		$markUrlPath = $this->getNavigationPath($markUrl, $data);
 		foreach ($markUrlPath ?: array() as $elem) {
-			$result = $result || (array_shift($urlPath) === $elem);
+			$result = $result && (array_shift($urlPath) === $elem);
 		}
 		return $result && empty($urlPath);
 	}
