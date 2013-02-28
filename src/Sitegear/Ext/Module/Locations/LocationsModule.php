@@ -9,9 +9,8 @@
 namespace Sitegear\Ext\Module\Locations;
 
 use Sitegear\Base\Module\AbstractUrlMountableModule;
-use Doctrine\Common\Collections\ArrayCollection;
-use Sitegear\Util\TokenUtilities;
 use Sitegear\Base\View\ViewInterface;
+use Sitegear\Util\TokenUtilities;
 use Sitegear\Util\LoggerRegistry;
 
 use Symfony\Component\HttpFoundation\Request;
@@ -20,6 +19,7 @@ use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 use Doctrine\ORM\NoResultException;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * LocationsModule allows display and management of geographical locations.  By default, it requires GoogleModule for
