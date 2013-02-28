@@ -47,7 +47,7 @@ interface ModuleInterface {
 	/**
 	 * Get the root file path of the module, which is the path containing the final implementation of this interface.
 	 *
-	 * @return string Path, always ends with a trailing slash ('/').
+	 * @return string Path, never ends with a trailing slash ('/').
 	 */
 	public function getModuleRoot();
 
