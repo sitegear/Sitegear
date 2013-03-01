@@ -1,10 +1,9 @@
 <?php
 /**
  * @var \Sitegear\Core\View\View $view
- *
- * TODO Use forms module?
  */
-?>
+echo $view->forms()->form('location-search');
+/*
 <form name="location-search-form" id="location-search-form" action="<?php echo $view['action-url']; ?>" method="get">
 	<fieldset>
 		<div class="field" id="location-input-field">
@@ -30,3 +29,4 @@ foreach ($view['radius-options'] as $radiusOption) {
 		<input type="submit" value="Search" />
 	</div>
 </form>
+*/

@@ -199,6 +199,23 @@ return array(
 				)
 			)
 		)
+	),
+
+	/**
+	 * Settings for the location search form.
+	 */
+	'location-search-form' => array(
+
+		/**
+		 * Form key for the search form.
+		 */
+		'key' => 'location-search',
+
+		/**
+		 * Filename of the search form, relative to the module root at either the site-specific or built-in level.
+		 */
+		'filename' => 'location-search-form.json'
+
 	)
 
 );

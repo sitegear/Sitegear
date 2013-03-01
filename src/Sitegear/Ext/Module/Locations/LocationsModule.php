@@ -9,6 +9,7 @@
 namespace Sitegear\Ext\Module\Locations;
 
 use Sitegear\Base\Module\AbstractUrlMountableModule;
+use Sitegear\Base\Resources\ResourceLocations;
 use Sitegear\Base\View\ViewInterface;
 use Sitegear\Util\TokenUtilities;
 use Sitegear\Util\LoggerRegistry;
@@ -49,6 +50,14 @@ class LocationsModule extends AbstractUrlMountableModule {
 	 * {@inheritDoc}
 	 */
 	public function start() {
+		parent::start();
+		// Register "location-search" form.
+		$filename = $this->config('location-search-form.filename');
+		$this->getEngine()->forms()->addFormPath($this->config('location-search-form.key'), array(
+			$this->getEngine()->getSiteInfo()->getSitePath(ResourceLocations::RESOURCE_LOCATION_SITE, $this, $filename),
+			$this->getEngine()->getSiteInfo()->getSitePath(ResourceLocations::RESOURCE_LOCATION_MODULE, $this, $filename)
+		));
+		// Setup Doctrine.
 		$this->getEngine()->doctrine()->getEntityManager()->getConfiguration()->addEntityNamespace(self::ENTITY_ALIAS, '\\Sitegear\\Ext\\Module\\Locations\\Model');
 	}
 
@@ -152,7 +161,7 @@ class LocationsModule extends AbstractUrlMountableModule {
 		);
 		$location = $this->getEngine()->google()->geocodeLocation($query);
 		$radius = $request->query->get('radius', $this->getDefaultRadius());
-		$view['items'] = $this->getRepository('Item')->findInRadius($location, $radius);
+		$view['items'] = new ArrayCollection($this->getRepository('Item')->findInRadius($location, $radius));
 	}
 
 	//-- Component Controller Methods --------------------
