@@ -137,7 +137,6 @@ class FormsModule extends AbstractUrlMountableModule {
 	 */
 	public function formController(Request $request) {
 		LoggerRegistry::debug('FormsModule::formController()');
-
 		// Get the form and submission details
 		$formKey = $request->attributes->get('slug');
 		$form = $this->getForm($formKey, $request);
@@ -149,12 +148,10 @@ class FormsModule extends AbstractUrlMountableModule {
 		$availableSteps = $this->getAvailableSteps($formKey);
 		$step = $form->getStep($currentStep);
 		$fields = $step->getRootElement()->getAncestorFields();
-		$data = $form->getMethod() === 'GET' ? $request->query->all() : $request->request->all();
-		unset($data['back']);
-
+		$values = $form->getMethod() === 'GET' ? $request->query->all() : $request->request->all();
+		unset($values['back']);
 		// Set the values into the session so they can be displayed after redirecting, and clear previous errors.
-		$this->setValues($formKey, array_merge($this->getValues($formKey), $data));
-
+		$this->setValues($formKey, array_merge($this->getValues($formKey), $values));
 		if ($back) {
 			// The "back" button was clicked, try to go back a step.  No validation is necessary.
 			$nextStep = $currentStep - 1;
@@ -166,11 +163,11 @@ class FormsModule extends AbstractUrlMountableModule {
 		} else {
 			// The regular submit button was clicked, try to go to the next step; run validation and processors.
 			$nextStep = $currentStep + 1;
-			if ($valid = $this->validate($formKey, $fields, $data)) {
+			if ($valid = $this->validate($formKey, $fields, $values)) {
 				// No errors, so execute processors.
 				foreach ($step->getProcessors() as $processor) {
 					if (is_null($response)) {
-						$arguments = $this->parseProcessorArguments($processor, $data);
+						$arguments = $this->parseProcessorArguments($processor, $values);
 						try {
 							$response = TypeUtilities::invokeCallable($processor->getProcessorMethod(), null, array( $request ), $arguments);
 						} catch (\RuntimeException $exception) {
