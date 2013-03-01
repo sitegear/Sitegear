@@ -163,7 +163,7 @@ class FormsModule extends AbstractUrlMountableModule {
 		} else {
 			// The regular submit button was clicked, try to go to the next step; run validation and processors.
 			$nextStep = $currentStep + 1;
-			if ($valid = $this->validate($formKey, $fields, $values)) {
+			if ($valid = $this->validateForm($formKey, $fields, $values)) {
 				// No errors, so execute processors.
 				foreach ($step->getProcessors() as $processor) {
 					if (is_null($response)) {
@@ -406,7 +406,7 @@ class FormsModule extends AbstractUrlMountableModule {
 	 * @return boolean|\Symfony\Component\Validator\ConstraintViolationListInterface True if the data is valid, or a
 	 *   list of violations.
 	 */
-	public function validate($formKey, array $fields, array $data) {
+	public function validateForm($formKey, array $fields, array $data) {
 		LoggerRegistry::debug(sprintf('FormsModule::validate(%s)', $formKey));
 		$validator = Validation::createValidator();
 		$constraints = $this->getConstraints($fields);
