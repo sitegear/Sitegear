@@ -117,7 +117,7 @@ class FormsModule extends AbstractUrlMountableModule {
 		$back = $request->request->get('back');
 		$step = $form->getStep($currentStep);
 		$fields = $step->getRootElement()->getAncestorFields();
-		$data = $request->request->all();
+		$data = $form->getMethod() === 'GET' ? $request->query->all() : $request->request->all();
 		unset($data['step']);
 		unset($data['back']);
 
