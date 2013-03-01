@@ -38,14 +38,15 @@ class UserIntegrationModule extends AbstractUrlMountableModule {
 
 	/**
 	 * {@inheritDoc}
-	 *
-	 * Register the 'login' form.
 	 */
 	public function start() {
 		parent::start();
+		// Register "login" form.
 		$filename = $this->config('login-form.filename');
-		$this->getEngine()->forms()->addFormPath($this->config('login-form.key'), $this->getEngine()->getSiteInfo()->getSitePath(ResourceLocations::RESOURCE_LOCATION_SITE, $this, $filename));
-		$this->getEngine()->forms()->addFormPath($this->config('login-form.key'), $this->getEngine()->getSiteInfo()->getSitePath(ResourceLocations::RESOURCE_LOCATION_MODULE, $this, $filename));
+		$this->getEngine()->forms()->addFormPath($this->config('login-form.key'), array(
+			$this->getEngine()->getSiteInfo()->getSitePath(ResourceLocations::RESOURCE_LOCATION_SITE, $this, $filename),
+			$this->getEngine()->getSiteInfo()->getSitePath(ResourceLocations::RESOURCE_LOCATION_MODULE, $this, $filename)
+		));
 	}
 
 	//-- MountableModuleInterface Methods --------------------
