@@ -143,12 +143,12 @@ class FormsModule extends AbstractUrlMountableModule {
 		$formUrl = $request->getUriForPath('/' . $request->query->get('form-url', ''));
 		$targetUrl = null;
 		$response = null;
-		$back = $request->request->get('back');
 		$currentStep = $this->getCurrentStep($formKey);
 		$availableSteps = $this->getAvailableSteps($formKey);
 		$step = $form->getStep($currentStep);
 		$fields = $step->getRootElement()->getAncestorFields();
 		$values = $form->getMethod() === 'GET' ? $request->query->all() : $request->request->all();
+		$back = isset($values['back']) ? $values['back'] : false;
 		unset($values['back']);
 		// Set the values into the session so they can be displayed after redirecting.
 		$this->setValues($formKey, array_merge($this->getValues($formKey), $values));
