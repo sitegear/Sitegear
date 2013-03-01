@@ -133,6 +133,7 @@ class FormsModule extends AbstractUrlMountableModule {
 	 * @return \Symfony\Component\HttpFoundation\RedirectResponse
 	 *
 	 * @throws \RuntimeException
+	 * @throws \OutOfBoundsException
 	 */
 	public function formController(Request $request) {
 		LoggerRegistry::debug('FormsModule::formController()');
@@ -144,7 +145,9 @@ class FormsModule extends AbstractUrlMountableModule {
 		$targetUrl = null;
 		$response = null;
 		$back = $request->request->get('back');
-		$step = $form->getStep($this->getCurrentStep($formKey));
+		$currentStep = $this->getCurrentStep($formKey);
+		$availableSteps = $this->getAvailableSteps($formKey);
+		$step = $form->getStep($currentStep);
 		$fields = $step->getRootElement()->getAncestorFields();
 		$data = $form->getMethod() === 'GET' ? $request->query->all() : $request->request->all();
 		unset($data['back']);
@@ -153,13 +156,18 @@ class FormsModule extends AbstractUrlMountableModule {
 		$this->setValues($formKey, array_merge($this->getValues($formKey), $data));
 
 		if ($back) {
-			// The "back" button was clicked
-			// TODO Validation previous was not one-way and not out of range (use jump action?)
-			$this->setCurrentStep($formKey, $this->getCurrentStep($formKey) - 1);
+			// The "back" button was clicked, try to go back a step.  No validation is necessary.
+			$nextStep = $currentStep - 1;
+			// Check that the previous step is not a one-way blocker.
+			if (!in_array($nextStep, $availableSteps)) {
+				throw new \OutOfBoundsException(sprintf('FormsModule cannot go to step %d in form "%s": step not available', $nextStep, $formKey));
+			}
+			$valid = true;
 		} else {
-			// Perform validation
+			// The regular submit button was clicked, try to go to the next step; run validation and processors.
+			$nextStep = $currentStep + 1;
 			if ($valid = $this->validate($formKey, $fields, $data)) {
-				// No errors, so execute processors
+				// No errors, so execute processors.
 				foreach ($step->getProcessors() as $processor) {
 					if (is_null($response)) {
 						$arguments = $this->parseProcessorArguments($processor, $data);
@@ -170,31 +178,28 @@ class FormsModule extends AbstractUrlMountableModule {
 						}
 					}
 				}
-			}
-			// Validation passed and all processors executed successfully (or any errors were ignored).
-			if ($valid) {
-				$nextStep = $this->getCurrentStep($formKey) + 1;
-				if ($nextStep >= $form->getStepsCount()) {
-					// We're at the end of the form, and all the processors have run.  Reset the form and redirect to
-					// the final target URL.
-					$this->resetForm($formKey);
-					if (!is_null($form->getTargetUrl())) {
-						$targetUrl = $request->getUriForPath('/' . $form->getTargetUrl());
-					}
-				} else {
-					// The form still has more to come, so update the session.
-					$this->setCurrentStep($formKey, $nextStep);
-					// Update the available steps, if necessary
-					if ($step->isOneWay()) {
-						$availableSteps = array( $nextStep );
-					} else {
-						$availableSteps = $this->getAvailableSteps($formKey);
-						if (!in_array($nextStep, $availableSteps)) {
-							$availableSteps[] = $nextStep;
-						}
-					}
-					$this->setAvailableSteps($formKey, $availableSteps);
+				// Reset the 'available steps' list if this is a one-way step.
+				if ($step->isOneWay()) {
+					$availableSteps = array( $nextStep );
 				}
+			}
+		}
+		// Validation passed (or was skipped) and all processors executed successfully (or were skipped).
+		if ($valid) {
+			if ($nextStep >= $form->getStepsCount()) {
+				// We're at the end of the form, and all the processors of the last step have run.  Reset the form and
+				// redirect to the final target URL.
+				$this->resetForm($formKey);
+				if (!is_null($form->getTargetUrl())) {
+					$targetUrl = $request->getUriForPath('/' . $form->getTargetUrl());
+				}
+			} else {
+				// The form is not yet complete, so update the session.
+				if (!in_array($nextStep, $availableSteps)) {
+					$availableSteps[] = $nextStep;
+				}
+				$this->setAvailableSteps($formKey, $availableSteps);
+				$this->setCurrentStep($formKey, $nextStep);
 			}
 		}
 		// Return any of the following in order of preference: response returned by a processor method; redirection to
@@ -213,8 +218,6 @@ class FormsModule extends AbstractUrlMountableModule {
 	 * a form rule prevents the user from jumping to the specified step (e.g. a previous step has not been completed,
 	 * or an intervening step is marked one-way).
 	 *
-	 * TODO Implement one-way form steps and validation here
-	 *
 	 * @param \Symfony\Component\HttpFoundation\Request $request
 	 *
 	 * @return \Symfony\Component\HttpFoundation\RedirectResponse
@@ -227,16 +230,16 @@ class FormsModule extends AbstractUrlMountableModule {
 		$formKey = $request->attributes->get('slug');
 		$form = $this->getForm($formKey, $request);
 		// Get the step being requested in the jump
-		$step = intval($request->query->get('step', $this->getCurrentStep($formKey)));
+		$jumpStep = intval($request->query->get('step', $this->getCurrentStep($formKey)));
 		// Validation
-		if ($step < 0 || $step >= $form->getStepsCount()) {
-			throw new \OutOfBoundsException(sprintf('FormsModule cannot jump to step %d in form "%s": out of range', $step, $formKey));
+		if ($jumpStep < 0 || $jumpStep >= $form->getStepsCount()) {
+			throw new \OutOfBoundsException(sprintf('FormsModule cannot jump to step %d in form "%s": out of range', $jumpStep, $formKey));
 		}
-		if (!in_array($step, $this->getAvailableSteps($formKey))) {
-			throw new \OutOfBoundsException(sprintf('FormsModule cannot jump to step %d in form "%s": step not available', $step, $formKey));
+		if (!in_array($jumpStep, $this->getAvailableSteps($formKey))) {
+			throw new \OutOfBoundsException(sprintf('FormsModule cannot jump to step %d in form "%s": step not available', $jumpStep, $formKey));
 		}
 		// Update progress and redirect back to the form URL.
-		$this->setCurrentStep($formKey, $step);
+		$this->setCurrentStep($formKey, $jumpStep);
 		return new RedirectResponse($request->getUriForPath('/' . $request->query->get('form-url', '')));
 	}
 
@@ -264,10 +267,16 @@ class FormsModule extends AbstractUrlMountableModule {
 				}
 			}
 		}
+		// Disable the back button if the previous step is not available.
+		$currentStep = $this->getCurrentStep($formKey);
+		$availableSteps = $this->getAvailableSteps($formKey);
+		if (!in_array($currentStep - 1, $availableSteps)) {
+			$form->setBackButtonAttributes(array_merge($form->getBackButtonAttributes(), array( 'disabled' => 'disabled' )));
+		}
 		// Setup the view.
 		$this->applyConfigToView('component.form', $view);
 		$view['form'] = $form;
-		$view['current-step'] = $this->getCurrentStep($formKey);
+		$view['current-step'] = $currentStep;
 		$view['renderer-factory'] = $this->createRendererFactory();
 		// Remove errors as they are about to be displayed, and we don't want to show the same errors again.
 		$this->clearErrors($formKey);
@@ -570,8 +579,7 @@ class FormsModule extends AbstractUrlMountableModule {
 	 * @return integer
 	 */
 	protected function getCurrentStep($formKey) {
-		$progressSessionKey = $this->getSessionKey($formKey, 'current-step');
-		return $this->getEngine()->getSession()->get($progressSessionKey, 0);
+		return $this->getEngine()->getSession()->get($this->getSessionKey($formKey, 'current-step'), 0);
 	}
 
 	/**
@@ -581,8 +589,7 @@ class FormsModule extends AbstractUrlMountableModule {
 	 * @param integer $currentStep
 	 */
 	protected function setCurrentStep($formKey, $currentStep) {
-		$progressSessionKey = $this->getSessionKey($formKey, 'current-step');
-		$this->getEngine()->getSession()->set($progressSessionKey, intval($currentStep));
+		$this->getEngine()->getSession()->set($this->getSessionKey($formKey, 'current-step'), intval($currentStep));
 	}
 
 	/**
@@ -593,8 +600,7 @@ class FormsModule extends AbstractUrlMountableModule {
 	 * @return integer[]
 	 */
 	protected function getAvailableSteps($formKey) {
-		$progressSessionKey = $this->getSessionKey($formKey, 'available-steps');
-		return $this->getEngine()->getSession()->get($progressSessionKey, array( 0 ));
+		return $this->getEngine()->getSession()->get($this->getSessionKey($formKey, 'available-steps'), array( 0 ));
 	}
 
 	/**
@@ -604,8 +610,7 @@ class FormsModule extends AbstractUrlMountableModule {
 	 * @param integer[] $availableSteps
 	 */
 	protected function setAvailableSteps($formKey, array $availableSteps) {
-		$progressSessionKey = $this->getSessionKey($formKey, 'available-steps');
-		$this->getEngine()->getSession()->set($progressSessionKey, $availableSteps);
+		$this->getEngine()->getSession()->set($this->getSessionKey($formKey, 'available-steps'), $availableSteps);
 	}
 
 	/**
