@@ -206,10 +206,21 @@ class FormsModule extends AbstractUrlMountableModule {
 	 * @param \Symfony\Component\HttpFoundation\Request $request
 	 * @param string $formKey Unique key of the form, used for session storage and also is the key used to retrieve the
 	 *   form data, if it is not supplied directly.
+	 * @param array|null $values Values to set manually into the form before displaying it.  Note this is used for
+	 *   rendering the form only, these values are not set into the session.
 	 */
-	public function formComponent(ViewInterface $view, Request $request, $formKey) {
+	public function formComponent(ViewInterface $view, Request $request, $formKey, array $values=null) {
 		LoggerRegistry::debug('FormsModule::formComponent()');
-		$view['form'] = $this->getForm($formKey, $request);
+		$form = $this->getForm($formKey, $request);
+		if (is_array($values)) {
+			foreach ($values as $name => $value) {
+				$field = $form->getField($name);
+				if (!is_null($field)) {
+					$field->setValue($value);
+				}
+			}
+		}
+		$view['form'] = $form;
 		$view['current-step'] = $this->getEngine()->getSession()->get($this->getSessionKey($formKey, 'step'), 0);
 		$view['renderer-factory'] = $this->createRendererFactory();
 		$this->clearErrors($formKey);
