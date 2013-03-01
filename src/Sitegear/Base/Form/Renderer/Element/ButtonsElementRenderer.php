@@ -31,9 +31,6 @@ class ButtonsElementRenderer extends AbstractContainerElementRenderer {
 			if (!isset($backButtonAttributes['value'])) {
 				$backButtonAttributes['value'] = 'Back';
 			}
-			if ($this->getElement()->getStep()->getStepIndex() < 1) {
-				$backButtonAttributes['disabled'] = 'disabled';
-			}
 			$result[] = sprintf('<input%s />', HtmlUtilities::attributes($backButtonAttributes));
 		}
 		$submitButtonAttributes = $this->getElement()->getStep()->getForm()->getSubmitButtonAttributes();
