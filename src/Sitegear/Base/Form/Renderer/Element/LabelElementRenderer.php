@@ -23,8 +23,10 @@ class LabelElementRenderer extends AbstractElementRenderer {
 	protected function startRendering(array $options) {
 		$field = $this->getElement()->getField();
 		$separator = isset($options['separator']) ? $options['separator'] : null;
+		// Don't display label markers for read-only fields
+		$markers = $this->getElement()->getFieldReference()->isReadOnly() ? '' : $field->getLabelMarkers($separator);
 		return array(
-			sprintf('<label for="%s">%s%s</label>', $field->getName(), $field->getLabelText(), $field->getLabelMarkers($separator))
+			sprintf('<label for="%s">%s%s</label>', $field->getName(), $field->getLabelText(), $markers)
 		);
 	}
 
