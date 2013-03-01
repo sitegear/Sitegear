@@ -221,8 +221,8 @@ class FormsModule extends AbstractUrlMountableModule {
 	 * Configure the specified form to load its data from the given data file.  This is usually done during the
 	 * bootstrap sequence, other modules should call this method to setup their forms for potential later use.
 	 *
-	 * @param $formKey
-	 * @param $path
+	 * @param string $formKey
+	 * @param string|string[] $path May be one path or an array of paths.
 	 *
 	 * @throws \DomainException
 	 */
@@ -234,7 +234,11 @@ class FormsModule extends AbstractUrlMountableModule {
 		if (!isset($this->formDataPaths[$formKey])) {
 			$this->formDataPaths[$formKey] = array();
 		}
-		$this->formDataPaths[$formKey][] = $path;
+		if (is_array($path)) {
+			$this->formDataPaths[$formKey] = array_merge($this->formDataPaths[$formKey], $path);
+		} else {
+			$this->formDataPaths[$formKey][] = $path;
+		}
 	}
 
 	/**
