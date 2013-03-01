@@ -187,8 +187,10 @@ class FormsModule extends AbstractUrlMountableModule {
 						$targetUrl = $request->getUriForPath('/' . $form->getTargetUrl());
 					}
 				} else {
-					// Mark the current step available if necessary.
-					if (!in_array($progress['current-step'], $progress['available-steps'])) {
+					// Update the available steps, if necessary
+					if ($step->isOneWay()) {
+						$progress['available-steps'] = array( $progress['current-step'] );
+					} elseif (!in_array($progress['current-step'], $progress['available-steps'])) {
 						$progress['available-steps'][] = $progress['current-step'];
 					}
 					$this->setProgress($formKey, $progress);
