@@ -19,8 +19,6 @@ class FormElementRenderer extends AbstractContainerElementRenderer {
 
 	protected function startRendering(array $options) {
 		$result = parent::startRendering($options);
-		// Add hidden field for step counter
-		$result[] = sprintf('<input type="hidden" name="step" value="%d" />', $this->getElement()->getStep()->getStepIndex());
 		// Add error heading if necessary
 		$errorFields = array_filter($this->getElement()->getStep()->getRootElement()->getAncestorFields(), function(FieldInterface $field) {
 			return sizeof($field->getErrors()) > 0;

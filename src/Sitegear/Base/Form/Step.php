@@ -34,6 +34,11 @@ class Step implements StepInterface {
 	private $root;
 
 	/**
+	 * @var boolean
+	 */
+	private $oneWay;
+
+	/**
 	 * @var string
 	 */
 	private $heading;
@@ -53,13 +58,15 @@ class Step implements StepInterface {
 	/**
 	 * @param FormInterface $form
 	 * @param integer $stepIndex
+	 * @param boolean $oneWay
 	 * @param string|null $heading
 	 * @param string|null $errorHeading
 	 * @param array|null $processors
 	 */
-	public function __construct(FormInterface $form, $stepIndex, $heading=null, $errorHeading=null, array $processors=null) {
+	public function __construct(FormInterface $form, $stepIndex, $oneWay=false, $heading=null, $errorHeading=null, array $processors=null) {
 		$this->form = $form;
 		$this->stepIndex = intval($stepIndex);
+		$this->oneWay = $oneWay;
 		$this->heading = $heading;
 		$this->errorHeading = $errorHeading;
 		$this->processors = $processors ?: array();
@@ -80,6 +87,21 @@ class Step implements StepInterface {
 	 */
 	public function getStepIndex() {
 		return $this->stepIndex;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function isOneWay() {
+		return $this->oneWay;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function setOneWay($oneWay) {
+		$this->oneWay = $oneWay;
+		return $this;
 	}
 
 	/**

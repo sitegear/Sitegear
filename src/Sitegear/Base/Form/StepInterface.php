@@ -29,6 +29,18 @@ interface StepInterface {
 	public function getStepIndex();
 
 	/**
+	 * @return boolean
+	 */
+	public function isOneWay();
+
+	/**
+	 * @param boolean $oneWay
+	 *
+	 * @return self
+	 */
+	public function setOneWay($oneWay);
+
+	/**
 	 * @return string
 	 */
 	public function getHeading();
