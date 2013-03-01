@@ -66,6 +66,8 @@ class LocationsModule extends AbstractUrlMountableModule {
 
 	/**
 	 * {@inheritDoc}
+	 *
+	 * TODO Route requirements??
 	 */
 	protected function buildRoutes() {
 		$routes = new RouteCollection();

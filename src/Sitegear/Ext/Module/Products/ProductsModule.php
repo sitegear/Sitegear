@@ -131,6 +131,8 @@ class ProductsModule extends AbstractUrlMountableModule implements PurchaseItemP
 
 	/**
 	 * {@inheritDoc}
+	 *
+	 * TODO Route requirements??
 	 */
 	protected function buildRoutes() {
 		$routes = new RouteCollection();
