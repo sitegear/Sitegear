@@ -145,59 +145,18 @@ return array(
 			/**
 			 * Additional title text for the search page.
 			 */
-			'search-title' => 'Search'
-
-		)
-	),
-
-	/**
-	 * Component specific settings.
-	 */
-	'component' => array(
-
-		'search-form' => array(
+			'search-title' => 'Search',
 
 			/**
-			 * Maximum number of results to show on the results page.
+			 * Additional heading text for the search page.
 			 */
-			'result-limit' => 10,
+			'search-heading' => 'Search',
 
 			/**
-			 * List of options for the radius selector.
+			 * Format specifier for the results description (page intro text).
 			 */
-			'radius-options' => array(
-				array(
-					'value' => 1,
-					'label' => '1km',
-					'zoom' => 15
-				),
-				array(
-					'value' => 5,
-					'label' => '5km',
-					'zoom' => 12,
-					'default' => true
-				),
-				array(
-					'value' => 10,
-					'label' => '10km',
-					'zoom' => 11
-				),
-				array(
-					'value' => 25,
-					'label' => '25km',
-					'zoom' => 10
-				),
-				array(
-					'value' => 100,
-					'label' => '100km',
-					'zoom' => 9
-				),
-				array(
-					'value' => 250,
-					'label' => '250km',
-					'zoom' => 8
-				)
-			)
+			'results-description-format' => '<p>You searched for locations within %radius%km of &quot;%query%&quot;.</p>'
+
 		)
 	),
 

@@ -15,9 +15,10 @@ use Sitegear\Util\TokenUtilities;
 use Sitegear\Util\LoggerRegistry;
 
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 use Doctrine\ORM\NoResultException;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -145,23 +146,36 @@ class LocationsModule extends AbstractUrlMountableModule {
 	/**
 	 * Perform a search for a given (named) location and display results within a specified radius.
 	 *
+	 * TODO Another parameter, region, to restrict results to that region (and its children)
+	 *
 	 * @param \Sitegear\Base\View\ViewInterface $view
 	 * @param \Symfony\Component\HttpFoundation\Request $request
+	 *
+	 * @return RedirectResponse|null
+	 *
+	 * @throws \InvalidArgumentException
 	 */
 	public function searchController(ViewInterface $view, Request $request) {
 		LoggerRegistry::debug('LocationsModule::itemController()');
 		$this->applyViewDefaults($view);
 		$this->applyConfigToView('page.search', $view);
-		// TODO Another parameter, region, to restrict results to that region (and its children)
-		$query = \Sitegear\Util\TokenUtilities::replaceTokens(
-			$this->config('search.query-mask'),
-			array(
-				'query' => $request->query->get('query', null)
-			)
-		);
+		$query = $request->query->get('query');
+		$radius = $request->query->get('radius');
+		if (strlen($query) === 0) {
+			return new RedirectResponse($request->getUriForPath('/' . $this->getMountedUrl()));
+		}
+		if (!is_numeric($radius)) {
+			throw new \InvalidArgumentException(sprintf('LocationsModule received invalid radius in search; must be numeric, "%s" received', $radius));
+		}
+		$query = TokenUtilities::replaceTokens($this->config('search.query-mask'), array( 'query' => $query ));
 		$location = $this->getEngine()->google()->geocodeLocation($query);
-		$radius = $request->query->get('radius', $this->getDefaultRadius());
-		$view['items'] = new ArrayCollection($this->getRepository('Item')->findInRadius($location, $radius));
+		$radius = intval($radius);
+		$view['query'] = $query;
+		$view['radius'] = $radius;
+		$view['items'] = new ArrayCollection($radius > 0 ? $this->getRepository('Item')->findInRadius($location, $radius) : array());
+		$view['results-description'] = TokenUtilities::replaceTokens($view['results-description-format'], array( 'query' => $query, 'radius' => number_format($radius) ));
+		$view['no-items'] = 'no-items-search';
+		return null;
 	}
 
 	//-- Component Controller Methods --------------------
@@ -178,8 +192,12 @@ class LocationsModule extends AbstractUrlMountableModule {
 		$this->applyViewDefaults($view);
 		$this->applyConfigToView('component.search-form', $view);
 		$view['action-url'] = sprintf('%s/search', $this->getMountedUrl());
-		$view['query'] = $query;
-		$view['radius'] = $radius;
+		if (!is_null($query)) {
+			$view['query'] = $query;
+		}
+		if (!is_null($radius)) {
+			$view['radius'] = $radius;
+		}
 	}
 
 	//-- Internal Methods --------------------
@@ -232,19 +250,6 @@ class LocationsModule extends AbstractUrlMountableModule {
 			$result[] = $regionResult;
 		}
 		return $result;
-	}
-
-	/**
-	 * @return int|null Get the default radius as configured.
-	 */
-	private function getDefaultRadius() {
-		$result = null;
-		foreach ($this->config('component.search-form.radius-options') as $option) {
-			if (isset($option['default']) && $option['default']) {
-				$result = $option['value'];
-			}
-		}
-		return $result ?: $this->config('component.search-form.radius-options.0.value');
 	}
 
 	/**
