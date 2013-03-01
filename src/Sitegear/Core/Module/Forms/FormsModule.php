@@ -211,6 +211,7 @@ class FormsModule extends AbstractUrlMountableModule {
 	 */
 	public function formComponent(ViewInterface $view, Request $request, $formKey, array $values=null) {
 		LoggerRegistry::debug('FormsModule::formComponent()');
+		// Get the form and apply the specified values, if any.
 		$form = $this->getForm($formKey, $request);
 		if (is_array($values)) {
 			foreach ($values as $name => $value) {
@@ -220,10 +221,27 @@ class FormsModule extends AbstractUrlMountableModule {
 				}
 			}
 		}
+		// Setup the view.
+		$this->applyConfigToView('component.form', $view);
 		$view['form'] = $form;
 		$view['current-step'] = $this->getEngine()->getSession()->get($this->getSessionKey($formKey, 'step'), 0);
 		$view['renderer-factory'] = $this->createRendererFactory();
+		// Remove errors as they are about to be displayed, and we don't want to show the same errors again.
 		$this->clearErrors($formKey);
+	}
+
+	/**
+	 * Display the list of steps of the specified form.  Depending on the progress within the form and the form step
+	 * logic settings, some of the steps will be represented with links, and others with plain text.
+	 *
+	 * @param \Sitegear\Base\View\ViewInterface $view
+	 * @param \Symfony\Component\HttpFoundation\Request $request
+	 * @param string $formKey
+	 */
+	public function stepsComponent(ViewInterface $view, Request $request, $formKey) {
+		$this->applyConfigToView('component.steps', $view);
+		$view['form'] = $this->getForm($formKey, $request);
+		$view['current-step'] = $this->getEngine()->getSession()->get($this->getSessionKey($formKey, 'step'), 0);
 	}
 
 	//-- Form Management Methods --------------------
@@ -301,8 +319,9 @@ class FormsModule extends AbstractUrlMountableModule {
 				$errors = $module->getEngine()->getSession()->get($module->getSessionKey($formKey, 'errors'));
 				return isset($errors[$name]) ? $errors[$name] : array();
 			};
+			$query = strlen($request->getQueryString()) > 0 ? '?' . $request->getQueryString() : '';
 			$options = array_merge($this->config('form-builder'), array(
-				'form-url' => sprintf('%s?%s', ltrim($request->getPathInfo(), '/'), $request->getQueryString()),
+				'form-url' => sprintf('%s%s', ltrim($request->getPathInfo(), '/'), $query),
 				'submit-url' => sprintf('%s/form/%s', $this->getMountedUrl(), $formKey),
 				'constraint-label-markers' => $this->config('constraints.label-markers')
 			));

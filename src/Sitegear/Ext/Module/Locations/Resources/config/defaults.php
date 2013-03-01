@@ -155,7 +155,7 @@ return array(
 			/**
 			 * Format specifier for the results description (page intro text).
 			 */
-			'results-description-format' => '<p>You searched for locations within %radius%km of &quot;%query%&quot;.</p>'
+			'results-description-format' => '<p>You searched for locations within %radius%km of &quot;%query%&quot;</p>'
 
 		)
 	),

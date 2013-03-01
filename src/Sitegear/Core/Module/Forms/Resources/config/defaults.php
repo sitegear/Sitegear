@@ -77,6 +77,94 @@ return array(
 	'form-renderer' => array(
 		'class' => '\\Sitegear\\Core\\Form\\Renderer\\Factory\\NamespaceFormRendererFactory',
 		'arguments' => array()
+	),
+
+	/**
+	 * Component specific settings.
+	 */
+	'component' => array(
+
+		/**
+		 * Settings for the form component.
+		 */
+		'form' => array(
+
+		),
+
+		/**
+		 * Settings for the steps component.
+		 */
+		'steps' => array(
+
+			/**
+			 * Settings for the container around all steps.
+			 */
+			'outer-container' => array(
+				'element' => 'ul',
+				'attributes' => array(
+					'class' => 'sitegear-form-steps-list'
+				)
+			),
+
+			/**
+			 * Settings for the containers around each step.
+			 */
+			'item-container' => array(
+				'element' => 'li',
+				'attributes' => array()
+			),
+
+			/**
+			 * Settings per step.
+			 */
+			'steps' => array(
+
+				/**
+				 * Settings for steps that are links.
+				 */
+				'link' => array(
+					'attributes' => array()
+				),
+
+				/**
+				 * Settings for steps that are not links.
+				 */
+				'non-link' => array(
+					'element' => 'span',
+					'attributes' => array()
+				),
+
+				/**
+				 * Settings for steps that are before the current step.
+				 */
+				'earlier' => array(
+					'label-format' => '%heading%',
+					'container-attributes' => array(
+						'class' => 'previous-step'
+					)
+				),
+
+				/**
+				 * Settings for the current step.
+				 */
+				'current' => array(
+					'label-format' => '%heading%',
+					'container-attributes' => array(
+						'class' => 'current-step'
+					)
+				),
+
+				/**
+				 * Settings for steps that are after the current step.
+				 */
+				'later' => array(
+					'label-format' => '%heading%',
+					'container-attributes' => array(
+						'class' => 'next-step'
+					)
+				)
+			)
+		)
 	)
 
 );
