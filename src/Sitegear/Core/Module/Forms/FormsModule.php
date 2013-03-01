@@ -83,7 +83,8 @@ class FormsModule extends AbstractUrlMountableModule {
 	protected function buildRoutes() {
 		$routes = new RouteCollection();
 		$routes->add('form', new Route(sprintf('%s/form/{slug}', $this->getMountedUrl())));
-		$routes->add('reset', new Route(sprintf('%s/reset/{slug}', $this->getMountedUrl())));
+		$routes->add('initialise', new Route(sprintf('%s/init/{slug}', $this->getMountedUrl())));
+		$routes->add('jump', new Route(sprintf('%s/jump/{slug}', $this->getMountedUrl())));
 		return $routes;
 	}
 
@@ -95,6 +96,34 @@ class FormsModule extends AbstractUrlMountableModule {
 	}
 
 	//-- Page Controller Methods --------------------
+
+	/**
+	 * Reset the given form and optionally set request query (GET) parameters into the form values, then redirect to
+	 * the form URL, which must be supplied as a query (GET) parameter or the home page will be used as a default.
+	 *
+	 * @param \Symfony\Component\HttpFoundation\Request $request
+	 *
+	 * @return \Symfony\Component\HttpFoundation\RedirectResponse
+	 */
+	public function initialiseController(Request $request) {
+		LoggerRegistry::debug('FormsModule::resetController()');
+		$formKey = $request->attributes->get('slug');
+		$this->resetForm($formKey);
+		$form = $this->getForm($formKey, $request);
+		$formUrl = $request->getUriForPath('/' . $request->query->get('form-url', ''));
+		$data = array();
+		foreach ($request->query->all() as $key => $value) {
+			if (($key !== 'form-url') && !is_null($form->getField($key))) {
+				$field = $form->getField($key);
+				if (!is_null($field)) {
+					$field->setValue($value);
+					$data[$key] = $value;
+				}
+			}
+		}
+		$this->getEngine()->getSession()->set($this->getSessionKey($formKey, 'values'), $data);
+		return new RedirectResponse($formUrl);
+	}
 
 	/**
 	 * Handles a form submission.
@@ -114,24 +143,23 @@ class FormsModule extends AbstractUrlMountableModule {
 		$formUrl = $request->getUriForPath('/' . $request->query->get('form-url', ''));
 		$targetUrl = null;
 		$response = null;
-		$currentStep = $request->request->get('step', 0);
-		$currentStepSessionKey = $this->getSessionKey($formKey, 'step');
+		$session = $this->getEngine()->getSession();
+		$progress = $this->getProgress($formKey);
 		$back = $request->request->get('back');
-		$step = $form->getStep($currentStep);
+		$step = $form->getStep($progress['current-step']);
 		$fields = $step->getRootElement()->getAncestorFields();
 		$data = $form->getMethod() === 'GET' ? $request->query->all() : $request->request->all();
-		unset($data['step']);
 		unset($data['back']);
 
 		// Set the values into the session so they can be displayed after redirecting, and clear previous errors.
-		$session = $this->getEngine()->getSession();
 		$valuesSessionKey = $this->getSessionKey($formKey, 'values');
 		$session->set($valuesSessionKey, array_merge($session->get($valuesSessionKey, array()), $data));
 
 		if ($back) {
 			// The "back" button was clicked
-			$currentStep = max(0, $currentStep - 1);
-			$this->getEngine()->getSession()->set($currentStepSessionKey, $currentStep);
+			// TODO Validation previous was not one-way and not out of range (use jump action?)
+			$progress['current-step'] = $progress['current-step'] - 1;
+			$this->setProgress($formKey, $progress);
 		} else {
 			// Perform validation
 			if ($valid = $this->validate($formKey, $fields, $data)) {
@@ -150,13 +178,20 @@ class FormsModule extends AbstractUrlMountableModule {
 			// Validation passed and all processors executed successfully (or any errors were ignored).
 			if ($valid) {
 				// Setup for redirection to the target URL, if one is set.
-				if (++$currentStep >= $form->getStepsCount()) {
+				$progress['current-step']++;
+				if ($progress['current-step'] >= $form->getStepsCount()) {
+					// We're at the end of the form, and all the processors have run.  Reset the form and redirect to
+					// the final target URL.
 					$this->resetForm($formKey);
 					if (!is_null($form->getTargetUrl())) {
 						$targetUrl = $request->getUriForPath('/' . $form->getTargetUrl());
 					}
 				} else {
-					$this->getEngine()->getSession()->set($currentStepSessionKey, $currentStep);
+					// Mark the current step available if necessary.
+					if (!in_array($progress['current-step'], $progress['available-steps'])) {
+						$progress['available-steps'][] = $progress['current-step'];
+					}
+					$this->setProgress($formKey, $progress);
 				}
 			}
 		}
@@ -172,31 +207,37 @@ class FormsModule extends AbstractUrlMountableModule {
 	}
 
 	/**
-	 * Reset the given form and optionally set request query (GET) parameters into the form values, then redirect to
-	 * the form URL, which must be supplied as a query (GET) parameter or the home page will be used as a default.
+	 * Jump to a particular step within the given form.  This may fail if the step does not exist (out of range) or if
+	 * a form rule prevents the user from jumping to the specified step (e.g. a previous step has not been completed,
+	 * or an intervening step is marked one-way).
+	 *
+	 * TODO Implement one-way form steps and validation here
 	 *
 	 * @param \Symfony\Component\HttpFoundation\Request $request
 	 *
 	 * @return \Symfony\Component\HttpFoundation\RedirectResponse
+	 *
+	 * @throws \OutOfBoundsException
 	 */
-	public function resetController(Request $request) {
-		LoggerRegistry::debug('FormsModule::resetController()');
+	public function jumpController(Request $request) {
+		LoggerRegistry::debug('FormsModule::jumpController()');
+		// Get the form details.
 		$formKey = $request->attributes->get('slug');
-		$this->resetForm($formKey);
 		$form = $this->getForm($formKey, $request);
-		$formUrl = $request->getUriForPath('/' . $request->query->get('form-url', ''));
-		$data = array();
-		foreach ($request->query->all() as $key => $value) {
-			if (($key !== 'form-url') && !is_null($form->getField($key))) {
-				$field = $form->getField($key);
-				if (!is_null($field)) {
-					$field->setValue($value);
-					$data[$key] = $value;
-				}
-			}
+		$progress = $this->getProgress($formKey);
+		// Get the step being requested in the jump
+		$step = intval($request->query->get('step', $progress['current-step']));
+		// Validation
+		if ($step < 0 || $step >= $form->getStepsCount()) {
+			throw new \OutOfBoundsException(sprintf('FormsModule cannot jump to step %d in form "%s": out of range', $step, $formKey));
 		}
-		$this->getEngine()->getSession()->set($this->getSessionKey($formKey, 'values'), $data);
-		return new RedirectResponse($formUrl);
+		if (!in_array($step, $progress['available-steps'])) {
+			throw new \OutOfBoundsException(sprintf('FormsModule cannot jump to step %d in form "%s": step not available', $step, $formKey));
+		}
+		// Update progress and redirect back to the form URL.
+		$progress['current-step'] = $step;
+		$this->setProgress($formKey, $progress);
+		return new RedirectResponse($request->getUriForPath('/' . $request->query->get('form-url', '')));
 	}
 
 	//-- Component Controller Methods --------------------
@@ -226,7 +267,8 @@ class FormsModule extends AbstractUrlMountableModule {
 		// Setup the view.
 		$this->applyConfigToView('component.form', $view);
 		$view['form'] = $form;
-		$view['current-step'] = $this->getEngine()->getSession()->get($this->getSessionKey($formKey, 'step'), 0);
+		$progress = $this->getProgress($formKey);
+		$view['current-step'] = $progress['current-step'];
 		$view['renderer-factory'] = $this->createRendererFactory();
 		// Remove errors as they are about to be displayed, and we don't want to show the same errors again.
 		$this->clearErrors($formKey);
@@ -243,7 +285,10 @@ class FormsModule extends AbstractUrlMountableModule {
 	public function stepsComponent(ViewInterface $view, Request $request, $formKey) {
 		$this->applyConfigToView('component.steps', $view);
 		$view['form'] = $this->getForm($formKey, $request);
-		$view['current-step'] = $this->getEngine()->getSession()->get($this->getSessionKey($formKey, 'step'), 0);
+		$progress = $this->getProgress($formKey);
+		$view['current-step'] = $progress['current-step'];
+		$view['available-steps'] = $progress['available-steps'];
+		$view['jump-url-format'] = sprintf('%s/jump/%s?form-url=%s&step=%%d', $this->getMountedUrl(), $formKey, ltrim($request->getPathInfo(), '/'));
 	}
 
 	//-- Form Management Methods --------------------
@@ -339,7 +384,7 @@ class FormsModule extends AbstractUrlMountableModule {
 	 */
 	public function resetForm($formKey) {
 		LoggerRegistry::debug(sprintf('FormsModule::resetForm(%s)', $formKey));
-		$this->getEngine()->getSession()->remove($this->getSessionKey($formKey, 'step'));
+		$this->clearProgress($formKey);
 		$this->clearValues($formKey);
 		$this->clearErrors($formKey);
 	}
@@ -531,6 +576,39 @@ class FormsModule extends AbstractUrlMountableModule {
 	 */
 	protected function getSessionKey($formKey, $subKey) {
 		return sprintf('forms.%s.%s', $formKey, $subKey);
+	}
+
+	/**
+	 * Get the progress data for the specified form.
+	 *
+	 * @param string $formKey
+	 *
+	 * @return array Key-value array with keys 'current-step' (integer) and 'available-steps' (integer[]).
+	 */
+	protected function getProgress($formKey) {
+		$progressSessionKey = $this->getSessionKey($formKey, 'progress');
+		return $this->getEngine()->getSession()->get($progressSessionKey, array( 'current-step' => 0, 'available-steps' => array( 0 ) ));
+	}
+
+	/**
+	 * Update the progress for the specified form.
+	 *
+	 * @param string $formKey
+	 * @param array $progress
+	 */
+	protected function setProgress($formKey, array $progress) {
+		$progressSessionKey = $this->getSessionKey($formKey, 'progress');
+		$this->getEngine()->getSession()->set($progressSessionKey, $progress);
+	}
+
+	/**
+	 * Remove any existing progress data for the given key.
+	 *
+	 * @param string $formKey
+	 */
+	protected function clearProgress($formKey) {
+		$progressSessionKey = $this->getSessionKey($formKey, 'progress');
+		$this->getEngine()->getSession()->remove($progressSessionKey);
 	}
 
 	/**

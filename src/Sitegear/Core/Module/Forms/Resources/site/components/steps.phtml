@@ -5,8 +5,10 @@
  */
 $form = $view['form'];
 $currentStep = $view['current-step'];
+$availableSteps = $view['available-steps'];
 $linkStepFormat = sprintf('<a href="%%s"%s>%%s</a>', \Sitegear\Util\HtmlUtilities::attributes($view['steps']['link']['attributes'] ?: array()));
 $nonLinkStepFormat = sprintf('<%s%s>%%s</%s>', $view['steps']['non-link']['element'], \Sitegear\Util\HtmlUtilities::attributes($view['steps']['non-link']['attributes'] ?: array()), $view['steps']['non-link']['element']);
+$jumpUrlFormat = $view['jump-url-format'];
 echo sprintf('<%s%s>', $view['outer-container']['element'], \Sitegear\Util\HtmlUtilities::attributes($view['outer-container']['attributes'] ?: array())), PHP_EOL;
 for ($step=0, $count=$form->getStepsCount(); $step<$count; $step++) {
 	$stepType = $step < $currentStep ? 'earlier' : ($step > $currentStep ? 'later' : 'current');
@@ -16,12 +18,10 @@ for ($step=0, $count=$form->getStepsCount(); $step<$count; $step++) {
 		$view['steps'][$stepType]['container-attributes'] ?: array()
 	);
 	echo sprintf('<%s%s>', $view['item-container']['element'], \Sitegear\Util\HtmlUtilities::attributes($containerAttributes)), PHP_EOL;
-	if ($step >= $currentStep) {
-		echo sprintf($nonLinkStepFormat, $label), PHP_EOL;
+	if (in_array($step, $availableSteps) && $step !== $currentStep) {
+		echo sprintf($linkStepFormat, sprintf($jumpUrlFormat, $step), $label), PHP_EOL;
 	} else {
-		// TODO What is the link URL??
-		$stepLinkUrl = '';
-		echo sprintf($linkStepFormat, $stepLinkUrl, $label), PHP_EOL;
+		echo sprintf($nonLinkStepFormat, $label), PHP_EOL;
 	}
 	echo sprintf('</%s>', $view['item-container']['element']), PHP_EOL;
 }
