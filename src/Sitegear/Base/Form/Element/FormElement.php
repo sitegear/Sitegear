@@ -19,7 +19,7 @@ class FormElement extends AbstractContainerElement {
 
 	public function __construct(StepInterface $step, array $defaultAttributes=null, array $children=null) {
 		$defaultAttributes = $defaultAttributes ?: array(
-			'method' => 'post',
+			'method' => strtolower($step->getForm()->getMethod()),
 			'action' => $step->getForm()->getSubmitUrl()
 		);
 		parent::__construct($step, 'form', $defaultAttributes, $children);

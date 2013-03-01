@@ -77,6 +77,7 @@ class FormBuilder implements FormBuilderInterface {
 			$submitUrl,
 			isset($formData['target-url']) ? $formData['target-url'] : (isset($options['target-url']) ? $options['target-url'] : null),
 			isset($formData['cancel-url']) ? $formData['cancel-url'] : (isset($options['cancel-url']) ? $options['cancel-url'] : null),
+			isset($formData['method']) ? $formData['method'] : (isset($options['method']) ? $options['method'] : null),
 			isset($formData['submit-button']) ? $formData['submit-button'] : (isset($options['submit-button']) ? $options['submit-button'] : null),
 			isset($formData['reset-button']) ? $formData['reset-button'] : (isset($options['reset-button']) ? $options['reset-button'] : null),
 			isset($formData['back-button']) ? $formData['back-button'] : (isset($options['back-button']) ? $options['back-button'] : null)

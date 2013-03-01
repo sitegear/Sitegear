@@ -57,6 +57,28 @@ interface FormInterface {
 	/**
 	 * @return string
 	 */
+	public function getMethod();
+
+	/**
+	 * Form $method, only 'GET', 'POST', 'PUT' and 'DELETE' are accepted.
+	 *
+	 * Full list of HTTP methods: 'OPTIONS', 'GET', 'HEAD', 'POST', 'PUT', 'DELETE', 'TRACE', 'CONNECT'
+	 * Source: http://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html
+	 *
+	 * The ones listed here are ones considered valid for a form action.
+	 *
+	 * @param string $method
+	 * @param boolean $force Prevent an invalid method from throwing an exception, false by default.
+	 *
+	 * @return self
+	 *
+	 * @throws \InvalidArgumentException
+	 */
+	public function setMethod($method, $force=false);
+
+	/**
+	 * @return string
+	 */
 	public function getSubmitButtonAttributes();
 
 	/**

@@ -33,6 +33,11 @@ class Form implements FormInterface {
 	private $cancelUrl;
 
 	/**
+	 * @var string
+	 */
+	private $method;
+
+	/**
 	 * @var string[]|null
 	 */
 	private $submitButtonAttributes;
@@ -61,16 +66,18 @@ class Form implements FormInterface {
 
 	/**
 	 * @param string $submitUrl
+	 * @param string|null $method
 	 * @param string|null $targetUrl
 	 * @param string|null $cancelUrl
 	 * @param string[]|null $submitButtonAttributes
 	 * @param string[]|null $resetButtonAttributes
 	 * @param string[]|null $backButtonAttributes
 	 */
-	public function __construct($submitUrl, $targetUrl=null, $cancelUrl=null, $submitButtonAttributes=null, $resetButtonAttributes=null, $backButtonAttributes=null) {
+	public function __construct($submitUrl, $targetUrl=null, $cancelUrl=null, $method=null, $submitButtonAttributes=null, $resetButtonAttributes=null, $backButtonAttributes=null) {
 		$this->submitUrl = $submitUrl;
 		$this->targetUrl = $targetUrl;
 		$this->cancelUrl = $cancelUrl;
+		$this->setMethod($method ?: 'POST');
 		$this->submitButtonAttributes = is_array($submitButtonAttributes) ? $submitButtonAttributes : array( 'value' => $submitButtonAttributes );
 		$this->resetButtonAttributes = is_array($resetButtonAttributes) || !is_string($resetButtonAttributes) ?
 				$resetButtonAttributes : array( 'value' => $resetButtonAttributes );
@@ -124,6 +131,25 @@ class Form implements FormInterface {
 	 */
 	public function setCancelUrl($cancelUrl) {
 		$this->cancelUrl = $cancelUrl;
+		return $this;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function getMethod() {
+		return $this->method;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function setMethod($method, $force=false) {
+		$method = strtoupper($method);
+		if (!in_array($method, array( 'GET', 'POST', 'PUT', 'DELETE' )) && !$force) {
+			throw new \InvalidArgumentException(sprintf('Form: Cannot set invalid method "%s"', $method));
+		}
+		$this->method = $method;
 		return $this;
 	}
 
