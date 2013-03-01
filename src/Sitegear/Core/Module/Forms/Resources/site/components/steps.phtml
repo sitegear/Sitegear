@@ -17,12 +17,13 @@ for ($step=0, $count=$form->getStepsCount(); $step<$count; $step++) {
 		$view['item-container']['attributes'] ?: array(),
 		$view['steps'][$stepType]['container-attributes'] ?: array()
 	);
-	echo sprintf('<%s%s>', $view['item-container']['element'], \Sitegear\Util\HtmlUtilities::attributes($containerAttributes)), PHP_EOL;
+	echo "\t" . sprintf('<%s%s>', $view['item-container']['element'], \Sitegear\Util\HtmlUtilities::attributes($containerAttributes)), PHP_EOL;
+	echo "\t\t";
 	if (in_array($step, $availableSteps) && $step !== $currentStep) {
 		echo sprintf($linkStepFormat, sprintf($jumpUrlFormat, $step), $label), PHP_EOL;
 	} else {
 		echo sprintf($nonLinkStepFormat, $label), PHP_EOL;
 	}
-	echo sprintf('</%s>', $view['item-container']['element']), PHP_EOL;
+	echo "\t" . sprintf('</%s>', $view['item-container']['element']), PHP_EOL;
 }
 echo sprintf('</%s>', $view['outer-container']['element']), PHP_EOL;
