@@ -178,9 +178,10 @@ class FormBuilder implements FormBuilderInterface {
 				$processors[] = $this->buildProcessor($processorData);
 			}
 		}
+		$oneWay = isset($stepData['one-way']) ? $stepData['one-way'] : false;
 		$heading = isset($stepData['heading']) ? $stepData['heading'] : null;
 		$errorHeading = isset($stepData['error-heading']) ? $stepData['error-heading'] : null;
-		$step = new Step($form, $stepIndex, $heading, $errorHeading, $processors);
+		$step = new Step($form, $stepIndex, $oneWay, $heading, $errorHeading, $processors);
 		$step->setRootElement($this->buildFormElement($step, $formData, $stepData));
 		return $step;
 	}
