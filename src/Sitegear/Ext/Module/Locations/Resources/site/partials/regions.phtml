@@ -15,7 +15,7 @@ if ($regions->count() === 0) {
 	<h2>Regions</h2>
 <?php
 	foreach ($regions as $region) {
-		$linkUrl = sprintf('%s/%s/%s', $view['root-url'], $view['region-url'], $region->getUrlPath());
+		$linkUrl = sprintf('%s/%s', $view['region-base-url'], $region->getUrlPath());
 		$viewScript = sprintf('%s/%s', $view['region-path'], $region->getUrlPath());
 ?>
 	<section>

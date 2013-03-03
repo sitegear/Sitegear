@@ -14,7 +14,7 @@ if ($items->count() === 0) {
     <h2>Locations</h2>
 <?php
 	foreach ($items as $item) {
-		$linkUrl = sprintf('%s/%s/%s', $view['root-url'], $view['item-url'], $item->getUrlPath());
+		$linkUrl = sprintf('%s/%s', $view['item-base-url'], $item->getUrlPath());
 		$viewScript = sprintf('%s/%s', $view['item-path'], $item->getUrlPath());
 ?>
 	<section>

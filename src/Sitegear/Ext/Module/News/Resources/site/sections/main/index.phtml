@@ -1,5 +1,8 @@
 <?php
-/** @var \Sitegear\Core\View\View $view */
+/**
+ * @var \Sitegear\Core\View\View $view
+ * @var \Sitegear\Ext\Module\News\Model\Item $item
+ */
 $view->getStringsManager()->prepend('title', $view['title']);
 $itemDecorator = sprintf('excerpt(%d, "%s")', $view['excerpt-length'], 'Article content not found.');
 ?>
@@ -10,8 +13,8 @@ $itemDecorator = sprintf('excerpt(%d, "%s")', $view['excerpt-length'], 'Article 
 if (empty($view['items'])) {
 	echo $view->news()->noHeadlines();
 } else {
-	foreach ($view['items'] as $item) { /** @var \Sitegear\Ext\Module\News\Model\Item $item */
-		$linkUrl = sprintf('%s/%s', $view['root-url'], $item->getUrlPath());
+	foreach ($view['items'] as $item) {
+		$linkUrl = sprintf('%s/%s', $view['item-base-url'], $item->getUrlPath());
 		$viewScript = sprintf('%s/%s', $view['item-path'], $item->getUrlPath());
 ?>
 	<section>
@@ -55,11 +58,11 @@ if ($view['item-count'] > 0) {
 <?php
 	if ($view['more']) {
 ?>
-<a href="<?php echo $view['root-url']; ?>"><?php echo $view['show-less']; ?></a>
+<a href="<?php echo $view['index-url']; ?>"><?php echo $view['show-less']; ?></a>
 <?php
 	} else {
 ?>
-<a href="<?php echo $view['root-url']; ?>?more=1"><?php echo $view['show-more']; ?></a>
+<a href="<?php echo $view['index-url']; ?>?more=1"><?php echo $view['show-more']; ?></a>
 <?php
 	}
 ?>

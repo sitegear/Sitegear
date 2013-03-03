@@ -1,5 +1,7 @@
 <?php
-/** @var \Sitegear\Core\View\View $view */
+/**
+ * @var \Sitegear\Core\View\View $view
+ */
 $trolleyEmpty = !isset($view['trolley-data']) || empty($view['trolley-data']);
 if ($trolleyEmpty) {
 	echo $view['text']['no-items'];
@@ -22,7 +24,7 @@ if ($showDetailsLink || $showCheckoutLink) {
 		echo \Sitegear\Util\TokenUtilities::replaceTokens(
 			$view['text']['details-link'],
 			array(
-				'detailsUrl' => sprintf('%s/trolley', $view['root-url'])
+				'detailsUrl' => $view['details-url']
 			)
 		);
 	}
@@ -31,7 +33,7 @@ if ($showDetailsLink || $showCheckoutLink) {
 		echo \Sitegear\Util\TokenUtilities::replaceTokens(
 			$view['text']['checkout-link'],
 			array(
-				'checkoutUrl' => sprintf('%s/checkout', $view['root-url'])
+				'checkoutUrl' => $view['checkout-url']
 			)
 		);
 	}

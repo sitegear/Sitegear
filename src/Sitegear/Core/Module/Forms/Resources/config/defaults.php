@@ -12,6 +12,15 @@
 return array(
 
 	/**
+	 * Route settings.
+	 */
+	'routes' => array(
+		'form' => 'form',
+		'initialise' => 'init',
+		'jump' => 'jump'
+	),
+
+	/**
 	 * Settings for constraints.
 	 */
 	'constraints' => array(

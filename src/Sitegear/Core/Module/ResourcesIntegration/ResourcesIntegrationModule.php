@@ -76,12 +76,10 @@ class ResourcesIntegrationModule extends AbstractUrlMountableModule {
 
 	/**
 	 * {@inheritDoc}
-	 *
-	 * TODO Route requirements??
 	 */
 	protected function buildRoutes() {
 		$routes = new RouteCollection();
-		$routes->add('resource', new Route($this->getMountedUrl() . '/{location}/{path}', array(), array( 'path' => '.+' )));
+		$routes->add('resource', new Route($this->getMountedUrl() . '/{location}/{path}', array(), array( 'location' => '.+', 'path' => '.+' )));
 		return $routes;
 	}
 

@@ -53,13 +53,11 @@ class NewsModule extends AbstractUrlMountableModule {
 
 	/**
 	 * {@inheritDoc}
-	 *
-	 * TODO Route requirements??
 	 */
 	protected function buildRoutes() {
 		$routes = new RouteCollection();
 		$routes->add('index', new Route($this->getMountedUrl()));
-		$routes->add('item', new Route(sprintf('%s/{slug}', $this->getMountedUrl())));
+		$routes->add('item', new Route(sprintf('%s/{slug}', $this->getMountedUrl()), array(), array( 'slug' => '.+' )));
 		return $routes;
 	}
 
@@ -164,7 +162,8 @@ class NewsModule extends AbstractUrlMountableModule {
 	private function applyDefaults(ViewInterface $view) {
 		$view['title'] = $this->config('title');
 		$view['heading'] = $this->config('heading');
-		$view['root-url'] = $this->getMountedUrl();
+		$view['index-url'] = $this->getMountedUrl();
+		$view['item-base-url'] = $this->getMountedUrl();
 	}
 
 	/**

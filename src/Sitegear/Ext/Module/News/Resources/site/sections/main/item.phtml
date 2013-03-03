@@ -1,6 +1,8 @@
 <?php
-/** @var \Sitegear\Core\View\View $view */
-/** @var \Sitegear\Ext\Module\News\Model\Item $item */
+/**
+ * @var \Sitegear\Core\View\View $view
+ * @var \Sitegear\Ext\Module\News\Model\Item $item
+ */
 $item = $view['item'];
 $view->getStringsManager()->prepend('title', $view['title'])->prepend('title', $item->getHeadline());
 $published = \Sitegear\Util\TokenUtilities::replaceTokens(
@@ -12,7 +14,7 @@ $published = \Sitegear\Util\TokenUtilities::replaceTokens(
 $backLink = \Sitegear\Util\TokenUtilities::replaceTokens(
 	$view['back-link'],
 	array(
-		'rootUrl' => $view['root-url']
+		'indexUrl' => $view['index-url']
 	)
 );
 ?>

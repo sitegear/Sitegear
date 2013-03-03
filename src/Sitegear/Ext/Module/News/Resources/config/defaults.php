@@ -117,7 +117,7 @@ return array(
 			 *
 			 * %rootUrl% -- the URL of the top-level news landing page.
 			 */
-			'back-link' => 'Back to <a href="%rootUrl%">news index</a>.'
+			'back-link' => 'Back to <a href="%indexUrl%">news index</a>.'
 
 		)
 	),

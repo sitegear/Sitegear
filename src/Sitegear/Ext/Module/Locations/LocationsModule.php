@@ -66,14 +66,12 @@ class LocationsModule extends AbstractUrlMountableModule {
 
 	/**
 	 * {@inheritDoc}
-	 *
-	 * TODO Route requirements??
 	 */
 	protected function buildRoutes() {
 		$routes = new RouteCollection();
 		$routes->add('index', new Route($this->getMountedUrl()));
-		$routes->add('region', new Route(sprintf('%s/%s/{slug}', $this->getMountedUrl(), $this->config('routes.region'))));
-		$routes->add('item', new Route(sprintf('%s/%s/{slug}', $this->getMountedUrl(), $this->config('routes.item'))));
+		$routes->add('region', new Route(sprintf('%s/%s/{slug}', $this->getMountedUrl(), $this->config('routes.region')), array(), array( 'slug' => '.+' )));
+		$routes->add('item', new Route(sprintf('%s/%s/{slug}', $this->getMountedUrl(), $this->config('routes.item')), array(), array( 'slug' => '.+' )));
 		$routes->add('search', new Route(sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.search'))));
 		return $routes;
 	}
@@ -214,9 +212,8 @@ class LocationsModule extends AbstractUrlMountableModule {
 		$view['heading'] = $this->config('heading');
 		$view['region-path'] = trim($this->config('region-path'), '/');
 		$view['item-path'] = trim($this->config('item-path'), '/');
-		$view['item-url'] = $this->config('routes.item');
-		$view['region-url'] = $this->config('routes.region');
-		$view['root-url'] = $this->getMountedUrl();
+		$view['item-base-url'] = sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.item'));
+		$view['region-base-url'] = sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.region'));
 	}
 
 	/**

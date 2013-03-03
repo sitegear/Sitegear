@@ -1,7 +1,11 @@
 <?php
-/** @var \Sitegear\Core\View\View $view */
+/**
+ * @var \Sitegear\Core\View\View $view
+ * @var \Sitegear\Ext\Module\Products\Model\Category $category
+ * @var \Sitegear\Ext\Module\Products\Model\Item $item
+ * @var \Sitegear\Ext\Module\Products\Model\Category $subcategory
+ */
 $view->getStringsManager()->prepend('title', $view['title']);
-/** @var \Sitegear\Ext\Module\Products\Model\Category $category */
 $category = $view['category'];
 $view->getStringsManager()->prepend('title', $category->getName());
 $excerptDecorator = sprintf('excerpt(%d, "%s")', $view['excerpt-length'], 'Category description not found.');
@@ -18,8 +22,8 @@ if (empty($view['items'])) {
 <section class="products-items-container">
 	<h2>Products</h2>
 <?php
-	foreach ($view['items'] as $item) { /** @var \Sitegear\Ext\Module\Products\Model\Item $item */
-		$linkUrl = sprintf('%s/%s/%s', $view['root-url'], $view['item-url'], $item->getUrlPath());
+	foreach ($view['items'] as $item) {
+		$linkUrl = sprintf('%s/%s', $view['item-base-url'], $item->getUrlPath());
 		$viewScript = sprintf('%s/%s', $view['item-path'], $item->getUrlPath());
 ?>
 	<section>
@@ -41,9 +45,7 @@ if (empty($view['items'])) {
 </section>
 <?php
 }
-?>
 
-<?php
 if (!empty($view['categories'])) {
 ?>
 <section class="products-categories-container">
@@ -52,8 +54,8 @@ if (!empty($view['categories'])) {
 	The <?php echo $category->getName(); ?> category contains <?php echo number_format(sizeof($view['categories'])); ?> subcategories.
 	</p>
 <?php
-	foreach ($view['categories'] as $subcategory) { /** @var \Sitegear\Ext\Module\Products\Model\Category $subcategory */
-		$linkUrl = sprintf('%s/%s/%s', $view['root-url'], $view['category-url'], $subcategory->getUrlPath());
+	foreach ($view['categories'] as $subcategory) {
+		$linkUrl = sprintf('%s/%s', $view['category-base-url'], $subcategory->getUrlPath());
 		$viewScript = sprintf('%s/%s', $view['category-path'], $subcategory->getUrlPath());
 ?>
 	<section>

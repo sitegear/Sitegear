@@ -53,13 +53,11 @@ class UserIntegrationModule extends AbstractUrlMountableModule {
 
 	/**
 	 * {@inheritDoc}
-	 *
-	 * TODO Route requirements??
 	 */
 	protected function buildRoutes() {
 		$routes = new RouteCollection();
-		$routes->add('login', new Route(sprintf('%s/login', $this->getMountedUrl())));
-		$routes->add('logout', new Route(sprintf('%s/logout', $this->getMountedUrl())));
+		$routes->add('login', new Route(sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.login'))));
+		$routes->add('logout', new Route(sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.logout'))));
 		return $routes;
 	}
 
@@ -138,7 +136,7 @@ class UserIntegrationModule extends AbstractUrlMountableModule {
 			'%s/%s/%s',
 			$this->getEngine()->config('system.command-url.root'),
 			$this->getEngine()->config('system.command-url.user'),
-			$key
+			$this->config(sprintf('routes.%s', $key))
 		);
 		return UrlUtilities::generateLinkWithReturnUrl($url, $returnUrl);
 	}

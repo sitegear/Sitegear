@@ -1,10 +1,13 @@
 <?php
-/** @var \Sitegear\Core\View\View $view */
+/**
+ * @var \Sitegear\Core\View\View $view
+ * @var \Sitegear\Ext\Module\News\Model\Item $item
+ */
 if (empty($view['items'])) {
 	echo $view->news()->noHeadlines();
 } else {
-	foreach ($view['items'] as $item) { /** @var \Sitegear\Ext\Module\News\Model\Item $item */
-		$linkUrl = sprintf('%s/%s', $view['root-url'], $item->getUrlPath());
+	foreach ($view['items'] as $item) {
+		$linkUrl = sprintf('%s/%s', $view['item-base-url'], $item->getUrlPath());
 ?>
 <section class="news-item-preview">
 <?php

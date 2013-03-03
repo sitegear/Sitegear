@@ -77,14 +77,12 @@ class FormsModule extends AbstractUrlMountableModule {
 
 	/**
 	 * {@inheritDoc}
-	 *
-	 * TODO Route requirements??
 	 */
 	protected function buildRoutes() {
 		$routes = new RouteCollection();
-		$routes->add('form', new Route(sprintf('%s/form/{slug}', $this->getMountedUrl())));
-		$routes->add('initialise', new Route(sprintf('%s/init/{slug}', $this->getMountedUrl())));
-		$routes->add('jump', new Route(sprintf('%s/jump/{slug}', $this->getMountedUrl())));
+		$routes->add('form', new Route(sprintf('%s/%s/{slug}', $this->getMountedUrl(), $this->config('routes.form')), array(), array( 'slug' => '.+' )));
+		$routes->add('initialise', new Route(sprintf('%s/%s/{slug}', $this->getMountedUrl(), $this->config('routes.initialise')), array(), array( 'slug' => '.+' )));
+		$routes->add('jump', new Route(sprintf('%s/%s/{slug}', $this->getMountedUrl(), $this->config('routes.jump')), array(), array( 'slug' => '.+' )));
 		return $routes;
 	}
 
@@ -373,7 +371,7 @@ class FormsModule extends AbstractUrlMountableModule {
 			$query = strlen($request->getQueryString()) > 0 ? '?' . $request->getQueryString() : '';
 			$options = array_merge($this->config('form-builder'), array(
 				'form-url' => sprintf('%s%s', ltrim($request->getPathInfo(), '/'), $query),
-				'submit-url' => sprintf('%s/form/%s', $this->getMountedUrl(), $formKey),
+				'submit-url' => sprintf('%s/%s/%s', $this->getMountedUrl(), $this->config('routes.form'), $formKey),
 				'constraint-label-markers' => $this->config('constraints.label-markers')
 			));
 			$this->forms[$formKey] = $this->builder->buildForm($formData, $valueCallback, $errorsCallback, $options);

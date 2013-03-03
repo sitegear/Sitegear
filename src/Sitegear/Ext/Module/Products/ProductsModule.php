@@ -131,14 +131,12 @@ class ProductsModule extends AbstractUrlMountableModule implements PurchaseItemP
 
 	/**
 	 * {@inheritDoc}
-	 *
-	 * TODO Route requirements??
 	 */
 	protected function buildRoutes() {
 		$routes = new RouteCollection();
 		$routes->add('index', new Route($this->getMountedUrl()));
-		$routes->add('category', new Route(sprintf('%s/%s/{slug}', $this->getMountedUrl(), $this->config('routes.category'))));
-		$routes->add('item', new Route(sprintf('%s/%s/{slug}', $this->getMountedUrl(), $this->config('routes.item'))));
+		$routes->add('category', new Route(sprintf('%s/%s/{slug}', $this->getMountedUrl(), $this->config('routes.category')), array(), array( 'slug' => '.+' )));
+		$routes->add('item', new Route(sprintf('%s/%s/{slug}', $this->getMountedUrl(), $this->config('routes.item')), array(), array( 'slug' => '.+' )));
 		return $routes;
 	}
 
@@ -218,9 +216,8 @@ class ProductsModule extends AbstractUrlMountableModule implements PurchaseItemP
 		$view['heading'] = $this->config('heading');
 		$view['category-path'] = trim($this->config('category-path'), '/');
 		$view['item-path'] = trim($this->config('item-path'), '/');
-		$view['item-url'] = $this->config('routes.item');
-		$view['category-url'] = $this->config('routes.category');
-		$view['root-url'] = $this->getMountedUrl();
+		$view['item-base-url'] = sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.item'));
+		$view['category-base-url'] = sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.category'));
 	}
 
 	/**

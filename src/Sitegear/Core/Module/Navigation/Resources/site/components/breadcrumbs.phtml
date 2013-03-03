@@ -1,5 +1,7 @@
 <?php
-/** @var \Sitegear\Core\View\View $view */
+/**
+ * @var \Sitegear\Core\View\View $view
+ */
 $trail = array();
 foreach (array_slice($view['trail'], 0, -1) as $crumb) {
 	$trail[] = \Sitegear\Util\TokenUtilities::replaceTokens(

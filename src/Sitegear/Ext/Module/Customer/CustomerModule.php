@@ -60,17 +60,15 @@ class CustomerModule extends AbstractUrlMountableModule {
 
 	/**
 	 * {@inheritDoc}
-	 *
-	 * TODO Route requirements??
 	 */
 	protected function buildRoutes() {
 		$routes = new RouteCollection();
 		$routes->add('index', new Route($this->getMountedUrl()));
-		$routes->add('addTrolleyItem', new Route(sprintf('%s/add-trolley-item', $this->getMountedUrl())));
-		$routes->add('removeTrolleyItem', new Route(sprintf('%s/remove-trolley-item', $this->getMountedUrl())));
-		$routes->add('modifyTrolleyItem', new Route(sprintf('%s/modify-trolley-item', $this->getMountedUrl())));
-		$routes->add('trolley', new Route(sprintf('%s/trolley', $this->getMountedUrl())));
-		$routes->add('checkout', new Route(sprintf('%s/checkout', $this->getMountedUrl())));
+		$routes->add('addTrolleyItem', new Route(sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.add-trolley-item'))));
+		$routes->add('removeTrolleyItem', new Route(sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.remove-trolley-item'))));
+		$routes->add('modifyTrolleyItem', new Route(sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.modify-trolley-item'))));
+		$routes->add('trolley', new Route(sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.trolley'))));
+		$routes->add('checkout', new Route(sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.checkout'))));
 		return $routes;
 	}
 
@@ -133,7 +131,7 @@ class CustomerModule extends AbstractUrlMountableModule {
 		// Go back to the page where the submission was made.
 		return new RedirectResponse($request->getUriForPath(
 			$valid ?
-				sprintf('/%s/trolley', $this->getMountedUrl()) :
+				sprintf('/%s/%s', $this->getMountedUrl(), $this->config('routes.trolley')) :
 				sprintf('/%s', $request->request->get('form-url'))
 		));
 	}
@@ -150,7 +148,7 @@ class CustomerModule extends AbstractUrlMountableModule {
 		// Remove the item from the stored trolley data.
 		$this->removeTrolleyItem(intval($request->request->get('index')));
 		// Go back to the page where the submission was made.
-		return new RedirectResponse($request->getUriForPath(sprintf('/%s/trolley', $this->getMountedUrl())));
+		return new RedirectResponse($request->getUriForPath(sprintf('/%s/%s', $this->getMountedUrl(), $this->config('routes.trolley'))));
 	}
 
 	/**
@@ -165,7 +163,7 @@ class CustomerModule extends AbstractUrlMountableModule {
 		// Update the stored trolley data.
 		$this->modifyTrolleyItem(intval($request->request->get('index')), intval($request->request->get('quantity')));
 		// Go back to the page where the submission was made.
-		return new RedirectResponse($request->getUriForPath(sprintf('/%s/trolley', $this->getMountedUrl())));
+		return new RedirectResponse($request->getUriForPath(sprintf('/%s/%s', $this->getMountedUrl(), $this->config('routes.trolley'))));
 	}
 
 	/**
@@ -176,7 +174,10 @@ class CustomerModule extends AbstractUrlMountableModule {
 	public function trolleyController(ViewInterface $view) {
 		LoggerRegistry::debug('CustomerModule::trolleyController');
 		$this->applyConfigToView('pages.trolley', $view);
-		$view['root-url'] = $this->getMountedUrl();
+		$view['modify-item-url'] = sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.modify-trolley-item'));
+		$view['remove-item-url'] = sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.remove-trolley-item'));
+		$view['form-url'] = sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.trolley'));
+		$view['checkout-url'] = sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.checkout'));
 		$view['trolley-data'] = $this->getTrolleyData();
 	}
 
@@ -201,8 +202,9 @@ class CustomerModule extends AbstractUrlMountableModule {
 	public function trolleyPreviewComponent(ViewInterface $view) {
 		LoggerRegistry::debug('CustomerModule::trolleyPreviewComponent');
 		$this->applyConfigToView('components.trolley-preview', $view);
-		$view['root-url'] = $this->getMountedUrl();
 		$view['trolley-data'] = $this->getTrolleyData();
+		$view['details-url'] = sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.trolley'));
+		$view['checkout-url'] = sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.checkout'));
 	}
 
 	/**
@@ -462,7 +464,7 @@ class CustomerModule extends AbstractUrlMountableModule {
 
 		// Display the combined form.
 		return array(
-			'action-url' => sprintf('%s/add-trolley-item', $this->getMountedUrl()),
+			'action-url' => sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.add-trolley-item')),
 			'submit-button' => $this->config('trolley-form.submit-button'),
 			'reset-button' => false,
 			'fields' => $fieldDefinitions,

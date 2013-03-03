@@ -12,6 +12,14 @@
 return array(
 
 	/**
+	 * Route settings.
+	 */
+	'routes' => array(
+		'login' => 'login',
+		'logout' => 'logout'
+	),
+
+	/**
 	 * Component-specific settings.
 	 */
 	'components' => array(

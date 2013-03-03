@@ -1,5 +1,7 @@
 <?php
-/** @var \Sitegear\Core\View\View $view */
+/**
+ * @var \Sitegear\Core\View\View $view
+ */
 $jsonFormatter = new \Sitegear\Util\JsonFormatter();
 $jsonFormatter->setInitialIndentLevel(2);
 $view->getResourcesManager()->register('script:api:google', 'script', $view['apiScriptUrl'], true);

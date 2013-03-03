@@ -1,8 +1,12 @@
 <?php
 // TODO Editable product name and specifications
-// TODO Add to trolley form (integration with Base\Customer module)
-/** @var \Sitegear\Core\View\View $view */
-/** @var \Sitegear\Ext\Module\Products\Model\Item $item  */
+/**
+ * @var \Sitegear\Core\View\View $view
+ * @var \Sitegear\Ext\Module\Products\Model\Item $item
+ * @var \Sitegear\Ext\Module\Products\Model\Specification $specification
+ * @var \Sitegear\Ext\Module\Products\Model\Relationship $relationship
+ * @var \Sitegear\Ext\Module\Products\Model\CategoryAssignment $categoryAssignment
+ */
 $item = $view['item'];
 $view->getStringsManager()->prepend('title', $view['title'])->prepend('title', $item->getName());
 ?>
@@ -24,7 +28,7 @@ if (sizeof($item->getSpecifications()) > 0) {
 	<table>
 <?php
 	$odd = true;
-	foreach ($item->getSpecifications() as $specification) { /** @var \Sitegear\Ext\Module\Products\Model\Specification $specification */
+	foreach ($item->getSpecifications() as $specification) {
 ?>
 		<tr class="<?php echo $odd ? 'odd' : 'even'; ?>">
 			<td class="label">
@@ -50,8 +54,8 @@ if (sizeof($item->getRelationships()) > 0) {
 	<h2>Related Items</h2>
 	<ul>
 <?php
-	foreach ($item->getRelationships() as $relationship) { /** @var \Sitegear\Ext\Module\Products\Model\Relationship $relationship */
-		$linkUrl = sprintf('%s/%s/%s', $view['root-url'], $view['item-url'], $relationship->getRelatedItem()->getUrlPath());
+	foreach ($item->getRelationships() as $relationship) {
+		$linkUrl = sprintf('%s/%s', $view['item-base-url'], $relationship->getRelatedItem()->getUrlPath());
 ?>
 		<li><a href="<?php echo $linkUrl; ?>"><?php echo $relationship->getRelatedItem()->getName(); ?></a></li>
 <?php
@@ -69,8 +73,8 @@ if (sizeof($item->getCategoryAssignments()) > 0) {
 	<h2>Related Categories</h2>
 	<ul>
 <?php
-	foreach ($item->getCategoryAssignments() as $categoryAssignment) { /** @var \Sitegear\Ext\Module\Products\Model\CategoryAssignment $categoryAssignment */
-		$linkUrl = sprintf('%s/%s/%s', $view['root-url'], $view['category-url'], $categoryAssignment->getCategory()->getUrlPath());
+	foreach ($item->getCategoryAssignments() as $categoryAssignment) {
+		$linkUrl = sprintf('%s/%s', $view['category-base-url'], $categoryAssignment->getCategory()->getUrlPath());
 ?>
 		<li><a href="<?php echo $linkUrl; ?>"><?php echo $categoryAssignment->getCategory()->getName(); ?></a></li>
 <?php
