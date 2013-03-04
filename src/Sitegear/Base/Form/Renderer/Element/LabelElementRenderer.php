@@ -8,8 +8,6 @@
 
 namespace Sitegear\Base\Form\Renderer\Element;
 
-use Sitegear\Base\Form\Element\ElementInterface;
-
 /**
  * Renderer for a `LabelElement`.
  *
