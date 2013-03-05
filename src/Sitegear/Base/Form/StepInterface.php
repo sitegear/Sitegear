@@ -8,7 +8,6 @@
 
 namespace Sitegear\Base\Form;
 
-use Sitegear\Base\Form\Element\ElementInterface;
 use Sitegear\Base\Form\Processor\FormProcessorInterface;
 
 /**
@@ -19,7 +18,7 @@ use Sitegear\Base\Form\Processor\FormProcessorInterface;
 interface StepInterface {
 
 	/**
-	 * @return FormInterface Link to the parent form.
+	 * @return \Sitegear\Base\Form\FormInterface Link to the parent form.
 	 */
 	public function getForm();
 
@@ -65,16 +64,43 @@ interface StepInterface {
 	public function setErrorHeading($errorHeading);
 
 	/**
-	 * @return ElementInterface
+	 * Retrieve the fieldsets within this step.
+	 *
+	 * @return FieldsetInterface[]
 	 */
-	public function getRootElement();
+	public function getFieldsets();
 
 	/**
-	 * @param ElementInterface $root
+	 * Add a fieldset to this step.
+	 *
+	 * @param FieldsetInterface $fieldset
 	 *
 	 * @return self
 	 */
-	public function setRootElement(ElementInterface $root);
+	public function addFieldset(FieldsetInterface $fieldset);
+
+	/**
+	 * Remove a fieldset from this step.
+	 *
+	 * @param FieldsetInterface $fieldset
+	 *
+	 * @return self
+	 */
+	public function removeFieldset(FieldsetInterface $fieldset);
+
+	/**
+	 * Remove all fieldsets from this step.
+	 *
+	 * @return self
+	 */
+	public function clearFieldsets();
+
+	/**
+	 * Retrieve all the fields referenced by this step of this form.  Read-only field references should be excluded.
+	 *
+	 * @return \Sitegear\Base\Form\Field\FieldInterface[]
+	 */
+	public function getReferencedFields();
 
 	/**
 	 * @return FormProcessorInterface[]

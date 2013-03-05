@@ -12,6 +12,9 @@ namespace Sitegear\Base\Form\Builder;
  * Describes the behaviour of an object responsible for converting a particular representation of a form into a set of
  * objects.  The input representation of the form data could be anything, e.g. an array, object structure, or a
  * filename to load the data from.
+ *
+ * This creates only the form structure itself; the form's HTML representation as elements can be constructed using an
+ * implementation of `FormElementBuilderInterface`.
  */
 interface FormBuilderInterface {
 

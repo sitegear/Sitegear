@@ -9,13 +9,13 @@
 namespace Sitegear\Base\Form\Renderer\Field;
 
 use Sitegear\Base\Form\Field\FieldInterface;
-use Sitegear\Base\Form\Renderer\Factory\FormRendererFactoryInterface;
+use Sitegear\Base\Form\Renderer\AbstractRenderer;
 
 /**
  * Abstract implementation of `FieldRendererInterface`.  Implements storage of and access to the related field object
  * and the factory object responsible for generation of renderers.
  */
-abstract class AbstractFieldRenderer implements FieldRendererInterface {
+abstract class AbstractFieldRenderer extends AbstractRenderer implements FieldRendererInterface {
 
 	//-- Attributes --------------------
 
@@ -24,20 +24,15 @@ abstract class AbstractFieldRenderer implements FieldRendererInterface {
 	 */
 	private $field;
 
-	/**
-	 * @var \Sitegear\Base\Form\Renderer\Factory\FormRendererFactoryInterface
-	 */
-	private $factory;
-
 	//-- Constructor --------------------
 
 	/**
 	 * @param \Sitegear\Base\Form\Field\FieldInterface $field
-	 * @param \Sitegear\Base\Form\Renderer\Factory\FormRendererFactoryInterface $factory
+	 * @param array|null $renderOptions
 	 */
-	public function __construct(FieldInterface $field, FormRendererFactoryInterface $factory) {
+	public function __construct(FieldInterface $field, array $renderOptions=null) {
 		$this->field = $field;
-		$this->factory = $factory;
+		parent::__construct($renderOptions);
 	}
 
 	//-- FieldRendererInterface Methods --------------------
@@ -49,11 +44,19 @@ abstract class AbstractFieldRenderer implements FieldRendererInterface {
 		return $this->field;
 	}
 
+	//-- AbstractInterface Methods --------------------
+
 	/**
 	 * {@inheritDoc}
 	 */
-	public function getFactory() {
-		return $this->factory;
+	protected function normaliseRenderOptions(array $renderOptions=null) {
+		$renderOptions = parent::normaliseRenderOptions($renderOptions);
+		if (!isset($renderOptions[self::RENDER_OPTION_KEY_ATTRIBUTES]['id'])) {
+			$renderOptions[self::RENDER_OPTION_KEY_ATTRIBUTES]['id'] = $this->getField()->getName();
+		}
+		$renderOptions[self::RENDER_OPTION_KEY_ATTRIBUTES]['name'] = $this->getField()->getName();
+		$renderOptions[self::RENDER_OPTION_KEY_VALUE] = $this->getField()->getValue();
+		return $renderOptions;
 	}
 
 }

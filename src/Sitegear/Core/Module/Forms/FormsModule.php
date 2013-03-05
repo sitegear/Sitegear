@@ -17,7 +17,8 @@ use Sitegear\Base\View\ViewInterface;
 use Sitegear\Base\Form\FormInterface;
 use Sitegear\Base\Form\Field\FieldInterface;
 use Sitegear\Base\Form\Processor\FormProcessorInterface;
-use Sitegear\Core\Form\Builder\FormBuilder;
+use Sitegear\Base\Form\Renderer\FormRenderer;
+use Sitegear\Core\Form\FormBuilder;
 use Sitegear\Util\UrlUtilities;
 use Sitegear\Util\NameUtilities;
 use Sitegear\Util\TypeUtilities;
@@ -25,6 +26,7 @@ use Sitegear\Util\FileUtilities;
 use Sitegear\Util\LoggerRegistry;
 
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\Route;
@@ -41,7 +43,7 @@ class FormsModule extends AbstractUrlMountableModule {
 	//-- Attributes --------------------
 
 	/**
-	 * @var \Sitegear\Core\Form\Builder\FormBuilder
+	 * @var \Sitegear\Core\Form\FormBuilder
 	 */
 	private $builder;
 
@@ -114,7 +116,7 @@ class FormsModule extends AbstractUrlMountableModule {
 			if (($key !== 'form-url') && !is_null($form->getField($key))) {
 				$field = $form->getField($key);
 				if (!is_null($field)) {
-					$field->setValue($value);
+//					$field->setValue($value);
 					$data[$key] = $value;
 				}
 			}
@@ -144,7 +146,7 @@ class FormsModule extends AbstractUrlMountableModule {
 		$currentStep = $this->getCurrentStep($formKey);
 		$availableSteps = $this->getAvailableSteps($formKey);
 		$step = $form->getStep($currentStep);
-		$fields = $step->getRootElement()->getAncestorFields();
+		$fields = $step->getReferencedFields();
 		$values = $form->getMethod() === 'GET' ? $request->query->all() : $request->request->all();
 		$back = isset($values['back']) ? $values['back'] : false;
 		unset($values['back']);
@@ -164,7 +166,7 @@ class FormsModule extends AbstractUrlMountableModule {
 			if ($valid = $this->validateForm($formKey, $fields, $values)) {
 				// No errors, so execute processors.
 				foreach ($step->getProcessors() as $processor) {
-					if (is_null($response)) {
+					if (!$response instanceof Response) {
 						$arguments = $this->parseProcessorArguments($processor, $values);
 						try {
 							$response = TypeUtilities::invokeCallable($processor->getProcessorMethod(), null, array( $request ), $arguments);
@@ -199,7 +201,7 @@ class FormsModule extends AbstractUrlMountableModule {
 		}
 		// Return any of the following in order of preference: response returned by a processor method; redirection to
 		// the target URL; redirection to the return URL extracted from the form URL; the form URL; the home page.
-		if (is_null($response)) {
+		if (!$response instanceof Response) {
 			if (is_null($targetUrl) && !is_null($formUrl)) {
 				$targetUrl = UrlUtilities::getReturnUrl($formUrl) ?: $formUrl;
 			}
@@ -265,15 +267,15 @@ class FormsModule extends AbstractUrlMountableModule {
 		// Disable the back button if the previous step is not available.
 		$currentStep = $this->getCurrentStep($formKey);
 		$availableSteps = $this->getAvailableSteps($formKey);
-		if (!in_array($currentStep - 1, $availableSteps)) {
+		if (!in_array($currentStep - 1, $availableSteps) && is_array($form->getBackButtonAttributes())) {
 			$form->setBackButtonAttributes(array_merge($form->getBackButtonAttributes(), array( 'disabled' => 'disabled' )));
 		}
 		// Setup the view.
 		$this->applyConfigToView('component.form', $view);
-		$view['form'] = $form;
-		$view['current-step'] = $currentStep;
-		$view['renderer-factory'] = $this->createRendererFactory();
-		// Remove errors as they are about to be displayed, and we don't want to show the same errors again.
+		// TODO Pass in rendering options
+		$view['form-renderer'] = new FormRenderer($form, $currentStep);
+		// Remove errors as they are about to be displayed (they are already set in the Form structure), and we don't
+		// want to show the same errors again.
 		$this->clearErrors($formKey);
 	}
 
@@ -434,7 +436,7 @@ class FormsModule extends AbstractUrlMountableModule {
 	 * @return array
 	 */
 	public function getValues($formKey) {
-		return $this->getEngine()->getSession()->get($this->getSessionKey($formKey, 'values'));
+		return $this->getEngine()->getSession()->get($this->getSessionKey($formKey, 'values'), array());
 	}
 
 	/**
@@ -706,21 +708,6 @@ class FormsModule extends AbstractUrlMountableModule {
 				break;
 		}
 		return $result;
-	}
-
-	/**
-	 * Create a renderer factory.
-	 *
-	 * @return \Sitegear\Base\Form\Renderer\Factory\FormRendererFactoryInterface
-	 */
-	protected function createRendererFactory() {
-		return TypeUtilities::buildTypeCheckedObject(
-			$this->config('form-renderer.class'),
-			'form renderer',
-			null,
-			'\\Sitegear\\Base\\Form\\Renderer\\Factory\\FormRendererFactoryInterface',
-			$this->config('form-renderer.arguments')
-		);
 	}
 
 }

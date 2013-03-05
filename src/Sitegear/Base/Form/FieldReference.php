@@ -27,15 +27,22 @@ class FieldReference {
 	 */
 	private $readOnly;
 
+	/**
+	 * @var boolean
+	 */
+	private $wrapped;
+
 	//-- Constructor --------------------
 
 	/**
 	 * @param string $fieldName
 	 * @param boolean $readOnly
+	 * @param boolean $wrapped
 	 */
-	public function __construct($fieldName, $readOnly) {
+	public function __construct($fieldName, $readOnly, $wrapped) {
 		$this->fieldName = $fieldName;
 		$this->readOnly = $readOnly;
+		$this->wrapped = $wrapped;
 	}
 
 	//-- FieldReferenceInterface Methods --------------------
@@ -52,6 +59,13 @@ class FieldReference {
 	 */
 	public function isReadOnly() {
 		return $this->readOnly;
+	}
+
+	/**
+	 * @return boolean
+	 */
+	public function isWrapped() {
+		return $this->wrapped;
 	}
 
 }

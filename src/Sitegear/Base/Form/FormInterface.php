@@ -77,7 +77,7 @@ interface FormInterface {
 	public function setMethod($method, $force=false);
 
 	/**
-	 * @return string
+	 * @return string[]
 	 */
 	public function getSubmitButtonAttributes();
 
@@ -89,7 +89,7 @@ interface FormInterface {
 	public function setSubmitButtonAttributes(array $submitButtonAttributes);
 
 	/**
-	 * @return string
+	 * @return string[]
 	 */
 	public function getResetButtonAttributes();
 
@@ -104,7 +104,7 @@ interface FormInterface {
 	 * This only applies to multi-step forms and will sometimes be disabled (e.g. first page, or previous step is
 	 * marked "one-way")
 	 *
-	 * @return string
+	 * @return string[]
 	 */
 	public function getBackButtonAttributes();
 

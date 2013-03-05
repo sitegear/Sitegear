@@ -79,10 +79,8 @@ class Form implements FormInterface {
 		$this->cancelUrl = $cancelUrl;
 		$this->setMethod($method ?: 'POST');
 		$this->submitButtonAttributes = is_array($submitButtonAttributes) ? $submitButtonAttributes : array( 'value' => $submitButtonAttributes );
-		$this->resetButtonAttributes = is_array($resetButtonAttributes) || !is_string($resetButtonAttributes) ?
-				$resetButtonAttributes : array( 'value' => $resetButtonAttributes );
-		$this->backButtonAttributes = is_array($backButtonAttributes) || !is_string($backButtonAttributes) ?
-				$backButtonAttributes : array( 'value' => $backButtonAttributes );
+		$this->resetButtonAttributes = (is_null($resetButtonAttributes) || is_array($resetButtonAttributes)) ? $resetButtonAttributes : array( 'value' => $resetButtonAttributes );
+		$this->backButtonAttributes = (is_null($backButtonAttributes) || is_array($backButtonAttributes)) ? $backButtonAttributes : array( 'value' => $backButtonAttributes );
 		$this->fields = array();
 		$this->steps = array();
 	}

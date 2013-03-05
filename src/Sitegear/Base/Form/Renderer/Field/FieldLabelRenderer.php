@@ -8,15 +8,16 @@
 
 namespace Sitegear\Base\Form\Renderer\Field;
 
-use Sitegear\Base\Form\Renderer\Field\AbstractFieldRenderer;
 use Sitegear\Util\HtmlUtilities;
 
 /**
- * Renderer for a `TextareaField`.
- *
- * @method \Sitegear\Base\Form\Field\TextareaField getField()
+ * Renders the label for a given field.
  */
-class TextareaFieldRenderer extends AbstractFieldRenderer {
+class FieldLabelRenderer extends AbstractFieldRenderer {
+
+	//-- Constants --------------------
+
+	const RENDER_OPTION_KEY_MARKER_SEPARATOR = 'marker-separator';
 
 	//-- RendererInterface Methods --------------------
 
@@ -25,24 +26,22 @@ class TextareaFieldRenderer extends AbstractFieldRenderer {
 	 */
 	public function render(array & $output) {
 		$output[] = sprintf(
-			'<textarea%s>%s</textarea>',
+			'<label%s>%s%s</label>',
 			HtmlUtilities::attributes($this->getRenderOption(self::RENDER_OPTION_KEY_ATTRIBUTES)),
-			$this->getRenderOption(self::RENDER_OPTION_KEY_VALUE)
+			$this->getField()->getLabelText(),
+			$this->getField()->getLabelMarkers($this->getRenderOption(self::RENDER_OPTION_KEY_MARKER_SEPARATOR))
 		);
 	}
 
-	//-- AbstractInterface Methods --------------------
+	//-- AbstractRenderer Methods --------------------
 
 	/**
 	 * {@inheritDoc}
 	 */
 	protected function normaliseRenderOptions(array $renderOptions=null) {
 		$renderOptions = parent::normaliseRenderOptions($renderOptions);
-		if (!is_null($this->getField()->getRows())) {
-			$renderOptions[self::RENDER_OPTION_KEY_ATTRIBUTES]['rows'] = $this->getField()->getRows();
-		}
-		if (!is_null($this->getField()->getCols())) {
-			$renderOptions[self::RENDER_OPTION_KEY_ATTRIBUTES]['cols'] = $this->getField()->getCols();
+		if (!isset($renderOptions[self::RENDER_OPTION_KEY_MARKER_SEPARATOR])) {
+			$renderOptions[self::RENDER_OPTION_KEY_MARKER_SEPARATOR] = '';
 		}
 		return $renderOptions;
 	}

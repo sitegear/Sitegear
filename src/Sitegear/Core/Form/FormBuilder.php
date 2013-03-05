@@ -6,20 +6,15 @@
  * http://sitegear.org/
  */
 
-namespace Sitegear\Core\Form\Builder;
+namespace Sitegear\Core\Form;
 
 use Sitegear\Base\Form\Form;
+use Sitegear\Base\Form\FieldReference;
+use Sitegear\Base\Form\Fieldset;
 use Sitegear\Base\Form\Step;
 use Sitegear\Base\Form\StepInterface;
 use Sitegear\Base\Form\FormInterface;
-use Sitegear\Base\Form\FieldReference;
 use Sitegear\Base\Form\Builder\FormBuilderInterface;
-use Sitegear\Base\Form\Element\ButtonsElement;
-use Sitegear\Base\Form\Element\FieldElement;
-use Sitegear\Base\Form\Element\LabelElement;
-use Sitegear\Base\Form\Element\FieldContainerElement;
-use Sitegear\Base\Form\Element\FieldsetElement;
-use Sitegear\Base\Form\Element\FormElement;
 use Sitegear\Base\Form\Processor\ModuleProcessor;
 use Sitegear\Base\Engine\EngineInterface;
 use Sitegear\Util\ArrayUtilities;
@@ -92,7 +87,7 @@ class FormBuilder implements FormBuilderInterface {
 		return $form;
 	}
 
-	//-- Internal Methods --------------------
+	//-- Public Methods --------------------
 
 	/**
 	 * Create a single field.
@@ -105,7 +100,7 @@ class FormBuilder implements FormBuilderInterface {
 	 *
 	 * @return \Sitegear\Base\Form\Field\FieldInterface
 	 */
-	private function buildField($name, array $fieldData, $value=null, array $constraintLabelMarkers=null, array $errors=null) {
+	public function buildField($name, array $fieldData, $value=null, array $constraintLabelMarkers=null, array $errors=null) {
 		LoggerRegistry::debug('FormBuilder::buildField()');
 		$fieldType = $fieldData['type'];
 		$fieldTypeClass = new \ReflectionClass(
@@ -150,7 +145,7 @@ class FormBuilder implements FormBuilderInterface {
 	 *
 	 * @return \Symfony\Component\Validator\Constraint
 	 */
-	private function buildConstraint(array $constraintData) {
+	public function buildConstraint(array $constraintData) {
 		LoggerRegistry::debug('FormBuilder::buildConstraint()');
 		$constraintClass = new \ReflectionClass(
 			isset($constraintData['class']) ?
@@ -169,21 +164,49 @@ class FormBuilder implements FormBuilderInterface {
 	 *
 	 * @return \Sitegear\Base\Form\StepInterface
 	 */
-	private function buildStep(FormInterface $form, array $formData, $stepIndex) {
+	public function buildStep(FormInterface $form, array $formData, $stepIndex) {
 		LoggerRegistry::debug('FormBuilder::buildStep()');
 		$stepData = $formData['steps'][$stepIndex];
-		$processors = array();
-		if (isset($stepData['processors'])) {
-			foreach ($stepData['processors'] as $processorData) {
-				$processors[] = $this->buildProcessor($processorData);
-			}
-		}
 		$oneWay = isset($stepData['one-way']) ? $stepData['one-way'] : false;
 		$heading = isset($stepData['heading']) ? $stepData['heading'] : null;
 		$errorHeading = isset($stepData['error-heading']) ? $stepData['error-heading'] : null;
-		$step = new Step($form, $stepIndex, $oneWay, $heading, $errorHeading, $processors);
-		$step->setRootElement($this->buildFormElement($step, $formData, $stepData));
+		$step = new Step($form, $stepIndex, $oneWay, $heading, $errorHeading);
+		if (isset($stepData['fieldsets'])) {
+			foreach ($stepData['fieldsets'] as $fieldsetData) {
+				$step->addFieldset($this->buildFieldset($step, $fieldsetData));
+			}
+		}
+		if (isset($stepData['processors'])) {
+			foreach ($stepData['processors'] as $processorData) {
+				$step->addProcessor($this->buildProcessor($processorData));
+			}
+		}
 		return $step;
+	}
+
+	/**
+	 * Create a single fieldset, which exists within a given step.
+	 *
+	 * @param \Sitegear\Base\Form\StepInterface $step
+	 * @param array $fieldsetData
+	 *
+	 * @return \Sitegear\Base\Form\Fieldset
+	 */
+	public function buildFieldset(StepInterface $step, array $fieldsetData) {
+		LoggerRegistry::debug('FormBuilder::buildFieldset()');
+		$heading = isset($fieldsetData['heading']) ? $fieldsetData['heading'] : null;
+		$fieldset = new Fieldset($step, $heading);
+		foreach ($fieldsetData['fields'] as $fieldData) {
+			if (!is_array($fieldData)) {
+				$fieldData = array( 'field' => $fieldData );
+			}
+			$fieldset->addFieldReference(new FieldReference(
+				$fieldData['field'],
+				isset($fieldData['read-only']) && $fieldData['read-only'],
+				!isset($fieldData['wrapped']) || $fieldData['wrapped']
+			));
+		}
+		return $fieldset;
 	}
 
 	/**
@@ -191,9 +214,9 @@ class FormBuilder implements FormBuilderInterface {
 	 *
 	 * @param array $processorData
 	 *
-	 * @return \Sitegear\Base\Config\Processor\ProcessorInterface
+	 * @return \Sitegear\Base\Form\Processor\FormProcessorInterface
 	 */
-	private function buildProcessor(array $processorData) {
+	public function buildProcessor(array $processorData) {
 		LoggerRegistry::debug('FormBuilder::buildProcessor()');
 		return new ModuleProcessor(
 			$this->engine->getModule($processorData['module']),
@@ -202,66 +225,6 @@ class FormBuilder implements FormBuilderInterface {
 			isset($processorData['exception-field-names']) ? $processorData['exception-field-names'] : null,
 			isset($processorData['exception-action']) ? $processorData['exception-action'] : null
 		);
-	}
-
-	/**
-	 * Create a `FormElement` instance.
-	 *
-	 * @param \Sitegear\Base\Form\StepInterface $step
-	 * @param array $formData
-	 * @param array $stepData
-	 *
-	 * @return \Sitegear\Base\Form\Element\FormElement
-	 */
-	private function buildFormElement(StepInterface $step, array $formData, array $stepData) {
-		LoggerRegistry::debug('FormBuilder::buildFormElement()');
-		$formElement = new FormElement($step, isset($formData['attributes']) ? $formData['attributes'] : array());
-		foreach ($stepData['fieldsets'] as $fieldsetData) {
-			$formElement->addChild($this->buildFieldsetElement($step, $fieldsetData));
-		}
-		$formElement->addChild(new ButtonsElement($step));
-		return $formElement;
-	}
-
-	/**
-	 * Create a `FieldsetElement` instance.
-	 *
-	 * @param \Sitegear\Base\Form\StepInterface $step
-	 * @param array $fieldsetData
-	 *
-	 * @return \Sitegear\Base\Form\Element\FieldsetElement
-	 */
-	private function buildFieldsetElement(StepInterface $step, array $fieldsetData) {
-		LoggerRegistry::debug('FormBuilder::buildFieldsetElement()');
-		$fieldsetElement = new FieldsetElement($step, isset($formData['attributes']) ? $formData['attributes'] : array());
-		foreach ($fieldsetData['fields'] as $fieldReferenceData) {
-			$fieldsetElement->addChild($this->buildFieldContainerElement($step, $fieldReferenceData));
-		}
-		return $fieldsetElement;
-	}
-
-	/**
-	 * Create a `FieldContainerElement` instance.
-	 *
-	 * @param \Sitegear\Base\Form\StepInterface $step
-	 * @param $fieldReferenceData
-	 *
-	 * @return \Sitegear\Base\Form\Element\FieldContainerElement
-	 */
-	private function buildFieldContainerElement(StepInterface $step, $fieldReferenceData) {
-		LoggerRegistry::debug('FormBuilder::buildFieldContainerElement()');
-		if (!is_array($fieldReferenceData)) {
-			$fieldReferenceData = array( 'field' => $fieldReferenceData );
-		}
-		$fieldReferenceData = ArrayUtilities::combine(array( 'element' => 'div', 'attributes' => array(), 'read-only' => false, 'wrapper' => true ), $fieldReferenceData);
-		$fieldReference = new FieldReference($fieldReferenceData['field'], $fieldReferenceData['read-only']);
-		$fieldElement = new FieldElement($step, $fieldReference);
-		if ($fieldReferenceData['wrapper']) {
-			$fieldContainerElement = new FieldContainerElement($step, $fieldReferenceData['element'], $fieldReferenceData['attributes']);
-			return $fieldContainerElement->addChild(new LabelElement($step, $fieldReference))->addChild($fieldElement);
-		}  else {
-			return $fieldElement;
-		}
 	}
 
 }

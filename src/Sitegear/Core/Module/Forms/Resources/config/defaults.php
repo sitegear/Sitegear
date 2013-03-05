@@ -73,19 +73,11 @@ return array(
 		'submit-button' => 'Submit',
 
 		/**
-		 * Reset button attributes, or a string value to specify only the `value` attribute, or false/null to exclude
-		 * the reset button completely.
+		 * Reset button attributes, or a string value to specify only the `value` attribute, or null to exclude the
+		 * reset button completely.
 		 */
-		'reset-button' => false
+		'reset-button' => null
 
-	),
-
-	/**
-	 * Details for the `FormRendererFactoryInterface` implementation.
-	 */
-	'form-renderer' => array(
-		'class' => '\\Sitegear\\Core\\Form\\Renderer\\Factory\\NamespaceFormRendererFactory',
-		'arguments' => array()
 	),
 
 	/**

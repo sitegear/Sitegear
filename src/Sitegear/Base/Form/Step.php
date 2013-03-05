@@ -8,7 +8,6 @@
 
 namespace Sitegear\Base\Form;
 
-use Sitegear\Base\Form\Element\ElementInterface;
 use Sitegear\Base\Form\Processor\FormProcessorInterface;
 
 /**
@@ -29,11 +28,6 @@ class Step implements StepInterface {
 	private $stepIndex;
 
 	/**
-	 * @var ElementInterface
-	 */
-	private $root;
-
-	/**
 	 * @var boolean
 	 */
 	private $oneWay;
@@ -49,6 +43,11 @@ class Step implements StepInterface {
 	private $errorHeading;
 
 	/**
+	 * @var FieldsetInterface[]
+	 */
+	private $fieldsets;
+
+	/**
 	 * @var FormProcessorInterface[]
 	 */
 	private $processors;
@@ -61,16 +60,15 @@ class Step implements StepInterface {
 	 * @param boolean $oneWay
 	 * @param string|null $heading
 	 * @param string|null $errorHeading
-	 * @param array|null $processors
 	 */
-	public function __construct(FormInterface $form, $stepIndex, $oneWay=false, $heading=null, $errorHeading=null, array $processors=null) {
+	public function __construct(FormInterface $form, $stepIndex, $oneWay=false, $heading=null, $errorHeading=null) {
 		$this->form = $form;
 		$this->stepIndex = intval($stepIndex);
 		$this->oneWay = $oneWay;
 		$this->heading = $heading;
 		$this->errorHeading = $errorHeading;
-		$this->processors = $processors ?: array();
-		$this->root = null;
+		$this->fieldsets = array();
+		$this->processors = array();
 	}
 
 	//-- StepInterface Methods --------------------
@@ -120,16 +118,14 @@ class Step implements StepInterface {
 	}
 
 	/**
-	 * @return string
+	 * {@inheritDoc}
 	 */
 	public function getErrorHeading() {
 		return $this->errorHeading;
 	}
 
 	/**
-	 * @param string $errorHeading
-	 *
-	 * @return self
+	 * {@inheritDoc}
 	 */
 	public function setErrorHeading($errorHeading) {
 		$this->errorHeading = $errorHeading;
@@ -139,16 +135,48 @@ class Step implements StepInterface {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function getRootElement() {
-		return $this->root;
+	public function getFieldsets() {
+		return $this->fieldsets;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public function setRootElement(ElementInterface $root) {
-		$this->root = $root;
+	public function addFieldset(FieldsetInterface $fieldset) {
+		$this->fieldsets[] = $fieldset;
 		return $this;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function removeFieldset(FieldsetInterface $fieldset) {
+		$this->fieldsets = array_filter($this->fieldsets, function($f) use ($fieldset) {
+			return $f !== $fieldset;
+		});
+		return $this;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function clearFieldsets() {
+		$this->fieldsets = array();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function getReferencedFields() {
+		$fields = array();
+		foreach ($this->getFieldsets() as $fieldset) {
+			foreach ($fieldset->getFieldReferences() as $fieldReference) {
+				if (!$fieldReference->isReadOnly()) {
+					$fields[] = $this->getForm()->getField($fieldReference->getFieldName());
+				}
+			}
+		}
+		return $fields;
 	}
 
 	/**

@@ -8,27 +8,16 @@
 
 namespace Sitegear\Base\Form\Renderer\Field;
 
+use Sitegear\Base\Form\Renderer\RendererInterface;
+
 /**
- * Defines the behaviour of a renderer for a field.
+ * Extends RendererInterface to provide a link to a field.
  */
-interface FieldRendererInterface {
+interface FieldRendererInterface extends RendererInterface {
 
 	/**
 	 * @return \Sitegear\Base\Form\Field\FieldInterface
 	 */
 	public function getField();
-
-	/**
-	 * @return \Sitegear\Base\Form\Renderer\Factory\FormRendererFactoryInterface
-	 */
-	public function getFactory();
-
-	/**
-	 * @param array $options
-	 * @param mixed $value
-	 *
-	 * @return string[]
-	 */
-	public function render(array $options, $value);
 
 }

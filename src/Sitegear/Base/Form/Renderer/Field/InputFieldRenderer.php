@@ -8,6 +8,7 @@
 
 namespace Sitegear\Base\Form\Renderer\Field;
 
+use Sitegear\Base\Form\Renderer\Field\AbstractFieldRenderer;
 use Sitegear\Util\HtmlUtilities;
 
 /**
@@ -17,22 +18,28 @@ use Sitegear\Util\HtmlUtilities;
  */
 class InputFieldRenderer extends AbstractFieldRenderer {
 
+	//-- RendererInterface Methods --------------------
+
 	/**
 	 * {@inheritDoc}
 	 */
-	public function render(array $options, $value) {
-		$attributes = isset($options['attributes']) ? $options['attributes'] : array();
-		if (!is_null($this->getField()->getType())) {
-			$attributes['type'] = $this->getField()->getType();
-		}
-		$attributes['id'] = isset($attributes['id']) ? $attributes['id'] : $this->getField()->getName();
-		$attributes['name'] = $this->getField()->getName();
-		if (!empty($value)) {
-			$attributes['value'] = $value;
-		}
-		return array(
-			sprintf('<input%s />', HtmlUtilities::attributes($attributes) )
+	public function render(array & $output) {
+		$output[] = sprintf(
+			'<input%s />',
+			HtmlUtilities::attributes($this->getRenderOption('attributes'))
 		);
+	}
+
+	//-- AbstractInterface Methods --------------------
+
+	/**
+	 * {@inheritDoc}
+	 */
+	protected function normaliseRenderOptions(array $renderOptions=null) {
+		$renderOptions = parent::normaliseRenderOptions($renderOptions);
+		$renderOptions[self::RENDER_OPTION_KEY_ATTRIBUTES]['type'] = !is_null($this->getField()->getType()) ? $this->getField()->getType() : 'text';
+		$renderOptions[self::RENDER_OPTION_KEY_ATTRIBUTES]['value'] = $renderOptions[self::RENDER_OPTION_KEY_VALUE];
+		return $renderOptions;
 	}
 
 }

@@ -1,10 +1,9 @@
 <?php
 /**
  * @var \Sitegear\Core\View\View $view
- * @var \Sitegear\Base\Form\FormInterface $form
- * @var \Sitegear\Base\Form\Renderer\Factory\FormRendererFactoryInterface $rendererFactory
+ * @var \Sitegear\Base\Form\Renderer\FormRenderer $formRenderer
  */
-$form = $view['form'];
-$rendererFactory = $view['renderer-factory'];
-$options = array(); // TODO Options??
-echo implode(PHP_EOL, $rendererFactory->getElementRenderer($form->getStep($view['current-step'])->getRootElement())->render($options)), PHP_EOL;
+$output = array();
+$formRenderer = $view['form-renderer'];
+$formRenderer->render($output);
+echo implode(PHP_EOL, $output), PHP_EOL;
