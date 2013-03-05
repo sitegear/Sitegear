@@ -77,9 +77,9 @@ class ProductsModule extends AbstractUrlMountableModule implements PurchaseItemP
 		switch ($type) {
 			case 'item':
 				foreach ($this->getRepository('Item')->find($id)->getAttributeAssignments() as $assignment) { /** @var \Sitegear\Ext\Module\Products\Model\AttributeAssignment $assignment */
-					$options = array();
+					$values = array();
 					foreach ($assignment->getAttribute()->getOptions() as $option) { /** @var \Sitegear\Ext\Module\Products\Model\AttributeOption $option */
-						$options[] = array(
+						$values[] = array(
 							'id' => $option->getId(),
 							'value' => $option->getValue(),
 							'label' => $option->getLabel()
@@ -88,7 +88,7 @@ class ProductsModule extends AbstractUrlMountableModule implements PurchaseItemP
 					$result[] = array(
 						'id' => $assignment->getAttribute()->getId(),
 						'label' => $assignment->getAttribute()->getLabel(),
-						'options' => $options
+						'values' => $values
 					);
 				}
 				break;
