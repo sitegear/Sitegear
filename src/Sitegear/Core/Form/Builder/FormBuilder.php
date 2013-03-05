@@ -9,11 +9,11 @@
 namespace Sitegear\Core\Form\Builder;
 
 use Sitegear\Base\Form\Form;
-use Sitegear\Base\Form\FieldReference;
-use Sitegear\Base\Form\Fieldset;
+use Sitegear\Base\Form\FormInterface;
 use Sitegear\Base\Form\Step;
 use Sitegear\Base\Form\StepInterface;
-use Sitegear\Base\Form\FormInterface;
+use Sitegear\Base\Form\FieldReference;
+use Sitegear\Base\Form\Fieldset;
 use Sitegear\Base\Form\Builder\FormBuilderInterface;
 use Sitegear\Base\Form\Processor\ModuleProcessor;
 use Sitegear\Base\Engine\EngineInterface;
