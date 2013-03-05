@@ -6,10 +6,10 @@
  * http://sitegear.org/
  */
 
-namespace Sitegear\Base\Form\Renderer;
+namespace Sitegear\Core\Form\Renderer;
 
 use Sitegear\Base\Form\FieldsetInterface;
-use Sitegear\Base\Form\Renderer\Field\Factory\FieldRendererFactory;
+use Sitegear\Core\Form\Renderer\Factory\FieldRendererFactory;
 
 /**
  * RendererInterface implementation for a fieldset.

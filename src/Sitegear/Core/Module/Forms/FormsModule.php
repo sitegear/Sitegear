@@ -17,8 +17,8 @@ use Sitegear\Base\View\ViewInterface;
 use Sitegear\Base\Form\FormInterface;
 use Sitegear\Base\Form\Field\FieldInterface;
 use Sitegear\Base\Form\Processor\FormProcessorInterface;
-use Sitegear\Base\Form\Renderer\FormRenderer;
-use Sitegear\Core\Form\FormBuilder;
+use Sitegear\Core\Form\Renderer\FormRenderer;
+use Sitegear\Core\Form\Builder\FormBuilder;
 use Sitegear\Util\UrlUtilities;
 use Sitegear\Util\NameUtilities;
 use Sitegear\Util\TypeUtilities;
@@ -43,7 +43,7 @@ class FormsModule extends AbstractUrlMountableModule {
 	//-- Attributes --------------------
 
 	/**
-	 * @var \Sitegear\Core\Form\FormBuilder
+	 * @var \Sitegear\Core\Form\Builder\FormBuilder
 	 */
 	private $builder;
 

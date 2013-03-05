@@ -6,7 +6,7 @@
  * http://sitegear.org/
  */
 
-namespace Sitegear\Core\Form;
+namespace Sitegear\Core\Form\Builder;
 
 use Sitegear\Base\Form\Form;
 use Sitegear\Base\Form\FieldReference;

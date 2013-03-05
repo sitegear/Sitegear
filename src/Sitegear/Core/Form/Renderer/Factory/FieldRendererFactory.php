@@ -6,7 +6,7 @@
  * http://sitegear.org/
  */
 
-namespace Sitegear\Base\Form\Renderer\Field\Factory;
+namespace Sitegear\Core\Form\Renderer\Factory;
 
 use Sitegear\Util\TypeUtilities;
 use Sitegear\Base\Form\Field\FieldInterface;
@@ -28,7 +28,7 @@ class FieldRendererFactory {
 	 */
 	public function getFieldRenderer(FieldInterface $field, array $renderOptions=null) {
 		$fieldClass = new \ReflectionClass($field);
-		$fieldRendererClassName = sprintf('\\Sitegear\\Base\\Form\\Renderer\\Field\\%sRenderer', $fieldClass->getShortName());
+		$fieldRendererClassName = sprintf('\\Sitegear\\Core\\Form\\Renderer\\Field\\%sRenderer', $fieldClass->getShortName());
 		return TypeUtilities::buildTypeCheckedObject(
 			$fieldRendererClassName,
 			'field renderer',

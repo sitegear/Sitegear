@@ -6,7 +6,9 @@
  * http://sitegear.org/
  */
 
-namespace Sitegear\Base\Form\Renderer;
+namespace Sitegear\Core\Form\Renderer;
+
+use Sitegear\Base\Form\Renderer\RendererInterface;
 
 /**
  * Abstract base renderer class.

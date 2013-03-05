@@ -6,7 +6,7 @@
  * http://sitegear.org/
  */
 
-namespace Sitegear\Base\Form\Renderer\Field;
+namespace Sitegear\Core\Form\Renderer;
 
 /**
  * Renders the error messages for a given field.

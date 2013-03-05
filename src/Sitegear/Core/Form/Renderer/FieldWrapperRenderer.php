@@ -6,13 +6,10 @@
  * http://sitegear.org/
  */
 
-namespace Sitegear\Base\Form\Renderer;
+namespace Sitegear\Core\Form\Renderer;
 
-use Sitegear\Base\Form\Renderer\AbstractContainerRenderer;
-use Sitegear\Base\Form\Renderer\Field\Factory\FieldRendererFactory;
-use Sitegear\Base\Form\Renderer\Field\FieldErrorsRenderer;
-use Sitegear\Base\Form\Renderer\Field\FieldLabelRenderer;
 use Sitegear\Base\Form\Field\FieldInterface;
+use Sitegear\Core\Form\Renderer\Factory\FieldRendererFactory;
 use Sitegear\Util\TypeUtilities;
 
 /**

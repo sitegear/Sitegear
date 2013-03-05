@@ -6,9 +6,7 @@
  * http://sitegear.org/
  */
 
-namespace Sitegear\Base\Form\Renderer;
-
-use Sitegear\Base\Form\Renderer\Field\FieldReadOnlyRenderer;
+namespace Sitegear\Core\Form\Renderer;
 
 class FieldWrapperReadOnlyRenderer extends FieldWrapperRenderer {
 
