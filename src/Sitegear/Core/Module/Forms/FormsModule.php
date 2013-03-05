@@ -113,10 +113,9 @@ class FormsModule extends AbstractUrlMountableModule {
 		$formUrl = $request->getUriForPath('/' . $request->query->get('form-url', ''));
 		$data = array();
 		foreach ($request->query->all() as $key => $value) {
-			if (($key !== 'form-url') && !is_null($form->getField($key))) {
+			if ($key !== 'form-url') {
 				$field = $form->getField($key);
 				if (!is_null($field)) {
-//					$field->setValue($value);
 					$data[$key] = $value;
 				}
 			}
