@@ -22,19 +22,19 @@ class FieldRendererFactory {
 	 * @param \Sitegear\Base\Form\Field\FieldInterface $field
 	 * @param array $renderOptions
 	 *
-	 * @return \Sitegear\Base\Form\Renderer\Field\FieldRendererInterface
+	 * @return \Sitegear\Base\Form\Renderer\FieldRendererInterface
 	 *
 	 * TODO Allow different namespaces??
 	 */
 	public function getFieldRenderer(FieldInterface $field, array $renderOptions=null) {
 		$fieldClass = new \ReflectionClass($field);
-		$fieldRendererClassName = sprintf('\\Sitegear\\Core\\Form\\Renderer\\Field\\%sRenderer', $fieldClass->getShortName());
+		$fieldRendererClassName = sprintf('\\Sitegear\\Core\\Form\\Renderer\\%sRenderer', $fieldClass->getShortName());
 		return TypeUtilities::buildTypeCheckedObject(
 			$fieldRendererClassName,
 			'field renderer',
 			null,
 			array(
-				'\\Sitegear\\Base\\Form\\Renderer\\Field\\FieldRendererInterface'
+				'\\Sitegear\\Base\\Form\\Renderer\\FieldRendererInterface'
 			),
 			array(
 				$field,

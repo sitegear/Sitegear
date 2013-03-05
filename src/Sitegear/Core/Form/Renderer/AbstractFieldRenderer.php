@@ -9,8 +9,8 @@
 namespace Sitegear\Core\Form\Renderer;
 
 use Sitegear\Base\Form\Field\FieldInterface;
+use Sitegear\Base\Form\Renderer\FieldRendererInterface;
 use Sitegear\Core\Form\Renderer\AbstractRenderer;
-use Sitegear\Base\Form\Renderer\Field\FieldRendererInterface;
 
 /**
  * Abstract implementation of `FieldRendererInterface`.  Implements storage of and access to the related field object

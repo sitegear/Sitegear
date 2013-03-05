@@ -6,7 +6,7 @@
  * http://sitegear.org/
  */
 
-namespace Sitegear\Base\Form\Renderer\Field;
+namespace Sitegear\Base\Form\Renderer;
 
 use Sitegear\Base\Form\Renderer\RendererInterface;
 

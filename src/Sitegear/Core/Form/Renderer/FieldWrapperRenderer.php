@@ -75,7 +75,7 @@ class FieldWrapperRenderer extends AbstractContainerRenderer {
 	//-- Internal Methods --------------------
 
 	/**
-	 * @return \Sitegear\Base\Form\Renderer\Field\FieldRendererInterface
+	 * @return \Sitegear\Base\Form\Renderer\FieldRendererInterface
 	 *
 	 * TODO Pass through render options
 	 */
