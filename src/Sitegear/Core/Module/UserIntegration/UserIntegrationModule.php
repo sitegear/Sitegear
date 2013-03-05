@@ -11,7 +11,6 @@ namespace Sitegear\Core\Module\UserIntegration;
 use Sitegear\Base\Module\AbstractUrlMountableModule;
 use Sitegear\Base\Resources\ResourceLocations;
 use Sitegear\Base\View\ViewInterface;
-use Sitegear\Core\Form\Builder\FormBuilder;
 use Sitegear\Util\UrlUtilities;
 use Sitegear\Util\LoggerRegistry;
 
