@@ -78,7 +78,16 @@ if ($trolleyEmpty) {
 	<tr>
 		<td colspan="4"><?php echo $view['text']['table-total-labels']['total']; ?></td>
 		<td><?php echo $view['text']['unknown-value']; ?></td>
-		<td><?php echo sprintf($view['text']['checkout-link'], $view['checkout-url']); ?></td>
+		<td>
+<?php
+	echo \Sitegear\Util\TokenUtilities::replaceTokens(
+		$view['text']['checkout-link'],
+		array(
+			'checkoutUrl' => $view['checkout-url']
+		)
+	);
+?>
+		</td>
 	</tr>
 	</tbody>
 </table>

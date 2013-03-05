@@ -223,7 +223,7 @@ return array(
 		 * Text to display on the no-value option.  Set to an empty string to display no text, or to null to omit the
 		 * no-value option altogether.
 		 */
-		'no-value-option-label' => '-- Please Select --',
+		'no-value-label' => '-- Please Select --',
 
 		/**
 		 * Label for the Quantity field.

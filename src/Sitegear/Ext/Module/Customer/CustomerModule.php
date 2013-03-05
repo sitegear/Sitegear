@@ -9,6 +9,12 @@
 namespace Sitegear\Ext\Module\Customer;
 
 use Sitegear\Base\Module\AbstractUrlMountableModule;
+use Sitegear\Base\Form\FieldReference;
+use Sitegear\Base\Form\Form;
+use Sitegear\Base\Form\Step;
+use Sitegear\Base\Form\Fieldset;
+use Sitegear\Base\Form\Field\SelectField;
+use Sitegear\Base\Form\Field\InputField;
 use Sitegear\Base\Module\PurchaseItemProviderModuleInterface;
 use Sitegear\Base\View\ViewInterface;
 use Sitegear\Ext\Module\Customer\Model\TransactionItem;
@@ -19,6 +25,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\Route;
+use Symfony\Component\Validator\Constraints\Range;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
  * Provides customer management functionality.
@@ -117,9 +125,10 @@ class CustomerModule extends AbstractUrlMountableModule {
 		$id = $request->request->get('id');
 		// Setup the generated form.
 		$formKey = $this->config('trolley-form.form-key');
-		$this->getEngine()->forms()->registerForm($formKey, $this->buildTrolleyForm($moduleName, $type, $id));
+		$form = $this->buildTrolleyForm($moduleName, $type, $id);
+		$this->getEngine()->forms()->registerForm($formKey, $form);
 		// Validate the data against the generated form, and add the trolley item if valid.
-		if ($valid = $this->getEngine()->forms()->validateForm($formKey, 0, $request->request->all())) {
+		if ($valid = $this->getEngine()->forms()->validateForm($formKey, $form->getStep(0)->getReferencedFields(), $request->request->all())) {
 			$attributeValues = array();
 			foreach ($request->request->all() as $key => $value) {
 				if (strstr($key, 'attr_') !== false) {
@@ -249,11 +258,11 @@ class CustomerModule extends AbstractUrlMountableModule {
 		foreach ($attributeValues as $attributeValue) {
 			$attributeValue = intval($attributeValue);
 			foreach ($attributeDefinitions as $attributeDefinition) {
-				foreach ($attributeDefinition['options'] as $option) {
-					if ($option['id'] === $attributeValue) {
+				foreach ($attributeDefinition['values'] as $value) {
+					if ($value['id'] === $attributeValue) {
 						$attributes[] = array(
 							'value' => $attributeValue,
-							'label' => sprintf('%s: %s', $attributeDefinition['label'], $option['label'])
+							'label' => sprintf('%s: %s', $attributeDefinition['label'], $value['label'])
 						);
 					}
 				}
@@ -370,114 +379,82 @@ class CustomerModule extends AbstractUrlMountableModule {
 	 * @param $type
 	 * @param $id
 	 *
-	 * @return array
+	 * @return \Sitegear\Base\Form\FormInterface
 	 */
-	protected function buildTrolleyForm($moduleName, $type, $id) {
-		// The first three fields are fixed, and they are all hidden fields.  This carries the information needed to determine
-		// the unit price and other details of the project, once it is submitted to the Customer Module.
-		$fieldDefinitions = array(
-			'module' => array(
-				'component' => 'input',
-				'attributes' => array(
-					'type' => 'hidden'
-				),
-				'default' => $moduleName
-			),
-			'type' => array(
-				'component' => 'input',
-				'attributes' => array(
-					'type' => 'hidden'
-				),
-				'default' => $type
-			),
-			'id' => array(
-				'component' => 'input',
-				'attributes' => array(
-					'type' => 'hidden'
-				),
-				'default' => $id
-			)
-		);
-		$fields = array(
-			'module',
-			'type',
-			'id'
-		);
-
-		// Every item attribute is an additional field in the form.
-		foreach ($this->getPurchaseItemProviderModule($moduleName)->getPurchaseItemAttributeDefinitions($type, $id) as $attribute) { /** @var \Sitegear\Ext\Module\Products\Model\Attribute $attribute */
-			$component = 'select'; // TODO Other field types
-			$options = array();
-			$noValueOptionLabel = $this->config('trolley-form.no-value-option-label');
-			if (!is_null($noValueOptionLabel)) {
-				$options[] = array(
-					'value' => '',
-					'label' => $noValueOptionLabel
-				);
-			}
-			$labelFormat = $this->config('trolley-form.value-format');
-			foreach ($attribute['options'] as $option) {
-				$label = \Sitegear\Util\TokenUtilities::replaceTokens(
-					$labelFormat,
-					array(
-						'label' => $option['label'],
-						'value' => sprintf('$%s', number_format($option['value'] / 100, 2))
-					)
-				);
-				$options[] = array(
-					'value' => $option['id'],
-					'label' => $label
-				);
-			}
+	private function buildTrolleyForm($moduleName, $type, $id) {
+		$submitUrl = sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.add-trolley-item'));
+		$form = new Form($submitUrl);
+		// Add the hidden fields.
+		$moduleField = new InputField('module', $moduleName);
+		$moduleField->setSetting('type', 'hidden');
+		$form->addField($moduleField);
+		$typeField = new InputField('type', $type);
+		$typeField->setSetting('type', 'hidden');
+		$form->addField($typeField);
+		$idField = new InputField('id', $id);
+		$idField->setSetting('type', 'hidden');
+		$form->addField($idField);
+		// Create the array of field names for references used by the single step of the form.
+		$fields = array( 'module', 'type', 'id' );
+		// Add a field to the form for every purchase item attribute.
+		foreach ($this->getPurchaseItemProviderModule($moduleName)->getPurchaseItemAttributeDefinitions($type, $id) as $attribute) {
 			$name = sprintf('attr_%s', $attribute['id']);
-			$fieldDefinitions[$name] = array(
-				'component' => $component,
-				'label' => $attribute['label'],
-				'options' => $options,
-				'validators' => array(
-					array(
-						'constraint' => 'not-blank'
-					)
-				)
-			);
+			// TODO Other field types - MultiInputField with radios and checkboxes
+			$attributeField = new SelectField($name, null, $attribute['label']);
+			$attributeField->addConstraint(new NotBlank());
+			$attributeField->setSetting('values', $this->buildTrolleyFormAttributeFieldValues($attribute));
+			$form->addField($attributeField);
 			$fields[] = $name;
 		}
-
 		// Add the quantity field, which is a standard text field with a label.
-		$fieldDefinitions['quantity'] = array(
-			'component' => 'input',
-			'label' => $this->config('trolley-form.quantity-label'),
-			'default' => 1,
-			'validators' => array(
-				array(
-					'constraint' => 'not-blank'
-				),
-				array(
-					'constraint' => 'range',
-					'options' => array(
-						'min' => 1
-					)
-				)
-			)
-		);
+		$quantityField = new InputField('quantity', 1, $this->config('trolley-form.quantity-label'));
+		$quantityField->addConstraint(new NotBlank());
+		$quantityField->addConstraint(new Range(array( 'min' => 1 )));
+		$form->addField($quantityField);
 		$fields[] = 'quantity';
+		// Complete the form structure.
+		$step = new Step($form, 0);
+		$fieldset = new Fieldset($step);
+		foreach ($fields as $field) {
+			$fieldset->addFieldReference(new FieldReference($field, false, true));
+		}
+		$form->addStep($step->addFieldset($fieldset));
+		return $form;
+	}
 
-		// Display the combined form.
-		return array(
-			'action-url' => sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.add-trolley-item')),
-			'submit-button' => $this->config('trolley-form.submit-button'),
-			'reset-button' => false,
-			'fields' => $fieldDefinitions,
-			'pages' => array(
+	/**
+	 * Create the values array for the given attribute.
+	 *
+	 * @param array $attribute
+	 *
+	 * @return array
+	 */
+	private function buildTrolleyFormAttributeFieldValues(array $attribute) {
+		$values = array();
+		// Add the 'no value' value.
+		$noValueLabel = $this->config('trolley-form.no-value-label');
+		if (!is_null($noValueLabel)) {
+			$values[] = array(
+				'value' => '',
+				'label' => $noValueLabel
+			);
+		}
+		// Add the other values.
+		$labelFormat = $this->config('trolley-form.value-format');
+		foreach ($attribute['values'] as $value) {
+			$label = \Sitegear\Util\TokenUtilities::replaceTokens(
+				$labelFormat,
 				array(
-					'fieldsets' => array(
-						array(
-							'fields' => $fields
-						)
-					)
+					'label' => $value['label'],
+					'value' => sprintf('$%s', number_format($value['value'] / 100, 2))
 				)
-			)
-		);
+			);
+			$values[] = array(
+				'value' => $value['id'],
+				'label' => $label
+			);
+		}
+		return $values;
 	}
 
 	/**
