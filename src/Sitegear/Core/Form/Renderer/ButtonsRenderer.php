@@ -36,6 +36,7 @@ class ButtonsRenderer extends AbstractContainerRenderer {
 	//-- AbstractContainerRenderer Methods --------------------
 
 	protected function renderChildren(array & $output) {
+		// Back button.
 		$backButtonAttributes = $this->getForm()->getBackButtonAttributes();
 		if (is_array($backButtonAttributes)) {
 			$backButtonAttributes['type'] = 'submit';
@@ -45,11 +46,11 @@ class ButtonsRenderer extends AbstractContainerRenderer {
 			}
 			$output[] = sprintf('<input%s />', HtmlUtilities::attributes($backButtonAttributes));
 		}
+		// Submit button.
 		$submitButtonAttributes = $this->getForm()->getSubmitButtonAttributes();
-		if (is_array($submitButtonAttributes)) {
-			$submitButtonAttributes['type'] = 'submit';
-			$output[] = sprintf('<input%s />', HtmlUtilities::attributes($submitButtonAttributes));
-		}
+		$submitButtonAttributes['type'] = 'submit';
+		$output[] = sprintf('<input%s />', HtmlUtilities::attributes($submitButtonAttributes));
+		// Reset button.
 		$resetButtonAttributes = $this->getForm()->getResetButtonAttributes();
 		if (is_array($resetButtonAttributes)) {
 			$resetButtonAttributes['type'] = 'reset';
