@@ -20,6 +20,7 @@ use Sitegear\Base\Module\PurchaseItemProviderModuleInterface;
 use Sitegear\Base\View\ViewInterface;
 use Sitegear\Ext\Module\Customer\Model\TransactionItem;
 use Sitegear\Ext\Module\Customer\Model\Account;
+use Sitegear\Util\TokenUtilities;
 use Sitegear\Util\LoggerRegistry;
 
 use Symfony\Component\HttpFoundation\Request;
@@ -446,7 +447,7 @@ class CustomerModule extends AbstractUrlMountableModule {
 		// Add the other values.
 		$labelFormat = $this->config('forms.add-trolley-item.value-format');
 		foreach ($attribute['values'] as $value) {
-			$label = \Sitegear\Util\TokenUtilities::replaceTokens(
+			$label = TokenUtilities::replaceTokens(
 				$labelFormat,
 				array(
 					'label' => $value['label'],
