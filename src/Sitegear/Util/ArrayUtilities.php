@@ -81,4 +81,27 @@ class ArrayUtilities {
 		return $array1;
 	}
 
+	/**
+	 * Combine the two arrays of HTML attributes, i.e. key-value arrays where the keys are attribute names and the
+	 * values are attribute values.  The following rules are applied:
+	 *
+	 * 1. Attributes named "class" or "style" that exist in both $array1 and $array2 will be merged using string
+	 *    concatenation (with whitespace separator).  Note this means the style attributes must correctly end with a
+	 *    semi-colon otherwise the concatenated result will be an error.
+	 * 2. All other attributes that exist in both arrays will be given the value from $array2.
+	 *
+	 * @param array $array1
+	 * @param array $array2
+	 *
+	 * @return array
+	 */
+	public static function mergeHtmlAttributes(array $array1, array $array2) {
+		foreach (array( 'class', 'style' ) as $mergeAttribute) {
+			if (isset($array1[$mergeAttribute]) && isset($array2[$mergeAttribute])) {
+				$array2[$mergeAttribute] = sprintf('%s %s', trim($array1[$mergeAttribute]), trim($array2[$mergeAttribute]));
+			}
+		}
+		return array_merge($array1, $array2);
+	}
+
 }
