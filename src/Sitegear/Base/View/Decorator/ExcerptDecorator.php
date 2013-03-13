@@ -20,9 +20,9 @@ class ExcerptDecorator implements DecoratorInterface {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function decorate($content, $length=null) {
+	public function decorate($content, $length=null, $default=null) {
 		if (is_numeric($length)) {
-			$content = HtmlUtilities::excerpt($content, intval($length)) . PHP_EOL;
+			$content = HtmlUtilities::excerpt(!empty($content) ? $content : $default, intval($length)) . PHP_EOL;
 		}
 		return $content;
 	}
