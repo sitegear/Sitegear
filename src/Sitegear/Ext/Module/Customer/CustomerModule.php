@@ -188,6 +188,7 @@ class CustomerModule extends AbstractUrlMountableModule {
 		$view['form-url'] = sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.trolley'));
 		$view['checkout-url'] = sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.checkout'));
 		$view['trolley-data'] = $this->getTrolleyData();
+		$view['adjustments'] = array();
 	}
 
 	/**
@@ -357,7 +358,7 @@ class CustomerModule extends AbstractUrlMountableModule {
 	/**
 	 * Get the current contents of the trolley.
 	 *
-	 * @return array
+	 * @return TransactionItem[]
 	 */
 	protected function getTrolleyData() {
 		return $this->getEngine()->getSession()->get(self::SESSION_KEY_TROLLEY, array());
@@ -366,7 +367,7 @@ class CustomerModule extends AbstractUrlMountableModule {
 	/**
 	 * Set the contents of the trolley.
 	 *
-	 * @param array $data
+	 * @param TransactionItem[] $data
 	 */
 	protected function setTrolleyData(array $data) {
 		$this->getEngine()->getSession()->set(self::SESSION_KEY_TROLLEY, $data);

@@ -70,11 +70,17 @@ if ($trolleyEmpty) {
 		<td>$<?php echo number_format($totalPrice / 100, 2); ?></td>
 		<td></td>
 	</tr>
+<?php
+	foreach ($view['adjustments'] as $adjustment) {
+?>
 	<tr>
-		<td colspan="4"><?php echo $view['text']['table-total-labels']['additional']; ?></td>
+		<td colspan="4"><?php echo $adjustment['label']; ?></td>
 		<td><?php echo $view['text']['unknown-value']; ?></td>
 		<td></td>
 	</tr>
+<?php
+	}
+?>
 	<tr>
 		<td colspan="4"><?php echo $view['text']['table-total-labels']['total']; ?></td>
 		<td><?php echo $view['text']['unknown-value']; ?></td>

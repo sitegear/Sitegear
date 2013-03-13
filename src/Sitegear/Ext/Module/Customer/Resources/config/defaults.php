@@ -185,7 +185,6 @@ return array(
 				),
 				'table-total-labels' => array(
 					'subtotal' => 'Subtotal',
-					'additional' => 'Tax &amp; Shipping',
 					'total' => 'Total'
 				)
 			)
@@ -241,4 +240,5 @@ return array(
 		 */
 		'submit-button' => 'Buy Now'
 	)
+	
 );
