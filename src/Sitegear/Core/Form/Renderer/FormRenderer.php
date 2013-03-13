@@ -73,7 +73,6 @@ class FormRenderer extends AbstractContainerRenderer {
 	 */
 	protected function normaliseRenderOptions(array $renderOptions=null) {
 		$renderOptions = parent::normaliseRenderOptions($renderOptions);
-		// TODO Handle "class" attributes properly
 		$renderOptions[self::RENDER_OPTION_KEY_ELEMENT_NAME] = 'form';
 		$renderOptions[self::RENDER_OPTION_KEY_ATTRIBUTES] = array_merge(
 			$renderOptions[self::RENDER_OPTION_KEY_ATTRIBUTES],

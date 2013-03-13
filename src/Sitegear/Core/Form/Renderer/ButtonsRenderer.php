@@ -62,7 +62,6 @@ class ButtonsRenderer extends AbstractContainerRenderer {
 
 	protected function normaliseRenderOptions(array $renderOptions=null) {
 		$renderOptions = parent::normaliseRenderOptions($renderOptions);
-		// TODO Handle "class" attributes properly
 		if (!isset($renderOptions[self::RENDER_OPTION_KEY_ATTRIBUTES]['class'])) {
 			$renderOptions[self::RENDER_OPTION_KEY_ATTRIBUTES]['class'] = 'buttons';
 		}

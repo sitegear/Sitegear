@@ -9,6 +9,7 @@
 namespace Sitegear\Core\Form\Renderer;
 
 use Sitegear\Util\NameUtilities;
+use Sitegear\Util\ArrayUtilities;
 use Sitegear\Util\HtmlUtilities;
 
 /**
@@ -110,17 +111,16 @@ class MultipleInputFieldRenderer extends AbstractFieldRenderer {
 	 * {@inheritDoc}
 	 */
 	protected function normaliseRenderOptions(array $renderOptions=null) {
-		// TODO Handle "class" attributes properly
 		$renderOptions = parent::normaliseRenderOptions($renderOptions);
 		// Input elements settings
-		$renderOptions[self::RENDER_OPTION_KEY_ATTRIBUTES]['type'] = $this->getField()->getType();
-		$renderOptions[self::RENDER_OPTION_KEY_ATTRIBUTES]['name'] = $this->getField()->getName();
-		$extraClass = $this->getField()->getType();
-		if (isset($renderOptions[self::RENDER_OPTION_KEY_ATTRIBUTES]['class'])) {
-			$renderOptions[self::RENDER_OPTION_KEY_ATTRIBUTES]['class'] = sprintf('%s %s', $renderOptions[self::RENDER_OPTION_KEY_ATTRIBUTES]['class'], $extraClass);
-		} else {
-			$renderOptions[self::RENDER_OPTION_KEY_ATTRIBUTES]['class'] = $extraClass;
-		}
+		$renderOptions[self::RENDER_OPTION_KEY_ATTRIBUTES] = ArrayUtilities::mergeHtmlAttributes(
+			$renderOptions[self::RENDER_OPTION_KEY_ATTRIBUTES],
+			array(
+				'type' => $this->getField()->getType(),
+				'name' => $this->getField()->getName(),
+				'class' => $this->getField()->getType()
+			)
+		);
 		// Outer wrapper settings
 		if (!isset($renderOptions[self::RENDER_OPTION_KEY_OUTER_WRAPPER_ELEMENT_NAME])) {
 			$renderOptions[self::RENDER_OPTION_KEY_OUTER_WRAPPER_ELEMENT_NAME] = 'ul';
@@ -128,16 +128,13 @@ class MultipleInputFieldRenderer extends AbstractFieldRenderer {
 		if (!isset($renderOptions[self::RENDER_OPTION_KEY_OUTER_WRAPPER_ATTRIBUTES])) {
 			$renderOptions[self::RENDER_OPTION_KEY_OUTER_WRAPPER_ATTRIBUTES] = array();
 		}
-		if (!isset($renderOptions[self::RENDER_OPTION_KEY_OUTER_WRAPPER_ATTRIBUTES]['id'])) {
-			$renderOptions[self::RENDER_OPTION_KEY_OUTER_WRAPPER_ATTRIBUTES]['id'] = sprintf('%s-container', $this->getField()->getName());
-		}
-		$extraOuterWrapperClass = sprintf('multi-input-container %s-container', $this->getField()->getType());
-		if (isset($renderOptions[self::RENDER_OPTION_KEY_OUTER_WRAPPER_ATTRIBUTES]['class'])) {
-			$outerWrapperClass = sprintf('%s %s', $renderOptions[self::RENDER_OPTION_KEY_OUTER_WRAPPER_ATTRIBUTES]['class'], $extraOuterWrapperClass);
-		} else {
-			$outerWrapperClass = $extraOuterWrapperClass;
-		}
-		$renderOptions[self::RENDER_OPTION_KEY_OUTER_WRAPPER_ATTRIBUTES]['class'] = $outerWrapperClass;
+		$renderOptions[self::RENDER_OPTION_KEY_OUTER_WRAPPER_ATTRIBUTES] = ArrayUtilities::mergeHtmlAttributes(
+			array(
+				'id' => sprintf('%s-container', $this->getField()->getName()),
+				'class' => sprintf('multi-input-container %s-container', $this->getField()->getType())
+			),
+			$renderOptions[self::RENDER_OPTION_KEY_OUTER_WRAPPER_ATTRIBUTES]
+		);
 		// Inner wrapper settings
 		if (!isset($renderOptions[self::RENDER_OPTION_KEY_INNER_WRAPPER_ELEMENT_NAME])) {
 			$renderOptions[self::RENDER_OPTION_KEY_INNER_WRAPPER_ELEMENT_NAME] = 'li';
