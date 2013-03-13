@@ -121,7 +121,6 @@ class SwiftMailerModule extends AbstractConfigurableModule {
 	public function sendTemplate(Request $request, $subject, $addresses, $template, $data, $contentType=null, $charset=null) {
 		LoggerRegistry::debug(sprintf('SwiftMailerModule sending email from template %s', $template));
 		$view = $this->getEngine()->getViewFactory()->buildView($request);
-		// TODO Should there be a `mergeData()` method on ViewInterface to do this?  Is it being done elsewhere??
 		foreach ($data as $key => $value) {
 			$view[$key] = $value;
 		}
