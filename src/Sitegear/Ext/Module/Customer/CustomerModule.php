@@ -9,6 +9,7 @@
 namespace Sitegear\Ext\Module\Customer;
 
 use Sitegear\Base\Module\AbstractUrlMountableModule;
+use Sitegear\Base\Module\PurchaseAdjustmentProviderModuleInterface;
 use Sitegear\Base\Form\FieldReference;
 use Sitegear\Base\Form\Form;
 use Sitegear\Base\Form\Step;
@@ -111,7 +112,7 @@ class CustomerModule extends AbstractUrlMountableModule {
 	}
 
 	/**
-	 * Handle the "add to trolley" action for any purchasable item.  This is the target of the "add to trolley" form.
+	 * Handle the "add trolley item" action for any purchasable item.  This is the target of the "add trolley item" form.
 	 *
 	 * @param \Symfony\Component\HttpFoundation\Request $request
 	 *
@@ -124,8 +125,8 @@ class CustomerModule extends AbstractUrlMountableModule {
 		$type = $request->request->get('type');
 		$id = $request->request->get('id');
 		// Setup the generated form.
-		$formKey = $this->config('trolley-form.form-key');
-		$form = $this->buildTrolleyForm($moduleName, $type, $id);
+		$formKey = $this->config('forms.add-trolley-item.form-key');
+		$form = $this->buildAddTrolleyItemForm($moduleName, $type, $id);
 		$this->getEngine()->forms()->registerForm($formKey, $form);
 		// Validate the data against the generated form, and add the trolley item if valid.
 		if ($valid = $this->getEngine()->forms()->validateForm($formKey, $form->getStep(0)->getReferencedFields(), $request->request->all())) {
@@ -179,6 +180,8 @@ class CustomerModule extends AbstractUrlMountableModule {
 	 * Display the trolley details page.
 	 *
 	 * @param \Sitegear\Base\View\ViewInterface $view
+	 *
+	 * @throws \RuntimeException
 	 */
 	public function trolleyController(ViewInterface $view) {
 		LoggerRegistry::debug('CustomerModule::trolleyController');
@@ -188,7 +191,7 @@ class CustomerModule extends AbstractUrlMountableModule {
 		$view['form-url'] = sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.trolley'));
 		$view['checkout-url'] = sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.checkout'));
 		$view['trolley-data'] = $this->getTrolleyData();
-		$view['adjustments'] = array();
+		$view['adjustments'] = $this->getAdjustments();
 	}
 
 	/**
@@ -218,18 +221,18 @@ class CustomerModule extends AbstractUrlMountableModule {
 	}
 
 	/**
-	 * Display the "add to trolley" form.
+	 * Display the "add trolley item" form.
 	 *
 	 * @param \Sitegear\Base\View\ViewInterface $view
 	 * @param $moduleName
 	 * @param $type
 	 * @param $id
 	 */
-	public function trolleyFormComponent(ViewInterface $view, $moduleName, $type, $id) {
-		LoggerRegistry::debug('CustomerModule::trolleyFormComponent');
+	public function addTrolleyItemFormComponent(ViewInterface $view, $moduleName, $type, $id) {
+		LoggerRegistry::debug('CustomerModule::addTrolleyItemFormComponent');
 		// Setup the generated form.
-		$formKey = $view['form-key'] = $this->config('trolley-form.form-key');
-		$this->getEngine()->forms()->registerForm($formKey, $this->buildTrolleyForm($moduleName, $type, $id));
+		$formKey = $view['form-key'] = $this->config('forms.add-trolley-item.form-key');
+		$this->getEngine()->forms()->registerForm($formKey, $this->buildAddTrolleyItemForm($moduleName, $type, $id));
 	}
 
 	//-- Public Methods --------------------
@@ -374,7 +377,7 @@ class CustomerModule extends AbstractUrlMountableModule {
 	}
 
 	/**
-	 * Dynamically generate the trolley form configuration.
+	 * Dynamically generate the "add trolley item" form configuration.
 	 *
 	 * @param $moduleName
 	 * @param $type
@@ -382,7 +385,7 @@ class CustomerModule extends AbstractUrlMountableModule {
 	 *
 	 * @return \Sitegear\Base\Form\FormInterface
 	 */
-	private function buildTrolleyForm($moduleName, $type, $id) {
+	private function buildAddTrolleyItemForm($moduleName, $type, $id) {
 		$submitUrl = sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.add-trolley-item'));
 		$form = new Form($submitUrl);
 		// Add the hidden fields.
@@ -403,12 +406,12 @@ class CustomerModule extends AbstractUrlMountableModule {
 			// TODO Other field types - MultiInputField with radios and checkboxes
 			$attributeField = new SelectField($name, null, $attribute['label']);
 			$attributeField->addConstraint(new NotBlank());
-			$attributeField->setSetting('values', $this->buildTrolleyFormAttributeFieldValues($attribute));
+			$attributeField->setSetting('values', $this->buildAddTrolleyItemFormAttributeFieldValues($attribute));
 			$form->addField($attributeField);
 			$fields[] = $name;
 		}
 		// Add the quantity field, which is a standard text field with a label.
-		$quantityField = new InputField('quantity', 1, $this->config('trolley-form.quantity-label'));
+		$quantityField = new InputField('quantity', 1, $this->config('forms.add-trolley-item.quantity-label'));
 		$quantityField->addConstraint(new NotBlank());
 		$quantityField->addConstraint(new Range(array( 'min' => 1 )));
 		$form->addField($quantityField);
@@ -430,10 +433,10 @@ class CustomerModule extends AbstractUrlMountableModule {
 	 *
 	 * @return array
 	 */
-	private function buildTrolleyFormAttributeFieldValues(array $attribute) {
+	private function buildAddTrolleyItemFormAttributeFieldValues(array $attribute) {
 		$values = array();
 		// Add the 'no value' value.
-		$noValueLabel = $this->config('trolley-form.no-value-label');
+		$noValueLabel = $this->config('forms.add-trolley-item.no-value-label');
 		if (!is_null($noValueLabel)) {
 			$values[] = array(
 				'value' => '',
@@ -441,7 +444,7 @@ class CustomerModule extends AbstractUrlMountableModule {
 			);
 		}
 		// Add the other values.
-		$labelFormat = $this->config('trolley-form.value-format');
+		$labelFormat = $this->config('forms.add-trolley-item.value-format');
 		foreach ($attribute['values'] as $value) {
 			$label = \Sitegear\Util\TokenUtilities::replaceTokens(
 				$labelFormat,
@@ -456,6 +459,33 @@ class CustomerModule extends AbstractUrlMountableModule {
 			);
 		}
 		return $values;
+	}
+
+	/**
+	 * Get an array of key-value arrays specifying the label and value for each configured adjustment.
+	 *
+	 * @return array[]
+	 *
+	 * @throws \RuntimeException
+	 */
+	private function getAdjustments() {
+		$adjustments = array();
+		foreach ($this->config('checkout.adjustments') as $name) {
+			$module = $this->getEngine()->getModule($name);
+			if (is_null($module)) {
+				throw new \RuntimeException(sprintf('FormsModule found invalid entry in "checkout.adjustments"; module "%s" does not exist', $name));
+			} elseif (!$module instanceof PurchaseAdjustmentProviderModuleInterface) {
+				throw new \RuntimeException(sprintf('FormsModule found invalid entry in "checkout.adjustments"; must be a purchase adjustment provider module, found "%s"', $name));
+			}
+			$value = $module->getAdjustmentAmount($this->getTrolleyData(), array()); // TODO Pass in $data array
+			if (!empty($value) || $module->isVisibleUnset()) {
+				$adjustments[] = array(
+					'label' => $module->getAdjustmentLabel(),
+					'value' => $value
+				);
+			}
+		}
+		return $adjustments;
 	}
 
 	/**

@@ -75,7 +75,7 @@ if ($trolleyEmpty) {
 ?>
 	<tr>
 		<td colspan="4"><?php echo $adjustment['label']; ?></td>
-		<td><?php echo $view['text']['unknown-value']; ?></td>
+		<td><?php echo is_null($adjustment['value']) ? $view['text']['unknown-value'] : '$' . number_format($adjustment['value'] / 100, 2); ?></td>
 		<td></td>
 	</tr>
 <?php

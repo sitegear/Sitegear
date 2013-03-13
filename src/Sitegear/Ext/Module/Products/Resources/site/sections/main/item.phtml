@@ -16,8 +16,8 @@ $view->getStringsManager()->prepend('title', $view['title'])->prepend('title', $
 echo $view->products('editable')->item(sprintf('%s/%s', $view['item-path'], $item->getUrlPath()));
 
 // PURCHASE FORM
-if ($view['display-add-to-trolley-form']) {
-	echo $view->customer()->trolleyForm('products', 'item', $item->getId());
+if ($view['display-add-trolley-item-form']) {
+	echo $view->customer()->addTrolleyItemForm('products', 'item', $item->getId());
 }
 
 // ITEM SPECIFICATIONS

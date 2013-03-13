@@ -16,6 +16,13 @@ namespace Sitegear\Base\Module;
 interface PurchaseAdjustmentProviderModuleInterface extends ModuleInterface {
 
 	/**
+	 * Determine whether the adjustment should appear in views when it is not yet set or has a zero value.
+	 *
+	 * @return boolean
+	 */
+	public function isVisibleUnset();
+
+	/**
 	 * Get the label to use on the trolley table and during the checkout process to represent this adjustment.
 	 *
 	 * @return string
@@ -28,8 +35,15 @@ interface PurchaseAdjustmentProviderModuleInterface extends ModuleInterface {
 	 * @param \Sitegear\Ext\Module\Customer\Model\TransactionItem[] $items
 	 * @param array $data
 	 *
-	 * @return mixed
+	 * @return integer Amount of whole cents.
 	 */
 	public function getAdjustmentAmount(array $items, array $data);
+
+	/**
+	 * Determine whether the adjustment is already included in the unit prices of the items.
+	 *
+	 * @return boolean
+	 */
+	public function isIncludedAmount();
 
 }

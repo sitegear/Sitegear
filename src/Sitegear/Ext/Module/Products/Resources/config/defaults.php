@@ -119,7 +119,7 @@ return array(
 			 * Whether or not to display the "Add to Trolley" form.  This requires that the Customer module is
 			 * correctly configured.
 			 */
-			'display-add-to-trolley-form' => false
+			'display-add-trolley-item-form' => false
 
 		)
 	)

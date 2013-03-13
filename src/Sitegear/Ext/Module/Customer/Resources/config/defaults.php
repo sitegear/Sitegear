@@ -209,36 +209,53 @@ return array(
 	),
 
 	/**
-	 * Settings for the generated "add to trolley" form.
+	 * Form settings.
 	 */
-	'trolley-form' => array(
+	'forms' => array(
 
 		/**
-		 * Form key to use for the "add to trolley" form.
+		 * Settings for the generated "add to trolley" form.
 		 */
-		'form-key' => 'trolley',
+		'add-trolley-item' => array(
+
+			/**
+			 * Form key to use for the "add to trolley" form.
+			 */
+			'form-key' => 'trolley',
+
+			/**
+			 * Text to display on the no-value option.  Set to an empty string to display no text, or to null to omit the
+			 * no-value option altogether.
+			 */
+			'no-value-label' => '-- Please Select --',
+
+			/**
+			 * Label for the Quantity field.
+			 */
+			'quantity-label' => 'Quantity',
+
+			/**
+			 * Format mask to apply to values in the trolley form.  The available tokens are %label% and %value%, the
+			 * latter of which is given a formatted value.
+			 */
+			'value-format' => '%label% - %value%',
+
+			/**
+			 * Text for the submit button.
+			 */
+			'submit-button' => 'Buy Now'
+		)
+	),
+
+	/**
+	 * Settings for the checkout (see also "forms.checkout" for checkout form settings).
+	 */
+	'checkout' => array(
 
 		/**
-		 * Text to display on the no-value option.  Set to an empty string to display no text, or to null to omit the
-		 * no-value option altogether.
+		 * Names of modules implementing PurchaseItemAdjustmentProviderModuleInterface, which are enabled to provide
+		 * adjustments during the checkout process (such as tax, shipping, etc).
 		 */
-		'no-value-label' => '-- Please Select --',
-
-		/**
-		 * Label for the Quantity field.
-		 */
-		'quantity-label' => 'Quantity',
-
-		/**
-		 * Format mask to apply to values in the trolley form.  The available tokens are %label% and %value%, the
-		 * latter of which is given a formatted value.
-		 */
-		'value-format' => '%label% - %value%',
-
-		/**
-		 * Text for the submit button.
-		 */
-		'submit-button' => 'Buy Now'
+		'adjustments' => array()
 	)
-	
 );
