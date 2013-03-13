@@ -10,6 +10,7 @@ namespace Sitegear\Ext\Module\News;
 
 use Sitegear\Base\Module\AbstractUrlMountableModule;
 use Sitegear\Base\View\ViewInterface;
+use Sitegear\Util\TokenUtilities;
 use Sitegear\Util\LoggerRegistry;
 
 use Symfony\Component\HttpFoundation\Request;
@@ -67,21 +68,23 @@ class NewsModule extends AbstractUrlMountableModule {
 	protected function buildNavigationData($mode) {
 		$result = array();
 		$itemLimit = intval($this->config('navigation.item-limit'));
+		$dateFormat = $this->config('common.date-format');
 		foreach ($this->getRepository('Item')->findLatestItems($itemLimit) as $item) { /** @var \Sitegear\Ext\Module\News\Model\Item $item */
+			$values = array(
+				'headline' => $item->getHeadline(),
+				'datePublished' => $item->getDatePublished()->format($dateFormat)
+			);
 			$result[] = array(
 				'url' => sprintf('%s/%s', $this->getMountedUrl(), $item->getUrlPath()),
-				'label' => $item->getHeadline(),
-				// TODO Make this configurable
-				'tooltip' => sprintf('Read this news item "%s"', $item->getHeadline())
+				'label' => TokenUtilities::replaceTokens($this->config('navigation.item-link.label'), $values),
+				'tooltip' => TokenUtilities::replaceTokens($this->config('navigation.item-link.tooltip'), $values)
 			);
 		}
-		$allNewsLink = $this->config('navigation.all-news-link');
-		if (is_string($allNewsLink) && strlen($allNewsLink) > 0) {
+		if ($this->config('navigation.all-news-link.display')) {
 			$result[] = array(
 				'url' => sprintf('%s?more=1', $this->getMountedUrl()),
-				'label' => $allNewsLink,
-				// TODO Make this configurable
-				'tooltip' => 'View index of all news items'
+				'label' => $this->config('navigation.all-news-link.label'),
+				'tooltip' => $this->config('navigation.all-news-link.tooltip')
 			);
 		}
 		return $result;
@@ -149,7 +152,9 @@ class NewsModule extends AbstractUrlMountableModule {
 		$view['items'] = $this->getRepository('Item')->findLatestItems($itemLimit);
 		$view['date-format'] = $this->config('component.latest-headlines.date-format');
 		$view['excerpt-length'] = !is_null($excerptLength) ? $excerptLength : $this->config('component.latest-headlines.excerpt-length');
-		$view['read-more'] = $readMore ?: $this->config('component.latest-headlines.read-more');
+		if ($readMore) {
+			$view['read-more'] = $readMore;
+		}
 	}
 
 	//-- Internal Methods --------------------
@@ -160,8 +165,7 @@ class NewsModule extends AbstractUrlMountableModule {
 	 * @param \Sitegear\Base\View\ViewInterface $view
 	 */
 	private function applyDefaults(ViewInterface $view) {
-		$view['title'] = $this->config('title');
-		$view['heading'] = $this->config('heading');
+		$this->applyConfigToView('common', $view);
 		$view['index-url'] = $this->getMountedUrl();
 		$view['item-base-url'] = $this->getMountedUrl();
 	}

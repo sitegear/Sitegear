@@ -17,14 +17,33 @@ return array(
 	'item-path' => 'items',
 
 	/**
-	 * Title displayed on the news index page, and on the news item page after the item headline.
+	 * Settings that are used in multiple places and should have the same value everywhere.
 	 */
-	'title' => 'News',
+	'common' => array(
 
-	/**
-	 * Main page heading.
-	 */
-	'heading' => 'News',
+		/**
+		 * Title displayed on the news index page, and on the news item page after the item headline.
+		 */
+		'title' => 'News',
+
+		/**
+		 * Main page heading.
+		 */
+		'heading' => 'News',
+
+		/**
+		 * Text to use for "read more" links, null to disable completely (only have heading links).
+		 */
+		'read-more' => 'Read More &raquo;',
+
+		/**
+		 * How to show dates, null to hide completely.
+		 *
+		 * TODO Centralise this
+		 */
+		'date-format' => 'Y-m-d'
+
+	),
 
 	/**
 	 * Settings for navigation data generation.
@@ -37,10 +56,24 @@ return array(
 		'item-limit' => 5,
 
 		/**
-		 * Text to use on an additional link at the end of the list, which points to "all news", i.e. an additional
-		 * link to the top-level news index page, but with "?more=1".  If false or empty string, no link is added.
+		 * Settings to use for item links, in each value, the token `%headline%` is replaced by the item's headline and
+		 * the token `%datePublished%` is replaced by the item's publishing date.
 		 */
-		'all-news-link' => false
+		'item-link' => array(
+			'label' => '%headline%',
+			'tooltip' => 'Read this news item "%headline%" published %datePublished%'
+		),
+
+		/**
+		 * Settings to use for an additional link at the end of the list, which points to "all news", i.e. an
+		 * additional link to the top-level news index page, but with "?more=1".  If `display` is false, no link is
+		 * added.  No token replacements are performed on the value.
+		 */
+		'all-news-link' => array(
+			'display' => false,
+			'label' => 'News Archive',
+			'tooltip' => 'View index of all news items'
+		)
 
 	),
 
@@ -65,11 +98,6 @@ return array(
 			'show-less' => 'Show less items',
 
 			/**
-			 * How to show dates, null to hide completely.
-			 */
-			'date-format' => 'Y-m-d',
-
-			/**
 			 * Format for published date.  Tokens:
 			 *
 			 * %publishedDate% -- The date formatted according to 'date-format' configuration setting.
@@ -84,12 +112,7 @@ return array(
 			/**
 			 * Number of characters to show in each item's preview.
 			 */
-			'excerpt-length' => 100,
-
-			/**
-			 * Text to use for "read more" links, null to disable completely (only have heading links).
-			 */
-			'read-more' => 'Read More &raquo;'
+			'excerpt-length' => 100
 
 		),
 
@@ -97,13 +120,6 @@ return array(
 		 * Settings for the news item view page.
 		 */
 		'item' => array(
-
-			/**
-			 * How to show dates, null to hide completely.
-			 *
-			 * TODO Centralise this
-			 */
-			'date-format' => 'Y-m-d',
 
 			/**
 			 * Format for published date.  Tokens:
@@ -133,13 +149,6 @@ return array(
 		'latest-headlines' => array(
 
 			/**
-			 * How to show dates, null to hide completely.
-			 *
-			 * TODO Centralise this
-			 */
-			'date-format' => null,
-
-			/**
 			 * Format for published date.  Tokens:
 			 *
 			 * %publishedDate% -- the date formatted according to 'date-format' configuration setting.
@@ -154,12 +163,7 @@ return array(
 			/**
 			 * Number of characters to show in each item's preview.
 			 */
-			'excerpt-length' => 100,
-
-			/**
-			 * Text to use for "read more" links, null to disable completely (only have heading links).
-			 */
-			'read-more' => 'Read More &raquo;'
+			'excerpt-length' => 100
 
 		)
 	)
