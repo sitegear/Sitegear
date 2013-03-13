@@ -53,8 +53,6 @@ return array(
 		'text' => array(
 			'unknown-value' => 'TBA',
 			'no-items' => '<span class="sitegear-trolley-preview-no-items">Trolley is empty</span>',
-			'details-link' => '<a href="%detailsUrl%" class="sitegear-trolley-preview-details-link">Details</a>',
-			'checkout-link' => '<a href="%checkoutUrl%" class="sitegear-trolley-preview-checkout-link">Checkout</a>',
 			'items-count' => array(
 				'<span class="sitegear-trolley-preview-items-count">Trolley contains %count% item</span>',
 				'<span class="sitegear-trolley-preview-items-count">Trolley contains %count% items</span>'
@@ -78,8 +76,8 @@ return array(
 			'text' => array(
 				'no-items' => '{{ config:common.text.no-items }}',
 				'items-count' => '{{ config:common.text.items-count }}',
-				'details-link' => '{{ config:common.text.details-link }}',
-				'checkout-link' => '{{ config:common.text.checkout-link }}'
+				'details-link' => '<a href="%detailsUrl%" class="sitegear-trolley-preview-details-link">Details</a>',
+				'checkout-link' => '<a href="%checkoutUrl%" class="sitegear-trolley-preview-checkout-link">Checkout</a>',
 			),
 
 			/**
@@ -172,12 +170,11 @@ return array(
 				'unknown-value' => '{{ config:common.text.unknown-value }}',
 				'no-items' => '{{ config:common.text.no-items }}',
 				'items-count' => '{{ config:common.text.items-count }}',
-				'checkout-link' => '{{ config:common.text.checkout-link }}',
+				'checkout-link' => '<a href="%checkoutUrl%" class="sitegear-trolley-checkout-link">Checkout</a>',
 				'remove-button' => 'Remove',
 				'quantity-button' => '=',
 				'table-headings' => array(
 					'item' => 'Item',
-					'details' => 'Details',
 					'price' => 'Price',
 					'quantity' => 'Quantity',
 					'total' => 'Total',
@@ -187,6 +184,22 @@ return array(
 					'subtotal' => 'Subtotal',
 					'total' => 'Total'
 				)
+			),
+
+			/**
+			 * Classes used displaying the trolley details table.
+			 */
+			'table-classes' => array(
+				'table' => 'sitegear-trolley-details-table',
+				'item' => 'sitegear-trolley-item',
+				'item-label-container' => 'sitegear-trolley-item-label',
+				'item-attributes-container' => 'sitegear-trolley-item-attributes',
+				'price' => 'sitegear-trolley-price',
+				'quantity' => 'sitegear-trolley-quantity',
+				'total' => 'sitegear-trolley-total',
+				'actions' => 'sitegear-trolley-actions',
+				'total-label' => 'sitegear-trolley-total-label',
+				'checkout-link-container' => 'sitegear-trolley-checkout-link-container'
 			)
 		),
 
