@@ -123,6 +123,10 @@ class ContentModule extends AbstractUrlMountableModule {
 	/**
 	 * Recursive function to generate Routes based on directory structure.
 	 *
+	 * Note that no routes are generated for error pages.  This is so that the correct exceptions are generated and
+	 * therefore the error pages are only ever used as error pages and cannot be accessed directly by accessing a URL
+	 * like `/error-500` (this will show the 404 error page the same as any other non-existent URL).
+	 *
 	 * @param RouteCollection $collection
 	 * @param string $mainSectionPath
 	 * @param string $path
@@ -136,9 +140,9 @@ class ContentModule extends AbstractUrlMountableModule {
 					$dirPath = $path . $entry . '/';
 					$this->buildRoutesFromMainSectionViewScripts($collection, $mainSectionPath, $dirPath);
 				} else {
+					// Skip error pages.
 					$name = preg_replace('/\..*$/', '', $entry);
-					// Skip error messages TODO document this
-					if (!is_numeric($name)) {
+					if (!preg_match('/^error-\d+$/', $name)) {
 						$route = sprintf('%s%s', $path, $name);
 						$pattern = $this->getMountedUrl() . ($name === 'index' ? rtrim($path, '/') : $route);
 						$collection->add($route, new Route($pattern));
