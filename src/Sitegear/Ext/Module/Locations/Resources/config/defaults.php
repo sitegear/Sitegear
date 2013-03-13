@@ -22,16 +22,6 @@ return array(
 	'region-path' => 'regions',
 
 	/**
-	 * Title displayed on the locations index page, and on the region and location pages after the name.
-	 */
-	'title' => 'Locations',
-
-	/**
-	 * Main page heading.
-	 */
-	'heading' => 'Locations',
-
-	/**
 	 * Route settings.
 	 */
 	'routes' => array(
@@ -84,6 +74,33 @@ return array(
 	),
 
 	/**
+	 * Settings that are used in multiple places and should have the same value.
+	 */
+	'common' => array(
+
+		/**
+		 * Title displayed on the locations index page, and on the region and location pages after the name.
+		 */
+		'title' => 'Locations',
+
+		/**
+		 * Main page heading.
+		 */
+		'heading' => 'Locations',
+
+		/**
+		 * Text to use for "read more" links, null to disable completely (only have heading links).
+		 */
+		'read-more' => 'Read More &raquo;',
+
+		/**
+		 * Text to use in place of a region description when the region description is not found.
+		 */
+		'missing-region-description' => 'Region description not found.'
+
+	),
+
+	/**
 	 * Page specific settings.
 	 */
 	'page' => array(
@@ -94,11 +111,6 @@ return array(
 			 * Number of characters to show in each item's preview.
 			 */
 			'excerpt-length' => 100,
-
-			/**
-			 * Text to use for "read more" links, null to disable completely (only have heading links).
-			 */
-			'read-more' => 'Read More &raquo;',
 
 			/**
 			 * Component to use when no regions are found.
@@ -113,11 +125,6 @@ return array(
 			 * Number of characters to show in each item's preview.
 			 */
 			'excerpt-length' => 100,
-
-			/**
-			 * Text to use for "read more" links, null to disable completely (only have heading links).
-			 */
-			'read-more' => 'Read More &raquo;',
 
 			/**
 			 * Component to use when no child regions are found.
@@ -136,11 +143,6 @@ return array(
 			 * Number of characters to show in each item's preview.
 			 */
 			'excerpt-length' => 100,
-
-			/**
-			 * Text to use for "read more" links, null to disable completely (only have heading links).
-			 */
-			'read-more' => 'Read More &raquo;',
 
 			/**
 			 * Additional title text for the search page.

@@ -5,8 +5,7 @@
  * @var \Sitegear\Ext\Module\Locations\Model\Region $region
  */
 $regions = $view['regions'];
-// TODO Configurable text here
-$excerptDecorator = sprintf('excerpt(%d, "%s")', $view['excerpt-length'], 'Region description not found.');
+$excerptDecorator = sprintf('excerpt(%d, "%s")', $view['excerpt-length'], $view['missing-region-description']);
 if ($regions->count() === 0) {
 	echo $view->locations()->item(sprintf('partials/%s', $view['no-regions'] ?: 'no-regions'));
 } else {

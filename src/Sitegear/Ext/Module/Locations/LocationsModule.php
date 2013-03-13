@@ -208,8 +208,7 @@ class LocationsModule extends AbstractUrlMountableModule {
 	 * @param \Sitegear\Base\View\ViewInterface $view
 	 */
 	private function applyViewDefaults(ViewInterface $view) {
-		$view['title'] = $this->config('title');
-		$view['heading'] = $this->config('heading');
+		$this->applyConfigToView('common', $view);
 		$view['region-path'] = trim($this->config('region-path'), '/');
 		$view['item-path'] = trim($this->config('item-path'), '/');
 		$view['item-base-url'] = sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.item'));
