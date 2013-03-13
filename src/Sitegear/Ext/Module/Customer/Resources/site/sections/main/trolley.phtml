@@ -23,19 +23,19 @@ if ($trolleyEmpty) {
 <table class="<?php echo $view['table-classes']['table']; ?>">
 	<thead>
 	<tr>
-		<th class="<?php echo $view['table-classes']['item']; ?>">
+		<th class="<?php echo $view['table-classes']['columns']['item']; ?>">
 			<?php echo $view['text']['table-headings']['item']; ?>
 		</th>
-		<th class="<?php echo $view['table-classes']['price']; ?>">
+		<th class="<?php echo $view['table-classes']['columns']['price']; ?>">
 			<?php echo $view['text']['table-headings']['price']; ?>
 		</th>
-		<th class="<?php echo $view['table-classes']['quantity']; ?>">
+		<th class="<?php echo $view['table-classes']['columns']['quantity']; ?>">
 			<?php echo $view['text']['table-headings']['quantity']; ?>
 		</th>
-		<th class="<?php echo $view['table-classes']['total']; ?>">
+		<th class="<?php echo $view['table-classes']['columns']['total']; ?>">
 			<?php echo $view['text']['table-headings']['total']; ?>
 		</th>
-		<th class="<?php echo $view['table-classes']['actions']; ?>">
+		<th class="<?php echo $view['table-classes']['columns']['actions']; ?>">
 			<?php echo $view['text']['table-headings']['actions']; ?>
 		</th>
 	</tr>
@@ -47,20 +47,20 @@ if ($trolleyEmpty) {
 		$totalPrice += $item->getQuantity() * $item->getUnitPrice();
 		$inputId = sprintf('item-%d-quantity', $index);
 ?>
-	<tr>
-		<td class="<?php echo $view['table-classes']['item']; ?>">
-			<div class="<?php echo $view['table-classes']['item-label-container']; ?>">
+	<tr class="<?php echo $view['table-classes']['rows']['item']; ?>">
+		<td class="<?php echo $view['table-classes']['columns']['item']; ?>">
+			<div class="<?php echo $view['table-classes']['extra']['item-label-container']; ?>">
 				<a href="<?php echo $item->getDetailsUrl(); ?>"><?php echo $item->getLabel(); ?></a>
 			</div>
-			<div class="<?php echo $view['table-classes']['item-attributes-container']; ?>">
+			<div class="<?php echo $view['table-classes']['extra']['item-attributes-container']; ?>">
 				<?php echo implode('<br/>', array_map(function($attribute) { return $attribute['label']; }, $item->getAttributes())); ?>
 			</div>
 		</td>
-		<td class="<?php echo $view['table-classes']['price']; ?>">
+		<td class="<?php echo $view['table-classes']['columns']['price']; ?>">
 			$<?php echo number_format($item->getUnitPrice() / 100, 2); ?>
 		</td>
-		<td class="<?php echo $view['table-classes']['quantity']; ?>">
-			<form method="post" action="<?php echo $view['modify-item-url']; ?>" class="minimal">
+		<td class="<?php echo $view['table-classes']['columns']['quantity']; ?>">
+			<form method="post" action="<?php echo $view['modify-item-url']; ?>" class="<?php echo $view['table-classes']['forms']['modify']; ?>">
 				<nobr>
 					<input type="hidden" name="form-url" value="<?php echo $view['form-url']; ?>" />
 					<input type="hidden" name="index" value="<?php echo $index; ?>" />
@@ -70,11 +70,11 @@ if ($trolleyEmpty) {
 				</nobr>
 			</form>
 		</td>
-		<td class="<?php echo $view['table-classes']['total']; ?>">
+		<td class="<?php echo $view['table-classes']['columns']['total']; ?>">
 			$<?php echo number_format($item->getUnitPrice() * $item->getQuantity() / 100, 2); ?>
 		</td>
-		<td class="<?php echo $view['table-classes']['actions']; ?>">
-			<form method="post" action="<?php echo $view['remove-item-url']; ?>" class="minimal">
+		<td class="<?php echo $view['table-classes']['columns']['actions']; ?>">
+			<form method="post" action="<?php echo $view['remove-item-url']; ?>" class="<?php echo $view['table-classes']['forms']['remove']; ?>">
 				<input type="hidden" name="form-url" value="<?php echo $view['form-url']; ?>" />
 				<input type="hidden" name="index" value="<?php echo $index; ?>" />
 				<input type="submit" value="<?php echo $view['text']['remove-button']; ?>" />
@@ -84,36 +84,36 @@ if ($trolleyEmpty) {
 <?php
 	}
 ?>
-	<tr>
-		<td colspan="3" class="<?php echo $view['table-classes']['total-label']; ?>">
+	<tr class="<?php echo $view['table-classes']['rows']['subtotal']; ?>">
+		<td colspan="3" class="<?php echo $view['table-classes']['columns']['total-label']; ?>">
 			<?php echo $view['text']['table-total-labels']['subtotal']; ?>
 		</td>
-		<td class="<?php echo $view['table-classes']['total']; ?>">
+		<td class="<?php echo $view['table-classes']['columns']['total']; ?>">
 			$<?php echo number_format($totalPrice / 100, 2); ?>
 		</td>
-		<td  class="<?php echo $view['table-classes']['checkout-link-container']; ?>" rowspan="<?php echo 2 + sizeof($view['adjustments']); ?>">
+		<td  class="<?php echo $view['table-classes']['columns']['checkout-link-container']; ?>" rowspan="<?php echo 2 + sizeof($view['adjustments']); ?>">
 			<?php echo \Sitegear\Util\TokenUtilities::replaceTokens($view['text']['checkout-link'], array( 'checkoutUrl' => $view['checkout-url'] )); ?>
 		</td>
 	</tr>
 <?php
 	foreach ($view['adjustments'] as $adjustment) {
 ?>
-	<tr>
-		<td colspan="3" class="<?php echo $view['table-classes']['total-label']; ?>">
+	<tr class="<?php echo $view['table-classes']['rows']['adjustment']; ?>">
+		<td colspan="3" class="<?php echo $view['table-classes']['columns']['total-label']; ?>">
 			<?php echo $adjustment['label']; ?>
 		</td>
-		<td class="<?php echo $view['table-classes']['total']; ?>">
+		<td class="<?php echo $view['table-classes']['columns']['total']; ?>">
 			<?php echo is_null($adjustment['value']) ? $view['text']['unknown-value'] : '$' . number_format($adjustment['value'] / 100, 2); ?>
 		</td>
 	</tr>
 <?php
 	}
 ?>
-	<tr>
-		<td colspan="3" class="<?php echo $view['table-classes']['total-label']; ?>">
+	<tr class="<?php echo $view['table-classes']['rows']['total']; ?>">
+		<td colspan="3" class="<?php echo $view['table-classes']['columns']['total-label']; ?>">
 			<?php echo $view['text']['table-total-labels']['total']; ?>
 		</td>
-		<td class="<?php echo $view['table-classes']['total']; ?>">
+		<td class="<?php echo $view['table-classes']['columns']['total']; ?>">
 			<?php echo $view['text']['unknown-value']; ?>
 		</td>
 	</tr>

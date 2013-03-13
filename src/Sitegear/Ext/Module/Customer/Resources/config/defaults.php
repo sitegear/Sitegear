@@ -191,15 +191,29 @@ return array(
 			 */
 			'table-classes' => array(
 				'table' => 'sitegear-trolley-details-table',
-				'item' => 'sitegear-trolley-item',
-				'item-label-container' => 'sitegear-trolley-item-label',
-				'item-attributes-container' => 'sitegear-trolley-item-attributes',
-				'price' => 'sitegear-trolley-price',
-				'quantity' => 'sitegear-trolley-quantity',
-				'total' => 'sitegear-trolley-total',
-				'actions' => 'sitegear-trolley-actions',
-				'total-label' => 'sitegear-trolley-total-label',
-				'checkout-link-container' => 'sitegear-trolley-checkout-link-container'
+				'rows' => array(
+					'item' => 'sitegear-trolley-item-row',
+					'subtotal' => 'sitegear-trolley-subtotal-row',
+					'adjustment' => 'sitegear-trolley-adjustment-row',
+					'total' => 'sitegear-trolley-total-row'
+				),
+				'columns' => array(
+					'item' => 'sitegear-trolley-item',
+					'price' => 'sitegear-trolley-price',
+					'quantity' => 'sitegear-trolley-quantity',
+					'total' => 'sitegear-trolley-total',
+					'actions' => 'sitegear-trolley-actions',
+					'total-label' => 'sitegear-trolley-total-label',
+					'checkout-link-container' => 'sitegear-trolley-checkout-link-container'
+				),
+				'forms' => array(
+					'modify' => 'sitegear-trolley-form-modify',
+					'remove' => 'sitegear-trolley-form-modify'
+				),
+				'extra' => array(
+					'item-label-container' => 'sitegear-trolley-item-label',
+					'item-attributes-container' => 'sitegear-trolley-item-attributes'
+				)
 			)
 		),
 
