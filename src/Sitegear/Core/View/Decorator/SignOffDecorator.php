@@ -31,11 +31,12 @@ class SignOffDecorator implements DecoratorInterface {
 	public function decorate($content, ViewInterface $view=null, Request $request=null) {
 		$renderTime = $this->formatTime($view->getEngine()->getTimestamp());
 		$version = $view->getEngine()->getSitegearInfo()->getSitegearVersionIdentifier();
+		$userManager = $view->getEngine()->getUserManager();
 		$comment = sprintf(
 			'<!-- %s%s :: %s :: %s -->%s<!-- %s :: %s :: %s -->',
 			$request->getUri(),
 			is_null($view->getEngine()->getEnvironmentInfo()->getEnvironment()) ? '' : sprintf(' :: %s environment', $view->getEngine()->getEnvironmentInfo()->getEnvironment()),
-			$view->getEngine()->getUserManager()->isLoggedIn() ? 'guest user' : 'logged in user', // TODO logged in as...
+			$userManager->isLoggedIn() ? 'logged in as ' . $userManager->getLoggedInUserEmail() : 'guest user',
 			$renderTime,
 			PHP_EOL,
 			$view->getEngine()->getSitegearInfo()->getSitegearHomepage(),
