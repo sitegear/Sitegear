@@ -43,8 +43,7 @@ class TokenUtilities {
 	 */
 	public static function replaceTokens($text, array $values) {
 		foreach ($values as $token => $value) {
-			// TODO Is this the best logic for detecting string-convertible values?
-			if (is_string($value) || is_int($value) || is_float($value) || is_bool($value) || (is_object($value) && method_exists($value, '__toString'))) {
+			if (is_scalar($value) || (is_object($value) && method_exists($value, '__toString'))) {
 				$text = str_replace(sprintf('%%%s%%', $token), strval($value), $text);
 			}
 		}
