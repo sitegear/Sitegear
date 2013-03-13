@@ -74,7 +74,7 @@ return array(
 	),
 
 	/**
-	 * Settings that are used in multiple places and should have the same value.
+	 * Settings that are used in multiple places and should have the same value everywhere.
 	 */
 	'common' => array(
 
