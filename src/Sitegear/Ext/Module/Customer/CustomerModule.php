@@ -344,10 +344,10 @@ class CustomerModule extends AbstractUrlMountableModule {
 	 */
 	protected function buildAddTrolleyItemForm($moduleName, $type, $id) {
 		$formData = array(
+			'submit-url' => sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.add-trolley-item')),
 			'module-name' => $moduleName,
 			'type' => $type,
 			'id' => $id,
-			'submit-url' => sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.add-trolley-item')),
 			'labels' => array(
 				'quantity-field' => $this->config('forms.add-trolley-item.quantity-field'),
 				'no-value-option' => $this->config('forms.add-trolley-item.no-value-option'),

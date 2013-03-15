@@ -43,6 +43,15 @@ class AddTrolleyItemFormBuilder implements FormBuilderInterface {
 	//-- FormBuilderInterface Methods --------------------
 
 	/**
+	 * The $formData argument should be an array containing the following keys:
+	 *
+	 * 'submit-url' which is the URL for form submission.
+	 * 'module-name' which is the name of the module providing the purchase item.
+	 * 'type' which is the type of the purchase item.
+	 * 'id' which is the identifier of the purchase item, unique within items of the given module and type.
+	 * 'labels' which is an array containing keys 'quantity-field', 'no-value-option', and 'value-format', which may
+	 *   contain tokens %label% and %value%.
+	 *
 	 * @param mixed $formData Representation of the form.
 	 * @param callable $valueCallback
 	 * @param callable $errorsCallback
@@ -59,7 +68,7 @@ class AddTrolleyItemFormBuilder implements FormBuilderInterface {
 			throw new \InvalidArgumentException(sprintf('The specified module "%s" is not a valid purchase item provider.', $formData['module-name']));
 		}
 		// Add the hidden fields.
-		// TODO Make this a single hidden field with encoded value
+		// TODO Make 'module-name', 'type' and 'id' a single hidden field with encoded value
 		$moduleField = new InputField('module', $formData['module-name']);
 		$moduleField->setSetting('type', 'hidden');
 		$form->addField($moduleField);
