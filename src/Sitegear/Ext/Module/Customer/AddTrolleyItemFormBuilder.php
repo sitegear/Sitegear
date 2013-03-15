@@ -33,6 +33,9 @@ class AddTrolleyItemFormBuilder implements FormBuilderInterface {
 
 	//-- Constructor --------------------
 
+	/**
+	 * @param \Sitegear\Base\Engine\EngineInterface $engine
+	 */
 	public function __construct(EngineInterface $engine) {
 		$this->engine = $engine;
 	}
