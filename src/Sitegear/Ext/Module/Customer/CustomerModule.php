@@ -10,25 +10,16 @@ namespace Sitegear\Ext\Module\Customer;
 
 use Sitegear\Base\Module\AbstractUrlMountableModule;
 use Sitegear\Base\Module\PurchaseAdjustmentProviderModuleInterface;
-use Sitegear\Base\Form\FieldReference;
-use Sitegear\Base\Form\Form;
-use Sitegear\Base\Form\Step;
-use Sitegear\Base\Form\Fieldset;
-use Sitegear\Base\Form\Field\SelectField;
-use Sitegear\Base\Form\Field\InputField;
 use Sitegear\Base\Module\PurchaseItemProviderModuleInterface;
 use Sitegear\Base\View\ViewInterface;
 use Sitegear\Ext\Module\Customer\Model\TransactionItem;
 use Sitegear\Ext\Module\Customer\Model\Account;
-use Sitegear\Util\TokenUtilities;
 use Sitegear\Util\LoggerRegistry;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\Route;
-use Symfony\Component\Validator\Constraints\Range;
-use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
  * Provides customer management functionality.
@@ -343,20 +334,28 @@ class CustomerModule extends AbstractUrlMountableModule {
 	//-- Internal Methods --------------------
 
 	/**
-	 * Retrieve a named module from the engine and check that it is an instance of PurchaseItemProviderModuleInterface.
-	 * Essentially this is a shortcut to getEngine()->getModule() with an additional type check.
+	 * Utilise AddTrolleyItemFormBuilder to create the 'add trolley item' form.
 	 *
-	 * @param $name
+	 * @param string $moduleName
+	 * @param string $type
+	 * @param integer $id
 	 *
-	 * @return \Sitegear\Base\Module\PurchaseItemProviderModuleInterface
-	 * @throws \InvalidArgumentException
+	 * @return \Sitegear\Base\Form\FormInterface
 	 */
-	protected function getPurchaseItemProviderModule($name) {
-		$module = $this->getEngine()->getModule($name);
-		if (!$module instanceof PurchaseItemProviderModuleInterface) {
-			throw new \InvalidArgumentException(sprintf('The specified module "%s" is not a valid purchase item provider.', $name));
-		}
-		return $module;
+	protected function buildAddTrolleyItemForm($moduleName, $type, $id) {
+		$formData = array(
+			'module-name' => $moduleName,
+			'type' => $type,
+			'id' => $id,
+			'submit-url' => sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.add-trolley-item')),
+			'labels' => array(
+				'quantity-field' => $this->config('forms.add-trolley-item.quantity-field'),
+				'no-value-option' => $this->config('forms.add-trolley-item.no-value-option'),
+				'value-format' => $this->config('forms.add-trolley-item.value-format')
+			)
+		);
+		$formBuilder = new AddTrolleyItemFormBuilder($this->getEngine());
+		return $formBuilder->buildForm($formData, null, null, array());
 	}
 
 	/**
@@ -375,91 +374,6 @@ class CustomerModule extends AbstractUrlMountableModule {
 	 */
 	protected function setTrolleyData(array $data) {
 		$this->getEngine()->getSession()->set(self::SESSION_KEY_TROLLEY, $data);
-	}
-
-	/**
-	 * Dynamically generate the "add trolley item" form configuration.
-	 *
-	 * @param $moduleName
-	 * @param $type
-	 * @param $id
-	 *
-	 * @return \Sitegear\Base\Form\FormInterface
-	 */
-	private function buildAddTrolleyItemForm($moduleName, $type, $id) {
-		$submitUrl = sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.add-trolley-item'));
-		$form = new Form($submitUrl);
-		// Add the hidden fields.
-		$moduleField = new InputField('module', $moduleName);
-		$moduleField->setSetting('type', 'hidden');
-		$form->addField($moduleField);
-		$typeField = new InputField('type', $type);
-		$typeField->setSetting('type', 'hidden');
-		$form->addField($typeField);
-		$idField = new InputField('id', $id);
-		$idField->setSetting('type', 'hidden');
-		$form->addField($idField);
-		// Create the array of field names for references used by the single step of the form.
-		$fields = array( 'module', 'type', 'id' );
-		// Add a field to the form for every purchase item attribute.
-		foreach ($this->getPurchaseItemProviderModule($moduleName)->getPurchaseItemAttributeDefinitions($type, $id) as $attribute) {
-			$name = sprintf('attr_%s', $attribute['id']);
-			// TODO Other field types - MultiInputField with radios and checkboxes
-			$attributeField = new SelectField($name, null, $attribute['label']);
-			$attributeField->addConstraint(new NotBlank());
-			$attributeField->setSetting('values', $this->buildAddTrolleyItemFormAttributeFieldValues($attribute));
-			$form->addField($attributeField);
-			$fields[] = $name;
-		}
-		// Add the quantity field, which is a standard text field with a label.
-		$quantityField = new InputField('quantity', 1, $this->config('forms.add-trolley-item.quantity-label'));
-		$quantityField->addConstraint(new NotBlank());
-		$quantityField->addConstraint(new Range(array( 'min' => 1 )));
-		$form->addField($quantityField);
-		$fields[] = 'quantity';
-		// Complete the form structure.
-		$step = new Step($form, 0);
-		$fieldset = new Fieldset($step);
-		foreach ($fields as $field) {
-			$fieldset->addFieldReference(new FieldReference($field, false, true));
-		}
-		$form->addStep($step->addFieldset($fieldset));
-		return $form;
-	}
-
-	/**
-	 * Create the values array for the given attribute.
-	 *
-	 * @param array $attribute
-	 *
-	 * @return array
-	 */
-	private function buildAddTrolleyItemFormAttributeFieldValues(array $attribute) {
-		$values = array();
-		// Add the 'no value' value.
-		$noValueLabel = $this->config('forms.add-trolley-item.no-value-label');
-		if (!is_null($noValueLabel)) {
-			$values[] = array(
-				'value' => '',
-				'label' => $noValueLabel
-			);
-		}
-		// Add the other values.
-		$labelFormat = $this->config('forms.add-trolley-item.value-format');
-		foreach ($attribute['values'] as $value) {
-			$label = TokenUtilities::replaceTokens(
-				$labelFormat,
-				array(
-					'label' => $value['label'],
-					'value' => sprintf('$%s', number_format($value['value'] / 100, 2))
-				)
-			);
-			$values[] = array(
-				'value' => $value['id'],
-				'label' => $label
-			);
-		}
-		return $values;
 	}
 
 	/**
@@ -487,6 +401,23 @@ class CustomerModule extends AbstractUrlMountableModule {
 			}
 		}
 		return $adjustments;
+	}
+
+	/**
+	 * Retrieve a named module from the engine and check that it is an instance of PurchaseItemProviderModuleInterface.
+	 * Essentially this is a shortcut to getEngine()->getModule() with an additional type check.
+	 *
+	 * @param $name
+	 *
+	 * @return \Sitegear\Base\Module\PurchaseItemProviderModuleInterface
+	 * @throws \InvalidArgumentException
+	 */
+	protected function getPurchaseItemProviderModule($name) {
+		$module = $this->getEngine()->getModule($name);
+		if (!$module instanceof PurchaseItemProviderModuleInterface) {
+			throw new \InvalidArgumentException(sprintf('The specified module "%s" is not a valid purchase item provider.', $name));
+		}
+		return $module;
 	}
 
 	/**

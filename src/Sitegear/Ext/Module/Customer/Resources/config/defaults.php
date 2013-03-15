@@ -254,12 +254,12 @@ return array(
 			 * Text to display on the no-value option.  Set to an empty string to display no text, or to null to omit the
 			 * no-value option altogether.
 			 */
-			'no-value-label' => '-- Please Select --',
+			'no-value-option' => '-- Please Select --',
 
 			/**
 			 * Label for the Quantity field.
 			 */
-			'quantity-label' => 'Quantity',
+			'quantity-field' => 'Quantity',
 
 			/**
 			 * Format mask to apply to values in the trolley form.  The available tokens are %label% and %value%, the
