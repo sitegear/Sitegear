@@ -8,6 +8,8 @@
 
 namespace Sitegear\Base\Form\Processor;
 
+use Sitegear\Base\Form\Processor\Condition\ConditionInterface;
+
 /**
  * Defines the behaviour of a form processor, which can perform any arbitrary action upon successful (valid) submission
  * of a form step.
@@ -39,16 +41,23 @@ interface FormProcessorInterface {
 	//-- Methods --------------------
 
 	/**
+	 * Get the method that should be called when executing this processor.
+	 *
 	 * @return callable
 	 */
 	public function getProcessorMethod();
 
 	/**
+	 * Get the default arguments for the method called to execute this processor.
+	 *
 	 * @return array
 	 */
 	public function getArgumentDefaults();
 
 	/**
+	 * Modify the default arguments for the method called to execute this processor.  Completely overrides any previous
+	 * default values.
+	 *
 	 * @param array $argumentDefaults
 	 *
 	 * @return self
@@ -56,11 +65,45 @@ interface FormProcessorInterface {
 	public function setArgumentDefaults(array $argumentDefaults);
 
 	/**
+	 * @return ConditionInterface[]
+	 */
+	public function getConditions();
+
+	/**
+	 * Add a condition to this form processor.
+	 *
+	 * @param ConditionInterface $condition Condition which must be satisfied before the processor will be executed.
+	 *
+	 * @return self
+	 */
+	public function addCondition(ConditionInterface $condition);
+
+	/**
+	 * Remove all conditions from this form processor.
+	 *
+	 * @return self
+	 */
+	public function clearConditions();
+
+	/**
+	 * Determine whether the processor should be executed based on the given form values.
+	 *
+	 * @param array $values
+	 *
+	 * @return boolean
+	 */
+	public function shouldExecute(array $values);
+
+	/**
+	 * Get the names of fields to attach any error messages to.
+	 *
 	 * @return string[]
 	 */
 	public function getExceptionFieldNames();
 
 	/**
+	 * Modify the names of fields to attach any error messages to.
+	 *
 	 * @param string[] $exceptionFieldNames
 	 *
 	 * @return self
@@ -68,11 +111,17 @@ interface FormProcessorInterface {
 	public function setExceptionFieldNames(array $exceptionFieldNames);
 
 	/**
+	 * Retrieve the exception action, which indicates how exceptions occurring during execution of the processor should
+	 * be handled.
+	 *
 	 * @return string One of the EXCEPTION_ACTION_* constants defined in FormProcessorInterface.
 	 */
 	public function getExceptionAction();
 
 	/**
+	 * Modify the exception action, which indicates how exceptions occurring during execution of the processor should
+	 * be handled.
+	 *
 	 * @param string $exceptionAction One of the EXCEPTION_ACTION_* constants defined in FormProcessorInterface.
 	 *
 	 * @return self

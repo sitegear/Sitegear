@@ -8,6 +8,8 @@
 
 namespace Sitegear\Base\Form\Processor;
 
+use Sitegear\Base\Form\Processor\Condition\ConditionInterface;
+
 /**
  * Partial abstract implementation of FormProcessorInterface.
  */
@@ -19,6 +21,11 @@ abstract class AbstractFormProcessor implements FormProcessorInterface {
 	 * @var array
 	 */
 	private $argumentDefaults;
+
+	/**
+	 * @var ConditionInterface[]
+	 */
+	private $conditions;
 
 	/**
 	 * @var string[]
@@ -39,6 +46,7 @@ abstract class AbstractFormProcessor implements FormProcessorInterface {
 	 */
 	public function __construct(array $argumentDefaults=null, array $exceptionFieldNames=null, $exceptionAction=null) {
 		$this->argumentDefaults = $argumentDefaults ?: array();
+		$this->conditions = array();
 		$this->exceptionFieldNames = $exceptionFieldNames ?: array();
 		$this->exceptionAction = $exceptionAction ?: FormProcessorInterface::EXCEPTION_ACTION_RETHROW;
 	}
@@ -57,6 +65,38 @@ abstract class AbstractFormProcessor implements FormProcessorInterface {
 	 */
 	public function setArgumentDefaults(array $argumentDefaults) {
 		$this->argumentDefaults = $argumentDefaults;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function getConditions() {
+		return $this->conditions;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function addCondition(ConditionInterface $condition) {
+		$this->conditions[] = $condition;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function clearConditions() {
+		$this->conditions = array();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function shouldExecute(array $values) {
+		$result = true;
+		foreach ($this->getConditions() as $condition) {
+			$result = $result && $condition->matches($values);
+		}
+		return $result;
 	}
 
 	/**

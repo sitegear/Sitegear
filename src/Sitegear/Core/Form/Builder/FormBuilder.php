@@ -10,6 +10,7 @@ namespace Sitegear\Core\Form\Builder;
 
 use Sitegear\Base\Form\Form;
 use Sitegear\Base\Form\FormInterface;
+use Sitegear\Base\Form\Processor\Condition\ConditionInterface;
 use Sitegear\Base\Form\Step;
 use Sitegear\Base\Form\StepInterface;
 use Sitegear\Base\Form\FieldReference;
@@ -39,6 +40,11 @@ class FormBuilder implements FormBuilderInterface {
 	 * Default class name for Constraint implementations.
 	 */
 	const CLASS_NAME_FORMAT_CONSTRAINT = '\\Symfony\\Component\\Validator\\Constraints\\%s';
+
+	/**
+	 * Default class name for Constraint implementations.
+	 */
+	const CLASS_NAME_FORMAT_CONDITION = '\\Sitegear\\Base\\Form\\Processor\\Condition\\%sCondition';
 
 	//-- Attributes --------------------
 
@@ -224,14 +230,36 @@ class FormBuilder implements FormBuilderInterface {
 	 */
 	public function buildProcessor(array $processorData) {
 		LoggerRegistry::debug('FormBuilder::buildProcessor()');
-		// TODO Processor pre-requisites
-		return new ModuleProcessor(
+		$processor = new ModuleProcessor(
 			$this->engine->getModule($processorData['module']),
 			$processorData['method'],
 			isset($processorData['arguments']) ? $processorData['arguments'] : array(),
 			isset($processorData['exception-field-names']) ? $processorData['exception-field-names'] : null,
 			isset($processorData['exception-action']) ? $processorData['exception-action'] : null
 		);
+		if (isset($processorData['conditions'])) {
+			foreach ($processorData['conditions'] as $conditionData) {
+				$processor->addCondition($this->buildCondition($conditionData));
+			}
+		}
+		return $processor;
+	}
+
+	/**
+	 * Create a single condition for a single processor.
+	 *
+	 * @param array $conditionData
+	 *
+	 * @return ConditionInterface
+	 */
+	public function buildCondition(array $conditionData) {
+		$conditionClass = new \ReflectionClass(
+			sprintf(
+				self::CLASS_NAME_FORMAT_CONDITION,
+				NameUtilities::convertToStudlyCaps($conditionData['condition'])
+			)
+		);
+		return $conditionClass->newInstance($conditionData['field'], $conditionData['values']);
 	}
 
 }

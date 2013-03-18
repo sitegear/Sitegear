@@ -170,7 +170,7 @@ class FormsModule extends AbstractUrlMountableModule {
 			if (empty($errors)) {
 				// No errors, so execute processors.
 				foreach ($step->getProcessors() as $processor) {
-					if (!$response instanceof Response) {
+					if (!$response instanceof Response && $processor->shouldExecute($values)) {
 						$arguments = $this->parseProcessorArguments($processor, $values);
 						try {
 							$response = TypeUtilities::invokeCallable($processor->getProcessorMethod(), null, array( $request ), $arguments);
