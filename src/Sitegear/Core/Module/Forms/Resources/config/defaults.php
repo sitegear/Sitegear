@@ -82,10 +82,38 @@ return array(
 						'class' => 'form'
 					)
 				),
+				'Sitegear\\Core\\Form\\Renderer\\FieldsetRenderer' => array(),
+				'Sitegear\\Core\\Form\\Renderer\\FieldWrapperRenderer' => array(
+					'attributes' => array(
+						'class' => 'field'
+					)
+				),
+				'Sitegear\\Core\\Form\\Renderer\\FieldWrapperReadOnlyRenderer' => array(),
+				'Sitegear\\Core\\Form\\Renderer\\FieldLabelRenderer' => array(),
+				'Sitegear\\Core\\Form\\Renderer\\FieldErrorsRenderer' => array(
+					'element' => 'ul',
+					'attributes' => array(
+						'class' => 'errors'
+					),
+					'error-wrapper-element' => 'li',
+					'error-wrapper-attributes' => array()
+				),
 				'Sitegear\\Core\\Form\\Renderer\\ButtonsRenderer' => array(
-					'element' => 'div',
 					'attributes' => array(
 						'class' => 'buttons'
+					)
+				),
+				'Sitegear\\Core\\Form\\Renderer\\InputFieldRenderer' => array(),
+				'Sitegear\\Core\\Form\\Renderer\\TextareaFieldRenderer' => array(),
+				'Sitegear\\Core\\Form\\Renderer\\SelectFieldRenderer' => array(),
+				'Sitegear\\Core\\Form\\Renderer\\MultipleInputFieldRenderer' => array(
+					'outer-wrapper-element-name' => 'ul',
+					'inner-wrapper-element-name' => 'li'
+				),
+				'Sitegear\\Core\\Form\\Renderer\\FieldReadOnlyRenderer' => array(
+					'element' => 'span',
+					'attributes' => array(
+						'class' => 'display'
 					)
 				)
 			)

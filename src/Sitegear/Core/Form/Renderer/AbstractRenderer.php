@@ -10,6 +10,7 @@ namespace Sitegear\Core\Form\Renderer;
 
 use Sitegear\Base\Form\Renderer\Factory\RendererFactoryInterface;
 use Sitegear\Base\Form\Renderer\RendererInterface;
+use Sitegear\Util\ArrayUtilities;
 
 /**
  * Abstract base renderer class.
@@ -76,14 +77,13 @@ abstract class AbstractRenderer implements RendererInterface {
 	 */
 	protected function normaliseRenderOptions() {
 		$class = new \ReflectionClass($this);
-		$renderOptions = $this->getFactory()->getRenderOptionDefaults($class->getName());
-		if (!isset($renderOptions[self::RENDER_OPTION_KEY_ELEMENT_NAME])) {
-			$renderOptions[self::RENDER_OPTION_KEY_ELEMENT_NAME] = 'div';
-		}
-		if (!isset($renderOptions[self::RENDER_OPTION_KEY_ATTRIBUTES])) {
-			$renderOptions[self::RENDER_OPTION_KEY_ATTRIBUTES] = array();
-		}
-		return $renderOptions;
+		return ArrayUtilities::combine(
+			array(
+				self::RENDER_OPTION_KEY_ELEMENT_NAME => 'div',
+				self::RENDER_OPTION_KEY_ATTRIBUTES => array()
+			),
+			$this->getFactory()->getRenderOptionDefaults($class->getName())
+		);
 	}
 
 }

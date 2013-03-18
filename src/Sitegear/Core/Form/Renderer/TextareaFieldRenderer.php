@@ -8,6 +8,7 @@
 
 namespace Sitegear\Core\Form\Renderer;
 
+use Sitegear\Util\ArrayUtilities;
 use Sitegear\Util\HtmlUtilities;
 
 /**
@@ -26,7 +27,7 @@ class TextareaFieldRenderer extends AbstractFieldRenderer {
 		$output[] = sprintf(
 			'<textarea%s>%s</textarea>',
 			HtmlUtilities::attributes($this->getRenderOption(self::RENDER_OPTION_KEY_ATTRIBUTES)),
-			$this->getRenderOption(self::RENDER_OPTION_KEY_VALUE)
+			$this->getField()->getValue()
 		);
 	}
 
@@ -36,14 +37,15 @@ class TextareaFieldRenderer extends AbstractFieldRenderer {
 	 * {@inheritDoc}
 	 */
 	protected function normaliseRenderOptions() {
-		$renderOptions = parent::normaliseRenderOptions();
-		if (!is_null($this->getField()->getRows())) {
-			$renderOptions[self::RENDER_OPTION_KEY_ATTRIBUTES]['rows'] = $this->getField()->getRows();
-		}
-		if (!is_null($this->getField()->getCols())) {
-			$renderOptions[self::RENDER_OPTION_KEY_ATTRIBUTES]['cols'] = $this->getField()->getCols();
-		}
-		return $renderOptions;
+		return ArrayUtilities::combine(
+			parent::normaliseRenderOptions(),
+			array(
+				self::RENDER_OPTION_KEY_ATTRIBUTES => array(
+					'rows' => $this->getField()->getRows(),
+					'cols' => $this->getField()->getCols()
+				)
+			)
+		);
 	}
 
 }

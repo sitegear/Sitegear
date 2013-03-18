@@ -8,6 +8,7 @@
 
 namespace Sitegear\Core\Form\Renderer;
 
+use Sitegear\Util\ArrayUtilities;
 use Sitegear\Util\HtmlUtilities;
 
 /**

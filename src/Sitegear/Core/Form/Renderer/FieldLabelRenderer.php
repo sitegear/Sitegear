@@ -8,6 +8,7 @@
 
 namespace Sitegear\Core\Form\Renderer;
 
+use Sitegear\Util\ArrayUtilities;
 use Sitegear\Util\HtmlUtilities;
 
 /**
@@ -17,6 +18,10 @@ class FieldLabelRenderer extends AbstractFieldRenderer {
 
 	//-- Constants --------------------
 
+	/**
+	 * Render option key used to specify the separator between label markers, and between the label and the first
+	 * label marker.
+	 */
 	const RENDER_OPTION_KEY_MARKER_SEPARATOR = 'marker-separator';
 
 	//-- RendererInterface Methods --------------------
@@ -39,11 +44,12 @@ class FieldLabelRenderer extends AbstractFieldRenderer {
 	 * {@inheritDoc}
 	 */
 	protected function normaliseRenderOptions() {
-		$renderOptions = parent::normaliseRenderOptions();
-		if (!isset($renderOptions[self::RENDER_OPTION_KEY_MARKER_SEPARATOR])) {
-			$renderOptions[self::RENDER_OPTION_KEY_MARKER_SEPARATOR] = '';
-		}
-		return $renderOptions;
+		return ArrayUtilities::combine(
+			array(
+				self::RENDER_OPTION_KEY_MARKER_SEPARATOR => ''
+			),
+			parent::normaliseRenderOptions()
+		);
 	}
 
 }

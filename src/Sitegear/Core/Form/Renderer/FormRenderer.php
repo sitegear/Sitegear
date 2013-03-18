@@ -10,6 +10,7 @@ namespace Sitegear\Core\Form\Renderer;
 
 use Sitegear\Base\Form\FormInterface;
 use Sitegear\Base\Form\Renderer\Factory\RendererFactoryInterface;
+use Sitegear\Util\ArrayUtilities;
 
 /**
  * RendererInterface implementation for the top-level form element.
@@ -75,16 +76,16 @@ class FormRenderer extends AbstractContainerRenderer {
 	 * {@inheritDoc}
 	 */
 	protected function normaliseRenderOptions() {
-		$renderOptions = parent::normaliseRenderOptions();
-		$renderOptions[self::RENDER_OPTION_KEY_ELEMENT_NAME] = 'form';
-		$renderOptions[self::RENDER_OPTION_KEY_ATTRIBUTES] = array_merge(
-			$renderOptions[self::RENDER_OPTION_KEY_ATTRIBUTES],
+		return ArrayUtilities::combine(
+			parent::normaliseRenderOptions(),
 			array(
-				'action' => $this->form->getSubmitUrl(),
-				'method' => $this->form->getMethod()
+				self::RENDER_OPTION_KEY_ELEMENT_NAME => 'form',
+				self::RENDER_OPTION_KEY_ATTRIBUTES => array(
+					'action' => $this->form->getSubmitUrl(),
+					'method' => $this->form->getMethod()
+				)
 			)
 		);
-		return $renderOptions;
 	}
 
 }

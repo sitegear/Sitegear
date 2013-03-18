@@ -60,18 +60,4 @@ class FieldWrapperRenderer extends AbstractContainerRenderer {
 		$fieldRenderer->render($output);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	protected function normaliseRenderOptions(array $renderOptions=null) {
-		$renderOptions = parent::normaliseRenderOptions($renderOptions);
-		if (!isset($renderOptions[self::RENDER_OPTION_KEY_ATTRIBUTES])) {
-			$renderOptions[self::RENDER_OPTION_KEY_ATTRIBUTES] = array();
-		}
-		if (!isset($renderOptions[self::RENDER_OPTION_KEY_ATTRIBUTES]['class'])) {
-			$renderOptions[self::RENDER_OPTION_KEY_ATTRIBUTES]['class'] = 'field';
-		}
-		return $renderOptions;
-	}
-
 }

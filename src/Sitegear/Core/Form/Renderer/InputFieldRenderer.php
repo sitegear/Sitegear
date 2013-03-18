@@ -8,6 +8,7 @@
 
 namespace Sitegear\Core\Form\Renderer;
 
+use Sitegear\Util\ArrayUtilities;
 use Sitegear\Util\HtmlUtilities;
 
 /**
@@ -35,10 +36,15 @@ class InputFieldRenderer extends AbstractFieldRenderer {
 	 * {@inheritDoc}
 	 */
 	protected function normaliseRenderOptions() {
-		$renderOptions = parent::normaliseRenderOptions();
-		$renderOptions[self::RENDER_OPTION_KEY_ATTRIBUTES]['type'] = !is_null($this->getField()->getType()) ? $this->getField()->getType() : 'text';
-		$renderOptions[self::RENDER_OPTION_KEY_ATTRIBUTES]['value'] = $renderOptions[self::RENDER_OPTION_KEY_VALUE];
-		return $renderOptions;
+		return ArrayUtilities::combine(
+			parent::normaliseRenderOptions(),
+			array(
+				self::RENDER_OPTION_KEY_ATTRIBUTES => array(
+					'type' => $this->getField()->getType() ?: 'text',
+					'value' => $this->getField()->getValue()
+				)
+			)
+		);
 	}
 
 }

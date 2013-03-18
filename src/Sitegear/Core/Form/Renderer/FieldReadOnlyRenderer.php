@@ -21,32 +21,7 @@ class FieldReadOnlyRenderer extends AbstractFieldRenderer {
 	 * {@inheritDoc}
 	 */
 	public function render(array & $output) {
-		if ($this->getField()->isArrayValue()) {
-			$output[] = $this->renderValue(implode(', ', $this->getField()->getValue()));
-		} else {
-			$output[] = $this->renderValue($this->getField()->getValue());
-		}
-	}
-
-	//-- AbstractRenderer Methods --------------------
-
-	public function normaliseRenderOptions() {
-		$renderOptions = parent::normaliseRenderOptions();
-		$renderOptions[self::RENDER_OPTION_KEY_ELEMENT_NAME] = 'span';
-		if (!isset($renderOptions[self::RENDER_OPTION_KEY_ATTRIBUTES]['class'])) {
-			$renderOptions[self::RENDER_OPTION_KEY_ATTRIBUTES]['class'] = 'display';
-		}
-		return $renderOptions;
-	}
-
-	//-- Internal Methods --------------------
-
-	/**
-	 * @param $value
-	 *
-	 * @return string
-	 */
-	protected function renderValue($value) {
+		$value = $this->getField()->isArrayValue() ? implode(', ', $this->getField()->getValue()) : $this->getField()->getValue();
 		return sprintf(
 			'<%s%s>%s</%s>',
 			$this->getRenderOption(self::RENDER_OPTION_KEY_ELEMENT_NAME),

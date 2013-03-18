@@ -12,19 +12,13 @@ use Sitegear\Base\Form\Field\FieldInterface;
 use Sitegear\Base\Form\Renderer\Factory\RendererFactoryInterface;
 use Sitegear\Base\Form\Renderer\FieldRendererInterface;
 use Sitegear\Core\Form\Renderer\AbstractRenderer;
+use Sitegear\Util\ArrayUtilities;
 
 /**
  * Abstract implementation of `FieldRendererInterface`.  Implements storage of and access to the related field object
  * and the factory object responsible for generation of renderers.
  */
 abstract class AbstractFieldRenderer extends AbstractRenderer implements FieldRendererInterface {
-
-	//-- Constants --------------------
-
-	/**
-	 * Render option key used to specify the current value(s) of the element being rendered.
-	 */
-	const RENDER_OPTION_KEY_VALUE = 'value';
 
 	//-- Attributes --------------------
 
@@ -59,13 +53,19 @@ abstract class AbstractFieldRenderer extends AbstractRenderer implements FieldRe
 	 * {@inheritDoc}
 	 */
 	protected function normaliseRenderOptions() {
-		$renderOptions = parent::normaliseRenderOptions();
-		if (!isset($renderOptions[self::RENDER_OPTION_KEY_ATTRIBUTES]['id'])) {
-			$renderOptions[self::RENDER_OPTION_KEY_ATTRIBUTES]['id'] = $this->getField()->getName();
-		}
-		$renderOptions[self::RENDER_OPTION_KEY_ATTRIBUTES]['name'] = $this->getField()->getName();
-		$renderOptions[self::RENDER_OPTION_KEY_VALUE] = $this->getField()->getValue();
-		return $renderOptions;
+		return ArrayUtilities::combine(
+			array(
+				self::RENDER_OPTION_KEY_ATTRIBUTES => array(
+					'id' => $this->getField()->getName()
+				)
+			),
+			parent::normaliseRenderOptions(),
+			array(
+				self::RENDER_OPTION_KEY_ATTRIBUTES => array(
+					'name' => $this->getField()->getName()
+				)
+			)
+		);
 	}
 
 }

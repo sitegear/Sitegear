@@ -63,14 +63,4 @@ class ButtonsRenderer extends AbstractContainerRenderer {
 		}
 	}
 
-	//-- AbstractRenderer Methods --------------------
-
-	protected function normaliseRenderOptions() {
-		$renderOptions = parent::normaliseRenderOptions();
-		if (!isset($renderOptions[self::RENDER_OPTION_KEY_ATTRIBUTES]['class'])) {
-			$renderOptions[self::RENDER_OPTION_KEY_ATTRIBUTES]['class'] = 'buttons';
-		}
-		return $renderOptions;
-	}
-
 }

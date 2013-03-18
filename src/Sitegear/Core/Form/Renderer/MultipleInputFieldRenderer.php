@@ -21,16 +21,35 @@ class MultipleInputFieldRenderer extends AbstractFieldRenderer {
 
 	//-- Constants --------------------
 
+	/**
+	 * Render option key used to specify the outer wrapper element name.
+	 */
 	const RENDER_OPTION_KEY_OUTER_WRAPPER_ELEMENT_NAME = 'outer-wrapper-element-name';
 
+	/**
+	 * Render option key used to specify the outer wrapper attributes.
+	 */
 	const RENDER_OPTION_KEY_OUTER_WRAPPER_ATTRIBUTES = 'outer-wrapper-attributes';
 
+	/**
+	 * Render option key used to specify the inner wrapper element name.
+	 */
 	const RENDER_OPTION_KEY_INNER_WRAPPER_ELEMENT_NAME = 'inner-wrapper-element-name';
 
+	/**
+	 * Render option key used to specify the inner wrapper attributes.
+	 */
 	const RENDER_OPTION_KEY_INNER_WRAPPER_ATTRIBUTES = 'inner-wrapper-attributes';
 
+	/**
+	 * Render option key used to specify the ID attribute value prefix for inner wrapper elements.
+	 */
 	const RENDER_OPTION_KEY_INNER_WRAPPER_ID_PREFIX = 'inner-wrapper-id-prefix';
 
+	/**
+	 * Render option key used to determine whether the value labels should be shown before (true) or after (false) the
+	 * corresponding input element.
+	 */
 	const RENDER_OPTION_KEY_LABELS_FIRST = 'labels-first';
 
 	//-- RendererInterface Methods --------------------
@@ -111,45 +130,27 @@ class MultipleInputFieldRenderer extends AbstractFieldRenderer {
 	 * {@inheritDoc}
 	 */
 	protected function normaliseRenderOptions() {
-		$renderOptions = parent::normaliseRenderOptions();
-		// Input elements settings
-		$renderOptions[self::RENDER_OPTION_KEY_ATTRIBUTES] = ArrayUtilities::mergeHtmlAttributes(
-			$renderOptions[self::RENDER_OPTION_KEY_ATTRIBUTES],
+		return ArrayUtilities::combine(
 			array(
-				'type' => $this->getField()->getType(),
-				'name' => $this->getField()->getName(),
-				'class' => $this->getField()->getType()
+				self::RENDER_OPTION_KEY_OUTER_WRAPPER_ELEMENT_NAME => 'div',
+				self::RENDER_OPTION_KEY_OUTER_WRAPPER_ATTRIBUTES => array(
+					'id' => sprintf('%s-container', $this->getField()->getName()),
+					'class' => sprintf('multi-input-container %s-container', $this->getField()->getType())
+				),
+				self::RENDER_OPTION_KEY_INNER_WRAPPER_ELEMENT_NAME => 'div',
+				self::RENDER_OPTION_KEY_INNER_WRAPPER_ATTRIBUTES => array(),
+				self::RENDER_OPTION_KEY_INNER_WRAPPER_ID_PREFIX => 'value',
+				self::RENDER_OPTION_KEY_LABELS_FIRST => false
+			),
+			parent::normaliseRenderOptions(),
+			array(
+				self::RENDER_OPTION_KEY_ATTRIBUTES => array(
+					'type' => $this->getField()->getType(),
+					'name' => $this->getField()->getName(),
+					'class' => $this->getField()->getType()
+				)
 			)
 		);
-		// Outer wrapper settings
-		if (!isset($renderOptions[self::RENDER_OPTION_KEY_OUTER_WRAPPER_ELEMENT_NAME])) {
-			$renderOptions[self::RENDER_OPTION_KEY_OUTER_WRAPPER_ELEMENT_NAME] = 'ul';
-		}
-		if (!isset($renderOptions[self::RENDER_OPTION_KEY_OUTER_WRAPPER_ATTRIBUTES])) {
-			$renderOptions[self::RENDER_OPTION_KEY_OUTER_WRAPPER_ATTRIBUTES] = array();
-		}
-		$renderOptions[self::RENDER_OPTION_KEY_OUTER_WRAPPER_ATTRIBUTES] = ArrayUtilities::mergeHtmlAttributes(
-			array(
-				'id' => sprintf('%s-container', $this->getField()->getName()),
-				'class' => sprintf('multi-input-container %s-container', $this->getField()->getType())
-			),
-			$renderOptions[self::RENDER_OPTION_KEY_OUTER_WRAPPER_ATTRIBUTES]
-		);
-		// Inner wrapper settings
-		if (!isset($renderOptions[self::RENDER_OPTION_KEY_INNER_WRAPPER_ELEMENT_NAME])) {
-			$renderOptions[self::RENDER_OPTION_KEY_INNER_WRAPPER_ELEMENT_NAME] = 'li';
-		}
-		if (!isset($renderOptions[self::RENDER_OPTION_KEY_INNER_WRAPPER_ATTRIBUTES])) {
-			$renderOptions[self::RENDER_OPTION_KEY_INNER_WRAPPER_ATTRIBUTES] = array();
-		}
-		if (!isset($renderOptions[self::RENDER_OPTION_KEY_INNER_WRAPPER_ID_PREFIX])) {
-			$renderOptions[self::RENDER_OPTION_KEY_INNER_WRAPPER_ID_PREFIX] = 'value';
-		}
-		// Set label elements first or input elements first
-		if (!isset($renderOptions[self::RENDER_OPTION_KEY_LABELS_FIRST])) {
-			$renderOptions[self::RENDER_OPTION_KEY_LABELS_FIRST] = false;
-		}
-		return $renderOptions;
 	}
 
 }

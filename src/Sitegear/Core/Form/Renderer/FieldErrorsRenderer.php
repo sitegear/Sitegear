@@ -8,25 +8,54 @@
 
 namespace Sitegear\Core\Form\Renderer;
 
+use Sitegear\Util\ArrayUtilities;
+use Sitegear\Util\HtmlUtilities;
+
 /**
  * Renders the error messages for a given field.
  */
 class FieldErrorsRenderer extends AbstractFieldRenderer {
 
+	//-- Constants --------------------
+
+	/**
+	 * Render option key used to specify the element name for the wrapper around each error message.
+	 */
+	const RENDER_OPTION_KEY_ERROR_WRAPPER_ELEMENT_NAME = 'error-wrapper-element-name';
+
+	/**
+	 * Render option key used to specify the attributes for the wrapper around each error message..
+	 */
+	const RENDER_OPTION_KEY_ERROR_WRAPPER_ATTRIBUTES = 'error-wrapper-attributes';
+
+	//-- RendererInterface Methods --------------------
+
 	/**
 	 * {@inheritDoc}
-	 *
-	 * TODO Rendering options
 	 */
 	public function render(array & $output) {
 		$errors = $this->getField()->getErrors();
 		if (!empty($errors)) {
-			$output[] = '<ul class="errors">';
+			$output[] = sprintf('<%s%s>', $this->getRenderOption(self::RENDER_OPTION_KEY_ELEMENT_NAME), HtmlUtilities::attributes($this->getRenderOption(self::RENDER_OPTION_KEY_ATTRIBUTES)));
+			$errorWrapperElementName = $this->getRenderOption(self::RENDER_OPTION_KEY_ERROR_WRAPPER_ELEMENT_NAME);
+			$errorWrapperAttributes = HtmlUtilities::attributes($this->getRenderOption(self::RENDER_OPTION_KEY_ERROR_WRAPPER_ATTRIBUTES));
 			foreach ($errors as $error) {
-				$output[] = sprintf('<li>%s</li>', $error);
+				$output[] = sprintf('<%s%s>%s</%s>', $errorWrapperElementName, $errorWrapperAttributes, $error, $errorWrapperElementName);
 			}
-			$output[] = '</ul>';
+			$output[] = sprintf('</%s>', $this->getRenderOption(self::RENDER_OPTION_KEY_ELEMENT_NAME));
 		}
+	}
+
+	//-- AbstractRenderer Methods --------------------
+
+	protected function normaliseRenderOptions() {
+		return ArrayUtilities::combine(
+			array(
+				self::RENDER_OPTION_KEY_ERROR_WRAPPER_ELEMENT_NAME => 'div',
+				self::RENDER_OPTION_KEY_ERROR_WRAPPER_ATTRIBUTES => array()
+			),
+			parent::normaliseRenderOptions()
+		);
 	}
 
 }
