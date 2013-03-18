@@ -363,20 +363,12 @@ class FormsModule extends AbstractUrlMountableModule {
 			if (is_null($path)) {
 				throw new \InvalidArgumentException(sprintf('FormsModule received form key "%s" with no available data file', $formKey));
 			}
+			$queryString = strlen($request->getQueryString()) > 0 ? '?' . $request->getQueryString() : '';
 			$formData = array_merge(
 				$this->config('form-builder'),
 				array(
-					'form-url' => sprintf(
-						'%s%s',
-						ltrim($request->getPathInfo(), '/'),
-						strlen($request->getQueryString()) > 0 ? '?' . $request->getQueryString() : ''
-					),
-					'submit-url' => sprintf(
-						'%s/%s/%s',
-						$this->getMountedUrl(),
-						$this->config('routes.form'),
-						$formKey
-					),
+					'form-url' => sprintf('%s%s', ltrim($request->getPathInfo(), '/'), $queryString),
+					'submit-url' => sprintf('%s/%s/%s', $this->getMountedUrl(), $this->config('routes.form'), $formKey),
 					'constraint-label-markers' => $this->config('constraints.label-markers')
 				),
 				json_decode(file_get_contents($path), true)
