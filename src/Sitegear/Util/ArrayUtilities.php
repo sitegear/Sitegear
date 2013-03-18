@@ -64,19 +64,26 @@ class ArrayUtilities {
 	 * * Non-array elements in $array2 always overwrite elements in the same position $array1.
 	 *
 	 * @param array $array1 Array of base values.
-	 * @param array $array2 Array to merge in.  These values will always take precedence.
+	 * @param array $array2 Array to merge in.
+	 * @varargs Additional arrays may be specified, the values in the last specified array will always have precedence.
 	 *
 	 * @return array Merged arrays.
 	 */
 	public static function combine(array $array1, array $array2) {
-		if (self::isSequential($array1) && self::isSequential($array2)) {
-			$array1 = array_merge($array1, $array2);
-		} else {
-			foreach ($array2 as $key => $value2) {
-				$array1[$key] = (is_array($value2) && array_key_exists($key, $array1) && is_array($array1[$key])) ?
-						self::combine($array1[$key], $value2) :
-						$value2;
+		if (func_num_args() === 2) {
+			// Base case, just merge the two arrays.
+			if (self::isSequential($array1) && self::isSequential($array2)) {
+				$array1 = array_merge($array1, $array2);
+			} else {
+				foreach ($array2 as $key => $value2) {
+					$array1[$key] = (is_array($value2) && array_key_exists($key, $array1) && is_array($array1[$key])) ?
+							self::combine($array1[$key], $value2) :
+							$value2;
+				}
 			}
+		} else {
+			// Tail-first recursive call, merge all but the first argument, then merge with the first argument.
+			$array1 = self::combine($array1, forward_static_call_array('self::combine', array_slice(func_get_args(), 1)));
 		}
 		return $array1;
 	}
