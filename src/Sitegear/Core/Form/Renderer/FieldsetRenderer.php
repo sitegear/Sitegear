@@ -52,6 +52,7 @@ class FieldsetRenderer extends AbstractContainerRenderer {
 	 */
 	protected function renderChildren(array & $output) {
 		$form = $this->getFieldset()->getStep()->getForm();
+		$fieldRendererFactory = new FieldRendererFactory();
 		foreach ($this->getFieldset()->getFieldReferences() as $fieldReference) {
 			$field = $form->getField($fieldReference->getFieldName());
 			if ($fieldReference->isWrapped()) {
@@ -60,8 +61,7 @@ class FieldsetRenderer extends AbstractContainerRenderer {
 						new FieldWrapperRenderer($field);
 				$wrapperRenderer->render($output);
 			} else {
-				$fieldRendererFactory = new FieldRendererFactory();
-				$fieldRendererFactory->getFieldRenderer($field, array());
+				$fieldRendererFactory->getFieldRenderer($field, array())->render($output);
 			}
 		}
 	}
