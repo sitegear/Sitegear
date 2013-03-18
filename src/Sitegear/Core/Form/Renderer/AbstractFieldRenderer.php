@@ -9,6 +9,7 @@
 namespace Sitegear\Core\Form\Renderer;
 
 use Sitegear\Base\Form\Field\FieldInterface;
+use Sitegear\Base\Form\Renderer\Factory\RendererFactoryInterface;
 use Sitegear\Base\Form\Renderer\FieldRendererInterface;
 use Sitegear\Core\Form\Renderer\AbstractRenderer;
 
@@ -35,12 +36,12 @@ abstract class AbstractFieldRenderer extends AbstractRenderer implements FieldRe
 	//-- Constructor --------------------
 
 	/**
-	 * @param \Sitegear\Base\Form\Field\FieldInterface $field
-	 * @param array|null $renderOptions
+	 * @param RendererFactoryInterface $factory
+	 * @param FieldInterface $field
 	 */
-	public function __construct(FieldInterface $field, array $renderOptions=null) {
+	public function __construct(RendererFactoryInterface $factory, FieldInterface $field) {
 		$this->field = $field;
-		parent::__construct($renderOptions);
+		parent::__construct($factory);
 	}
 
 	//-- FieldRendererInterface Methods --------------------
@@ -57,8 +58,8 @@ abstract class AbstractFieldRenderer extends AbstractRenderer implements FieldRe
 	/**
 	 * {@inheritDoc}
 	 */
-	protected function normaliseRenderOptions(array $renderOptions=null) {
-		$renderOptions = parent::normaliseRenderOptions($renderOptions);
+	protected function normaliseRenderOptions() {
+		$renderOptions = parent::normaliseRenderOptions();
 		if (!isset($renderOptions[self::RENDER_OPTION_KEY_ATTRIBUTES]['id'])) {
 			$renderOptions[self::RENDER_OPTION_KEY_ATTRIBUTES]['id'] = $this->getField()->getName();
 		}

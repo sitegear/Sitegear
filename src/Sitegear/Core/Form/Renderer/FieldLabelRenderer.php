@@ -38,8 +38,8 @@ class FieldLabelRenderer extends AbstractFieldRenderer {
 	/**
 	 * {@inheritDoc}
 	 */
-	protected function normaliseRenderOptions(array $renderOptions=null) {
-		$renderOptions = parent::normaliseRenderOptions($renderOptions);
+	protected function normaliseRenderOptions() {
+		$renderOptions = parent::normaliseRenderOptions();
 		if (!isset($renderOptions[self::RENDER_OPTION_KEY_MARKER_SEPARATOR])) {
 			$renderOptions[self::RENDER_OPTION_KEY_MARKER_SEPARATOR] = '';
 		}

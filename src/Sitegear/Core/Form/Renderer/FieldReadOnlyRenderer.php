@@ -10,6 +10,9 @@ namespace Sitegear\Core\Form\Renderer;
 
 use Sitegear\Util\HtmlUtilities;
 
+/**
+ * Renders a field in read-only mode.
+ */
 class FieldReadOnlyRenderer extends AbstractFieldRenderer {
 
 	//-- RendererInterface Methods --------------------
@@ -27,8 +30,8 @@ class FieldReadOnlyRenderer extends AbstractFieldRenderer {
 
 	//-- AbstractRenderer Methods --------------------
 
-	public function normaliseRenderOptions(array $renderOptions=null) {
-		$renderOptions = parent::normaliseRenderOptions($renderOptions);
+	public function normaliseRenderOptions() {
+		$renderOptions = parent::normaliseRenderOptions();
 		$renderOptions[self::RENDER_OPTION_KEY_ELEMENT_NAME] = 'span';
 		if (!isset($renderOptions[self::RENDER_OPTION_KEY_ATTRIBUTES]['class'])) {
 			$renderOptions[self::RENDER_OPTION_KEY_ATTRIBUTES]['class'] = 'display';

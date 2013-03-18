@@ -81,6 +81,27 @@ return array(
 	),
 
 	/**
+	 * Form renderer factory settings.
+	 */
+	'form-renderer-factory' => array(
+
+		/**
+		 * Class name of the RendererFactoryInterface implementation to use.
+		 */
+		'class-name' => '\\Sitegear\\Core\\Form\\Renderer\\Factory\\RendererFactory',
+
+		/**
+		 * Arguments to pass to the configured RendererFactoryInterface implementation's constructor.
+		 *
+		 * For the default implementation, this should be a key-value array where the keys are class names of
+		 * RendererInterface implementations and the values are key-value arrays which are passed as render options to
+		 * that renderer type.
+		 */
+		'constructor-arguments' => array()
+
+	),
+
+	/**
 	 * Component specific settings.
 	 */
 	'component' => array(
@@ -89,7 +110,6 @@ return array(
 		 * Settings for the form component.
 		 */
 		'form' => array(
-
 		),
 
 		/**

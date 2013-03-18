@@ -8,6 +8,7 @@
 
 namespace Sitegear\Core\Form\Renderer;
 
+use Sitegear\Base\Form\Renderer\Factory\RendererFactoryInterface;
 use Sitegear\Base\Form\Renderer\RendererInterface;
 
 /**
@@ -37,10 +38,11 @@ abstract class AbstractRenderer implements RendererInterface {
 	//-- Constructor --------------------
 
 	/**
-	 * @param array|null $renderOptions
+	 * @param RendererFactoryInterface $factory
 	 */
-	public function __construct(array $renderOptions=null) {
-		$this->renderOptions = $this->normaliseRenderOptions($renderOptions);
+	public function __construct(RendererFactoryInterface $factory) {
+		$this->factory = $factory;
+		$this->renderOptions = $this->normaliseRenderOptions();
 	}
 
 	//-- RendererInterface Methods --------------------
@@ -61,19 +63,19 @@ abstract class AbstractRenderer implements RendererInterface {
 
 	//-- Internal Methods --------------------
 
+	protected function getFactory() {
+		return $this->factory;
+	}
+
 	/**
 	 * This method should be overridden by subclasses wishing to extend the normalising behaviour (e.g. ensure the
 	 * existence of additional keys, etc).  Overriding implementations should be sure to call this implementation to
 	 * provide a baseline.
 	 *
-	 * @param array|null $renderOptions
-	 *
 	 * @return array
 	 */
-	protected function normaliseRenderOptions(array $renderOptions=null) {
-		if (is_null($renderOptions)) {
-			$renderOptions = array();
-		}
+	protected function normaliseRenderOptions() {
+		$renderOptions = $this->getFactory()->getRenderOptionDefaults(get_class($this));
 		if (!isset($renderOptions[self::RENDER_OPTION_KEY_ELEMENT_NAME])) {
 			$renderOptions[self::RENDER_OPTION_KEY_ELEMENT_NAME] = 'div';
 		}

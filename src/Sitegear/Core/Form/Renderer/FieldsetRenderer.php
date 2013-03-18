@@ -9,7 +9,8 @@
 namespace Sitegear\Core\Form\Renderer;
 
 use Sitegear\Base\Form\FieldsetInterface;
-use Sitegear\Core\Form\Renderer\Factory\FieldRendererFactory;
+use Sitegear\Base\Form\Renderer\Factory\RendererFactoryInterface;
+use Sitegear\Core\Form\Renderer\Factory\RendererFactory;
 
 /**
  * RendererInterface implementation for a fieldset.
@@ -26,12 +27,12 @@ class FieldsetRenderer extends AbstractContainerRenderer {
 	//-- Constructor --------------------
 
 	/**
-	 * @param \Sitegear\Base\Form\FieldsetInterface $fieldset
-	 * @param string[]|null $renderOptions
+	 * @param RendererFactoryInterface $factory
+	 * @param FieldsetInterface $fieldset
 	 */
-	public function __construct(FieldsetInterface $fieldset, array $renderOptions=null) {
+	public function __construct(RendererFactoryInterface $factory, FieldsetInterface $fieldset) {
 		$this->fieldset = $fieldset;
-		parent::__construct($renderOptions);
+		parent::__construct($factory);
 	}
 
 	//-- Public Methods --------------------
@@ -47,21 +48,20 @@ class FieldsetRenderer extends AbstractContainerRenderer {
 
 	/**
 	 * {@inheritDoc}
-	 *
-	 * TODO Pass field wrapper render options
 	 */
 	protected function renderChildren(array & $output) {
 		$form = $this->getFieldset()->getStep()->getForm();
-		$fieldRendererFactory = new FieldRendererFactory();
 		foreach ($this->getFieldset()->getFieldReferences() as $fieldReference) {
 			$field = $form->getField($fieldReference->getFieldName());
 			if ($fieldReference->isWrapped()) {
+				// isWrapped() is true, so render a wrapper.
 				$wrapperRenderer = ($fieldReference->isReadOnly()) ?
-						new FieldWrapperReadOnlyRenderer($field) :
-						new FieldWrapperRenderer($field);
+						$this->getFactory()->createFieldWrapperReadOnlyRenderer($field) :
+						$this->getFactory()->createFieldWrapperRenderer($field);
 				$wrapperRenderer->render($output);
 			} else {
-				$fieldRendererFactory->getFieldRenderer($field, array())->render($output);
+				// isWrapped() is false, so just render the field.
+				$this->getFactory()->createFieldRenderer($field, array())->render($output);
 			}
 		}
 	}
@@ -69,8 +69,8 @@ class FieldsetRenderer extends AbstractContainerRenderer {
 	/**
 	 * {@inheritDoc}
 	 */
-	protected function normaliseRenderOptions(array $renderOptions=null) {
-		$renderOptions = parent::normaliseRenderOptions($renderOptions);
+	protected function normaliseRenderOptions() {
+		$renderOptions = parent::normaliseRenderOptions();
 		$renderOptions[self::RENDER_OPTION_KEY_ELEMENT_NAME] = 'fieldset';
 		return $renderOptions;
 	}

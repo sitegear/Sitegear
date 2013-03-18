@@ -14,11 +14,9 @@ class FieldWrapperReadOnlyRenderer extends FieldWrapperRenderer {
 
 	/**
 	 * {@inheritDoc}
-	 *
-	 * TODO Pass through render options
 	 */
 	protected function getFieldRenderer() {
-		return new FieldReadOnlyRenderer($this->getField(), array());
+		return $this->getFactory()->createFieldReadOnlyRenderer($this->getField(), array());
 	}
 
 }

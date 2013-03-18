@@ -9,6 +9,7 @@
 namespace Sitegear\Core\Form\Renderer;
 
 use Sitegear\Base\Form\FormInterface;
+use Sitegear\Base\Form\Renderer\Factory\RendererFactoryInterface;
 
 /**
  * RendererInterface implementation for the top-level form element.
@@ -30,14 +31,14 @@ class FormRenderer extends AbstractContainerRenderer {
 	//-- Constructor --------------------
 
 	/**
-	 * @param \Sitegear\Base\Form\FormInterface $form
+	 * @param RendererFactoryInterface $factory
+	 * @param FormInterface $form
 	 * @param integer $step
-	 * @param array|null $renderOptions
 	 */
-	public function __construct(FormInterface $form, $step, array $renderOptions=null) {
+	public function __construct(RendererFactoryInterface $factory, FormInterface $form, $step) {
 		$this->form = $form;
 		$this->step = intval($step);
-		parent::__construct($renderOptions);
+		parent::__construct($factory);
 	}
 
 	//-- Public Methods --------------------
@@ -58,21 +59,23 @@ class FormRenderer extends AbstractContainerRenderer {
 
 	//-- AbstractRenderer Methods --------------------
 
+	/**
+	 * {@inheritDoc}
+	 */
 	protected function renderChildren(array & $output) {
 		foreach ($this->getForm()->getStep($this->getStep())->getFieldsets() as $fieldset) {
-			// TODO Pass fieldset render options
-			$fieldsetRenderer = new FieldsetRenderer($fieldset);
+			$fieldsetRenderer = $this->getFactory()->createFieldsetRenderer($fieldset);
 			$fieldsetRenderer->render($output);
 		}
-		$buttonsRenderer = new ButtonsRenderer($this->getForm());
+		$buttonsRenderer = $this->getFactory()->createButtonsRenderer($this->getForm());
 		$buttonsRenderer->render($output);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	protected function normaliseRenderOptions(array $renderOptions=null) {
-		$renderOptions = parent::normaliseRenderOptions($renderOptions);
+	protected function normaliseRenderOptions() {
+		$renderOptions = parent::normaliseRenderOptions();
 		$renderOptions[self::RENDER_OPTION_KEY_ELEMENT_NAME] = 'form';
 		$renderOptions[self::RENDER_OPTION_KEY_ATTRIBUTES] = array_merge(
 			$renderOptions[self::RENDER_OPTION_KEY_ATTRIBUTES],

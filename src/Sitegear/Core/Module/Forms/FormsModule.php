@@ -8,6 +8,7 @@
 
 namespace Sitegear\Core\Module\Forms;
 
+use Sitegear\Base\Form\Renderer\Factory\RendererFactoryInterface;
 use Sitegear\Base\Module\AbstractUrlMountableModule;
 use Sitegear\Base\Config\Processor\ArrayTokenProcessor;
 use Sitegear\Base\Config\Processor\ConfigTokenProcessor;
@@ -275,8 +276,7 @@ class FormsModule extends AbstractUrlMountableModule {
 		}
 		// Setup the view.
 		$this->applyConfigToView('component.form', $view);
-		// TODO Pass in rendering options
-		$view['form-renderer'] = new FormRenderer($form, $currentStep);
+		$view['form-renderer'] = $this->createRendererFactory()->createFormRenderer($form, $currentStep);
 		// Remove errors as they are about to be displayed (they are already set in the Form structure), and we don't
 		// want to show the same errors again.
 		$this->clearErrors($formKey);
@@ -701,6 +701,23 @@ class FormsModule extends AbstractUrlMountableModule {
 				break;
 		}
 		return $result;
+	}
+
+	/**
+	 * Create a RendererFactoryInterface implementation as determined by configuration.
+	 *
+	 * @return RendererFactoryInterface
+	 */
+	protected function createRendererFactory() {
+		$factoryClassName = $this->config('form-renderer-factory.class-name');
+		$factoryConstructorArguments = $this->config('form-renderer-factory.constructor-arguments');
+		return TypeUtilities::buildTypeCheckedObject(
+			$factoryClassName,
+			'form renderer factory',
+			null,
+			array( '\\Sitegear\\Base\\Form\\Renderer\\Factory\\RendererFactoryInterface' ),
+			$factoryConstructorArguments
+		);
 	}
 
 }

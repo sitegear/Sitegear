@@ -110,8 +110,8 @@ class MultipleInputFieldRenderer extends AbstractFieldRenderer {
 	/**
 	 * {@inheritDoc}
 	 */
-	protected function normaliseRenderOptions(array $renderOptions=null) {
-		$renderOptions = parent::normaliseRenderOptions($renderOptions);
+	protected function normaliseRenderOptions() {
+		$renderOptions = parent::normaliseRenderOptions();
 		// Input elements settings
 		$renderOptions[self::RENDER_OPTION_KEY_ATTRIBUTES] = ArrayUtilities::mergeHtmlAttributes(
 			$renderOptions[self::RENDER_OPTION_KEY_ATTRIBUTES],

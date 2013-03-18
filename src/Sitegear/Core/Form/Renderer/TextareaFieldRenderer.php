@@ -35,8 +35,8 @@ class TextareaFieldRenderer extends AbstractFieldRenderer {
 	/**
 	 * {@inheritDoc}
 	 */
-	protected function normaliseRenderOptions(array $renderOptions=null) {
-		$renderOptions = parent::normaliseRenderOptions($renderOptions);
+	protected function normaliseRenderOptions() {
+		$renderOptions = parent::normaliseRenderOptions();
 		if (!is_null($this->getField()->getRows())) {
 			$renderOptions[self::RENDER_OPTION_KEY_ATTRIBUTES]['rows'] = $this->getField()->getRows();
 		}

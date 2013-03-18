@@ -34,8 +34,8 @@ class InputFieldRenderer extends AbstractFieldRenderer {
 	/**
 	 * {@inheritDoc}
 	 */
-	protected function normaliseRenderOptions(array $renderOptions=null) {
-		$renderOptions = parent::normaliseRenderOptions($renderOptions);
+	protected function normaliseRenderOptions() {
+		$renderOptions = parent::normaliseRenderOptions();
 		$renderOptions[self::RENDER_OPTION_KEY_ATTRIBUTES]['type'] = !is_null($this->getField()->getType()) ? $this->getField()->getType() : 'text';
 		$renderOptions[self::RENDER_OPTION_KEY_ATTRIBUTES]['value'] = $renderOptions[self::RENDER_OPTION_KEY_VALUE];
 		return $renderOptions;

@@ -9,6 +9,7 @@
 namespace Sitegear\Core\Form\Renderer;
 
 use Sitegear\Base\Form\FormInterface;
+use Sitegear\Base\Form\Renderer\Factory\RendererFactoryInterface;
 use Sitegear\Util\HtmlUtilities;
 
 /**
@@ -19,9 +20,13 @@ class ButtonsRenderer extends AbstractContainerRenderer {
 
 	//-- Constructor --------------------
 
-	public function __construct(FormInterface $form, array $renderOptions=null) {
+	/**
+	 * @param RendererFactoryInterface $factory
+	 * @param FormInterface $form
+	 */
+	public function __construct(RendererFactoryInterface $factory, FormInterface $form) {
 		$this->form = $form;
-		parent::__construct($renderOptions);
+		parent::__construct($factory);
 	}
 
 	//-- Public Methods --------------------
@@ -60,8 +65,8 @@ class ButtonsRenderer extends AbstractContainerRenderer {
 
 	//-- AbstractRenderer Methods --------------------
 
-	protected function normaliseRenderOptions(array $renderOptions=null) {
-		$renderOptions = parent::normaliseRenderOptions($renderOptions);
+	protected function normaliseRenderOptions() {
+		$renderOptions = parent::normaliseRenderOptions();
 		if (!isset($renderOptions[self::RENDER_OPTION_KEY_ATTRIBUTES]['class'])) {
 			$renderOptions[self::RENDER_OPTION_KEY_ATTRIBUTES]['class'] = 'buttons';
 		}

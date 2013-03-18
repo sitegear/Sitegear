@@ -9,7 +9,7 @@
 namespace Sitegear\Core\Form\Renderer;
 
 use Sitegear\Base\Form\Field\FieldInterface;
-use Sitegear\Core\Form\Renderer\Factory\FieldRendererFactory;
+use Sitegear\Base\Form\Renderer\Factory\RendererFactoryInterface;
 use Sitegear\Util\TypeUtilities;
 
 /**
@@ -28,9 +28,13 @@ class FieldWrapperRenderer extends AbstractContainerRenderer {
 
 	//-- Constructor --------------------
 
-	public function __construct(FieldInterface $field, array $renderOptions=null) {
+	/**
+	 * @param RendererFactoryInterface $factory
+	 * @param FieldInterface $field
+	 */
+	public function __construct(RendererFactoryInterface $factory, FieldInterface $field) {
 		$this->field = $field;
-		parent::__construct($renderOptions);
+		parent::__construct($factory);
 	}
 
 	//-- Public Methods --------------------
@@ -46,15 +50,13 @@ class FieldWrapperRenderer extends AbstractContainerRenderer {
 
 	/**
 	 * {@inheritDoc}
-	 *
-	 * TODO Pass through render options
 	 */
 	protected function renderChildren(array & $output) {
-		$fieldLabelRenderer = new FieldLabelRenderer($this->getField());
+		$fieldLabelRenderer = $this->getFactory()->createFieldLabelRenderer($this->getField());
 		$fieldLabelRenderer->render($output);
-		$fieldErrorsRenderer = new FieldErrorsRenderer($this->getField());
+		$fieldErrorsRenderer = $this->getFactory()->createFieldErrorsRenderer($this->getField());
 		$fieldErrorsRenderer->render($output);
-		$fieldRenderer = $this->getFieldRenderer();
+		$fieldRenderer = $this->getFactory()->createFieldRenderer($this->getField());
 		$fieldRenderer->render($output);
 	}
 
@@ -70,18 +72,6 @@ class FieldWrapperRenderer extends AbstractContainerRenderer {
 			$renderOptions[self::RENDER_OPTION_KEY_ATTRIBUTES]['class'] = 'field';
 		}
 		return $renderOptions;
-	}
-
-	//-- Internal Methods --------------------
-
-	/**
-	 * @return \Sitegear\Base\Form\Renderer\FieldRendererInterface
-	 *
-	 * TODO Pass through render options
-	 */
-	protected function getFieldRenderer() {
-		$fieldRendererFactory = new FieldRendererFactory();
-		return $fieldRendererFactory->getFieldRenderer($this->getField(), array());
 	}
 
 }

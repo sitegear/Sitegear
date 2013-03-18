@@ -47,8 +47,8 @@ class SelectFieldRenderer extends AbstractFieldRenderer {
 	/**
 	 * {@inheritDoc}
 	 */
-	protected function normaliseRenderOptions(array $renderOptions=null) {
-		$renderOptions = parent::normaliseRenderOptions($renderOptions);
+	protected function normaliseRenderOptions() {
+		$renderOptions = parent::normaliseRenderOptions();
 		if ($this->getField()->isMultiple()) {
 			$renderOptions[self::RENDER_OPTION_KEY_ATTRIBUTES]['multiple'] = 'multiple';
 		} elseif (isset($attributes['multiple'])) {
