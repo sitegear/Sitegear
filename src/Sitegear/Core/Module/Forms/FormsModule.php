@@ -106,7 +106,7 @@ class FormsModule extends AbstractUrlMountableModule {
 	 * @return \Symfony\Component\HttpFoundation\RedirectResponse
 	 */
 	public function initialiseController(Request $request) {
-		LoggerRegistry::debug('FormsModule::resetController()');
+		LoggerRegistry::debug('FormsModule::initialiseController()');
 		$formKey = $request->attributes->get('slug');
 		$this->resetForm($formKey);
 		$form = $this->getForm($formKey, $request);
@@ -147,10 +147,11 @@ class FormsModule extends AbstractUrlMountableModule {
 		$step = $form->getStep($currentStep);
 		$fields = $step->getReferencedFields();
 		$values = $form->getMethod() === 'GET' ? $request->query->all() : $request->request->all();
+		$errors = null;
 		$back = isset($values['back']) ? $values['back'] : false;
 		unset($values['back']);
-		// Set the values into the session so they can be displayed after redirecting.
-		$this->setValues($formKey, array_merge($this->getValues($formKey), $values));
+		// Set the values into the session so they can be displayed after redirecting.  Merge in with existing values
+		// (e.g. from preceding steps).
 		if ($back) {
 			// The "back" button was clicked, try to go back a step.  No validation is necessary.
 			$nextStep = $currentStep - 1;
@@ -158,11 +159,14 @@ class FormsModule extends AbstractUrlMountableModule {
 			if (!in_array($nextStep, $availableSteps)) {
 				throw new \OutOfBoundsException(sprintf('FormsModule cannot go to step %d in form "%s": step not available', $nextStep, $formKey));
 			}
-			$valid = true;
+			// Set the values so that they will be present on the next iteration.
+			$this->setValues($formKey, array_merge($this->getValues($formKey), $values));
 		} else {
 			// The regular submit button was clicked, try to go to the next step; run validation and processors.
 			$nextStep = $currentStep + 1;
-			if ($valid = $this->validateForm($formKey, $fields, $values)) {
+			// Validation also sets the values and errors into the session.
+			$errors = $this->validateForm($formKey, $fields, $values);
+			if (empty($errors)) {
 				// No errors, so execute processors.
 				foreach ($step->getProcessors() as $processor) {
 					if (!$response instanceof Response) {
@@ -181,7 +185,7 @@ class FormsModule extends AbstractUrlMountableModule {
 			}
 		}
 		// Validation passed (or was skipped) and all processors executed successfully (or were skipped).
-		if ($valid) {
+		if (empty($errors)) {
 			if ($nextStep >= $form->getStepsCount()) {
 				// We're at the end of the form, and all the processors of the last step have run.  Reset the form and
 				// redirect to the final target URL.
@@ -359,23 +363,25 @@ class FormsModule extends AbstractUrlMountableModule {
 			if (is_null($path)) {
 				throw new \InvalidArgumentException(sprintf('FormsModule received form key "%s" with no available data file', $formKey));
 			}
-			$formData = json_decode(file_get_contents($path), true);
-			$module = $this;
-			$valueCallback = function($name) use ($module, $formKey) {
-				$values = $module->getValues($formKey);
-				return isset($values[$name]) ? $values[$name] : null;
-			};
-			$errorsCallback = function($name) use ($module, $formKey) {
-				$errors = $module->getErrors($formKey);
-				return isset($errors[$name]) ? $errors[$name] : array();
-			};
-			$query = strlen($request->getQueryString()) > 0 ? '?' . $request->getQueryString() : '';
-			$options = array_merge($this->config('form-builder'), array(
-				'form-url' => sprintf('%s%s', ltrim($request->getPathInfo(), '/'), $query),
-				'submit-url' => sprintf('%s/%s/%s', $this->getMountedUrl(), $this->config('routes.form'), $formKey),
-				'constraint-label-markers' => $this->config('constraints.label-markers')
-			));
-			$this->forms[$formKey] = $this->builder->buildForm($formData, $valueCallback, $errorsCallback, $options);
+			$formData = array_merge(
+				$this->config('form-builder'),
+				array(
+					'form-url' => sprintf(
+						'%s%s',
+						ltrim($request->getPathInfo(), '/'),
+						strlen($request->getQueryString()) > 0 ? '?' . $request->getQueryString() : ''
+					),
+					'submit-url' => sprintf(
+						'%s/%s/%s',
+						$this->getMountedUrl(),
+						$this->config('routes.form'),
+						$formKey
+					),
+					'constraint-label-markers' => $this->config('constraints.label-markers')
+				),
+				json_decode(file_get_contents($path), true)
+			);
+			$this->forms[$formKey] = $this->builder->buildForm($formData, $this->getValues($formKey), $this->getErrors($formKey));
 		}
 		return $this->forms[$formKey];
 	}
@@ -400,29 +406,25 @@ class FormsModule extends AbstractUrlMountableModule {
 	 *
 	 * @param string $formKey
 	 * @param FieldInterface[] $fields
-	 * @param array $data
+	 * @param array $values
 	 *
-	 * @return boolean|\Symfony\Component\Validator\ConstraintViolationListInterface True if the data is valid, or a
-	 *   list of violations.
+	 * @return \Symfony\Component\Validator\ConstraintViolationListInterface[] True if the data is valid, or an array
+	 *   of lists of violations per field with errors.
 	 */
-	public function validateForm($formKey, array $fields, array $data) {
+	public function validateForm($formKey, array $fields, array $values) {
 		LoggerRegistry::debug(sprintf('FormsModule::validate(%s)', $formKey));
 		$validator = Validation::createValidator();
-		$constraints = $this->getConstraints($fields);
-		$violations = $validator->validateValue($data, $constraints);
-		$valid = ($violations->count() === 0);
-		if (!$valid) {
-			$errors = array();
-			foreach ($violations as $violation) { /** @var \Symfony\Component\Validator\ConstraintViolationInterface $violation */
-				$fieldName = trim($violation->getPropertyPath(), '[]');
-				if (!isset($errors[$fieldName])) {
-					$errors[$fieldName] = array();
-				}
-				$errors[$fieldName][] = $violation->getMessage();
+		$errors = array();
+		foreach ($validator->validateValue($values, $this->getConstraints($fields)) as $violation) { /** @var \Symfony\Component\Validator\ConstraintViolationInterface $violation */
+			$fieldName = trim($violation->getPropertyPath(), '[]');
+			if (!isset($errors[$fieldName])) {
+				$errors[$fieldName] = array();
 			}
-			$this->setErrors($formKey, $errors);
+			$errors[$fieldName][] = $violation->getMessage();
 		}
-		return $valid;
+		$this->setValues($formKey, array_merge($this->getValues($formKey), $values));
+		$this->setErrors($formKey, $errors);
+		return $errors;
 	}
 
 	//-- Form Accessor Methods --------------------

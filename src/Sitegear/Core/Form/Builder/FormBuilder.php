@@ -59,32 +59,38 @@ class FormBuilder implements FormBuilderInterface {
 	//-- FormBuilderInterface Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @param array $formData
+	 * @param array|null $values Key-value array containing any values per field to set into the form.
+	 * @param array|null $errors Key-value array containing arrays of error messages per field to set into the form.
+	 *
+	 * @return \Sitegear\Base\Form\FormInterface
 	 */
-	public function buildForm($formData, callable $valueCallback, callable $errorsCallback, array $options) {
+	public function buildForm($formData, array $values=null, array $errors=null) {
 		LoggerRegistry::debug('FormBuilder::buildForm()');
 		$submitUrl = UrlUtilities::generateLinkWithReturnUrl(
-			isset($formData['submit-url']) ? $formData['submit-url'] : $options['submit-url'],
-			$options['form-url'],
+			$formData['submit-url'],
+			$formData['form-url'],
 			'form-url'
 		);
 		$form = new Form(
 			$submitUrl,
-			isset($formData['target-url']) ? $formData['target-url'] : (isset($options['target-url']) ? $options['target-url'] : null),
-			isset($formData['cancel-url']) ? $formData['cancel-url'] : (isset($options['cancel-url']) ? $options['cancel-url'] : null),
-			isset($formData['method']) ? $formData['method'] : (isset($options['method']) ? $options['method'] : null),
-			isset($formData['submit-button']) ? $formData['submit-button'] : (isset($options['submit-button']) ? $options['submit-button'] : null),
-			isset($formData['reset-button']) ? $formData['reset-button'] : (isset($options['reset-button']) ? $options['reset-button'] : null),
-			isset($formData['back-button']) ? $formData['back-button'] : (isset($options['back-button']) ? $options['back-button'] : null)
+			isset($formData['target-url']) ? $formData['target-url'] : null,
+			isset($formData['cancel-url']) ? $formData['cancel-url'] : null,
+			isset($formData['method']) ? $formData['method'] : null,
+			isset($formData['submit-button']) ? $formData['submit-button'] : null,
+			isset($formData['reset-button']) ? $formData['reset-button'] : null,
+			isset($formData['back-button']) ? $formData['back-button'] : null
 		);
-		$constraintLabelMarkers = isset($options['constraint-label-markers']) ? $options['constraint-label-markers'] : array();
+		$constraintLabelMarkers = isset($formData['constraint-label-markers']) ? $formData['constraint-label-markers'] : array();
 		foreach ($formData['fields'] as $name => $fieldData) {
-			$form->addField($this->buildField($name, $fieldData, $valueCallback($name), $constraintLabelMarkers, $errorsCallback($name)));
+			$fieldValue = isset($values[$name]) ? $values[$name] : null;
+			$fieldErrors = isset($errors[$name]) ? $errors[$name] : null;
+			$form->addField($this->buildField($name, $fieldData, $fieldValue, $constraintLabelMarkers, $fieldErrors));
 		}
 		for ($i=0, $l=sizeof($formData['steps']); $i<$l; ++$i) {
 			$form->addStep($this->buildStep($form, $formData, $i));
 		}
-		return $form;
+		return $formData;
 	}
 
 	//-- Public Methods --------------------

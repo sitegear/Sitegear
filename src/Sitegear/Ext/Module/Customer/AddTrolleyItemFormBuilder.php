@@ -52,16 +52,17 @@ class AddTrolleyItemFormBuilder implements FormBuilderInterface {
 	 * 'labels' which is an array containing keys 'quantity-field', 'no-value-option', and 'value-format', which may
 	 *   contain tokens %label% and %value%.
 	 *
-	 * @param mixed $formData Representation of the form.
-	 * @param callable $valueCallback
-	 * @param callable $errorsCallback
-	 * @param array $options Options for the builder implementation.
+	 * @param array $formData
+	 * @param array|null $values Key-value array containing any values per field to set into the form.
+	 * @param array|null $errors Key-value array containing arrays of error messages per field to set into the form.
 	 *
 	 * @return \Sitegear\Base\Form\FormInterface
 	 *
 	 * @throws \InvalidArgumentException
 	 */
-	public function buildForm($formData, callable $valueCallback, callable $errorsCallback, array $options) {
+	public function buildForm($formData, array $values=null, array $errors=null) {
+		$values = $values ?: array();
+		$errors = $errors ?: array();
 		$form = new Form($formData['submit-url']);
 		$module = $this->engine->getModule($formData['module-name']);
 		if (!$module instanceof PurchaseItemProviderModuleInterface) {
@@ -79,28 +80,36 @@ class AddTrolleyItemFormBuilder implements FormBuilderInterface {
 		$idField->setSetting('type', 'hidden');
 		$form->addField($idField);
 		// Create the array of field names for references used by the single step of the form.
-		$fields = array( 'module', 'type', 'id' );
+		$fields = array( 'module' => false, 'type' => false, 'id' => false );
 		// Add a field to the form for every purchase item attribute.
 		foreach ($module->getPurchaseItemAttributeDefinitions($formData['type'], $formData['id']) as $attribute) {
 			$name = sprintf('attr_%s', $attribute['id']);
 			// TODO Other field types - MultiInputField with radios and checkboxes
-			$attributeField = new SelectField($name, null, $attribute['label']);
+			$value = isset($values[$name]) ? $values[$name] : null;
+			$attributeField = new SelectField($name, $value, $attribute['label']);
 			$attributeField->addConstraint(new NotBlank());
 			$attributeField->setSetting('values', $this->buildAddTrolleyItemFormAttributeFieldValues($attribute, $formData['labels']['no-value-option'], $formData['labels']['value-format']));
+			if (isset($errors[$name])) {
+				$attributeField->setErrors($errors[$name]);
+			}
 			$form->addField($attributeField);
-			$fields[] = $name;
+			$fields[$name] = true;
 		}
 		// Add the quantity field, which is a standard text field with a label.
-		$quantityField = new InputField('quantity', 1, $formData['labels']['quantity-field']);
+		$quantity = isset($values['quantity']) ? $values['quantity'] : 1;
+		$quantityField = new InputField('quantity', $quantity, $formData['labels']['quantity-field']);
 		$quantityField->addConstraint(new NotBlank());
 		$quantityField->addConstraint(new Range(array( 'min' => 1 )));
+		if (isset($errors['quantity'])) {
+			$quantityField->setErrors($errors['quantity']);
+		}
 		$form->addField($quantityField);
-		$fields[] = 'quantity';
+		$fields['quantity'] = true;
 		// Complete the form structure.
 		$step = new Step($form, 0);
 		$fieldset = new Fieldset($step);
-		foreach ($fields as $field) {
-			$fieldset->addFieldReference(new FieldReference($field, false, true));
+		foreach ($fields as $field => $wrapped) {
+			$fieldset->addFieldReference(new FieldReference($field, false, $wrapped));
 		}
 		$form->addStep($step->addFieldset($fieldset));
 		return $form;
@@ -131,12 +140,12 @@ class AddTrolleyItemFormBuilder implements FormBuilderInterface {
 			$label = TokenUtilities::replaceTokens(
 				$valueFormat,
 				array(
-					'label' => $value['label'],
-					'value' => sprintf('$%s', number_format($value['value'] / 100, 2))
+					'value' => sprintf('$%s', number_format($value['value'] / 100, 2)),
+					'label' => $value['label']
 				)
 			);
 			$values[] = array(
-				'value' => $value['id'],
+				'value' => strval($value['id']),
 				'label' => $label
 			);
 		}

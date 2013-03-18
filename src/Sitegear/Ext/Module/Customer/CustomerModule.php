@@ -14,6 +14,7 @@ use Sitegear\Base\Module\PurchaseItemProviderModuleInterface;
 use Sitegear\Base\View\ViewInterface;
 use Sitegear\Ext\Module\Customer\Model\TransactionItem;
 use Sitegear\Ext\Module\Customer\Model\Account;
+use Sitegear\Util\UrlUtilities;
 use Sitegear\Util\LoggerRegistry;
 
 use Symfony\Component\HttpFoundation\Request;
@@ -116,12 +117,14 @@ class CustomerModule extends AbstractUrlMountableModule {
 		$moduleName = $request->request->get('module');
 		$type = $request->request->get('type');
 		$id = $request->request->get('id');
+		// Get the form URL.
+		$formUrl = $request->query->get('form-url');
 		// Setup the generated form.
 		$formKey = $this->config('forms.add-trolley-item.form-key');
-		$form = $this->buildAddTrolleyItemForm($moduleName, $type, $id);
-		$this->getEngine()->forms()->registerForm($formKey, $form);
+		$form = $this->buildAddTrolleyItemForm($formKey, $moduleName, $type, $id, $formUrl);
 		// Validate the data against the generated form, and add the trolley item if valid.
-		if ($valid = $this->getEngine()->forms()->validateForm($formKey, $form->getStep(0)->getReferencedFields(), $request->request->all())) {
+		$errors = $this->getEngine()->forms()->validateForm($formKey, $form->getStep(0)->getReferencedFields(), $request->request->all());
+		if (empty($errors)) {
 			$attributeValues = array();
 			foreach ($request->request->all() as $key => $value) {
 				if (strstr($key, 'attr_') !== false) {
@@ -132,9 +135,9 @@ class CustomerModule extends AbstractUrlMountableModule {
 		}
 		// Go back to the page where the submission was made.
 		return new RedirectResponse($request->getUriForPath(
-			$valid ?
+			empty($errors) ?
 				sprintf('/%s/%s', $this->getMountedUrl(), $this->config('routes.trolley')) :
-				sprintf('/%s', $request->request->get('form-url'))
+				sprintf('/%s', $formUrl)
 		));
 	}
 
@@ -216,15 +219,15 @@ class CustomerModule extends AbstractUrlMountableModule {
 	 * Display the "add trolley item" form.
 	 *
 	 * @param \Sitegear\Base\View\ViewInterface $view
+	 * @param Request $request
 	 * @param $moduleName
 	 * @param $type
 	 * @param $id
 	 */
-	public function addTrolleyItemFormComponent(ViewInterface $view, $moduleName, $type, $id) {
+	public function addTrolleyItemFormComponent(ViewInterface $view, Request $request, $moduleName, $type, $id) {
 		LoggerRegistry::debug('CustomerModule::addTrolleyItemFormComponent');
-		// Setup the generated form.
 		$formKey = $view['form-key'] = $this->config('forms.add-trolley-item.form-key');
-		$this->getEngine()->forms()->registerForm($formKey, $this->buildAddTrolleyItemForm($moduleName, $type, $id));
+		$this->buildAddTrolleyItemForm($formKey, $moduleName, $type, $id, $request->getPathInfo());
 	}
 
 	//-- Public Methods --------------------
@@ -336,18 +339,22 @@ class CustomerModule extends AbstractUrlMountableModule {
 	/**
 	 * Utilise AddTrolleyItemFormBuilder to create the 'add trolley item' form.
 	 *
+	 * @param string $formKey
 	 * @param string $moduleName
 	 * @param string $type
 	 * @param integer $id
+	 * @param string $formUrl
 	 *
 	 * @return \Sitegear\Base\Form\FormInterface
 	 */
-	protected function buildAddTrolleyItemForm($moduleName, $type, $id) {
+	protected function buildAddTrolleyItemForm($formKey, $moduleName, $type, $id, $formUrl) {
+		$submitUrl = sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.add-trolley-item'));
+		$submitUrl = UrlUtilities::generateLinkWithReturnUrl($submitUrl, ltrim($formUrl, '/'), 'form-url');
 		$formData = array(
-			'submit-url' => sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.add-trolley-item')),
 			'module-name' => $moduleName,
 			'type' => $type,
 			'id' => $id,
+			'submit-url' => $submitUrl,
 			'labels' => array(
 				'quantity-field' => $this->config('forms.add-trolley-item.quantity-field'),
 				'no-value-option' => $this->config('forms.add-trolley-item.no-value-option'),
@@ -355,7 +362,9 @@ class CustomerModule extends AbstractUrlMountableModule {
 			)
 		);
 		$formBuilder = new AddTrolleyItemFormBuilder($this->getEngine());
-		return $formBuilder->buildForm($formData, null, null, array());
+		$form = $formBuilder->buildForm($formData, $this->getEngine()->forms()->getValues($formKey), $this->getEngine()->forms()->getErrors($formKey));
+		$this->getEngine()->forms()->registerForm($formKey, $form);
+		return $form;
 	}
 
 	/**
