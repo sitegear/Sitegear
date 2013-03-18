@@ -6,7 +6,7 @@
  * http://sitegear.org/
  */
 
-namespace Sitegear\Ext\Module\Customer;
+namespace Sitegear\Ext\Module\Customer\Form;
 
 use Sitegear\Base\Engine\EngineInterface;
 use Sitegear\Base\Form\Builder\FormBuilderInterface;

@@ -12,6 +12,7 @@ use Sitegear\Base\Module\AbstractUrlMountableModule;
 use Sitegear\Base\Module\PurchaseAdjustmentProviderModuleInterface;
 use Sitegear\Base\Module\PurchaseItemProviderModuleInterface;
 use Sitegear\Base\View\ViewInterface;
+use Sitegear\Ext\Module\Customer\Form\AddTrolleyItemFormBuilder;
 use Sitegear\Ext\Module\Customer\Model\TransactionItem;
 use Sitegear\Ext\Module\Customer\Model\Account;
 use Sitegear\Util\UrlUtilities;
