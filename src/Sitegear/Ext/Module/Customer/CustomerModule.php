@@ -133,6 +133,7 @@ class CustomerModule extends AbstractUrlMountableModule {
 				}
 			}
 			$this->addTrolleyItem($moduleName, $type, $id, $attributeValues, intval($request->request->get('quantity')));
+			$this->getEngine()->forms()->resetForm($formKey);
 		}
 		// Go back to the page where the submission was made.
 		return new RedirectResponse($request->getUriForPath(
