@@ -90,7 +90,7 @@ class FormBuilder implements FormBuilderInterface {
 		for ($i=0, $l=sizeof($formData['steps']); $i<$l; ++$i) {
 			$form->addStep($this->buildStep($form, $formData, $i));
 		}
-		return $formData;
+		return $form;
 	}
 
 	//-- Public Methods --------------------
@@ -224,6 +224,7 @@ class FormBuilder implements FormBuilderInterface {
 	 */
 	public function buildProcessor(array $processorData) {
 		LoggerRegistry::debug('FormBuilder::buildProcessor()');
+		// TODO Processor pre-requisites
 		return new ModuleProcessor(
 			$this->engine->getModule($processorData['module']),
 			$processorData['method'],
