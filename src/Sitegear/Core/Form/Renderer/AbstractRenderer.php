@@ -17,11 +17,15 @@ abstract class AbstractRenderer implements RendererInterface {
 
 	//-- Constants --------------------
 
+	/**
+	 * Render option key used to specify the element name.
+	 */
 	const RENDER_OPTION_KEY_ELEMENT_NAME = 'element';
 
+	/**
+	 * Render option key used to specify a key-value array of attributes.
+	 */
 	const RENDER_OPTION_KEY_ATTRIBUTES = 'attributes';
-
-	const RENDER_OPTION_KEY_VALUE = 'value';
 
 	//-- Attributes --------------------
 

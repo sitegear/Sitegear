@@ -18,6 +18,13 @@ use Sitegear\Core\Form\Renderer\AbstractRenderer;
  */
 abstract class AbstractFieldRenderer extends AbstractRenderer implements FieldRendererInterface {
 
+	//-- Constants --------------------
+
+	/**
+	 * Render option key used to specify the current value(s) of the element being rendered.
+	 */
+	const RENDER_OPTION_KEY_VALUE = 'value';
+
 	//-- Attributes --------------------
 
 	/**
