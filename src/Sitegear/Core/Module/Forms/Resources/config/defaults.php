@@ -46,28 +46,6 @@ return array(
 	'form-builder' => array(
 
 		/**
-		 * Attributes for the form element.
-		 */
-		'attributes' => array(
-			'class' => 'form'
-		),
-
-		/**
-		 * Attributes for the fieldset elements.
-		 */
-		'fieldset-attributes' => array(),
-
-		/**
-		 * Attributes for the buttons container element.
-		 */
-		'buttons-container' => array(
-			'element' => 'div',
-			'attributes' => array(
-				'class' => 'buttons'
-			)
-		),
-
-		/**
 		 * Submit button attributes, or a single string value to specify only the `value` attribute.
 		 */
 		'submit-button' => 'Submit',
@@ -97,7 +75,21 @@ return array(
 		 * RendererInterface implementations and the values are key-value arrays which are passed as render options to
 		 * that renderer type.
 		 */
-		'constructor-arguments' => array()
+		'constructor-arguments' => array(
+			array(
+				'Sitegear\\Core\\Form\\Renderer\\FormRenderer' => array(
+					'attributes' => array(
+						'class' => 'form'
+					)
+				),
+				'Sitegear\\Core\\Form\\Renderer\\ButtonsRenderer' => array(
+					'element' => 'div',
+					'attributes' => array(
+						'class' => 'buttons'
+					)
+				)
+			)
+		)
 
 	),
 
