@@ -64,6 +64,11 @@ abstract class AbstractRenderer implements RendererInterface {
 
 	//-- Internal Methods --------------------
 
+	/**
+	 * Retrieve the factory used to create this renderer.
+	 *
+	 * @return RendererFactoryInterface
+	 */
 	protected function getFactory() {
 		return $this->factory;
 	}
