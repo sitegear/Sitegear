@@ -75,7 +75,8 @@ abstract class AbstractRenderer implements RendererInterface {
 	 * @return array
 	 */
 	protected function normaliseRenderOptions() {
-		$renderOptions = $this->getFactory()->getRenderOptionDefaults(get_class($this));
+		$class = new \ReflectionClass($this);
+		$renderOptions = $this->getFactory()->getRenderOptionDefaults($class->getName());
 		if (!isset($renderOptions[self::RENDER_OPTION_KEY_ELEMENT_NAME])) {
 			$renderOptions[self::RENDER_OPTION_KEY_ELEMENT_NAME] = 'div';
 		}
