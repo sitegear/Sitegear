@@ -236,14 +236,14 @@ return array(
 	),
 
 	/**
-	 * Settings for the generated "add to trolley" form.
+	 * Settings for the generated "add trolley item" form.
 	 */
 	'add-trolley-item' => array(
 
 		/**
-		 * Form key to use for the "add to trolley" form.
+		 * Form key to use for the "add trolley item" form.
 		 */
-		'form-key' => 'trolley',
+		'form-key' => 'customer.add-trolley-item',
 
 		/**
 		 * Text to display on the no-value option.  Set to an empty string to display no text, or to null to omit the
@@ -274,9 +274,23 @@ return array(
 	'checkout' => array(
 
 		/**
+		 * Form key to use for the checkout form.
+		 */
+		'form-key' => 'customer.checkout',
+
+		/**
+		 * Name of the form builder final implementation class to use.
+		 */
+		'form-structure' => array(
+			'current' => 'four-step',
+			'built-in' => '{{ include:$module/config/checkout-forms.php }}'
+		),
+
+		/**
 		 * Names of modules implementing PurchaseItemAdjustmentProviderModuleInterface, which are enabled to provide
 		 * adjustments during the checkout process (such as tax, shipping, etc).
 		 */
 		'adjustments' => array()
+
 	)
 );

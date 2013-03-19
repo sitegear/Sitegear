@@ -199,7 +199,11 @@ class CustomerModule extends AbstractUrlMountableModule {
 	public function checkoutController(ViewInterface $view) {
 		LoggerRegistry::debug('CustomerModule::checkoutController');
 		$this->applyConfigToView('pages.checkout', $view);
-		// TODO Checkout page
+		$formStructure = $this->config('checkout.form-structure.current');
+		if (is_string($formStructure)) {
+			$formStructure = $this->config(sprintf('checkout.form-structure.built-in.%s', $formStructure));
+		}
+		// TODO Build form based (partly) on $formStructure
 	}
 
 	//-- Component Controller Methods --------------------
