@@ -185,7 +185,7 @@ class Engine extends AbstractConfigurableEngine {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function normaliseResourceMap($resources) {
+	public function normaliseResourceMap(array $resources) {
 		// Retrieve and normalise the preferences for CDN vs local delivery.
 		$preferCdn = $this->config('system.resources.prefer-cdn');
 		if ($preferCdn === true) {
@@ -341,7 +341,7 @@ class Engine extends AbstractConfigurableEngine {
 	 * {@inheritDoc}
 	 */
 	protected function getRawProtocolSchemeMap() {
-		return $this->config('protocols.map');
+		return $this->config('protocols.map', array());
 	}
 
 	/**

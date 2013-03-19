@@ -470,6 +470,6 @@ abstract class AbstractEngine implements EngineInterface {
 	 *
 	 * @return array
 	 */
-	protected abstract function normaliseResourceMap($resources);
+	protected abstract function normaliseResourceMap(array $resources);
 
 }
