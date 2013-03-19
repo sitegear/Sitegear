@@ -236,42 +236,36 @@ return array(
 	),
 
 	/**
-	 * Form settings.
+	 * Settings for the generated "add to trolley" form.
 	 */
-	'forms' => array(
+	'add-trolley-item' => array(
 
 		/**
-		 * Settings for the generated "add to trolley" form.
+		 * Form key to use for the "add to trolley" form.
 		 */
-		'add-trolley-item' => array(
+		'form-key' => 'trolley',
 
-			/**
-			 * Form key to use for the "add to trolley" form.
-			 */
-			'form-key' => 'trolley',
+		/**
+		 * Text to display on the no-value option.  Set to an empty string to display no text, or to null to omit the
+		 * no-value option altogether.
+		 */
+		'no-value-option' => '-- Please Select --',
 
-			/**
-			 * Text to display on the no-value option.  Set to an empty string to display no text, or to null to omit the
-			 * no-value option altogether.
-			 */
-			'no-value-option' => '-- Please Select --',
+		/**
+		 * Label for the Quantity field.
+		 */
+		'quantity-field' => 'Quantity',
 
-			/**
-			 * Label for the Quantity field.
-			 */
-			'quantity-field' => 'Quantity',
+		/**
+		 * Format mask to apply to values in the trolley form.  The available tokens are %label% and %value%, the
+		 * latter of which is given a formatted value.
+		 */
+		'value-format' => '%label% - %value%',
 
-			/**
-			 * Format mask to apply to values in the trolley form.  The available tokens are %label% and %value%, the
-			 * latter of which is given a formatted value.
-			 */
-			'value-format' => '%label% - %value%',
-
-			/**
-			 * Text for the submit button.
-			 */
-			'submit-button' => 'Buy Now'
-		)
+		/**
+		 * Text for the submit button.
+		 */
+		'submit-button' => 'Buy Now'
 	),
 
 	/**

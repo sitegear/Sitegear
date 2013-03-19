@@ -121,7 +121,7 @@ class CustomerModule extends AbstractUrlMountableModule {
 		// Get the form URL.
 		$formUrl = $request->query->get('form-url');
 		// Setup the generated form.
-		$formKey = $this->config('forms.add-trolley-item.form-key');
+		$formKey = $this->config('add-trolley-item.form-key');
 		$form = $this->buildAddTrolleyItemForm($formKey, $moduleName, $type, $id, $formUrl);
 		// Validate the data against the generated form, and add the trolley item if valid.
 		$errors = $this->getEngine()->forms()->validateForm($formKey, $form->getStep(0)->getReferencedFields(), $request->request->all());
@@ -228,7 +228,7 @@ class CustomerModule extends AbstractUrlMountableModule {
 	 */
 	public function addTrolleyItemFormComponent(ViewInterface $view, Request $request, $moduleName, $type, $id) {
 		LoggerRegistry::debug('CustomerModule::addTrolleyItemFormComponent');
-		$formKey = $view['form-key'] = $this->config('forms.add-trolley-item.form-key');
+		$formKey = $view['form-key'] = $this->config('add-trolley-item.form-key');
 		$this->buildAddTrolleyItemForm($formKey, $moduleName, $type, $id, $request->getPathInfo());
 	}
 
@@ -358,9 +358,9 @@ class CustomerModule extends AbstractUrlMountableModule {
 			'id' => $id,
 			'submit-url' => $submitUrl,
 			'labels' => array(
-				'quantity-field' => $this->config('forms.add-trolley-item.quantity-field'),
-				'no-value-option' => $this->config('forms.add-trolley-item.no-value-option'),
-				'value-format' => $this->config('forms.add-trolley-item.value-format')
+				'quantity-field' => $this->config('add-trolley-item.quantity-field'),
+				'no-value-option' => $this->config('add-trolley-item.no-value-option'),
+				'value-format' => $this->config('add-trolley-item.value-format')
 			)
 		);
 		$formBuilder = new AddTrolleyItemFormBuilder($this->getEngine());
