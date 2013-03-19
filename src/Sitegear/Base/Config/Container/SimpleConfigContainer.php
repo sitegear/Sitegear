@@ -86,9 +86,12 @@ class SimpleConfigContainer implements ConfigContainerInterface {
 		$keys = $this->normaliseKey($key);
 		$value = $this->data;
 		foreach ($keys as $k) {
+			if (is_string($value)) {
+				$value = $this->applyProcessors($value);
+			}
 			$value = (is_array($value) && isset($value[$k])) ? $value[$k] : null;
 		}
-		return is_null($value) ? $default : $this->applyProcessors($value);
+		return $value ? $this->applyProcessors($value) : $default;
 	}
 
 	//-- Internal Methods --------------------
