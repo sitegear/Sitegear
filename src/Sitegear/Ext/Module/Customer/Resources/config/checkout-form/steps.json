@@ -1,0 +1,142 @@
+{
+	"four-step": [
+		{
+			"fieldsets": [
+				"customer"
+			]
+		},
+		{
+			"fieldsets": [
+				"billing"
+			]
+		},
+		{
+			"fieldsets": [
+				"delivery"
+			],
+			"processors": [
+				"prepare-payment"
+			]
+		},
+		{
+			"fieldsets": [
+				"payment",
+				"terms"
+			],
+			"processors": [
+				"make-payment"
+			]
+		}
+	],
+	"three-step": [
+		{
+			"fieldsets": [
+				"customer",
+				"billing"
+			]
+		},
+		{
+			"fieldsets": [
+				"delivery"
+			],
+			"processors": [
+				"prepare-payment"
+			]
+		},
+		{
+			"fieldsets": [
+				"payment",
+				"terms"
+			],
+			"processors": [
+				"make-payment"
+			]
+		}
+	],
+	"two-step": [
+		{
+			"fieldsets": [
+				"customer",
+				"billing",
+				"delivery"
+			],
+			"processors": [
+				"prepare-payment"
+			]
+		},
+		{
+			"fieldsets": [
+				"payment",
+				"terms"
+			],
+			"processors": [
+				"make-payment"
+			]
+		}
+	],
+	"one-step": [
+		{
+			"fieldsets": [
+				"customer",
+				"billing",
+				"delivery",
+				"payment",
+				"terms"
+			],
+			"processors": [
+				"make-payment"
+			]
+		}
+	],
+	"three-steps-no-delivery": [
+		{
+			"fieldsets": [
+				"customer"
+			]
+		},
+		{
+			"fieldsets": [
+				"billing"
+			]
+		},
+		{
+			"fieldsets": [
+				"payment",
+				"terms"
+			],
+			"processors": [
+				"make-payment"
+			]
+		}
+	],
+	"two-steps-no-delivery": [
+		{
+			"fieldsets": [
+				"customer",
+				"billing"
+			]
+		},
+		{
+			"fieldsets": [
+				"payment",
+				"terms"
+			],
+			"processors": [
+				"make-payment"
+			]
+		}
+	],
+	"one-step-no-delivery": [
+		{
+			"fieldsets": [
+				"customer",
+				"billing",
+				"payment",
+				"terms"
+			],
+			"processors": [
+				"make-payment"
+			]
+		}
+	]
+}

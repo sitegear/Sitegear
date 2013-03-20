@@ -1,0 +1,9 @@
+{
+	"heading": "Card Details",
+	"fields": [
+		"card-number",
+		"card-cvn",
+		"card-expiry",
+		"card-name"
+	]
+}

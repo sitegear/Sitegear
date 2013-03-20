@@ -9,12 +9,12 @@
 namespace Sitegear\Ext\Module\Customer\Form;
 
 use Sitegear\Base\Form\Form;
-use Sitegear\Core\Module\Forms\Form\Builder\AbstractFormsModuleFormBuilder;
+use Sitegear\Core\Module\Forms\Form\Builder\FormBuilder;
 
 /**
  * Custom builder for the checkout form.
  */
-class CheckoutFormBuilder extends AbstractFormsModuleFormBuilder {
+class CheckoutFormBuilder extends FormBuilder {
 
 	/**
 	 * {@inheritDoc}

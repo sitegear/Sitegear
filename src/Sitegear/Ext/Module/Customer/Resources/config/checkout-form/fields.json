@@ -1,0 +1,455 @@
+{
+	"first-name": {
+		"type": "input",
+		"label": "First Name",
+		"constraints": [
+			{
+				"name": "not-blank",
+				"options": {
+					"message": "Please provide your first name"
+				}
+			}
+		]
+	},
+	"last-name": {
+		"type": "input",
+		"label": "Last Name",
+		"constraints": [
+			{
+				"name": "not-blank",
+				"options": {
+					"message": "Please provide your last name"
+				}
+			}
+		]
+	},
+	"email": {
+		"type": "input",
+		"label": "Email Address",
+		"label-markers": "<span class=\"email-marker\">@</span>",
+		"constraints": [
+			{
+				"name": "not-blank",
+				"options": {
+					"message": "Please provide your email address"
+				}
+			},
+			{
+				"name": "email"
+			}
+		]
+	},
+	"other-contact": {
+		"type": "input",
+		"label": "Other Contact"
+	},
+	"password": {
+		"type": "input",
+		"label": "To create an account, please set your password",
+		"settings": {
+			"type": "password",
+			"attributes": {
+				"autocomplete": "off"
+			}
+		},
+		"conditions": [
+			{
+				"type": "method-result",
+				"method": "isNewAccount",
+				"results": [
+					true
+				]
+			}
+		]
+	},
+	"confirm-password": {
+		"type": "input",
+		"label": "Please confirm your new password",
+		"settings": {
+			"type": "password",
+			"attributes": {
+				"autocomplete": "off"
+			}
+		},
+		"conditions": [
+			{
+				"type": "method-result",
+				"method": "isNewAccount",
+				"results": [
+					true
+				]
+			}
+		]
+	},
+	"street-1": {
+		"type": "input",
+		"label": "Street Address",
+		"constraints": [
+			{
+				"name": "not-blank",
+				"options": {
+					"message": "Please provide your street address for billing"
+				}
+			}
+		]
+	},
+	"street-2": {
+		"type": "input"
+	},
+	"town": {
+		"label": "Town / Suburb",
+		"type": "input",
+		"constraints": [
+			{
+				"name": "not-blank",
+				"options": {
+					"message": "Please provide your town or suburb for billing"
+				}
+			}
+		]
+	},
+	"postcode": {
+		"label": "Postcode",
+		"type": "input",
+		"constraints": [
+			{
+				"name": "not-blank",
+				"options": {
+					"message": "Please provide your postcode for billing"
+				}
+			}
+		]
+	},
+	"state": {
+		"label": "State / Territory",
+		"type": "select",
+		"settings": {
+			"values": [
+				{
+					"value": "",
+					"label": "Please Select"
+				},
+				{
+					"value": "Western Australia",
+					"label": "Western Australia"
+				},
+				{
+					"value": "South Australia",
+					"label": "South Australia"
+				},
+				{
+					"value": "Northern Territory",
+					"label": "Northern Territory"
+				},
+				{
+					"value": "Queensland",
+					"label": "Queensland"
+				},
+				{
+					"value": "New South Wales",
+					"label": "New South Wales"
+				},
+				{
+					"value": "Victoria",
+					"label": "Victoria"
+				},
+				{
+					"value": "Tasmania",
+					"label": "Tasmania"
+				},
+				{
+					"value": "Australian Capital Territory",
+					"label": "Australian Capital Territory"
+				},
+				{
+					"value": "Outside Australia",
+					"label": "Outside Australia"
+				}
+			]
+		},
+		"constraints": [
+			{
+				"name": "not-blank",
+				"options": {
+					"message": "Please select your state or territory for billing"
+				}
+			}
+		]
+	},
+	"country": {
+		"type": "select",
+		"label": "Country",
+		"settings": {
+			"values": "{{ engine:iso/getIso3166CountrySelectOptions() }}",
+			"value": "AU"
+		},
+		"constraints": [
+			{
+				"name": "not-blank",
+				"options": {
+					"message": "Please provide your country for billing"
+				}
+			}
+		]
+	},
+	"notes": {
+		"type": "textarea",
+		"label": "Notes / Special Instructions",
+		"settings": {
+			"rows": 4,
+			"cols": 20
+		}
+	},
+	"delivery-address-different": {
+		"type": "multi-input",
+		"settings": {
+			"multiple": true,
+			"values": [
+				{
+					"label": "My delivery address is different to my billing address",
+					"value": "yes"
+				}
+			]
+		}
+	},
+	"delivery-street-1": {
+		"type": "input",
+		"label": "Delivery Address",
+		"constraints": [
+			{
+				"condition": {
+					"field": "delivery-address-different",
+					"values": [
+						"yes"
+					]
+				},
+				"name": "not-blank",
+				"options": {
+					"message": "Please provide your street address for delivery"
+				}
+			}
+		]
+	},
+	"delivery-street-2": {
+		"type": "input"
+	},
+	"delivery-town": {
+		"type": "input",
+		"label": "Town / Suburb",
+		"constraints": [
+			{
+				"condition": {
+					"field": "delivery-address-different",
+					"values": [
+						"yes"
+					]
+				},
+				"name": "not-blank",
+				"options": {
+					"message": "Please provide your town or suburb for delivery"
+				}
+			}
+		]
+	},
+	"delivery-postcode": {
+		"label": "Postcode",
+		"type": "text",
+		"constraints": [
+			{
+				"condition": {
+					"field": "delivery-address-different",
+					"values": [
+						"yes"
+					]
+				},
+				"name": "not-blank",
+				"options": {
+					"message": "Please provide your postcode for delivery"
+				}
+			}
+		]
+	},
+	"delivery-state": {
+		"type": "select",
+		"label": "State / Territory",
+		"settings": {
+			"values": [
+				{
+					"value": "",
+					"label": "Please Select"
+				},
+				{
+					"value": "Western Australia",
+					"label": "Western Australia"
+				},
+				{
+					"value": "South Australia",
+					"label": "South Australia"
+				},
+				{
+					"value": "Northern Territory",
+					"label": "Northern Territory"
+				},
+				{
+					"value": "Queensland",
+					"label": "Queensland"
+				},
+				{
+					"value": "New South Wales",
+					"label": "New South Wales"
+				},
+				{
+					"value": "Victoria",
+					"label": "Victoria"
+				},
+				{
+					"value": "Tasmania",
+					"label": "Tasmania"
+				},
+				{
+					"value": "Australian Capital Territory",
+					"label": "Australian Capital Territory"
+				},
+				{
+					"value": "Outside Australia",
+					"label": "Outside Australia"
+				}
+			]
+		},
+		"constraints": [
+			{
+				"condition": {
+					"field": "delivery-address-different",
+					"values": [
+						"yes"
+					]
+				},
+				"name": "not-blank",
+				"options": {
+					"message": "Please provide your state or territory for delivery"
+				}
+			}
+		]
+	},
+	"delivery-country": {
+		"type": "select",
+		"label": "Country",
+		"settings": {
+			"values": "{{ engine:iso/getIso3166CountrySelectOptions() }}",
+			"value": "AU"
+		},
+		"constraints": [
+			{
+				"condition": {
+					"field": "delivery-address-different",
+					"values": [
+						"yes"
+					]
+				},
+				"name": "not-blank",
+				"options": {
+					"message": "Please provide your country for delivery"
+				}
+			}
+		]
+	},
+	"card-number": {
+		"type": "input",
+		"label": "Credit Card Number",
+		"settings": {
+			"sensitive": true,
+			"attributes": {
+				"maxlength": 16
+			}
+		},
+		"constraints": [
+			{
+				"name": "not-blank",
+				"options": {
+					"message": "Please provide your credit card number"
+				}
+			},
+			{
+				"name": "regex",
+				"options": {
+					"pattern": "^\\d{15}\\d?$",
+					"message": "Sorry, I don't understand your credit card number. Please double check that it is correct, it should have 15 or 16 digits and no spaces."
+				}
+			}
+		]
+	},
+	"card-cvn": {
+		"type": "input",
+		"label": "Verification Code",
+		"settings": {
+			"sensitive": true,
+			"attributes": {
+				"maxlength": 4
+			}
+		},
+		"constraints": [
+			{
+				"name": "not-blank",
+				"options": {
+					"message": "Please provide your credit card verification code."
+				}
+			},
+			{
+				"name": "regex",
+				"options": {
+					"pattern": "^\\d{3}\\d?$",
+					"message": "Sorry, I don't understand your verification code. Please double check that it is correct, it should have 3 or 4 digits only and no spaces."
+				}
+			}
+		]
+	},
+	"card-expiry": {
+		"type": "month-year-select",
+		"label": "Expiry",
+		"settings": {
+			"sensitive": true,
+			"attributes": {
+				"class": "card-expiry"
+			},
+			"type": "relative",
+			"year-min": 0,
+			"year-max": 30
+		},
+		"validator": "validateMonthYearSelect"
+	},
+	"card-name": {
+		"type": "input",
+		"label": "Full Name on Card",
+		"settings": {
+			"sensitive": true
+		},
+		"constraints": [
+			{
+				"name": "not-blank",
+				"options": {
+					"message": "Please provide your full name as printed on your credit card"
+				}
+			}
+		]
+	},
+	"agreement": {
+		"type": "multi-input",
+		"label": "Agreement",
+		"settings": {
+			"values": [
+				{
+					"value": "yes",
+					"label": "I accept the <a href=\"terms\">terms &amp; conditions<\/a>"
+				}
+			]
+		},
+		"constraints": [
+			{
+				"name": "not-blank",
+				"options": {
+					"message": "Please tick the box to indicate your acceptance of our terms."
+				}
+			}
+		]
+	}
+}

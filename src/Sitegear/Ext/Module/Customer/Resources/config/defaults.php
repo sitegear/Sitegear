@@ -284,11 +284,39 @@ return array(
 		'form-key' => 'customer.checkout',
 
 		/**
-		 * Name of the form builder final implementation class to use.
+		 * Field definitions.  These are referenced by the fieldset definitions below.
 		 */
-		'form-structure' => array(
+		'fields' => '{{ include:$module/config/checkout-form/fields.json }}',
+
+		/**
+		 * Fieldset definitions.  These are referenced by the steps definitions below.
+		 */
+		'fieldsets' => array(
+			'customer' => '{{ include:$module/config/checkout-form/customer.json }}',
+			'billing' => '{{ include:$module/config/checkout-form/billing.json }}',
+			'delivery' => '{{ include:$module/config/checkout-form/delivery.json }}',
+			'payment' => '{{ include:$module/config/checkout-form/payment.json }}',
+			'terms' => '{{ include:$module/config/checkout-form/terms.json }}'
+		),
+
+		/**
+		 * Step definition settings.
+		 *
+		 * Each "steps definition" is an array of arrays of fieldset names.  Each array of fieldset names
+		 * represents a single step in the form structure, so the steps definitions represent different ways of
+		 * constructing the form from these pre-defined fieldsets.
+		 */
+		'steps' => array(
+
+			/**
+			 * Either then name of a steps definition below, or a custom step definition.
+			 */
 			'current' => 'four-step',
-			'built-in' => '{{ include:$module/config/checkout-forms.php }}'
+
+			/**
+			 * Array of step definitions that are available by default.
+			 */
+			'built-in' => '{{ include:$module/config/checkout-form/steps.json }}'
 		),
 
 		/**

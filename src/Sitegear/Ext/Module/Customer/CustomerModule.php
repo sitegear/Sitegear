@@ -232,7 +232,12 @@ class CustomerModule extends AbstractUrlMountableModule {
 		$this->buildAddTrolleyItemForm($formKey, $moduleName, $type, $id, $request->getPathInfo());
 	}
 
-	public function checkoutFormComponent(ViewInterface $view, Request $request) {
+	/**
+	 * Display the checkout form.
+	 *
+	 * @param ViewInterface $view
+	 */
+	public function checkoutFormComponent(ViewInterface $view) {
 		LoggerRegistry::debug('CustomerModule::addTrolleyItemFormComponent');
 		$formKey = $view['form-key'] = $this->config('checkout.form-key');
 		$this->buildCheckoutForm($formKey);
@@ -381,15 +386,15 @@ class CustomerModule extends AbstractUrlMountableModule {
 	 * @param string $formKey
 	 */
 	protected function buildCheckoutForm($formKey) {
-		$formStructure = $this->config('checkout.form-structure.current');
-		if (is_string($formStructure)) {
-			$formStructure = $this->config(sprintf('checkout.form-structure.built-in.%s', $formStructure));
+		$steps = $this->config('checkout.steps.current');
+		if (is_string($steps)) {
+			$steps = $this->config(sprintf('checkout.steps.built-in.%s', $steps));
 		}
 		$formData = array(
 			'submit-url' => sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.checkout')),
 			'target-url' => sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.checkout-complete')),
 			'cancel-url' => sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.trolley')),
-			'structure' => $formStructure
+			'steps' => $steps
 		);
 		$builder = new CheckoutFormBuilder($this->getEngine()->forms(), $formKey);
 		// TODO Pass in values and errors
@@ -432,7 +437,8 @@ class CustomerModule extends AbstractUrlMountableModule {
 			} elseif (!$module instanceof PurchaseAdjustmentProviderModuleInterface) {
 				throw new \RuntimeException(sprintf('FormsModule found invalid entry in "checkout.adjustments"; must be a purchase adjustment provider module, found "%s"', $name));
 			}
-			$value = $module->getAdjustmentAmount($this->getTrolleyData(), array()); // TODO Pass in $data array
+			// TODO Pass in $data array
+			$value = $module->getAdjustmentAmount($this->getTrolleyData(), array());
 			if (!empty($value) || $module->isVisibleUnset()) {
 				$adjustments[] = array(
 					'label' => $module->getAdjustmentLabel(),

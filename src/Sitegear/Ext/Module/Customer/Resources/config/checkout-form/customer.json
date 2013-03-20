@@ -1,0 +1,11 @@
+{
+	"heading": "Your Details",
+	"fields": [
+		"first-name",
+		"last-name",
+		"email",
+		"other-contact",
+		"password",
+		"confirm-password"
+	]
+}

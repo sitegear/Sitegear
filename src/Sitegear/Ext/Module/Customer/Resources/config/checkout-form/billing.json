@@ -1,0 +1,12 @@
+{
+	"heading": "Billing Address",
+	"fields": [
+		"street-1",
+		"street-2",
+		"town",
+		"postcode",
+		"state",
+		"country",
+		"notes"
+	]
+}
