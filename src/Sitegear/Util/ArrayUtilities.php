@@ -55,35 +55,55 @@ class ArrayUtilities {
 	 * Recursive array merge function, with overwrites for non-array elements.  This is similar to, but different from,
 	 * the array_merge_recursive() built-in function.
 	 *
-	 * The following rules apply to combining arrays:
+	 * The following default rules apply to combining arrays:
 	 *
-	 * * Sequentially indexed arrays in the same position in both arrays is handled with a simple array_merge().
-	 * * Other arrays in the same position cause a recursive combine() call.  This means that keys in the child arrays
-	 *   of $array2 will recursively overwrite those keys in the child arrays of $array1, even if the keys are numeric.
-	 * * Non-array elements in $array1 are always overwritten by elements in the same position in $array2.
-	 * * Non-array elements in $array2 always overwrite elements in the same position $array1.
+	 * 1. Sequentially indexed arrays in the same position in both arrays is handled with a simple array_merge().
+	 * 2. Other arrays in the same position cause a recursive combine() call.  This means that keys in the child arrays
+	 *    of $array2 will recursively overwrite those keys in the child arrays of $array1.
+	 * 3. Non-array elements in $array1 are always overwritten by elements in the same position in $array2.
+	 * 4. Non-array elements in $array2 always overwrite elements in the same position $array1.
+	 *
+	 * The following special rules can be enabled by appending a suffix symbol to the relevant key within $array2:
+	 *
+	 * * Plus sign (+) indicates that $union should be set to true for recursive calls.  This has the effect that an
+	 *   sequential indexed array can be merged as though it is an associative array.  In other words, rule #1 above
+	 *   is ignored.
+	 * * Equals sign (=) indicates that the value in $array2 should override the value in $array1 regardless of the
+	 *   data types.
 	 *
 	 * @param array $array1 Array of base values.
 	 * @param array $array2 Array to merge in.
-	 * @varargs Additional arrays may be specified, the values in the last specified array will always have precedence.
+	 * @param boolean $union Whether or not to treat sequential arrays as associative arrays, i.e. combine the values
+	 *   in $array1[0] and $array2[0], then combine the values in $array1[1] and $array2[1], and so on.  The default
+	 *   value of false indicates the sequential indexed arrays should be concatenated using array_merge().
 	 *
 	 * @return array Merged arrays.
 	 */
-	public static function combine(array $array1, array $array2) {
-		if (func_num_args() === 2) {
-			// Base case, just merge the two arrays.
-			if (self::isSequential($array1) && self::isSequential($array2)) {
-				$array1 = array_merge($array1, $array2);
-			} else {
-				foreach ($array2 as $key => $value2) {
-					$array1[$key] = (is_array($value2) && array_key_exists($key, $array1) && is_array($array1[$key])) ?
-							self::combine($array1[$key], $value2) :
-							$value2;
-				}
-			}
+	public static function combine(array $array1, array $array2, $union=false) {
+		if (!$union && self::isSequential($array1) && self::isSequential($array2)) {
+			// Append the values in $array2 to the end of $array1
+			$array1 = array_merge($array1, $array2);
 		} else {
-			// Tail-first recursive call, merge all but the first argument, then merge with the first argument.
-			$array1 = self::combine($array1, forward_static_call_array('self::combine', array_slice(func_get_args(), 1)));
+			// Handle each value in $array2 depending on its type and the non/existence and type of the corresponding
+			// value in $array1.
+			foreach ($array2 as $key => $value2) {
+				// Check for + or = suffix symbols.
+				$childUnion = false;
+				$overwrite = false;
+				switch ($key[strlen($key) - 1]) {
+					case '+':
+						$childUnion = true;
+						$key = substr($key, 0, -1);
+						break;
+					case '=':
+						$overwrite = true;
+						$key = substr($key, 0, -1);
+					default: // Do nothing, defaults are already set and the key does not need to be modified
+				}
+				// Make a recursive call or simple overwrite, depending on $overwrite flag and/or data type.
+				$value1 = array_key_exists($key, $array1) && is_array($array1[$key]) ? $array1[$key] : null;
+				$array1[$key] = (!$overwrite && is_array($value2) && is_array($value1)) ? self::combine($value1, $value2, $childUnion) : $value2;
+			}
 		}
 		return $array1;
 	}

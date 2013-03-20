@@ -143,12 +143,14 @@ class MultipleInputFieldRenderer extends AbstractFieldRenderer {
 				self::RENDER_OPTION_KEY_INNER_WRAPPER_ID_PREFIX => 'value',
 				self::RENDER_OPTION_KEY_LABELS_FIRST => false
 			),
-			parent::normaliseRenderOptions(),
-			array(
-				self::RENDER_OPTION_KEY_ATTRIBUTES => array(
-					'type' => $this->getField()->getType(),
-					'name' => $this->getField()->getName(),
-					'class' => $this->getField()->getType()
+			ArrayUtilities::combine(
+				parent::normaliseRenderOptions(),
+				array(
+					self::RENDER_OPTION_KEY_ATTRIBUTES => array(
+						'type' => $this->getField()->getType(),
+						'name' => $this->getField()->getName(),
+						'class' => $this->getField()->getType()
+					)
 				)
 			)
 		);

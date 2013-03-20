@@ -59,10 +59,12 @@ abstract class AbstractFieldRenderer extends AbstractRenderer implements FieldRe
 					'id' => $this->getField()->getName()
 				)
 			),
-			parent::normaliseRenderOptions(),
-			array(
-				self::RENDER_OPTION_KEY_ATTRIBUTES => array(
-					'name' => $this->getField()->getName()
+			ArrayUtilities::combine(
+				parent::normaliseRenderOptions(),
+				array(
+					self::RENDER_OPTION_KEY_ATTRIBUTES => array(
+						'name' => $this->getField()->getName()
+					)
 				)
 			)
 		);
