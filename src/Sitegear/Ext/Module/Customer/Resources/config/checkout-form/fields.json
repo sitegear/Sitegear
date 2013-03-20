@@ -126,44 +126,44 @@
 		"settings": {
 			"values": [
 				{
-					"value": "",
-					"label": "Please Select"
+					"value": null,
+					"label": "-- Please Select --"
 				},
 				{
-					"value": "Western Australia",
+					"value": "WA",
 					"label": "Western Australia"
 				},
 				{
-					"value": "South Australia",
+					"value": "SA",
 					"label": "South Australia"
 				},
 				{
-					"value": "Northern Territory",
+					"value": "NT",
 					"label": "Northern Territory"
 				},
 				{
-					"value": "Queensland",
+					"value": "Qld",
 					"label": "Queensland"
 				},
 				{
-					"value": "New South Wales",
+					"value": "NSW",
 					"label": "New South Wales"
 				},
 				{
-					"value": "Victoria",
+					"value": "Vic",
 					"label": "Victoria"
 				},
 				{
-					"value": "Tasmania",
+					"value": "Tas",
 					"label": "Tasmania"
 				},
 				{
-					"value": "Australian Capital Territory",
+					"value": "ACT",
 					"label": "Australian Capital Territory"
 				},
 				{
-					"value": "Outside Australia",
-					"label": "Outside Australia"
+					"value": "Other",
+					"label": "Other (Outside Australia)"
 				}
 			]
 		},
@@ -180,7 +180,7 @@
 		"type": "select",
 		"label": "Country",
 		"settings": {
-			"values": "{{ engine:iso/getIso3166CountrySelectOptions() }}",
+			"values": "{{ engine:iso/getIso3166CountrySelectOptions('-- Please Select --') }}",
 			"value": "AU"
 		},
 		"constraints": [
@@ -275,8 +275,8 @@
 		"settings": {
 			"values": [
 				{
-					"value": "",
-					"label": "Please Select"
+					"value": null,
+					"label": "-- Please Select --"
 				},
 				{
 					"value": "Western Australia",
@@ -335,7 +335,7 @@
 		"type": "select",
 		"label": "Country",
 		"settings": {
-			"values": "{{ engine:iso/getIso3166CountrySelectOptions() }}",
+			"values": "{{ engine:iso/getIso3166CountrySelectOptions('-- Please Select --') }}",
 			"value": "AU"
 		},
 		"constraints": [
