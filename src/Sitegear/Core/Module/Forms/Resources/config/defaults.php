@@ -97,6 +97,9 @@ return array(
 				'Sitegear\\Core\\Module\\Forms\\Form\\Renderer\\SelectFieldRenderer' => array(),
 				'Sitegear\\Core\\Module\\Forms\\Form\\Renderer\\MultipleInputFieldRenderer' => array(
 					'outer-wrapper-element-name' => 'ul',
+					'outer-wrapper-attributes' => array(
+						'class' => 'multiple-input-container'
+					),
 					'inner-wrapper-element-name' => 'li'
 				),
 				'Sitegear\\Core\\Module\\Forms\\Form\\Renderer\\FieldReadOnlyRenderer' => array(
