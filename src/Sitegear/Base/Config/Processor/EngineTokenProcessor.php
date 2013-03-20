@@ -12,7 +12,13 @@ use Sitegear\Base\Engine\EngineInterface;
 use Sitegear\Util\PhpSourceUtilities;
 
 /**
- * Token processor that allows substitution of values from a specified configuration container.
+ * Token processor that allows substitution of values by calling methods, either on the engine directly or on a module
+ * retrieved from that engine.
+ *
+ * Tokens of the form "prefix:methodName(arg1, arg2)" will call `methodName()` on the engine.
+ *
+ * Tokens of the form "prefix:moduleName/methodName(arg1, arg2)" will call `methodName()` on the module with name given
+ * by `moduleName`.
  */
 class EngineTokenProcessor extends AbstractPrefixedTokenProcessor {
 
@@ -41,8 +47,16 @@ class EngineTokenProcessor extends AbstractPrefixedTokenProcessor {
 	 */
 	protected function getTokenResultReplacement($token) {
 		$result = null;
-		$parsed = PhpSourceUtilities::parseFunctionCall($token);
-		$method = array( $this->engine, $parsed['name'] );
+		$matches = array();
+		if (preg_match('/^([a-zA-Z][a-zA-Z0-9]*?)\\/(.*?\\(.*\\))$/', $token, $matches) && sizeof($matches) > 2) {
+			$target = $this->engine->getModule($matches[1]);
+			$call = $matches[2];
+		} else {
+			$target = $this->engine;
+			$call = $token;
+		}
+		$parsed = PhpSourceUtilities::parseFunctionCall($call);
+		$method = array( $target, $parsed['name'] );
 		if (is_callable($method)) {
 			$result = call_user_func_array($method, $parsed['arguments']);
 		}
