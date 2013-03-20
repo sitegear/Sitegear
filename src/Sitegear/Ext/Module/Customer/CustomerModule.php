@@ -8,12 +8,13 @@
 
 namespace Sitegear\Ext\Module\Customer;
 
+use Sitegear\Base\Form\FormInterface;
 use Sitegear\Base\Module\AbstractUrlMountableModule;
 use Sitegear\Base\Module\PurchaseAdjustmentProviderModuleInterface;
 use Sitegear\Base\Module\PurchaseItemProviderModuleInterface;
 use Sitegear\Base\View\ViewInterface;
-use Sitegear\Ext\Module\Customer\Form\AddTrolleyItemFormBuilder;
-use Sitegear\Ext\Module\Customer\Form\CheckoutFormBuilder;
+use Sitegear\Ext\Module\Customer\Form\Builder\AddTrolleyItemFormBuilder;
+use Sitegear\Ext\Module\Customer\Form\Builder\CheckoutFormBuilder;
 use Sitegear\Ext\Module\Customer\Model\TransactionItem;
 use Sitegear\Ext\Module\Customer\Model\Account;
 use Sitegear\Util\UrlUtilities;
@@ -57,7 +58,10 @@ class CustomerModule extends AbstractUrlMountableModule {
 	 */
 	public function start() {
 		LoggerRegistry::debug('CustomerModule starting');
+		// Register the Doctrine entity namespace.
 		$this->getEngine()->doctrine()->getEntityManager()->getConfiguration()->addEntityNamespace(self::ENTITY_ALIAS, '\\Sitegear\\Ext\\Module\\Customer\\Model');
+		// Register the checkout form generator.
+		$this->getEngine()->forms()->registerFormGeneratorCallback($this->config('checkout.form-key'), array( $this, 'buildCheckoutForm' ));
 	}
 
 	//-- AbstractUrlMountableModule Methods --------------------
@@ -94,14 +98,7 @@ class CustomerModule extends AbstractUrlMountableModule {
 		if (!$this->getEngine()->getUserManager()->isLoggedIn()) {
 			return new RedirectResponse($this->getEngine()->userIntegration()->getAuthenticationLinkUrl('login', $request->getUri()));
 		}
-		$email = $this->getEngine()->getUserManager()->getLoggedInUserEmail();
-		$account = $this->getRepository('Account')->findOneBy(array( 'email' => $email ));
-		if (is_null($account)) {
-			$account = new Account();
-			$account->setEmail($email);
-			$this->getEngine()->doctrine()->getEntityManager()->persist($account);
-		}
-		$view['account'] = $account;
+		$view['account'] = $this->getLoggedInUserAccount();
 		$view['fields'] = $this->getRepository('Field')->findAll();
 		return null;
 	}
@@ -122,10 +119,10 @@ class CustomerModule extends AbstractUrlMountableModule {
 		// Get the form URL.
 		$formUrl = $request->query->get('form-url');
 		// Setup the generated form.
-		$formKey = $this->config('add-trolley-item.form-key');
-		$form = $this->buildAddTrolleyItemForm($formKey, $moduleName, $type, $id, $formUrl);
+		$form = $this->buildAddTrolleyItemForm($moduleName, $type, $id, $formUrl);
+		$this->getEngine()->forms()->registerForm($this->config('add-trolley-item.form-key'), $form);
 		// Validate the data against the generated form, and add the trolley item if valid.
-		$errors = $this->getEngine()->forms()->validateForm($formKey, $form->getStep(0)->getReferencedFields(), $request->request->all());
+		$errors = $this->getEngine()->forms()->validateForm($this->config('add-trolley-item.form-key'), $form->getStep(0)->getReferencedFields(), $request->request->all());
 		if (empty($errors)) {
 			$attributeValues = array();
 			foreach ($request->request->all() as $key => $value) {
@@ -134,7 +131,7 @@ class CustomerModule extends AbstractUrlMountableModule {
 				}
 			}
 			$this->addTrolleyItem($moduleName, $type, $id, $attributeValues, intval($request->request->get('quantity')));
-			$this->getEngine()->forms()->resetForm($formKey);
+			$this->getEngine()->forms()->resetForm($this->config('add-trolley-item.form-key'));
 		}
 		// Go back to the page where the submission was made.
 		return new RedirectResponse($request->getUriForPath(
@@ -229,7 +226,7 @@ class CustomerModule extends AbstractUrlMountableModule {
 	public function addTrolleyItemFormComponent(ViewInterface $view, Request $request, $moduleName, $type, $id) {
 		LoggerRegistry::debug('CustomerModule::addTrolleyItemFormComponent');
 		$formKey = $view['form-key'] = $this->config('add-trolley-item.form-key');
-		$this->buildAddTrolleyItemForm($formKey, $moduleName, $type, $id, $request->getPathInfo());
+		$this->getEngine()->forms()->registerForm($formKey, $this->buildAddTrolleyItemForm($formKey, $moduleName, $type, $id, $request->getPathInfo()));
 	}
 
 	/**
@@ -238,9 +235,8 @@ class CustomerModule extends AbstractUrlMountableModule {
 	 * @param ViewInterface $view
 	 */
 	public function checkoutFormComponent(ViewInterface $view) {
-		LoggerRegistry::debug('CustomerModule::addTrolleyItemFormComponent');
-		$formKey = $view['form-key'] = $this->config('checkout.form-key');
-		$this->buildCheckoutForm($formKey);
+		LoggerRegistry::debug('CustomerModule::checkoutFormComponent');
+		$view['form-key'] = $this->config('checkout.form-key');
 	}
 
 	//-- Public Methods --------------------
@@ -347,12 +343,9 @@ class CustomerModule extends AbstractUrlMountableModule {
 		$this->setTrolleyData($data);
 	}
 
-	//-- Internal Methods --------------------
-
 	/**
 	 * Utilise AddTrolleyItemFormBuilder to create the 'add trolley item' form.
 	 *
-	 * @param string $formKey
 	 * @param string $moduleName
 	 * @param string $type
 	 * @param integer $id
@@ -360,10 +353,10 @@ class CustomerModule extends AbstractUrlMountableModule {
 	 *
 	 * @return \Sitegear\Base\Form\FormInterface
 	 */
-	protected function buildAddTrolleyItemForm($formKey, $moduleName, $type, $id, $formUrl) {
+	public function buildAddTrolleyItemForm($moduleName, $type, $id, $formUrl) {
 		$submitUrl = sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.add-trolley-item'));
 		$submitUrl = UrlUtilities::generateLinkWithReturnUrl($submitUrl, ltrim($formUrl, '/'), 'form-url');
-		$formBuilder = new AddTrolleyItemFormBuilder($this->getEngine()->forms(), $formKey);
+		$formBuilder = new AddTrolleyItemFormBuilder($this->getEngine()->forms(), $this->config('add-trolley-item.form-key'));
 		$form = $formBuilder->buildForm(array(
 			'module-name' => $moduleName,
 			'type' => $type,
@@ -375,30 +368,47 @@ class CustomerModule extends AbstractUrlMountableModule {
 				'value-format' => $this->config('add-trolley-item.value-format')
 			)
 		));
-		$this->getEngine()->forms()->registerForm($formKey, $form);
 		return $form;
 	}
 
 	/**
 	 * Utilise CheckoutFormBuilder to create the checkout form.
 	 *
-	 * @param string $formKey
+	 * @return FormInterface
 	 */
-	protected function buildCheckoutForm($formKey) {
+	public function buildCheckoutForm() {
 		$steps = $this->config('checkout.steps.current');
 		if (is_string($steps)) {
 			$steps = $this->config(sprintf('checkout.steps.built-in.%s', $steps));
 		}
-		$builder = new CheckoutFormBuilder($this->getEngine()->forms(), $formKey);
+		$builder = new CheckoutFormBuilder($this->getEngine()->forms(), $this->config('checkout.form-key'), $this->getLoggedInUserAccount());
 		$form = $builder->buildForm(array(
-			'submit-url' => sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.checkout')),
 			'target-url' => sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.checkout-complete')),
 			'cancel-url' => sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.trolley')),
+			'fields' => $this->config('checkout.fields'),
+			'fieldsets' => $this->config('checkout.fieldsets'),
 			'steps' => $steps
 		));
-		$this->getEngine()->forms()->registerForm($formKey, $form);
-
+		return $form;
 	}
+
+	/**
+	 * Get the Account entity for the logged in user.  Create and persist the entity if necessary.
+	 *
+	 * @return Account|null
+	 */
+	public function getLoggedInUserAccount() {
+		$email = $this->getEngine()->getUserManager()->getLoggedInUserEmail();
+		$account = $this->getRepository('Account')->findOneBy(array( 'email' => 'ben@leftclick.com.au' ));
+		if (is_null($account)) {
+			$account = new Account();
+			$account->setEmail($email);
+			$this->getEngine()->doctrine()->getEntityManager()->persist($account);
+		}
+		return $account;
+	}
+
+	//-- Internal Methods --------------------
 
 	/**
 	 * Get the current contents of the trolley.

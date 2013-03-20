@@ -9,6 +9,7 @@
 namespace Sitegear\Core\Module\Forms;
 
 use Sitegear\Base\Form\Renderer\Factory\RendererFactoryInterface;
+use Sitegear\Base\Form\StepInterface;
 use Sitegear\Base\Module\AbstractUrlMountableModule;
 use Sitegear\Base\Config\Processor\ArrayTokenProcessor;
 use Sitegear\Base\Config\Processor\ConfigTokenProcessor;
@@ -44,12 +45,9 @@ class FormsModule extends AbstractUrlMountableModule {
 	//-- Attributes --------------------
 
 	/**
-	 * @var string[][] Key-value array from form keys to array of file paths to try for the data file for that form.
-	 */
-	private $formDefinitionPaths;
-
-	/**
-	 * @var FormInterface[]
+	 * @var array Each entry is either a FormInterface implementation representing an already-built form, or an array
+	 *   containing a 'type' key with value either 'definitions' or 'callback'.  Depending on the value of the 'type'
+	 *   key an additional key will store the path(s) to the definition file(s) or the callback itself.
 	 */
 	private $forms;
 
@@ -67,7 +65,6 @@ class FormsModule extends AbstractUrlMountableModule {
 	 */
 	public function start() {
 		$this->forms = array();
-		$this->formDefinitionPaths = array();
 	}
 
 	//-- AbstractUrlMountableModule Methods --------------------
@@ -303,19 +300,44 @@ class FormsModule extends AbstractUrlMountableModule {
 	 *
 	 * @throws \DomainException
 	 */
-	public function addFormPath($formKey, $path) {
-		LoggerRegistry::debug(sprintf('FormsModule::setFormPath(%s)', $formKey));
+	public function registerFormDefinitionFilePath($formKey, $path) {
+		LoggerRegistry::debug(sprintf('FormsModule::registerFormDefinitionFilePath(%s, %s)', $formKey, TypeUtilities::describe($path)));
 		if (isset($this->forms[$formKey])) {
-			throw new \DomainException(sprintf('FormsModule cannot add form path for form key "%s", form already generated', $formKey));
-		}
-		if (!isset($this->formDefinitionPaths[$formKey])) {
-			$this->formDefinitionPaths[$formKey] = array();
+			if (!is_array($this->forms[$formKey])) {
+				throw new \DomainException(sprintf('FormsModule cannot add form definition path for form key "%s", form already generated', $formKey));
+			} elseif ($this->forms[$formKey]['type'] !== 'definition') {
+				throw new \DomainException(sprintf('FormsModule cannot add form definition path for form key "%s", form already specified with a generator callback', $formKey));
+			}
+		} else {
+			$this->forms[$formKey] = array(
+				'type' => 'definitions',
+				'paths' => array()
+			);
 		}
 		if (is_array($path)) {
-			$this->formDefinitionPaths[$formKey] = array_merge($this->formDefinitionPaths[$formKey], $path);
+			$this->forms[$formKey]['paths'] = array_merge($this->forms[$formKey]['paths'], $path);
 		} else {
-			$this->formDefinitionPaths[$formKey][] = $path;
+			$this->forms[$formKey]['paths'][] = $path;
 		}
+	}
+
+	/**
+	 * Register a callback which will return a generated implementation of FormInterface.
+	 *
+	 * @param string $formKey
+	 * @param callable|array $callback
+	 *
+	 * @throws \DomainException
+	 */
+	public function registerFormGeneratorCallback($formKey, $callback) {
+		LoggerRegistry::debug(sprintf('FormsModule::registerFormGeneratorCallback(%s, ...)', $formKey));
+		if (isset($this->forms[$formKey])) {
+			throw new \DomainException(sprintf('FormsModule cannot add form generator callback for form key "%s", form already registered', $formKey));
+		}
+		$this->forms[$formKey] = array(
+			'type' => 'callback',
+			'callback' => $callback
+		);
 	}
 
 	/**
@@ -331,7 +353,7 @@ class FormsModule extends AbstractUrlMountableModule {
 	public function registerForm($formKey, FormInterface $form) {
 		LoggerRegistry::debug(sprintf('FormsModule::registerForm(%s)', $formKey));
 		if (isset($this->forms[$formKey])) {
-			throw new \DomainException(sprintf('FormsModule cannot register form key "%s" twice', $formKey));
+			throw new \DomainException(sprintf('FormsModule cannot register form for form key "%s", form already registered', $formKey));
 		}
 		return $this->forms[$formKey] = $form;
 	}
@@ -342,34 +364,41 @@ class FormsModule extends AbstractUrlMountableModule {
 	 * @param string $formKey
 	 * @param Request $request
 	 *
-	 * @return \Sitegear\Base\Form\FormInterface
+	 * @return \Sitegear\Base\Form\FormInterface|null
 	 *
 	 * @throws \InvalidArgumentException
 	 */
 	public function getForm($formKey, Request $request) {
 		LoggerRegistry::debug(sprintf('FormsModule::getForm(%s)', $formKey));
+		$queryString = strlen($request->getQueryString()) > 0 ? '?' . $request->getQueryString() : '';
+		$formUrl = sprintf('%s%s', ltrim($request->getPathInfo(), '/'), $queryString);
 		if (!isset($this->forms[$formKey])) {
-			// Use the first path that exists out of the paths configured with addFormPath(), plus the built-in default
-			$path = FileUtilities::firstExistingPath(array_merge(
-				isset($this->formDefinitionPaths[$formKey]) ? $this->formDefinitionPaths[$formKey] : array(),
-				array( $this->getEngine()->getSiteInfo()->getSitePath(ResourceLocations::RESOURCE_LOCATION_SITE, $this, sprintf('%s.json', $formKey)) )
-			));
-			if (is_null($path)) {
-				throw new \InvalidArgumentException(sprintf('FormsModule received form key "%s" with no available data file', $formKey));
+			$defaultPath = array( $this->getEngine()->getSiteInfo()->getSitePath(ResourceLocations::RESOURCE_LOCATION_SITE, $this, sprintf('%s.json', $formKey)) );
+			$this->forms[$formKey] = $this->loadFormFromDefinitions($formKey, $formUrl, $defaultPath);
+		} elseif (is_array($this->forms[$formKey])) {
+			switch ($this->forms[$formKey]['type']) {
+				case 'definitions':
+					$this->forms[$formKey] = $this->loadFormFromDefinitions($formKey, $formUrl, $this->forms[$formKey]['paths']);
+					break;
+				case 'callback':
+					$this->forms[$formKey] = call_user_func($this->forms[$formKey]['callback']);
+					break;
+				default: // No other values are ever assigned to 'type'
 			}
-			$queryString = strlen($request->getQueryString()) > 0 ? '?' . $request->getQueryString() : '';
-			$builder = new FormBuilder($this, $formKey);
-			$this->forms[$formKey] = $builder->buildForm(array_merge(
-				$this->config('form-builder'),
-				array(
-					'form-url' => sprintf('%s%s', ltrim($request->getPathInfo(), '/'), $queryString),
-					'submit-url' => sprintf('%s/%s/%s', $this->getMountedUrl(), $this->config('routes.form'), $formKey),
-					'constraint-label-markers' => $this->config('constraints.label-markers')
-				),
-				json_decode(file_get_contents($path), true)
-			));
 		}
 		return $this->forms[$formKey];
+	}
+
+	/**
+	 * Get the action URL for the form with the given key.  This does not check for the existence of the specified
+	 * form, it only returns the URL.
+	 *
+	 * @param string $formKey
+	 *
+	 * @return string URL relative to the site root.
+	 */
+	public function getFormSubmitUrl($formKey) {
+		return sprintf('%s/%s/%s', $this->getMountedUrl(), $this->config('routes.form'), $formKey);
 	}
 
 	/**
@@ -619,6 +648,29 @@ class FormsModule extends AbstractUrlMountableModule {
 	 */
 	protected function getSessionKey($formKey, $subKey) {
 		return sprintf('forms.%s.%s', $formKey, $subKey);
+	}
+
+	/**
+	 * @param string $formKey
+	 * @param string $formUrl
+	 * @param string[] $paths
+	 *
+	 * @return FormInterface|null
+	 */
+	protected function loadFormFromDefinitions($formKey, $formUrl, array $paths) {
+		$path = FileUtilities::firstExistingPath($paths);
+		if (!empty($path)) {
+			$builder = new FormBuilder($this, $formKey);
+			return $builder->buildForm(array_merge(
+				$this->config('form-builder'),
+				array(
+					'form-url' => $formUrl,
+					'constraint-label-markers' => $this->config('constraints.label-markers')
+				),
+				json_decode(file_get_contents($path), true)
+			));
+		}
+		return null;
 	}
 
 	/**

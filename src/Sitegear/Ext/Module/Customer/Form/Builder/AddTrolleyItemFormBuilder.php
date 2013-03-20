@@ -6,7 +6,7 @@
  * http://sitegear.org/
  */
 
-namespace Sitegear\Ext\Module\Customer\Form;
+namespace Sitegear\Ext\Module\Customer\Form\Builder;
 
 use Sitegear\Base\Form\Field\InputField;
 use Sitegear\Base\Form\Field\SelectField;

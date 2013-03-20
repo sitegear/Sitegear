@@ -54,7 +54,7 @@ class LocationsModule extends AbstractUrlMountableModule {
 		parent::start();
 		// Register "location-search" form.
 		$filename = $this->config('location-search-form.filename');
-		$this->getEngine()->forms()->addFormPath($this->config('location-search-form.key'), array(
+		$this->getEngine()->forms()->registerFormDefinitionFilePath($this->config('location-search-form.key'), array(
 			$this->getEngine()->getSiteInfo()->getSitePath(ResourceLocations::RESOURCE_LOCATION_SITE, $this, $filename),
 			$this->getEngine()->getSiteInfo()->getSitePath(ResourceLocations::RESOURCE_LOCATION_MODULE, $this, $filename)
 		));

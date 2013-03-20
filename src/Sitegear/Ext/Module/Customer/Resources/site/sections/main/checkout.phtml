@@ -5,3 +5,4 @@
 $view->getStringsManager()->prepend('title', $view['title']);
 ?>
 <h1><?php echo $view['heading']; ?></h1>
+<?php echo $view->customer()->checkoutForm(); ?>
