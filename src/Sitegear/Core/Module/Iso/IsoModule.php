@@ -35,7 +35,12 @@ class IsoModule extends AbstractConfigurableModule {
 	 *   only include the specified codes.
 	 */
 	public function getIso3166CountryCodes(array $includedCodes=null) {
-		return array_intersect_key($this->config('iso-3166-country-codes'), array_fill_keys($includedCodes, true));
+		$codes = $this->config('iso-3166-country-codes');
+		if (!is_null($includedCodes)) {
+			$includedCodes = array_fill_keys($includedCodes ?: array(), true);
+			$codes = array_intersect_key($codes, $includedCodes);
+		}
+		return $codes;
 	}
 
 	/**
