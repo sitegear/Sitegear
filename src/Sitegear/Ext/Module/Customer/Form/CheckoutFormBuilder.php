@@ -19,8 +19,8 @@ class CheckoutFormBuilder extends FormBuilder {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function buildForm($formData) {
-		$form = new Form($formData['submit-url'], $formData['target-url'], $formData['cancel-url']);
+	public function buildForm($formDefinition) {
+		$form = new Form($formDefinition['submit-url'], $formDefinition['target-url'], $formDefinition['cancel-url']);
 		return $form;
 	}
 

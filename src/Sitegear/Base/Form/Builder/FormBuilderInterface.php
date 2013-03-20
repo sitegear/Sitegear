@@ -19,11 +19,11 @@ namespace Sitegear\Base\Form\Builder;
 interface FormBuilderInterface {
 
 	/**
-	 * @param mixed $formData Representation of the form's configuration, which is used to control the generation of
-	 *   the form and its child objects.
+	 * @param mixed $formDefinition Representation of the form's configuration, which is used to control the generation
+	 *   of the form and its child objects.
 	 *
 	 * @return \Sitegear\Base\Form\FormInterface
 	 */
-	public function buildForm($formData);
+	public function buildForm($formDefinition);
 
 }

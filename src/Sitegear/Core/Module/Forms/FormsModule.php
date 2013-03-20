@@ -46,7 +46,7 @@ class FormsModule extends AbstractUrlMountableModule {
 	/**
 	 * @var string[][] Key-value array from form keys to array of file paths to try for the data file for that form.
 	 */
-	private $formDataPaths;
+	private $formDefinitionPaths;
 
 	/**
 	 * @var FormInterface[]
@@ -67,7 +67,7 @@ class FormsModule extends AbstractUrlMountableModule {
 	 */
 	public function start() {
 		$this->forms = array();
-		$this->formDataPaths = array();
+		$this->formDefinitionPaths = array();
 	}
 
 	//-- AbstractUrlMountableModule Methods --------------------
@@ -308,13 +308,13 @@ class FormsModule extends AbstractUrlMountableModule {
 		if (isset($this->forms[$formKey])) {
 			throw new \DomainException(sprintf('FormsModule cannot add form path for form key "%s", form already generated', $formKey));
 		}
-		if (!isset($this->formDataPaths[$formKey])) {
-			$this->formDataPaths[$formKey] = array();
+		if (!isset($this->formDefinitionPaths[$formKey])) {
+			$this->formDefinitionPaths[$formKey] = array();
 		}
 		if (is_array($path)) {
-			$this->formDataPaths[$formKey] = array_merge($this->formDataPaths[$formKey], $path);
+			$this->formDefinitionPaths[$formKey] = array_merge($this->formDefinitionPaths[$formKey], $path);
 		} else {
-			$this->formDataPaths[$formKey][] = $path;
+			$this->formDefinitionPaths[$formKey][] = $path;
 		}
 	}
 
@@ -351,7 +351,7 @@ class FormsModule extends AbstractUrlMountableModule {
 		if (!isset($this->forms[$formKey])) {
 			// Use the first path that exists out of the paths configured with addFormPath(), plus the built-in default
 			$path = FileUtilities::firstExistingPath(array_merge(
-				isset($this->formDataPaths[$formKey]) ? $this->formDataPaths[$formKey] : array(),
+				isset($this->formDefinitionPaths[$formKey]) ? $this->formDefinitionPaths[$formKey] : array(),
 				array( $this->getEngine()->getSiteInfo()->getSitePath(ResourceLocations::RESOURCE_LOCATION_SITE, $this, sprintf('%s.json', $formKey)) )
 			));
 			if (is_null($path)) {

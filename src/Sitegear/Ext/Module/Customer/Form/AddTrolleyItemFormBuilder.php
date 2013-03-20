@@ -29,7 +29,7 @@ class AddTrolleyItemFormBuilder extends AbstractFormsModuleFormBuilder {
 	//-- FormBuilderInterface Methods --------------------
 
 	/**
-	 * The $formData argument should be an array containing the following keys:
+	 * The $formDefinition argument should be an array containing the following keys:
 	 *
 	 * 'submit-url' which is the URL for form submission.
 	 * 'module-name' which is the name of the module providing the purchase item.
@@ -38,43 +38,43 @@ class AddTrolleyItemFormBuilder extends AbstractFormsModuleFormBuilder {
 	 * 'labels' which is an array containing keys 'quantity-field', 'no-value-option', and 'value-format', which may
 	 *   contain tokens %label% and %value%.
 	 *
-	 * @param array $formData
+	 * @param array $formDefinition
 	 *
 	 * @return \Sitegear\Base\Form\FormInterface
 	 *
 	 * @throws \InvalidArgumentException
 	 */
-	public function buildForm($formData) {
-		$form = new Form($formData['submit-url']);
-		$module = $this->getFormsModule()->getEngine()->getModule($formData['module-name']);
+	public function buildForm($formDefinition) {
+		$form = new Form($formDefinition['submit-url']);
+		$module = $this->getFormsModule()->getEngine()->getModule($formDefinition['module-name']);
 		if (!$module instanceof PurchaseItemProviderModuleInterface) {
-			throw new \InvalidArgumentException(sprintf('The specified module "%s" is not a valid purchase item provider.', $formData['module-name']));
+			throw new \InvalidArgumentException(sprintf('The specified module "%s" is not a valid purchase item provider.', $formDefinition['module-name']));
 		}
 		// Add the hidden fields.
 		// TODO Make 'module-name', 'type' and 'id' a single hidden field with encoded value
-		$moduleField = new InputField('module', $formData['module-name']);
+		$moduleField = new InputField('module', $formDefinition['module-name']);
 		$moduleField->setSetting('type', 'hidden');
 		$form->addField($moduleField);
-		$typeField = new InputField('type', $formData['type']);
+		$typeField = new InputField('type', $formDefinition['type']);
 		$typeField->setSetting('type', 'hidden');
 		$form->addField($typeField);
-		$idField = new InputField('id', $formData['id']);
+		$idField = new InputField('id', $formDefinition['id']);
 		$idField->setSetting('type', 'hidden');
 		$form->addField($idField);
 		// Create the array of field names for references used by the single step of the form.
 		$fields = array( 'module' => false, 'type' => false, 'id' => false );
 		// Add a field to the form for every purchase item attribute.
-		foreach ($module->getPurchaseItemAttributeDefinitions($formData['type'], $formData['id']) as $attribute) {
+		foreach ($module->getPurchaseItemAttributeDefinitions($formDefinition['type'], $formDefinition['id']) as $attribute) {
 			$name = sprintf('attr_%s', $attribute['id']);
 			// TODO Other field types - MultiInputField with radios and checkboxes
 			$attributeField = new SelectField($name, $this->getFieldValue($name), $attribute['label'], null, array( new NotBlank() ), $this->getFieldErrors($name));
-			$attributeField->setSetting('values', $this->buildAddTrolleyItemFormAttributeFieldValues($attribute, $formData['labels']['no-value-option'], $formData['labels']['value-format']));
+			$attributeField->setSetting('values', $this->buildAddTrolleyItemFormAttributeFieldValues($attribute, $formDefinition['labels']['no-value-option'], $formDefinition['labels']['value-format']));
 			$form->addField($attributeField);
 			$fields[$name] = true;
 		}
 		// Add the quantity field, which is a standard text field with a label.
 		$quantity = $this->getFieldValue('quantity', 1);
-		$quantityField = new InputField('quantity', $quantity, $formData['labels']['quantity-field']);
+		$quantityField = new InputField('quantity', $quantity, $formDefinition['labels']['quantity-field']);
 		$quantityField->addConstraint(new NotBlank());
 		$quantityField->addConstraint(new Range(array( 'min' => 1 )));
 		if (isset($fieldErrors['quantity'])) {
