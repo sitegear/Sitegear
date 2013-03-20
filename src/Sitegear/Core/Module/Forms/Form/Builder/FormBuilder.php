@@ -18,7 +18,6 @@ use Sitegear\Base\Form\Fieldset;
 use Sitegear\Base\Form\Processor\ModuleProcessor;
 use Sitegear\Util\ArrayUtilities;
 use Sitegear\Util\NameUtilities;
-use Sitegear\Util\UrlUtilities;
 use Sitegear\Util\LoggerRegistry;
 
 /**
@@ -51,13 +50,8 @@ class FormBuilder extends AbstractFormsModuleFormBuilder {
 	 */
 	public function buildForm($formDefinition) {
 		LoggerRegistry::debug('FormBuilder::buildForm()');
-		$submitUrl = UrlUtilities::generateLinkWithReturnUrl(
-			$formDefinition['submit-url'],
-			$formDefinition['form-url'],
-			'form-url'
-		);
 		$form = new Form(
-			$submitUrl,
+			$this->getSubmitUrl(isset($formDefinition['form-url']) ? $formDefinition['form-url'] : null),
 			isset($formDefinition['target-url']) ? $formDefinition['target-url'] : null,
 			isset($formDefinition['cancel-url']) ? $formDefinition['cancel-url'] : null,
 			isset($formDefinition['method']) ? $formDefinition['method'] : null,
