@@ -363,7 +363,8 @@ class CustomerModule extends AbstractUrlMountableModule {
 	protected function buildAddTrolleyItemForm($formKey, $moduleName, $type, $id, $formUrl) {
 		$submitUrl = sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.add-trolley-item'));
 		$submitUrl = UrlUtilities::generateLinkWithReturnUrl($submitUrl, ltrim($formUrl, '/'), 'form-url');
-		$formData = array(
+		$formBuilder = new AddTrolleyItemFormBuilder($this->getEngine()->forms(), $formKey);
+		$form = $formBuilder->buildForm(array(
 			'module-name' => $moduleName,
 			'type' => $type,
 			'id' => $id,
@@ -373,9 +374,7 @@ class CustomerModule extends AbstractUrlMountableModule {
 				'no-value-option' => $this->config('add-trolley-item.no-value-option'),
 				'value-format' => $this->config('add-trolley-item.value-format')
 			)
-		);
-		$formBuilder = new AddTrolleyItemFormBuilder($this->getEngine()->forms(), $formKey);
-		$form = $formBuilder->buildForm($formData);
+		));
 		$this->getEngine()->forms()->registerForm($formKey, $form);
 		return $form;
 	}
@@ -390,15 +389,13 @@ class CustomerModule extends AbstractUrlMountableModule {
 		if (is_string($steps)) {
 			$steps = $this->config(sprintf('checkout.steps.built-in.%s', $steps));
 		}
-		$formData = array(
+		$builder = new CheckoutFormBuilder($this->getEngine()->forms(), $formKey);
+		$form = $builder->buildForm(array(
 			'submit-url' => sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.checkout')),
 			'target-url' => sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.checkout-complete')),
 			'cancel-url' => sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.trolley')),
 			'steps' => $steps
-		);
-		$builder = new CheckoutFormBuilder($this->getEngine()->forms(), $formKey);
-		// TODO Pass in values and errors
-		$form = $builder->buildForm($formData);
+		));
 		$this->getEngine()->forms()->registerForm($formKey, $form);
 
 	}
@@ -437,7 +434,7 @@ class CustomerModule extends AbstractUrlMountableModule {
 			} elseif (!$module instanceof PurchaseAdjustmentProviderModuleInterface) {
 				throw new \RuntimeException(sprintf('FormsModule found invalid entry in "checkout.adjustments"; must be a purchase adjustment provider module, found "%s"', $name));
 			}
-			// TODO Pass in $data array
+			// TODO Pass in $data array to getAdjustmentAmount()
 			$value = $module->getAdjustmentAmount($this->getTrolleyData(), array());
 			if (!empty($value) || $module->isVisibleUnset()) {
 				$adjustments[] = array(
