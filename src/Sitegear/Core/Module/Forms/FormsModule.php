@@ -368,7 +368,7 @@ class FormsModule extends AbstractUrlMountableModule {
 				json_decode(file_get_contents($path), true)
 			);
 			$builder = new FormBuilder($this, $formKey);
-			$this->forms[$formKey] = $this->builder->buildForm($formData);
+			$this->forms[$formKey] = $builder->buildForm($formData);
 		}
 		return $this->forms[$formKey];
 	}
