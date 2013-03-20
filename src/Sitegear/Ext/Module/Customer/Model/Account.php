@@ -107,6 +107,21 @@ class Account {
 	}
 
 	/**
+	 * @param string $name
+	 *
+	 * @return null|AccountFieldValue
+	 */
+	public function getNamedFieldValue($name) {
+		$result = null;
+		foreach ($this->fieldValues as $fieldValue) { /** @var AccountFieldValue $fieldValue */
+			if ($fieldValue->getField()->getName() === $name) {
+				$result = $fieldValue;
+			}
+		}
+		return $result;
+	}
+
+	/**
 	 * @return \Doctrine\Common\Collections\Collection
 	 */
 	public function getTokens() {
