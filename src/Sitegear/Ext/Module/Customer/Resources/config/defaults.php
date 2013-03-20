@@ -274,7 +274,7 @@ return array(
 	),
 
 	/**
-	 * Settings for the checkout (see also "forms.checkout" for checkout form settings).
+	 * Settings for the checkout process and form.
 	 */
 	'checkout' => array(
 
