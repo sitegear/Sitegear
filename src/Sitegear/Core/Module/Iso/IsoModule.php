@@ -46,19 +46,27 @@ class IsoModule extends AbstractConfigurableModule {
 	/**
 	 * Retrieve an array structure suitable for use in form generation containing country codes and names.
 	 *
+	 * @param string|null $blankValueLabel
 	 * @param array|null $includedCodes Indexed array of codes to ignore.
 	 *
 	 * @return array Array of key-value arrays, each of which contains a 'value' and 'label' key, representing ISO-3166
 	 *   countries, possibly filtered to only include the specified codes.
 	 */
-	public function getIso3166CountrySelectOptions(array $includedCodes=null) {
+	public function getIso3166CountrySelectOptions($blankValueLabel=null, array $includedCodes=null) {
 		$codes = $this->getIso3166CountryCodes($includedCodes);
-		return array_map(function($code, $label) {
+		$codeOptions = array_map(function($code, $label) {
 			return array(
 				'value' => $code,
 				'label' => $label
 			);
 		}, array_keys($codes), array_values($codes));
+		if (!is_null($blankValueLabel)) {
+			array_unshift($codeOptions, array(
+				'value' => null,
+				'label' => $blankValueLabel
+			));
+		}
+		return $codeOptions;
 	}
 
 }
