@@ -201,7 +201,7 @@
 		}
 	},
 	"delivery-address-different": {
-		"type": "multi-input",
+		"type": "multiple-input",
 		"settings": {
 			"multiple": true,
 			"values": [
@@ -253,7 +253,7 @@
 	},
 	"delivery-postcode": {
 		"label": "Postcode",
-		"type": "text",
+		"type": "input",
 		"constraints": [
 			{
 				"condition": {
@@ -404,7 +404,7 @@
 		]
 	},
 	"card-expiry": {
-		"type": "month-year-select",
+		"type": "input",
 		"label": "Expiry",
 		"settings": {
 			"sensitive": true,
@@ -433,7 +433,7 @@
 		]
 	},
 	"agreement": {
-		"type": "multi-input",
+		"type": "multiple-input",
 		"label": "Agreement",
 		"settings": {
 			"values": [

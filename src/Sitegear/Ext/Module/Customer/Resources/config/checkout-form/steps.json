@@ -1,16 +1,20 @@
 {
 	"four-step": [
 		{
+			"heading": "Customer",
 			"fieldsets": [
 				"customer"
 			]
 		},
 		{
+			"heading": "Billing",
 			"fieldsets": [
 				"billing"
 			]
 		},
 		{
+			"heading": "Delivery",
+			"one-way": true,
 			"fieldsets": [
 				"delivery"
 			],
@@ -19,6 +23,7 @@
 			]
 		},
 		{
+			"heading": "Payment",
 			"fieldsets": [
 				"payment",
 				"terms"
@@ -30,12 +35,15 @@
 	],
 	"three-step": [
 		{
+			"heading": "Customer & Billing",
 			"fieldsets": [
 				"customer",
 				"billing"
 			]
 		},
 		{
+			"heading": "Delivery",
+			"one-way": true,
 			"fieldsets": [
 				"delivery"
 			],
@@ -44,6 +52,7 @@
 			]
 		},
 		{
+			"heading": "Payment",
 			"fieldsets": [
 				"payment",
 				"terms"
@@ -55,6 +64,8 @@
 	],
 	"two-step": [
 		{
+			"heading": "Customer & Addresses",
+			"one-way": true,
 			"fieldsets": [
 				"customer",
 				"billing",
@@ -65,6 +76,7 @@
 			]
 		},
 		{
+			"heading": "Payment",
 			"fieldsets": [
 				"payment",
 				"terms"
@@ -76,6 +88,7 @@
 	],
 	"one-step": [
 		{
+			"heading": "One-Page Checkout",
 			"fieldsets": [
 				"customer",
 				"billing",
@@ -90,16 +103,19 @@
 	],
 	"three-steps-no-delivery": [
 		{
+			"heading": "Customer",
 			"fieldsets": [
 				"customer"
 			]
 		},
 		{
+			"heading": "Billing",
 			"fieldsets": [
 				"billing"
 			]
 		},
 		{
+			"heading": "Payment",
 			"fieldsets": [
 				"payment",
 				"terms"
@@ -111,12 +127,14 @@
 	],
 	"two-steps-no-delivery": [
 		{
+			"heading": "Customer & Billing",
 			"fieldsets": [
 				"customer",
 				"billing"
 			]
 		},
 		{
+			"heading": "Payment",
 			"fieldsets": [
 				"payment",
 				"terms"
@@ -128,6 +146,7 @@
 	],
 	"one-step-no-delivery": [
 		{
+			"heading": "One-Page Checkout",
 			"fieldsets": [
 				"customer",
 				"billing",
