@@ -45,10 +45,14 @@ class CheckoutFormBuilder extends FormBuilder {
 		);
 		foreach ($formDefinition['fields'] as $name => $fieldDefinition) {
 			$field = $this->buildField($name, $fieldDefinition);
-			$value = $this->account->getNamedFieldValue($name);
-			if (!empty($value)) {
-				$field->setValue($value->getValue());
+			$value = $this->getFieldValue($name);
+			if (empty($value)) {
+				$fieldValue = $this->account->getNamedFieldValue($name);
+				if (!empty($fieldValue)) {
+					$value = $fieldValue->getValue();
+				}
 			}
+			$field->setValue($value);
 			$form->addField($field);
 		}
 		foreach ($formDefinition['steps'] as $stepIndex => $stepDefinition) {
