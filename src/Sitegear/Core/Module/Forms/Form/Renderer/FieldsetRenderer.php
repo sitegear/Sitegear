@@ -53,6 +53,9 @@ class FieldsetRenderer extends AbstractContainerRenderer {
 	 */
 	protected function renderChildren(array & $output) {
 		$form = $this->getFieldset()->getStep()->getForm();
+		if (!is_null($this->getFieldset()->getHeading())) {
+			$output[] = sprintf('<legend>%s</legend>', $this->getFieldset()->getHeading());
+		}
 		foreach ($this->getFieldset()->getFieldReferences() as $fieldReference) {
 			$field = $form->getField($fieldReference->getFieldName());
 			if ($fieldReference->isWrapped()) {
