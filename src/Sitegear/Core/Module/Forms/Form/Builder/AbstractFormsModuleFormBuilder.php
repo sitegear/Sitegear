@@ -10,6 +10,7 @@ namespace Sitegear\Core\Module\Forms\Form\Builder;
 
 use Sitegear\Base\Form\Builder\FormBuilderInterface;
 use Sitegear\Core\Module\Forms\FormsModule;
+use Sitegear\Util\UrlUtilities;
 
 /**
  * Abstract implementation of FormBuilderInterface which is given a reference to the FormsModule and a form key.
@@ -81,7 +82,19 @@ abstract class AbstractFormsModuleFormBuilder implements FormBuilderInterface {
 	 * @return string[]|null
 	 */
 	public function getFieldErrors($fieldName) {
-		return $this->getFormsModule()->getFieldValue($this->getFormKey(), $fieldName);
+		return $this->getFormsModule()->getFieldErrors($this->getFormKey(), $fieldName);
+	}
+
+	/**
+	 * Shortcut method to get the submission URL for the form.
+	 *
+	 * @param string $formUrl
+	 *
+	 * @return string
+	 */
+	public function getSubmitUrl($formUrl=null) {
+		$submitUrl = $this->getFormsModule()->getFormSubmitUrl($this->getFormKey());
+		return is_null($formUrl) ? $submitUrl : UrlUtilities::generateLinkWithReturnUrl($submitUrl, $formUrl, 'form-url');
 	}
 
 }
