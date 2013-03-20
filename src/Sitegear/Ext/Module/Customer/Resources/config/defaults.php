@@ -292,10 +292,30 @@ return array(
 		 * Fieldset definitions.  These are referenced by the steps definitions below.
 		 */
 		'fieldsets' => array(
+
+			/**
+			 * Contains fields for the customer's personal details (name, email address, etc).
+			 */
 			'customer' => '{{ include:$module/config/checkout-form/customer.json }}',
+
+			/**
+			 * Contains fields for billing address details.
+			 */
 			'billing' => '{{ include:$module/config/checkout-form/billing.json }}',
+
+			/**
+			 * Contains fields for delivery address details.
+			 */
 			'delivery' => '{{ include:$module/config/checkout-form/delivery.json }}',
+
+			/**
+			 * Contains fields that are required for payment, i.e. credit card name and numbers.
+			 */
 			'payment' => '{{ include:$module/config/checkout-form/payment.json }}',
+
+			/**
+			 * Contains fields for accepting terms and conditions.
+			 */
 			'terms' => '{{ include:$module/config/checkout-form/terms.json }}'
 		),
 
