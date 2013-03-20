@@ -6,8 +6,9 @@
  * http://sitegear.org/
  */
 
-namespace Sitegear\Core\Form\Renderer;
+namespace Sitegear\Core\Module\Forms\Form\Renderer;
 
+use Sitegear\Core\Module\Forms\Form\Renderer\AbstractFieldRenderer;
 use Sitegear\Util\NameUtilities;
 use Sitegear\Util\ArrayUtilities;
 use Sitegear\Util\HtmlUtilities;

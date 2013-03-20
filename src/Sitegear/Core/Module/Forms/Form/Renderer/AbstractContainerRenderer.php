@@ -6,9 +6,11 @@
  * http://sitegear.org/
  */
 
-namespace Sitegear\Core\Form\Renderer;
+namespace Sitegear\Core\Module\Forms\Form\Renderer;
 
+use Sitegear\Core\Module\Forms\Form\Renderer\AbstractRenderer;
 use Sitegear\Util\HtmlUtilities;
+use string;
 
 /**
  * Base class for renderers of container elements.  This splits the rendering into three sections -- start tag,

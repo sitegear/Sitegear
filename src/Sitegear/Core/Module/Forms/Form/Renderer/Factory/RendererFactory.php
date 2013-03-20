@@ -6,20 +6,24 @@
  * http://sitegear.org/
  */
 
-namespace Sitegear\Core\Form\Renderer\Factory;
+namespace Sitegear\Core\Module\Forms\Form\Renderer\Factory;
 
 use Sitegear\Base\Form\FieldsetInterface;
 use Sitegear\Base\Form\FormInterface;
 use Sitegear\Base\Form\Field\FieldInterface;
 use Sitegear\Base\Form\Renderer\Factory\RendererFactoryInterface;
-use Sitegear\Core\Form\Renderer\ButtonsRenderer;
-use Sitegear\Core\Form\Renderer\FieldErrorsRenderer;
-use Sitegear\Core\Form\Renderer\FieldLabelRenderer;
-use Sitegear\Core\Form\Renderer\FieldReadOnlyRenderer;
-use Sitegear\Core\Form\Renderer\FieldWrapperReadOnlyRenderer;
-use Sitegear\Core\Form\Renderer\FieldWrapperRenderer;
-use Sitegear\Core\Form\Renderer\FieldsetRenderer;
-use Sitegear\Core\Form\Renderer\FormRenderer;
+use Sitegear\Core\Module\Forms\Form\Renderer\ButtonsRenderer;
+use Sitegear\Core\Module\Forms\Form\Renderer\FieldErrorsRenderer;
+use Sitegear\Core\Module\Forms\Form\Renderer\FieldLabelRenderer;
+use Sitegear\Core\Module\Forms\Form\Renderer\FieldReadOnlyRenderer;
+use Sitegear\Core\Module\Forms\Form\Renderer\FieldWrapperReadOnlyRenderer;
+use Sitegear\Core\Module\Forms\Form\Renderer\FieldWrapperRenderer;
+use Sitegear\Core\Module\Forms\Form\Renderer\FieldsetRenderer;
+use Sitegear\Core\Module\Forms\Form\Renderer\FormRenderer;
+use Sitegear\Core\Module\Forms\Form\Renderer\InputFieldRenderer;
+use Sitegear\Core\Module\Forms\Form\Renderer\MultipleInputFieldRenderer;
+use Sitegear\Core\Module\Forms\Form\Renderer\SelectFieldRenderer;
+use Sitegear\Core\Module\Forms\Form\Renderer\TextareaFieldRenderer;
 use Sitegear\Util\NameUtilities;
 
 /**
@@ -110,11 +114,31 @@ class RendererFactory implements RendererFactoryInterface {
 
 	/**
 	 * {@inheritDoc}
+	 *
+	 * This implementation directly maps InputField, TextareaField, SelectField and MultipleInputField to their known
+	 * renderer implementations.  Otherwise, the field class name has 'Renderer' appended, which means the renderer
+	 * implementation should be in the same namespace as the field implementation, to utilise custom field types.
 	 */
 	public function createFieldRenderer(FieldInterface $field) {
 		$fieldClass = new \ReflectionClass($field);
-		$fieldRendererClass = new \ReflectionClass(sprintf('\\Sitegear\\Core\\Form\\Renderer\\%sRenderer', $fieldClass->getShortName()));
-		return $fieldRendererClass->newInstance($this, $field);
+		switch ($fieldClass->getShortName()) {
+			case 'InputField':
+				$renderer = new InputFieldRenderer($this, $field);
+				break;
+			case 'TextareaField':
+				$renderer = new TextareaFieldRenderer($this, $field);
+				break;
+			case 'SelectField':
+				$renderer = new SelectFieldRenderer($this, $field);
+				break;
+			case 'MultipleInputField':
+				$renderer = new MultipleInputFieldRenderer($this, $field);
+				break;
+			default:
+				$rendererClass = new \ReflectionClass($fieldClass->getName() . 'Renderer');
+				$renderer = $rendererClass->newInstance($this, $field);
+		}
+		return $renderer;
 	}
 
 	/**

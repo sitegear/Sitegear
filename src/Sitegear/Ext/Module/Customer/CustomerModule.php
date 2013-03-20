@@ -13,6 +13,7 @@ use Sitegear\Base\Module\PurchaseAdjustmentProviderModuleInterface;
 use Sitegear\Base\Module\PurchaseItemProviderModuleInterface;
 use Sitegear\Base\View\ViewInterface;
 use Sitegear\Ext\Module\Customer\Form\AddTrolleyItemFormBuilder;
+use Sitegear\Ext\Module\Customer\Form\CheckoutFormBuilder;
 use Sitegear\Ext\Module\Customer\Model\TransactionItem;
 use Sitegear\Ext\Module\Customer\Model\Account;
 use Sitegear\Util\UrlUtilities;
@@ -199,11 +200,6 @@ class CustomerModule extends AbstractUrlMountableModule {
 	public function checkoutController(ViewInterface $view) {
 		LoggerRegistry::debug('CustomerModule::checkoutController');
 		$this->applyConfigToView('pages.checkout', $view);
-		$formStructure = $this->config('checkout.form-structure.current');
-		if (is_string($formStructure)) {
-			$formStructure = $this->config(sprintf('checkout.form-structure.built-in.%s', $formStructure));
-		}
-		// TODO Build form based (partly) on $formStructure
 	}
 
 	//-- Component Controller Methods --------------------
@@ -234,6 +230,12 @@ class CustomerModule extends AbstractUrlMountableModule {
 		LoggerRegistry::debug('CustomerModule::addTrolleyItemFormComponent');
 		$formKey = $view['form-key'] = $this->config('add-trolley-item.form-key');
 		$this->buildAddTrolleyItemForm($formKey, $moduleName, $type, $id, $request->getPathInfo());
+	}
+
+	public function checkoutFormComponent(ViewInterface $view, Request $request) {
+		LoggerRegistry::debug('CustomerModule::addTrolleyItemFormComponent');
+		$formKey = $view['form-key'] = $this->config('checkout.form-key');
+		$this->buildCheckoutForm($formKey);
 	}
 
 	//-- Public Methods --------------------
@@ -367,10 +369,33 @@ class CustomerModule extends AbstractUrlMountableModule {
 				'value-format' => $this->config('add-trolley-item.value-format')
 			)
 		);
-		$formBuilder = new AddTrolleyItemFormBuilder($this->getEngine());
-		$form = $formBuilder->buildForm($formData, $this->getEngine()->forms()->getValues($formKey), $this->getEngine()->forms()->getErrors($formKey));
+		$formBuilder = new AddTrolleyItemFormBuilder($this->getEngine()->forms(), $formKey);
+		$form = $formBuilder->buildForm($formData);
 		$this->getEngine()->forms()->registerForm($formKey, $form);
 		return $form;
+	}
+
+	/**
+	 * Utilise CheckoutFormBuilder to create the checkout form.
+	 *
+	 * @param string $formKey
+	 */
+	protected function buildCheckoutForm($formKey) {
+		$formStructure = $this->config('checkout.form-structure.current');
+		if (is_string($formStructure)) {
+			$formStructure = $this->config(sprintf('checkout.form-structure.built-in.%s', $formStructure));
+		}
+		$formData = array(
+			'submit-url' => sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.checkout')),
+			'target-url' => sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.checkout-complete')),
+			'cancel-url' => sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.trolley')),
+			'structure' => $formStructure
+		);
+		$builder = new CheckoutFormBuilder($this->getEngine()->forms(), $formKey);
+		// TODO Pass in values and errors
+		$form = $builder->buildForm($formData);
+		$this->getEngine()->forms()->registerForm($formKey, $form);
+
 	}
 
 	/**

@@ -6,7 +6,7 @@
  * http://sitegear.org/
  */
 
-namespace Sitegear\Core\Form\Builder;
+namespace Sitegear\Core\Module\Forms\Form\Builder;
 
 use Sitegear\Base\Form\Form;
 use Sitegear\Base\Form\FormInterface;
@@ -15,9 +15,7 @@ use Sitegear\Base\Form\Step;
 use Sitegear\Base\Form\StepInterface;
 use Sitegear\Base\Form\FieldReference;
 use Sitegear\Base\Form\Fieldset;
-use Sitegear\Base\Form\Builder\FormBuilderInterface;
 use Sitegear\Base\Form\Processor\ModuleProcessor;
-use Sitegear\Base\Engine\EngineInterface;
 use Sitegear\Util\ArrayUtilities;
 use Sitegear\Util\NameUtilities;
 use Sitegear\Util\UrlUtilities;
@@ -27,7 +25,7 @@ use Sitegear\Util\LoggerRegistry;
  * Core FormBuilderInterface implementation.  Maps the format defined by the `FormsModule` data files into the Form
  * objects.
  */
-class FormBuilder implements FormBuilderInterface {
+class FormBuilder extends AbstractFormsModuleFormBuilder {
 
 	//-- Constants --------------------
 
@@ -46,32 +44,12 @@ class FormBuilder implements FormBuilderInterface {
 	 */
 	const CLASS_NAME_FORMAT_CONDITION = '\\Sitegear\\Base\\Form\\Processor\\Condition\\%sCondition';
 
-	//-- Attributes --------------------
-
-	/**
-	 * @var \Sitegear\Base\Engine\EngineInterface
-	 */
-	private $engine;
-
-	//-- Constructor --------------------
-
-	/**
-	 * @param \Sitegear\Base\Engine\EngineInterface $engine
-	 */
-	public function __construct(EngineInterface $engine) {
-		$this->engine = $engine;
-	}
-
 	//-- FormBuilderInterface Methods --------------------
 
 	/**
-	 * @param array $formData
-	 * @param array|null $values Key-value array containing any values per field to set into the form.
-	 * @param array|null $errors Key-value array containing arrays of error messages per field to set into the form.
-	 *
-	 * @return \Sitegear\Base\Form\FormInterface
+	 * {@inheritDoc}
 	 */
-	public function buildForm($formData, array $values=null, array $errors=null) {
+	public function buildForm($formData) {
 		LoggerRegistry::debug('FormBuilder::buildForm()');
 		$submitUrl = UrlUtilities::generateLinkWithReturnUrl(
 			$formData['submit-url'],
@@ -89,9 +67,7 @@ class FormBuilder implements FormBuilderInterface {
 		);
 		$constraintLabelMarkers = isset($formData['constraint-label-markers']) ? $formData['constraint-label-markers'] : array();
 		foreach ($formData['fields'] as $name => $fieldData) {
-			$fieldValue = isset($values[$name]) ? $values[$name] : null;
-			$fieldErrors = isset($errors[$name]) ? $errors[$name] : null;
-			$form->addField($this->buildField($name, $fieldData, $fieldValue, $constraintLabelMarkers, $fieldErrors));
+			$form->addField($this->buildField($name, $fieldData, $constraintLabelMarkers));
 		}
 		for ($i=0, $l=sizeof($formData['steps']); $i<$l; ++$i) {
 			$form->addStep($this->buildStep($form, $formData, $i));
@@ -106,13 +82,11 @@ class FormBuilder implements FormBuilderInterface {
 	 *
 	 * @param string $name
 	 * @param array $fieldData
-	 * @param mixed $value
 	 * @param string[] $constraintLabelMarkers
-	 * @param string[] $errors
 	 *
 	 * @return \Sitegear\Base\Form\Field\FieldInterface
 	 */
-	public function buildField($name, array $fieldData, $value=null, array $constraintLabelMarkers=null, array $errors=null) {
+	public function buildField($name, array $fieldData, array $constraintLabelMarkers=null) {
 		LoggerRegistry::debug('FormBuilder::buildField()');
 		$fieldType = $fieldData['type'];
 		$fieldTypeClass = new \ReflectionClass(
@@ -147,7 +121,7 @@ class FormBuilder implements FormBuilderInterface {
 			}
 		}
 		$settings = isset($fieldData['settings']) ? $fieldData['settings'] : array();
-		return $fieldTypeClass->newInstance($name, $value ?: $defaultValue, $labelText, $labelMarkers, $constraints, $errors, $settings);
+		return $fieldTypeClass->newInstance($name, $this->getFieldValue($name, $defaultValue), $labelText, $labelMarkers, $constraints, $this->getFieldErrors($name), $settings);
 	}
 
 	/**
@@ -231,7 +205,7 @@ class FormBuilder implements FormBuilderInterface {
 	public function buildProcessor(array $processorData) {
 		LoggerRegistry::debug('FormBuilder::buildProcessor()');
 		$processor = new ModuleProcessor(
-			$this->engine->getModule($processorData['module']),
+			$this->getFormsModule()->getEngine()->getModule($processorData['module']),
 			$processorData['method'],
 			isset($processorData['arguments']) ? $processorData['arguments'] : array(),
 			isset($processorData['exception-field-names']) ? $processorData['exception-field-names'] : null,

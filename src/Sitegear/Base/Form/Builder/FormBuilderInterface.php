@@ -21,11 +21,9 @@ interface FormBuilderInterface {
 	/**
 	 * @param mixed $formData Representation of the form's configuration, which is used to control the generation of
 	 *   the form and its child objects.
-	 * @param array|null $values Key-value array containing any values per field to set into the form.
-	 * @param array|null $errors Key-value array containing arrays of error messages per field to set into the form.
 	 *
 	 * @return \Sitegear\Base\Form\FormInterface
 	 */
-	public function buildForm($formData, array $values=null, array $errors=null);
+	public function buildForm($formData);
 
 }

@@ -8,8 +8,6 @@
 
 namespace Sitegear\Ext\Module\Customer\Form;
 
-use Sitegear\Base\Engine\EngineInterface;
-use Sitegear\Base\Form\Builder\FormBuilderInterface;
 use Sitegear\Base\Form\Field\InputField;
 use Sitegear\Base\Form\Field\SelectField;
 use Sitegear\Base\Form\FieldReference;
@@ -17,28 +15,16 @@ use Sitegear\Base\Form\Fieldset;
 use Sitegear\Base\Form\Form;
 use Sitegear\Base\Form\Step;
 use Sitegear\Base\Module\PurchaseItemProviderModuleInterface;
+use Sitegear\Core\Module\Forms\Form\Builder\AbstractFormsModuleFormBuilder;
 use Sitegear\Util\TokenUtilities;
 
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Range;
 
-class AddTrolleyItemFormBuilder implements FormBuilderInterface {
-
-	//-- Attributes --------------------
-
-	/**
-	 * @var \Sitegear\Base\Engine\EngineInterface
-	 */
-	private $engine;
-
-	//-- Constructor --------------------
-
-	/**
-	 * @param \Sitegear\Base\Engine\EngineInterface $engine
-	 */
-	public function __construct(EngineInterface $engine) {
-		$this->engine = $engine;
-	}
+/**
+ * Custom builder for the "add trolley item" form.
+ */
+class AddTrolleyItemFormBuilder extends AbstractFormsModuleFormBuilder {
 
 	//-- FormBuilderInterface Methods --------------------
 
@@ -53,18 +39,14 @@ class AddTrolleyItemFormBuilder implements FormBuilderInterface {
 	 *   contain tokens %label% and %value%.
 	 *
 	 * @param array $formData
-	 * @param array|null $values Key-value array containing any values per field to set into the form.
-	 * @param array|null $errors Key-value array containing arrays of error messages per field to set into the form.
 	 *
 	 * @return \Sitegear\Base\Form\FormInterface
 	 *
 	 * @throws \InvalidArgumentException
 	 */
-	public function buildForm($formData, array $values=null, array $errors=null) {
-		$values = $values ?: array();
-		$errors = $errors ?: array();
+	public function buildForm($formData) {
 		$form = new Form($formData['submit-url']);
-		$module = $this->engine->getModule($formData['module-name']);
+		$module = $this->getFormsModule()->getEngine()->getModule($formData['module-name']);
 		if (!$module instanceof PurchaseItemProviderModuleInterface) {
 			throw new \InvalidArgumentException(sprintf('The specified module "%s" is not a valid purchase item provider.', $formData['module-name']));
 		}
@@ -85,23 +67,18 @@ class AddTrolleyItemFormBuilder implements FormBuilderInterface {
 		foreach ($module->getPurchaseItemAttributeDefinitions($formData['type'], $formData['id']) as $attribute) {
 			$name = sprintf('attr_%s', $attribute['id']);
 			// TODO Other field types - MultiInputField with radios and checkboxes
-			$value = isset($values[$name]) ? $values[$name] : null;
-			$attributeField = new SelectField($name, $value, $attribute['label']);
-			$attributeField->addConstraint(new NotBlank());
+			$attributeField = new SelectField($name, $this->getFieldValue($name), $attribute['label'], null, array( new NotBlank() ), $this->getFieldErrors($name));
 			$attributeField->setSetting('values', $this->buildAddTrolleyItemFormAttributeFieldValues($attribute, $formData['labels']['no-value-option'], $formData['labels']['value-format']));
-			if (isset($errors[$name])) {
-				$attributeField->setErrors($errors[$name]);
-			}
 			$form->addField($attributeField);
 			$fields[$name] = true;
 		}
 		// Add the quantity field, which is a standard text field with a label.
-		$quantity = isset($values['quantity']) ? $values['quantity'] : 1;
+		$quantity = $this->getFieldValue('quantity', 1);
 		$quantityField = new InputField('quantity', $quantity, $formData['labels']['quantity-field']);
 		$quantityField->addConstraint(new NotBlank());
 		$quantityField->addConstraint(new Range(array( 'min' => 1 )));
-		if (isset($errors['quantity'])) {
-			$quantityField->setErrors($errors['quantity']);
+		if (isset($fieldErrors['quantity'])) {
+			$quantityField->setErrors($fieldErrors['quantity']);
 		}
 		$form->addField($quantityField);
 		$fields['quantity'] = true;

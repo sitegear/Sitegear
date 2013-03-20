@@ -30,17 +30,6 @@ return array(
 	),
 
 	/**
-	 * Processor conditions configuration.
-	 */
-	'conditions' => array(
-
-		'field-value-match' => array(
-			'class' => '\\Sitegear\\Ext\\Module\\Forms\\Condition\\FieldValueMatchCondition'
-		)
-
-	),
-
-	/**
 	 * Default configuration for the form builder.
 	 */
 	'form-builder' => array(
@@ -66,7 +55,7 @@ return array(
 		/**
 		 * Class name of the RendererFactoryInterface implementation to use.
 		 */
-		'class-name' => '\\Sitegear\\Core\\Form\\Renderer\\Factory\\RendererFactory',
+		'class-name' => '\\Sitegear\\Core\\Module\\Forms\\Form\\Renderer\\Factory\\RendererFactory',
 
 		/**
 		 * Arguments to pass to the configured RendererFactoryInterface implementation's constructor.
@@ -77,20 +66,20 @@ return array(
 		 */
 		'constructor-arguments' => array(
 			array(
-				'Sitegear\\Core\\Form\\Renderer\\FormRenderer' => array(
+				'Sitegear\\Core\\Module\\Forms\\Form\\Renderer\\FormRenderer' => array(
 					'attributes' => array(
 						'class' => 'form'
 					)
 				),
-				'Sitegear\\Core\\Form\\Renderer\\FieldsetRenderer' => array(),
-				'Sitegear\\Core\\Form\\Renderer\\FieldWrapperRenderer' => array(
+				'Sitegear\\Core\\Module\\Forms\\Form\\Renderer\\FieldsetRenderer' => array(),
+				'Sitegear\\Core\\Module\\Forms\\Form\\Renderer\\FieldWrapperRenderer' => array(
 					'attributes' => array(
 						'class' => 'field'
 					)
 				),
-				'Sitegear\\Core\\Form\\Renderer\\FieldWrapperReadOnlyRenderer' => array(),
-				'Sitegear\\Core\\Form\\Renderer\\FieldLabelRenderer' => array(),
-				'Sitegear\\Core\\Form\\Renderer\\FieldErrorsRenderer' => array(
+				'Sitegear\\Core\\Module\\Forms\\Form\\Renderer\\FieldWrapperReadOnlyRenderer' => array(),
+				'Sitegear\\Core\\Module\\Forms\\Form\\Renderer\\FieldLabelRenderer' => array(),
+				'Sitegear\\Core\\Module\\Forms\\Form\\Renderer\\FieldErrorsRenderer' => array(
 					'element' => 'ul',
 					'attributes' => array(
 						'class' => 'errors'
@@ -98,19 +87,19 @@ return array(
 					'error-wrapper-element' => 'li',
 					'error-wrapper-attributes' => array()
 				),
-				'Sitegear\\Core\\Form\\Renderer\\ButtonsRenderer' => array(
+				'Sitegear\\Core\\Module\\Forms\\Form\\Renderer\\ButtonsRenderer' => array(
 					'attributes' => array(
 						'class' => 'buttons'
 					)
 				),
-				'Sitegear\\Core\\Form\\Renderer\\InputFieldRenderer' => array(),
-				'Sitegear\\Core\\Form\\Renderer\\TextareaFieldRenderer' => array(),
-				'Sitegear\\Core\\Form\\Renderer\\SelectFieldRenderer' => array(),
-				'Sitegear\\Core\\Form\\Renderer\\MultipleInputFieldRenderer' => array(
+				'Sitegear\\Core\\Module\\Forms\\Form\\Renderer\\InputFieldRenderer' => array(),
+				'Sitegear\\Core\\Module\\Forms\\Form\\Renderer\\TextareaFieldRenderer' => array(),
+				'Sitegear\\Core\\Module\\Forms\\Form\\Renderer\\SelectFieldRenderer' => array(),
+				'Sitegear\\Core\\Module\\Forms\\Form\\Renderer\\MultipleInputFieldRenderer' => array(
 					'outer-wrapper-element-name' => 'ul',
 					'inner-wrapper-element-name' => 'li'
 				),
-				'Sitegear\\Core\\Form\\Renderer\\FieldReadOnlyRenderer' => array(
+				'Sitegear\\Core\\Module\\Forms\\Form\\Renderer\\FieldReadOnlyRenderer' => array(
 					'element' => 'span',
 					'attributes' => array(
 						'class' => 'display'

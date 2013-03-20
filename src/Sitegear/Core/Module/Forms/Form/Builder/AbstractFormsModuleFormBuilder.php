@@ -1,0 +1,87 @@
+<?php
+/*!
+ * This file is a part of Sitegear.
+ * Copyright (c) Ben New, Leftclick.com.au
+ * See the LICENSE and README files in the main source directory for details.
+ * http://sitegear.org/
+ */
+
+namespace Sitegear\Core\Module\Forms\Form\Builder;
+
+use Sitegear\Base\Form\Builder\FormBuilderInterface;
+use Sitegear\Core\Module\Forms\FormsModule;
+
+/**
+ * Abstract implementation of FormBuilderInterface which is given a reference to the FormsModule and a form key.
+ * Provides shortcut methods to retrieve the values and errors for individual fields, so that implementations do not
+ * generally have to use the form key directly.
+ */
+abstract class AbstractFormsModuleFormBuilder implements FormBuilderInterface {
+
+	//-- Attributes --------------------
+
+	/**
+	 * @var FormsModule
+	 */
+	private $formsModule;
+
+	/**
+	 * @var string
+	 */
+	private $formKey;
+
+	//-- Constructor --------------------
+
+	/**
+	 * @param FormsModule $formsModule
+	 * @param string $formKey
+	 */
+	public function __construct(FormsModule $formsModule, $formKey) {
+		$this->formsModule = $formsModule;
+		$this->formKey = $formKey;
+	}
+
+	//-- Public Methods --------------------
+
+	/**
+	 * Get the FormsModule instance.
+	 *
+	 * @return \Sitegear\Core\Module\Forms\FormsModule
+	 */
+	public function getFormsModule() {
+		return $this->formsModule;
+	}
+
+	/**
+	 * Get the form key associated with this builder.
+	 *
+	 * @return string
+	 */
+	public function getFormKey() {
+		return $this->formKey;
+	}
+
+	/**
+	 * Shortcut method to get the stored value for the given field.
+	 *
+	 * @param $fieldName
+	 * @param mixed|null $defaultValue
+	 *
+	 * @return mixed|null
+	 */
+	public function getFieldValue($fieldName, $defaultValue=null) {
+		return $this->getFormsModule()->getFieldValue($this->getFormKey(), $fieldName) ?: $defaultValue;
+	}
+
+	/**
+	 * Shortcut method to get the errors associated with the given field.
+	 *
+	 * @param $fieldName
+	 *
+	 * @return string[]|null
+	 */
+	public function getFieldErrors($fieldName) {
+		return $this->getFormsModule()->getFieldValue($this->getFormKey(), $fieldName);
+	}
+
+}

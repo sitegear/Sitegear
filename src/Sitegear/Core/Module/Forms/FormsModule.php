@@ -18,8 +18,8 @@ use Sitegear\Base\View\ViewInterface;
 use Sitegear\Base\Form\FormInterface;
 use Sitegear\Base\Form\Field\FieldInterface;
 use Sitegear\Base\Form\Processor\FormProcessorInterface;
-use Sitegear\Core\Form\Renderer\FormRenderer;
-use Sitegear\Core\Form\Builder\FormBuilder;
+use Sitegear\Core\Module\Forms\Form\Renderer\FormRenderer;
+use Sitegear\Core\Module\Forms\Form\Builder\FormBuilder;
 use Sitegear\Util\UrlUtilities;
 use Sitegear\Util\NameUtilities;
 use Sitegear\Util\TypeUtilities;
@@ -44,11 +44,6 @@ class FormsModule extends AbstractUrlMountableModule {
 	//-- Attributes --------------------
 
 	/**
-	 * @var \Sitegear\Core\Form\Builder\FormBuilder
-	 */
-	private $builder;
-
-	/**
 	 * @var string[][] Key-value array from form keys to array of file paths to try for the data file for that form.
 	 */
 	private $formDataPaths;
@@ -71,7 +66,6 @@ class FormsModule extends AbstractUrlMountableModule {
 	 * {@inheritDoc}
 	 */
 	public function start() {
-		$this->builder = new FormBuilder($this->getEngine());
 		$this->forms = array();
 		$this->formDataPaths = array();
 	}
@@ -373,7 +367,8 @@ class FormsModule extends AbstractUrlMountableModule {
 				),
 				json_decode(file_get_contents($path), true)
 			);
-			$this->forms[$formKey] = $this->builder->buildForm($formData, $this->getValues($formKey), $this->getErrors($formKey));
+			$builder = new FormBuilder($this, $formKey);
+			$this->forms[$formKey] = $this->builder->buildForm($formData);
 		}
 		return $this->forms[$formKey];
 	}

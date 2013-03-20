@@ -6,10 +6,11 @@
  * http://sitegear.org/
  */
 
-namespace Sitegear\Core\Form\Renderer;
+namespace Sitegear\Core\Module\Forms\Form\Renderer;
 
 use Sitegear\Base\Form\FormInterface;
 use Sitegear\Base\Form\Renderer\Factory\RendererFactoryInterface;
+use Sitegear\Core\Module\Forms\Form\Renderer\AbstractContainerRenderer;
 use Sitegear\Util\HtmlUtilities;
 
 /**

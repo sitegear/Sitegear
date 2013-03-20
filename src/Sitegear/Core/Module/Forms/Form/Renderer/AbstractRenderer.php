@@ -6,7 +6,7 @@
  * http://sitegear.org/
  */
 
-namespace Sitegear\Core\Form\Renderer;
+namespace Sitegear\Core\Module\Forms\Form\Renderer;
 
 use Sitegear\Base\Form\Renderer\Factory\RendererFactoryInterface;
 use Sitegear\Base\Form\Renderer\RendererInterface;
