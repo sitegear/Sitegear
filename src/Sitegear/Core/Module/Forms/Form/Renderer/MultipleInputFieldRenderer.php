@@ -90,7 +90,7 @@ class MultipleInputFieldRenderer extends AbstractFieldRenderer {
 			);
 			$inputLabelAttributes = array(
 				'for' => $optionId,
-				'class' => sprintf('multi-input-label %s-label', $this->getField()->getType())
+				'class' => sprintf('multiple-input-label %s-label', $this->getField()->getType())
 			);
 			$inputLabel = sprintf(
 				'<label%s>%s</label>',
@@ -136,7 +136,7 @@ class MultipleInputFieldRenderer extends AbstractFieldRenderer {
 				self::RENDER_OPTION_KEY_OUTER_WRAPPER_ELEMENT_NAME => 'div',
 				self::RENDER_OPTION_KEY_OUTER_WRAPPER_ATTRIBUTES => array(
 					'id' => sprintf('%s-container', $this->getField()->getName()),
-					'class' => sprintf('multi-input-container %s-container', $this->getField()->getType())
+					'class' => sprintf('multiple-input-container %s-container', $this->getField()->getType())
 				),
 				self::RENDER_OPTION_KEY_INNER_WRAPPER_ELEMENT_NAME => 'div',
 				self::RENDER_OPTION_KEY_INNER_WRAPPER_ATTRIBUTES => array(),
