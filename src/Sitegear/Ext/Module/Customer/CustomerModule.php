@@ -383,6 +383,7 @@ class CustomerModule extends AbstractUrlMountableModule {
 		}
 		$builder = new CheckoutFormBuilder($this->getEngine()->forms(), $this->config('checkout.form-key'), $this->getLoggedInUserAccount());
 		$form = $builder->buildForm(array(
+			'form-url' => sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.checkout')),
 			'target-url' => sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.checkout-complete')),
 			'cancel-url' => sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.trolley')),
 			'fields' => $this->config('checkout.fields'),
