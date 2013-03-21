@@ -34,7 +34,9 @@ final class UrlUtilities {
 		if ($linkUrl instanceof Request) {
 			$linkUrl = $linkUrl->getUri();
 		}
-		if ($returnUrl instanceof Request) {
+		if (!is_null(self::getReturnUrl($returnUrl, $returnUrlParam))) {
+			$returnUrl = self::getReturnUrl($returnUrl, $returnUrlParam);
+		} elseif ($returnUrl instanceof Request) {
 			$returnUrl = $returnUrl->getUri();
 		}
 		$query = preg_match('/\?/', $linkUrl) ? '&' : '?';
