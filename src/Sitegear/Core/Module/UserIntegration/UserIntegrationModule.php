@@ -57,6 +57,8 @@ class UserIntegrationModule extends AbstractUrlMountableModule {
 		$routes = new RouteCollection();
 		$routes->add('login', new Route(sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.login'))));
 		$routes->add('logout', new Route(sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.logout'))));
+		$routes->add('sign-up', new Route(sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.sign-up'))));
+		$routes->add('guest', new Route(sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.guest'))));
 		return $routes;
 	}
 
@@ -95,6 +97,25 @@ class UserIntegrationModule extends AbstractUrlMountableModule {
 	}
 
 	//-- Component Target Controller Methods --------------------
+
+	/**
+	 * Display a selector between login, sign-up and proceed as guest links.
+	 *
+	 * @param ViewInterface $view
+	 * @param Request $request
+	 */
+	public function selectorComponent(ViewInterface $view, Request $request) {
+		LoggerRegistry::debug('UserIntegrationModule::selectorComponent');
+		$links = array();
+		foreach (array( 'login' => 'Login', 'sign-up' => 'Sign Up', 'guest' => 'Proceed as Guest' ) as $route => $label) {
+			$links[] = array(
+				'url' => $this->getAuthenticationLinkUrl($route, $request->getUri()),
+				'label' => $label,
+				'current' => $request->getPathInfo() === sprintf('/%s/%s', $this->getMountedUrl(), $this->config(sprintf('routes.%s', $route)))
+			);
+		}
+		$view['links'] = $links;
+	}
 
 	/**
 	 * Display either a login or logout link, as appropriate depending on whether or not a user is currently logged in.

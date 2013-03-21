@@ -16,7 +16,9 @@ return array(
 	 */
 	'routes' => array(
 		'login' => 'login',
-		'logout' => 'logout'
+		'logout' => 'logout',
+		'sign-up' => 'sign-up',
+		'guest' => 'guest'
 	),
 
 	/**

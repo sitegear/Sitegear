@@ -3,7 +3,7 @@
  * @var \Sitegear\Core\View\View $view
  */
 $view->getStringsManager()->prepend('Login', 'title');
-$view->getResourcesManager()->activate('styles:sitegear:utilities');
 ?>
 <h1>Login</h1>
+<?php echo $view->userIntegration()->selector(); ?>
 <?php echo $view->forms()->form($view['form-key']); ?>
