@@ -8,6 +8,7 @@
 
 namespace Sitegear\Core\Engine;
 
+use Sitegear\Util\NameUtilities;
 use Sitegear\Util\TypeUtilities;
 
 use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
@@ -46,7 +47,7 @@ class EngineControllerResolver implements ControllerResolverInterface {
 	public function getController(Request $request) {
 		$route = explode(':', $request->attributes->get('_route'));
 		$module = $this->engine->getModule($route[0]);
-		$method = sprintf(self::FORMAT_CONTROLLER_METHOD_NAME, $route[1]);
+		$method = sprintf(self::FORMAT_CONTROLLER_METHOD_NAME, NameUtilities::convertToCamelCase($route[1]));
 		if (!method_exists($module, $method)) {
 			$module = $this->engine->getModule($this->engine->config('engine.module-resolution.default-controller'));
 			$method = sprintf(self::FORMAT_CONTROLLER_METHOD_NAME, $this->engine->config('engine.module-resolution.default-controller-method'));

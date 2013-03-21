@@ -72,11 +72,12 @@ class CustomerModule extends AbstractUrlMountableModule {
 	protected function buildRoutes() {
 		$routes = new RouteCollection();
 		$routes->add('index', new Route($this->getMountedUrl()));
-		$routes->add('addTrolleyItem', new Route(sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.add-trolley-item'))));
-		$routes->add('removeTrolleyItem', new Route(sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.remove-trolley-item'))));
-		$routes->add('modifyTrolleyItem', new Route(sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.modify-trolley-item'))));
+		$routes->add('add-trolley-item', new Route(sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.add-trolley-item'))));
+		$routes->add('remove-trolley-item', new Route(sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.remove-trolley-item'))));
+		$routes->add('modify-trolley-item', new Route(sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.modify-trolley-item'))));
 		$routes->add('trolley', new Route(sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.trolley'))));
 		$routes->add('checkout', new Route(sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.checkout'))));
+		$routes->add('thank-you', new Route(sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.thank-you'))));
 		return $routes;
 	}
 
@@ -385,7 +386,7 @@ class CustomerModule extends AbstractUrlMountableModule {
 		$builder = new CheckoutFormBuilder($this->getEngine()->forms(), $this->config('checkout.form-key'), $this->getLoggedInUserAccount());
 		$form = $builder->buildForm(array(
 			'form-url' => sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.checkout')),
-			'target-url' => sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.checkout-complete')),
+			'target-url' => sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.thank-you')),
 			'cancel-url' => sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.trolley')),
 			'fields' => $this->config('checkout.fields'),
 			'fieldsets' => $this->config('checkout.fieldsets'),
