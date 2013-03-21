@@ -41,7 +41,9 @@ class CheckoutFormBuilder extends FormBuilder {
 			$formDefinition['target-url'],
 			$formDefinition['cancel-url'],
 			null,
-			array( 'value' => 'Next' )
+			array( 'value' => 'Next >' ),
+			null,
+			array( 'value' => '< Back' )
 		);
 		foreach ($formDefinition['fields'] as $name => $fieldDefinition) {
 			$field = $this->buildField($name, $fieldDefinition);
