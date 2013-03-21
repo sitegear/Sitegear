@@ -26,17 +26,17 @@ class ExactMatchCondition implements ConditionInterface {
 	/**
 	 * @var array
 	 */
-	private $values;
+	private $matchValues;
 
 	//-- Constructor --------------------
 
 	/**
 	 * @param string $field Name of the field to check.
-	 * @param array $values Values, one of which must match exactly to the field's submitted value.
+	 * @param array $matchValues Values, one of which must match exactly to the field's submitted value.
 	 */
-	public function __construct($field, array $values) {
+	public function __construct($field, array $matchValues) {
 		$this->field = $field;
-		$this->values = $values;
+		$this->matchValues = $matchValues;
 	}
 
 	//-- ConditionInterface Methods --------------------
@@ -47,9 +47,9 @@ class ExactMatchCondition implements ConditionInterface {
 	public function matches(array $values) {
 		$result = false;
 		if (isset($values[$this->field])) {
-			$target = $values[$this->field];
-			foreach ($this->values as $value) {
-				$result = $result || ($value === $target);
+			$value = $values[$this->field];
+			foreach ($this->matchValues as $matchValue) {
+				$result = $result || ($matchValue === $value);
 			}
 		}
 		return $result;
