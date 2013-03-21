@@ -5,6 +5,9 @@
  * http://sitegear.org/
  */
 
+/**
+ * Checkout form script.
+ */
 (function($) {
 	/**
 	 * Show or hide the fields based on the value of `show`, with animation or instant toggling based on the value of
