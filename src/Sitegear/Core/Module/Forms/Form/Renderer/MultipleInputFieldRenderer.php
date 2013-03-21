@@ -58,7 +58,7 @@ class MultipleInputFieldRenderer extends AbstractFieldRenderer {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function render(array & $output) {
+	public function render(array & $output, array $values, array $errors) {
 		$innerIdPrefix = sprintf(
 			'%s-%s',
 			$this->getField()->getName(), $this->getRenderOption(self::RENDER_OPTION_KEY_INNER_WRAPPER_ID_PREFIX)
@@ -81,7 +81,9 @@ class MultipleInputFieldRenderer extends AbstractFieldRenderer {
 					'value' => $option['value']
 				)
 			);
-			if ($option['value'] === $this->getField()->getValue()) {
+			$name = $this->getField()->getName();
+			$value = isset($values[$name]) ? $values[$name] : $this->getField()->getDefaultValue();
+			if ($option['value'] === $value) {
 				$optionAttributes['selected'] = 'selected';
 			}
 			$input = sprintf(

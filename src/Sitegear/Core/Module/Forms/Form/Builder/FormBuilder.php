@@ -86,22 +86,31 @@ class FormBuilder extends AbstractFormsModuleFormBuilder {
 	 */
 	public function buildField($name, array $fieldDefinition, array $constraintLabelMarkers=null) {
 		LoggerRegistry::debug('FormBuilder::buildField()');
+		// Get the class for the field type.
 		$fieldType = $fieldDefinition['type'];
 		$fieldTypeClass = new \ReflectionClass(
 			isset($fieldDefinition['class']) ?
 					$fieldDefinition['class'] :
 					sprintf(self::CLASS_NAME_FORMAT_FIELD, NameUtilities::convertToStudlyCaps($fieldType))
 		);
-		$defaultValue = isset($fieldDefinition['default']) ? $fieldDefinition['default'] : null;
+		// Get label text and markers.
 		$labelText = isset($fieldDefinition['label']) ? $fieldDefinition['label'] : '';
 		$labelMarkers = array();
-		$constraints = array();
+		if (isset($fieldDefinition['label-markers'])) {
+			if (is_array($fieldDefinition['label-markers'])) {
+				$labelMarkers = array_merge($labelMarkers, $fieldDefinition['label-markers']);
+			} else {
+				$labelMarkers[] = $fieldDefinition['label-markers'];
+			}
+		}
+		// Get constraints.
+		$conditionalConstraints = array();
 		if (isset($fieldDefinition['constraints'])) {
 			if (is_null($constraintLabelMarkers)) {
 				$constraintLabelMarkers = array();
 			}
 			foreach ($fieldDefinition['constraints'] as $constraintData) {
-				$constraints[] = $this->buildConstraint($constraintData);
+				$conditionalConstraints[] = $this->buildConditionalConstraint($constraintData);
 				if (isset($constraintLabelMarkers[$constraintData['name']])) {
 					if (is_array($constraintLabelMarkers[$constraintData['name']])) {
 						$labelMarkers = array_merge($labelMarkers, $constraintLabelMarkers[$constraintData['name']]);
@@ -111,15 +120,17 @@ class FormBuilder extends AbstractFormsModuleFormBuilder {
 				}
 			}
 		}
-		if (isset($fieldDefinition['label-markers'])) {
-			if (is_array($fieldDefinition['label-markers'])) {
-				$labelMarkers = array_merge($labelMarkers, $fieldDefinition['label-markers']);
-			} else {
-				$labelMarkers[] = $fieldDefinition['label-markers'];
+		// Get conditions.
+		$includeConditions = array();
+		if (isset($fieldData['conditions'])) {
+			foreach ($fieldData['conditions'] as $conditionDefinition) {
+				$includeConditions[] = $this->buildCondition($conditionDefinition);
 			}
 		}
+		// Create the field instance.
+		$defaultValue = isset($fieldDefinition['default']) ? $fieldDefinition['default'] : null;
 		$settings = isset($fieldDefinition['settings']) ? $fieldDefinition['settings'] : array();
-		return $fieldTypeClass->newInstance($name, $this->getFieldValue($name, $defaultValue), $labelText, $labelMarkers, $constraints, $this->getFieldErrors($name), $settings);
+		return $fieldTypeClass->newInstance($name, $defaultValue, $labelText, $labelMarkers, $conditionalConstraints, $includeConditions, $settings);
 	}
 
 	/**
@@ -129,7 +140,7 @@ class FormBuilder extends AbstractFormsModuleFormBuilder {
 	 *
 	 * @return ConditionalConstraintInterface
 	 */
-	public function buildConstraint(array $constraintDefinition) {
+	public function buildConditionalConstraint(array $constraintDefinition) {
 		LoggerRegistry::debug('FormBuilder::buildConstraint()');
 		$constraintClass = new \ReflectionClass(
 			isset($constraintDefinition['class']) ?

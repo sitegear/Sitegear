@@ -34,13 +34,13 @@ class FieldErrorsRenderer extends AbstractFieldRenderer {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function render(array & $output) {
-		$errors = $this->getField()->getErrors();
-		if (!empty($errors)) {
+	public function render(array & $output, array $values, array $errors) {
+		$name = $this->getField()->getName();
+		if (isset($errors[$name])) {
 			$output[] = sprintf('<%s%s>', $this->getRenderOption(self::RENDER_OPTION_KEY_ELEMENT_NAME), HtmlUtilities::attributes($this->getRenderOption(self::RENDER_OPTION_KEY_ATTRIBUTES)));
 			$errorWrapperElementName = $this->getRenderOption(self::RENDER_OPTION_KEY_ERROR_WRAPPER_ELEMENT_NAME);
 			$errorWrapperAttributes = HtmlUtilities::attributes($this->getRenderOption(self::RENDER_OPTION_KEY_ERROR_WRAPPER_ATTRIBUTES));
-			foreach ($errors as $error) {
+			foreach ($errors[$name] as $error) {
 				$output[] = sprintf('<%s%s>%s</%s>', $errorWrapperElementName, $errorWrapperAttributes, $error, $errorWrapperElementName);
 			}
 			$output[] = sprintf('</%s>', $this->getRenderOption(self::RENDER_OPTION_KEY_ELEMENT_NAME));

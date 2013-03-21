@@ -52,13 +52,13 @@ class FieldWrapperRenderer extends AbstractContainerRenderer {
 	/**
 	 * {@inheritDoc}
 	 */
-	protected function renderChildren(array & $output) {
+	protected function renderChildren(array & $output, array $values, array $errors) {
 		$fieldLabelRenderer = $this->getFactory()->createFieldLabelRenderer($this->getField());
-		$fieldLabelRenderer->render($output);
+		$fieldLabelRenderer->render($output, $values, $errors);
 		$fieldErrorsRenderer = $this->getFactory()->createFieldErrorsRenderer($this->getField());
-		$fieldErrorsRenderer->render($output);
+		$fieldErrorsRenderer->render($output, $values, $errors);
 		$fieldRenderer = $this->getFactory()->createFieldRenderer($this->getField());
-		$fieldRenderer->render($output);
+		$fieldRenderer->render($output, $values, $errors);
 	}
 
 }

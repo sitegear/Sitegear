@@ -8,9 +8,11 @@
 
 namespace Sitegear\Base\Form\Field;
 
+use Sitegear\Base\Form\Condition\ConditionInterface;
 use Sitegear\Base\Form\Constraint\ConditionalConstraintInterface;
-use Symfony\Component\Validator\Constraint;
 use Sitegear\Util\LoggerRegistry;
+
+use Symfony\Component\Validator\Constraint;
 
 /**
  * Abstract base implementation of FieldInterface.
@@ -27,7 +29,7 @@ abstract class AbstractField implements FieldInterface {
 	/**
 	 * @var mixed
 	 */
-	private $value;
+	private $defaultValue;
 
 	/**
 	 * @var string
@@ -45,9 +47,9 @@ abstract class AbstractField implements FieldInterface {
 	private $conditionalConstraints;
 
 	/**
-	 * @var string[]
+	 * @var ConditionInterface[]
 	 */
-	private $errors;
+	private $includeConditions;
 
 	/**
 	 * @var array
@@ -58,20 +60,20 @@ abstract class AbstractField implements FieldInterface {
 
 	/**
 	 * @param string $name
-	 * @param mixed $value
+	 * @param mixed $defaultValue
 	 * @param string|null $labelText
 	 * @param string[]|null $labelMarkers
-	 * @param ConditionalConstraintInterface[]|null $constraints
-	 * @param string[]|null $errors
+	 * @param ConditionalConstraintInterface[]|null $conditionalConstraints
+	 * @param ConditionInterface[]|null $includeConditions
 	 * @param array $settings
 	 */
-	public function __construct($name, $value=null, $labelText=null, array $labelMarkers=null, array $constraints=null, array $errors=null, array $settings=null) {
+	public function __construct($name, $defaultValue=null, $labelText=null, array $labelMarkers=null, array $conditionalConstraints=null, array $includeConditions=null, array $settings=null) {
 		$this->name = $name;
-		$this->value = $value;
+		$this->defaultValue = $defaultValue;
 		$this->labelText = $labelText;
 		$this->labelMarkers = $labelMarkers ?: array();
-		$this->conditionalConstraints = $constraints ?: array();
-		$this->errors = $errors ?: array();
+		$this->conditionalConstraints = $conditionalConstraints ?: array();
+		$this->includeConditions = $includeConditions ?: array();
 		$this->settings = $settings ?: array();
 	}
 
@@ -87,15 +89,15 @@ abstract class AbstractField implements FieldInterface {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function getValue() {
-		return $this->value;
+	public function getDefaultValue() {
+		return $this->defaultValue;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public function setValue($value) {
-		$this->value = $value;
+	public function setDefaultValue($defaultValue) {
+		$this->defaultValue = $defaultValue;
 		return $this;
 	}
 
@@ -155,12 +157,8 @@ abstract class AbstractField implements FieldInterface {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function addConditionalConstraint(ConditionalConstraintInterface $conditionalConstraint, $index=null) {
-		if (is_null($index)) {
-			$this->conditionalConstraints[] = $conditionalConstraint;
-		} else {
-			$this->conditionalConstraints = array_splice($this->conditionalConstraints, intval($index), 0, $conditionalConstraint);
-		}
+	public function addConditionalConstraint(ConditionalConstraintInterface $conditionalConstraint) {
+		$this->conditionalConstraints[] = $conditionalConstraint;
 		return $this;
 	}
 
@@ -177,16 +175,37 @@ abstract class AbstractField implements FieldInterface {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function getErrors() {
-		return $this->errors;
+	public function getIncludeConditions() {
+		return $this->includeConditions;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public function setErrors(array $errors) {
-		$this->errors = $errors;
+	public function addIncludeCondition(ConditionInterface $includeCondition) {
+		$this->includeConditions[] = $includeCondition;
 		return $this;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function removeIncludeCondition(ConditionInterface $includeCondition) {
+		if (($index = array_search($includeCondition, $this->includeConditions)) !== false) {
+			$this->includeConditions = array_splice($this->includeConditions, $index, 1);
+		}
+		return $this;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function shouldBeIncluded(array $values) {
+		$result = true;
+		foreach ($this->getIncludeConditions() as $includeCondition) {
+			$result = $result && $includeCondition->matches($values);
+		}
+		return $result;
 	}
 
 	/**

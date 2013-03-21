@@ -64,13 +64,13 @@ class FormRenderer extends AbstractContainerRenderer {
 	/**
 	 * {@inheritDoc}
 	 */
-	protected function renderChildren(array & $output) {
+	protected function renderChildren(array & $output, array $values, array $errors) {
 		foreach ($this->getForm()->getStep($this->getStep())->getFieldsets() as $fieldset) {
 			$fieldsetRenderer = $this->getFactory()->createFieldsetRenderer($fieldset);
-			$fieldsetRenderer->render($output);
+			$fieldsetRenderer->render($output, $values, $errors);
 		}
 		$buttonsRenderer = $this->getFactory()->createButtonsRenderer($this->getForm());
-		$buttonsRenderer->render($output);
+		$buttonsRenderer->render($output, $values, $errors);
 	}
 
 	/**

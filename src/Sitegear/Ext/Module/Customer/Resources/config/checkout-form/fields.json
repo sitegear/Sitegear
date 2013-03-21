@@ -54,11 +54,13 @@
 		},
 		"conditions": [
 			{
-				"condition": "method-result",
-				"method": "isNewAccount",
-				"results": [
-					true
-				]
+				"condition": "exact-match",
+				"options": {
+					"field": "new-account",
+					"values": [
+						"1"
+					]
+				}
 			}
 		]
 	},
@@ -73,11 +75,13 @@
 		},
 		"conditions": [
 			{
-				"condition": "method-result",
-				"method": "isNewAccount",
-				"results": [
-					true
-				]
+				"condition": "exact-match",
+				"options": {
+					"field": "new-account",
+					"values": [
+						"1"
+					]
+				}
 			}
 		]
 	},

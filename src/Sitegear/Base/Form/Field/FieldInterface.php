@@ -8,7 +8,9 @@
 
 namespace Sitegear\Base\Form\Field;
 
+use Sitegear\Base\Form\Condition\ConditionInterface;
 use Sitegear\Base\Form\Constraint\ConditionalConstraintInterface;
+
 use Symfony\Component\Validator\Constraint;
 
 /**
@@ -26,16 +28,16 @@ interface FieldInterface {
 	 *
 	 * @return mixed
 	 */
-	public function getValue();
+	public function getDefaultValue();
 
 	/**
 	 * Set the default value for this field.  This may be overridden on rendering.
 	 *
-	 * @param mixed $value
+	 * @param mixed $defaultValue
 	 *
 	 * @return self
 	 */
-	public function setValue($value);
+	public function setDefaultValue($defaultValue);
 
 	/**
 	 * @return string The text to display in the field's label.
@@ -101,16 +103,30 @@ interface FieldInterface {
 	public function removeConditionalConstraint(ConditionalConstraintInterface $conditionalConstraint);
 
 	/**
-	 * @return string[]
+	 * @return ConditionInterface[]
 	 */
-	public function getErrors();
+	public function getIncludeConditions();
 
 	/**
-	 * @param string[] $errors
+	 * @param ConditionInterface $includeCondition
 	 *
 	 * @return self
 	 */
-	public function setErrors(array $errors);
+	public function addIncludeCondition(ConditionInterface $includeCondition);
+
+	/**
+	 * @param ConditionInterface $includeCondition
+	 *
+	 * @return self
+	 */
+	public function removeIncludeCondition(ConditionInterface $includeCondition);
+
+	/**
+	 * @param array $values
+	 *
+	 * @return boolean
+	 */
+	public function shouldBeIncluded(array $values);
 
 	/**
 	 * @param string $key

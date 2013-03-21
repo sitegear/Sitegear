@@ -24,11 +24,12 @@ class TextareaFieldRenderer extends AbstractFieldRenderer {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function render(array & $output) {
+	public function render(array & $output, array $values, array $errors) {
+		$name = $this->getField()->getName();
 		$output[] = sprintf(
 			'<textarea%s>%s</textarea>',
 			HtmlUtilities::attributes($this->getRenderOption(self::RENDER_OPTION_KEY_ATTRIBUTES)),
-			$this->getField()->getValue()
+			isset($values[$name]) ? $values[$name] : $this->getField()->getDefaultValue()
 		);
 	}
 

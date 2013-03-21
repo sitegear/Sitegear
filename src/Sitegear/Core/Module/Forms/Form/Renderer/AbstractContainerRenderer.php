@@ -23,10 +23,10 @@ abstract class AbstractContainerRenderer extends AbstractRenderer {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function render(array & $output) {
-		$this->renderStartTag($output);
-		$this->renderChildren($output);
-		$this->renderEndTag($output);
+	public function render(array & $output, array $values, array $errors) {
+		$this->renderStartTag($output, $values, $errors);
+		$this->renderChildren($output, $values, $errors);
+		$this->renderEndTag($output, $values, $errors);
 	}
 
 	//-- Internal Methods --------------------
@@ -35,8 +35,10 @@ abstract class AbstractContainerRenderer extends AbstractRenderer {
 	 * Render the start tag.
 	 *
 	 * @param string[] $output
+	 * @param array $values
+	 * @param array[] $errors
 	 */
-	protected function renderStartTag(array & $output) {
+	protected function renderStartTag(array & $output, array $values, array $errors) {
 		$output[] = sprintf(
 			'<%s%s>',
 			$this->getRenderOption(self::RENDER_OPTION_KEY_ELEMENT_NAME),
@@ -49,8 +51,10 @@ abstract class AbstractContainerRenderer extends AbstractRenderer {
 	 * of a `<form>` element are `<fieldset>` elements.
 	 *
 	 * @param string[] $output
+	 * @param array $values
+	 * @param array[] $errors
 	 */
-	protected function renderChildren(array & $output) {
+	protected function renderChildren(array & $output, array $values, array $errors) {
 		// Default implementation does nothing
 	}
 
@@ -58,8 +62,10 @@ abstract class AbstractContainerRenderer extends AbstractRenderer {
 	 * Render the end tag.
 	 *
 	 * @param string[] $output
+	 * @param array $values
+	 * @param array[] $errors
 	 */
-	protected function renderEndTag(array & $output) {
+	protected function renderEndTag(array & $output, array $values, array $errors) {
 		$output[] = sprintf(
 			'</%s>',
 			$this->getRenderOption(self::RENDER_OPTION_KEY_ELEMENT_NAME)

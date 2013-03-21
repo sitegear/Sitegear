@@ -24,10 +24,15 @@ class InputFieldRenderer extends AbstractFieldRenderer {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function render(array & $output) {
+	public function render(array & $output, array $values, array $errors) {
+		$name = $this->getField()->getName();
+		$value = isset($values[$name]) ? $values[$name] : $this->getField()->getDefaultValue();
 		$output[] = sprintf(
 			'<input%s />',
-			HtmlUtilities::attributes($this->getRenderOption('attributes'))
+			HtmlUtilities::attributes(ArrayUtilities::mergeHtmlAttributes(
+				$this->getRenderOption('attributes'),
+				array( 'value' => $value )
+			))
 		);
 	}
 
@@ -41,8 +46,7 @@ class InputFieldRenderer extends AbstractFieldRenderer {
 			parent::normaliseRenderOptions(),
 			array(
 				self::RENDER_OPTION_KEY_ATTRIBUTES => array(
-					'type' => $this->getField()->getType() ?: 'text',
-					'value' => $this->getField()->getValue()
+					'type' => $this->getField()->getType() ?: 'text'
 				)
 			)
 		);

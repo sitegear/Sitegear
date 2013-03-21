@@ -8,12 +8,13 @@
 
 namespace Sitegear\Ext\Module\Customer\Form\Builder;
 
-use Sitegear\Base\Form\Field\InputField;
-use Sitegear\Base\Form\Field\SelectField;
-use Sitegear\Base\Form\FieldReference;
-use Sitegear\Base\Form\Fieldset;
 use Sitegear\Base\Form\Form;
 use Sitegear\Base\Form\Step;
+use Sitegear\Base\Form\Fieldset;
+use Sitegear\Base\Form\FieldReference;
+use Sitegear\Base\Form\Field\InputField;
+use Sitegear\Base\Form\Field\SelectField;
+use Sitegear\Base\Form\Constraint\ConditionalConstraint;
 use Sitegear\Base\Module\PurchaseItemProviderModuleInterface;
 use Sitegear\Core\Module\Forms\Form\Builder\AbstractFormsModuleFormBuilder;
 use Sitegear\Util\TokenUtilities;
@@ -66,20 +67,17 @@ class AddTrolleyItemFormBuilder extends AbstractFormsModuleFormBuilder {
 		// Add a field to the form for every purchase item attribute.
 		foreach ($module->getPurchaseItemAttributeDefinitions($formDefinition['type'], $formDefinition['id']) as $attribute) {
 			$name = sprintf('attr_%s', $attribute['id']);
+			$constraints = array( new ConditionalConstraint(new NotBlank()) );
 			// TODO Other field types - MultiInputField with radios and checkboxes
-			$attributeField = new SelectField($name, $this->getFieldValue($name), $attribute['label'], null, array( new NotBlank() ), $this->getFieldErrors($name));
+			$attributeField = new SelectField($name, null, $attribute['label'], null, $constraints);
 			$attributeField->setSetting('values', $this->buildAddTrolleyItemFormAttributeFieldValues($attribute, $formDefinition['labels']['no-value-option'], $formDefinition['labels']['value-format']));
 			$form->addField($attributeField);
 			$fields[$name] = true;
 		}
 		// Add the quantity field, which is a standard text field with a label.
-		$quantity = $this->getFieldValue('quantity', 1);
-		$quantityField = new InputField('quantity', $quantity, $formDefinition['labels']['quantity-field']);
-		$quantityField->addConditionalConstraint(new NotBlank());
-		$quantityField->addConditionalConstraint(new Range(array( 'min' => 1 )));
-		if (isset($fieldErrors['quantity'])) {
-			$quantityField->setErrors($fieldErrors['quantity']);
-		}
+		$quantityField = new InputField('quantity', 1, $formDefinition['labels']['quantity-field']);
+		$quantityField->addConditionalConstraint(new ConditionalConstraint(new NotBlank()));
+		$quantityField->addConditionalConstraint(new ConditionalConstraint(new Range(array( 'min' => 1 ))));
 		$form->addField($quantityField);
 		$fields['quantity'] = true;
 		// Complete the form structure.

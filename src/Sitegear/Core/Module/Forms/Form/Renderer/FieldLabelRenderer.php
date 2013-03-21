@@ -30,7 +30,7 @@ class FieldLabelRenderer extends AbstractFieldRenderer {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function render(array & $output) {
+	public function render(array & $output, array $values, array $errors) {
 		$output[] = sprintf(
 			'<label%s>%s%s</label>',
 			HtmlUtilities::attributes($this->getRenderOption(self::RENDER_OPTION_KEY_ATTRIBUTES)),

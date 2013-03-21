@@ -9,7 +9,6 @@
 namespace Sitegear\Core\Module\Forms;
 
 use Sitegear\Base\Form\Renderer\Factory\RendererFactoryInterface;
-use Sitegear\Base\Form\StepInterface;
 use Sitegear\Base\Module\AbstractUrlMountableModule;
 use Sitegear\Base\Config\Processor\ArrayTokenProcessor;
 use Sitegear\Base\Config\Processor\ConfigTokenProcessor;
@@ -245,20 +244,15 @@ class FormsModule extends AbstractUrlMountableModule {
 	 * @param string $formKey Unique key of the form, used for session storage and also is the key used to retrieve the
 	 *   form data, if it is not supplied directly.
 	 * @param array|null $values Values to set manually into the form before displaying it.  Note this is used for
-	 *   rendering the form only, these values are not set into the session.
+	 *   rendering the form only, these values are not set into the session.  These values are merged into the values
+	 *   currently stored in the session (these values take precedence).
+	 * @param array[]|null $errors Errors to set manually into the form before displaying it.  These errors are merged
+	 *   into the errors currently stored in the session (these errors take precedence).
 	 */
-	public function formComponent(ViewInterface $view, Request $request, $formKey, array $values=null) {
+	public function formComponent(ViewInterface $view, Request $request, $formKey, array $values=null, array $errors=null) {
 		LoggerRegistry::debug('FormsModule::formComponent()');
-		// Get the form and apply the specified values, if any.
+		// Retrieve the form object.
 		$form = $this->getForm($formKey, $request);
-		if (is_array($values)) {
-			foreach ($values as $name => $value) {
-				$field = $form->getField($name);
-				if (!is_null($field)) {
-					$field->setValue($value);
-				}
-			}
-		}
 		// Disable the back button if the previous step is not available.
 		$currentStep = $this->getCurrentStep($formKey);
 		$availableSteps = $this->getAvailableSteps($formKey);
@@ -268,8 +262,10 @@ class FormsModule extends AbstractUrlMountableModule {
 		// Setup the view.
 		$this->applyConfigToView('component.form', $view);
 		$view['form-renderer'] = $this->createRendererFactory()->createFormRenderer($form, $currentStep);
-		// Remove errors as they are about to be displayed (they are already set in the Form structure), and we don't
-		// want to show the same errors again.
+		$view['values'] = array_merge($this->getValues($formKey), $values ?: array());
+		$view['errors'] = array_merge($this->getErrors($formKey), $errors ?: array());
+		// Remove errors as they are about to be displayed (they are already set in the view), and we don't want to
+		// show the same errors again.
 		$this->clearErrors($formKey);
 	}
 
@@ -508,7 +504,7 @@ class FormsModule extends AbstractUrlMountableModule {
 	 * @return array[]
 	 */
 	public function getErrors($formKey) {
-		return $this->getEngine()->getSession()->get($this->getSessionKey($formKey, 'errors'));
+		return $this->getEngine()->getSession()->get($this->getSessionKey($formKey, 'errors'), array());
 	}
 
 	/**

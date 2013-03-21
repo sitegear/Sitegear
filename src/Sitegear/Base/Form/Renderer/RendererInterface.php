@@ -14,21 +14,30 @@ namespace Sitegear\Base\Form\Renderer;
 interface RendererInterface {
 
 	/**
+	 * Retrieve the rendering option with the given key.
+	 *
 	 * @param string $key
+	 * @param mixed|null $default
 	 *
 	 * @return mixed
 	 */
-	public function getRenderOption($key);
+	public function getRenderOption($key, $default=null);
 
 	/**
+	 * Change the rendering option with the given key.
+	 *
 	 * @param string $key
 	 * @param mixed $value
 	 */
 	public function setRenderOption($key, $value);
 
 	/**
+	 * Render to the given output array; each element in the array is a line of output.
+	 *
 	 * @param string[] $output
+	 * @param array $values
+	 * @param array[] $errors
 	 */
-	public function render(array & $output);
+	public function render(array & $output, array $values, array $errors);
 
 }
