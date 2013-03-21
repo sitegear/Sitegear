@@ -217,12 +217,14 @@
 		"label": "Delivery Address",
 		"constraints": [
 			{
-				"condition": {
-					"field": "delivery-address-different",
-					"values": [
-						"yes"
-					]
-				},
+				"conditions": [
+					{
+						"field": "delivery-address-different",
+						"values": [
+							"yes"
+						]
+					}
+				],
 				"name": "not-blank",
 				"options": {
 					"message": "Please provide your street address for delivery"
@@ -238,12 +240,14 @@
 		"label": "Town / Suburb",
 		"constraints": [
 			{
-				"condition": {
-					"field": "delivery-address-different",
-					"values": [
-						"yes"
-					]
-				},
+				"conditions": [
+					{
+						"field": "delivery-address-different",
+						"values": [
+							"yes"
+						]
+					}
+				],
 				"name": "not-blank",
 				"options": {
 					"message": "Please provide your town or suburb for delivery"
@@ -256,12 +260,14 @@
 		"type": "input",
 		"constraints": [
 			{
-				"condition": {
-					"field": "delivery-address-different",
-					"values": [
-						"yes"
-					]
-				},
+				"conditions": [
+					{
+						"field": "delivery-address-different",
+						"values": [
+							"yes"
+						]
+					}
+				],
 				"name": "not-blank",
 				"options": {
 					"message": "Please provide your postcode for delivery"
@@ -318,12 +324,14 @@
 		},
 		"constraints": [
 			{
-				"condition": {
-					"field": "delivery-address-different",
-					"values": [
-						"yes"
-					]
-				},
+				"conditions": [
+					{
+						"field": "delivery-address-different",
+						"values": [
+							"yes"
+						]
+					}
+				],
 				"name": "not-blank",
 				"options": {
 					"message": "Please provide your state or territory for delivery"
@@ -340,12 +348,14 @@
 		},
 		"constraints": [
 			{
-				"condition": {
-					"field": "delivery-address-different",
-					"values": [
-						"yes"
-					]
-				},
+				"conditions": [
+					{
+						"field": "delivery-address-different",
+						"values": [
+							"yes"
+						]
+					}
+				],
 				"name": "not-blank",
 				"options": {
 					"message": "Please provide your country for delivery"
