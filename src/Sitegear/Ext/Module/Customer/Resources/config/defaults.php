@@ -57,10 +57,10 @@ return array(
 		 */
 		'text' => array(
 			'unknown-value' => 'TBA',
-			'no-items' => '<span class="sitegear-trolley-preview-no-items">Trolley is empty</span>',
+			'no-items' => '<span class="sitegear-trolley-preview-no-items">Your trolley is empty</span>',
 			'items-count' => array(
-				'<span class="sitegear-trolley-preview-items-count">Trolley contains %count% item</span>',
-				'<span class="sitegear-trolley-preview-items-count">Trolley contains %count% items</span>'
+				'<span class="sitegear-trolley-preview-items-count">Your trolley contains %count% item</span>',
+				'<span class="sitegear-trolley-preview-items-count">Your trolley contains %count% items</span>'
 			)
 		)
 	),
