@@ -173,7 +173,7 @@ class CustomerModule extends AbstractUrlMountableModule {
 	}
 
 	/**
-	 * Display the trolley details page.
+	 * Display the trolley page, which is mostly a wrapper for the trolley details component.
 	 *
 	 * @param \Sitegear\Base\View\ViewInterface $view
 	 *
@@ -182,12 +182,7 @@ class CustomerModule extends AbstractUrlMountableModule {
 	public function trolleyController(ViewInterface $view) {
 		LoggerRegistry::debug('CustomerModule::trolleyController');
 		$this->applyConfigToView('pages.trolley', $view);
-		$view['modify-item-url'] = sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.modify-trolley-item'));
-		$view['remove-item-url'] = sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.remove-trolley-item'));
-		$view['form-url'] = sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.trolley'));
-		$view['checkout-url'] = sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.checkout'));
 		$view['trolley-data'] = $this->getTrolleyData();
-		$view['adjustments'] = $this->getAdjustments();
 	}
 
 	/**
@@ -198,6 +193,8 @@ class CustomerModule extends AbstractUrlMountableModule {
 	public function checkoutController(ViewInterface $view) {
 		LoggerRegistry::debug('CustomerModule::checkoutController');
 		$this->applyConfigToView('pages.checkout', $view);
+		$view['form-key'] = $this->config('checkout.form-key');
+		$view['activate-script'] = $this->config('checkout.activate-script');
 	}
 
 	//-- Component Controller Methods --------------------
@@ -216,6 +213,22 @@ class CustomerModule extends AbstractUrlMountableModule {
 	}
 
 	/**
+	 * Display the trolley details component, which lists all items in the trolley, adjustments, and totals.
+	 *
+	 * @param ViewInterface $view
+	 */
+	public function trolleyDetailsComponent(ViewInterface $view) {
+		LoggerRegistry::debug('CustomerModule::trolleyDetailsComponent');
+		$this->applyConfigToView('components.trolley-details', $view);
+		$view['modify-item-url'] = sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.modify-trolley-item'));
+		$view['remove-item-url'] = sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.remove-trolley-item'));
+		$view['form-url'] = sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.trolley'));
+		$view['checkout-url'] = sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.checkout'));
+		$view['trolley-data'] = $this->getTrolleyData();
+		$view['adjustments'] = $this->getAdjustments();
+	}
+
+	/**
 	 * Display the "add trolley item" form.
 	 *
 	 * @param \Sitegear\Base\View\ViewInterface $view
@@ -228,17 +241,6 @@ class CustomerModule extends AbstractUrlMountableModule {
 		LoggerRegistry::debug('CustomerModule::addTrolleyItemFormComponent');
 		$formKey = $view['form-key'] = $this->config('add-trolley-item.form-key');
 		$this->getEngine()->forms()->registerForm($formKey, $this->buildAddTrolleyItemForm($formKey, $moduleName, $type, $id, $request->getPathInfo()));
-	}
-
-	/**
-	 * Display the checkout form.
-	 *
-	 * @param ViewInterface $view
-	 */
-	public function checkoutFormComponent(ViewInterface $view) {
-		LoggerRegistry::debug('CustomerModule::checkoutFormComponent');
-		$view['form-key'] = $this->config('checkout.form-key');
-		$view['activate-script'] = $this->config('checkout.activate-script');
 	}
 
 	//-- Public Methods --------------------
@@ -257,6 +259,7 @@ class CustomerModule extends AbstractUrlMountableModule {
 	 * @throws \DomainException
 	 */
 	public function addTrolleyItem($moduleName, $type, $itemId, array $attributeValues=null, $quantity=null) {
+		LoggerRegistry::debug('CustomerModule::addTrolleyItem');
 		if ($quantity < 1) {
 			throw new \DomainException('CustomerModule cannot modify trolley item to a zero or negative quantity; use removeTrolleyItem instead.');
 		}
@@ -314,6 +317,7 @@ class CustomerModule extends AbstractUrlMountableModule {
 	 * @throws \OutOfBoundsException
 	 */
 	public function removeTrolleyItem($index) {
+		LoggerRegistry::debug('CustomerModule::removeTrolleyItem');
 		$data = $this->getTrolleyData();
 		if ($index < 0 || $index >= sizeof($data)) {
 			throw new \OutOfBoundsException(sprintf('CustomerModule cannot modify trolley item with index (%d) out-of-bounds', $index));
@@ -332,6 +336,7 @@ class CustomerModule extends AbstractUrlMountableModule {
 	 * @throws \OutOfBoundsException
 	 */
 	public function modifyTrolleyItem($index, $quantity) {
+		LoggerRegistry::debug('CustomerModule::modifyTrolleyItem');
 		if ($quantity < 1) {
 			throw new \DomainException('CustomerModule cannot modify trolley item to a zero or negative quantity; use removeTrolleyItem instead.');
 		}
@@ -346,6 +351,27 @@ class CustomerModule extends AbstractUrlMountableModule {
 	}
 
 	/**
+	 * Prepare the payment, including calculating any adjustments that require checkout data excluding payment details.
+	 */
+	public function preparePayment() {
+		LoggerRegistry::debug('CustomerModule::preparePayment');
+		$values = $this->getEngine()->forms()->getValues($this->config('checkout.form-key'));
+		foreach ($this->config('adjustments') as $name) {
+			/** @var PurchaseAdjustmentProviderModuleInterface $module */
+			$module = $this->getEngine()->getModule($name);
+			$adjustment = $module->getAdjustmentAmount($this->getTrolleyData(), $values);
+		}
+	}
+
+	/**
+	 * Make the payment.  This requires payment details.
+	 */
+	public function makePayment() {
+		LoggerRegistry::debug('CustomerModule::makePayment');
+
+	}
+
+	/**
 	 * Utilise AddTrolleyItemFormBuilder to create the 'add trolley item' form.
 	 *
 	 * @param string $moduleName
@@ -356,6 +382,7 @@ class CustomerModule extends AbstractUrlMountableModule {
 	 * @return \Sitegear\Base\Form\FormInterface
 	 */
 	public function buildAddTrolleyItemForm($moduleName, $type, $id, $formUrl) {
+		LoggerRegistry::debug('CustomerModule::buildAddTrolleyItemForm');
 		$submitUrl = sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.add-trolley-item'));
 		$submitUrl = UrlUtilities::generateLinkWithReturnUrl($submitUrl, ltrim($formUrl, '/'), 'form-url');
 		$formBuilder = new AddTrolleyItemFormBuilder($this->getEngine()->forms(), $this->config('add-trolley-item.form-key'));
@@ -379,6 +406,7 @@ class CustomerModule extends AbstractUrlMountableModule {
 	 * @return FormInterface
 	 */
 	public function buildCheckoutForm() {
+		LoggerRegistry::debug('CustomerModule::buildCheckoutForm');
 		$steps = $this->config('checkout.steps.current');
 		if (is_string($steps)) {
 			$steps = $this->config(sprintf('checkout.steps.built-in.%s', $steps));
@@ -401,6 +429,7 @@ class CustomerModule extends AbstractUrlMountableModule {
 	 * @return Account|null
 	 */
 	public function getLoggedInUserAccount() {
+		LoggerRegistry::debug('CustomerModule::getLoggedInUserAccount');
 		$email = $this->getEngine()->getUserManager()->getLoggedInUserEmail();
 		$account = $this->getRepository('Account')->findOneBy(array( 'email' => 'ben@leftclick.com.au' ));
 		if (is_null($account)) {

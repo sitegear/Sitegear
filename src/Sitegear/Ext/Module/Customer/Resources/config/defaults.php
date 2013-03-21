@@ -116,6 +116,59 @@ return array(
 				 */
 				'checkout' => 'non-empty'
 			)
+		),
+
+		'trolley-details' => array(
+			/**
+			 * Text used in the trolley details component.
+			 */
+			'text' => array(
+				'unknown-value' => '{{ config:common.text.unknown-value }}',
+				'checkout-link' => '<a href="%checkoutUrl%" class="sitegear-trolley-checkout-link">Checkout</a>',
+				'remove-button' => 'Remove',
+				'quantity-button' => '=',
+				'table-headings' => array(
+					'item' => 'Item',
+					'price' => 'Price',
+					'quantity' => 'Quantity',
+					'total' => 'Total',
+					'actions' => 'Actions'
+				),
+				'table-total-labels' => array(
+					'subtotal' => 'Subtotal',
+					'total' => 'Total'
+				)
+			),
+
+			/**
+			 * Classes used displaying the trolley details table.
+			 */
+			'table-classes' => array(
+				'table' => 'sitegear-trolley-details-table',
+				'rows' => array(
+					'item' => 'sitegear-trolley-item-row',
+					'subtotal' => 'sitegear-trolley-subtotal-row',
+					'adjustment' => 'sitegear-trolley-adjustment-row',
+					'total' => 'sitegear-trolley-total-row'
+				),
+				'columns' => array(
+					'item' => 'sitegear-trolley-item',
+					'price' => 'sitegear-trolley-price',
+					'quantity' => 'sitegear-trolley-quantity',
+					'total' => 'sitegear-trolley-total',
+					'actions' => 'sitegear-trolley-actions',
+					'total-label' => 'sitegear-trolley-total-label',
+					'checkout-link-container' => 'sitegear-trolley-checkout-link-container'
+				),
+				'forms' => array(
+					'modify' => 'sitegear-trolley-form-modify',
+					'remove' => 'sitegear-trolley-form-modify'
+				),
+				'extra' => array(
+					'item-label-container' => 'sitegear-trolley-item-label',
+					'item-attributes-container' => 'sitegear-trolley-item-attributes'
+				)
+			)
 		)
 	),
 
@@ -172,53 +225,8 @@ return array(
 			 * Text used on the trolley details page.
 			 */
 			'text' => array(
-				'unknown-value' => '{{ config:common.text.unknown-value }}',
 				'no-items' => '{{ config:common.text.no-items }}',
-				'items-count' => '{{ config:common.text.items-count }}',
-				'checkout-link' => '<a href="%checkoutUrl%" class="sitegear-trolley-checkout-link">Checkout</a>',
-				'remove-button' => 'Remove',
-				'quantity-button' => '=',
-				'table-headings' => array(
-					'item' => 'Item',
-					'price' => 'Price',
-					'quantity' => 'Quantity',
-					'total' => 'Total',
-					'actions' => 'Actions'
-				),
-				'table-total-labels' => array(
-					'subtotal' => 'Subtotal',
-					'total' => 'Total'
-				)
-			),
-
-			/**
-			 * Classes used displaying the trolley details table.
-			 */
-			'table-classes' => array(
-				'table' => 'sitegear-trolley-details-table',
-				'rows' => array(
-					'item' => 'sitegear-trolley-item-row',
-					'subtotal' => 'sitegear-trolley-subtotal-row',
-					'adjustment' => 'sitegear-trolley-adjustment-row',
-					'total' => 'sitegear-trolley-total-row'
-				),
-				'columns' => array(
-					'item' => 'sitegear-trolley-item',
-					'price' => 'sitegear-trolley-price',
-					'quantity' => 'sitegear-trolley-quantity',
-					'total' => 'sitegear-trolley-total',
-					'actions' => 'sitegear-trolley-actions',
-					'total-label' => 'sitegear-trolley-total-label',
-					'checkout-link-container' => 'sitegear-trolley-checkout-link-container'
-				),
-				'forms' => array(
-					'modify' => 'sitegear-trolley-form-modify',
-					'remove' => 'sitegear-trolley-form-modify'
-				),
-				'extra' => array(
-					'item-label-container' => 'sitegear-trolley-item-label',
-					'item-attributes-container' => 'sitegear-trolley-item-attributes'
-				)
+				'items-count' => '{{ config:common.text.items-count }}'
 			)
 		),
 
@@ -235,7 +243,12 @@ return array(
 			/**
 			 * Page heading.
 			 */
-			'heading' => 'Checkout'
+			'heading' => 'Checkout',
+
+			/**
+			 * Second-level heading for trolley details section.
+			 */
+			'trolley-heading' => 'Your Trolley'
 
 		)
 	),

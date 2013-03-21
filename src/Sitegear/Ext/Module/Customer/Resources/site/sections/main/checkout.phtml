@@ -3,6 +3,15 @@
  * @var \Sitegear\Core\View\View $view
  */
 $view->getStringsManager()->prepend('title', $view['title']);
+if ($view['activate-script']) {
+	$view->getResourcesManager()->activate('script:customer:checkout');
+}
 ?>
 <h1><?php echo $view['heading']; ?></h1>
-<?php echo $view->customer()->checkoutForm(); ?>
+<p>
+Please complete the form below to complete your purchase.
+</p>
+<?php echo $view->forms()->steps($view['form-key']); ?>
+<?php echo $view->forms()->form($view['form-key']); ?>
+<h2><?php echo $view['trolley-heading']; ?></h2>
+<?php echo $view->customer()->trolleyDetails(); ?>
