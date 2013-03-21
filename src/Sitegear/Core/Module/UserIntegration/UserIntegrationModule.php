@@ -40,9 +40,27 @@ class UserIntegrationModule extends AbstractUrlMountableModule {
 	 */
 	public function start() {
 		parent::start();
-		// Register "login" form.
+		// Register login form.
 		$filename = $this->config('login-form.filename');
 		$this->getEngine()->forms()->registerFormDefinitionFilePath($this->config('login-form.key'), array(
+			$this->getEngine()->getSiteInfo()->getSitePath(ResourceLocations::RESOURCE_LOCATION_SITE, $this, $filename),
+			$this->getEngine()->getSiteInfo()->getSitePath(ResourceLocations::RESOURCE_LOCATION_MODULE, $this, $filename)
+		));
+		// Register sign-up form.
+		$filename = $this->config('sign-up-form.filename');
+		$this->getEngine()->forms()->registerFormDefinitionFilePath($this->config('sign-up-form.key'), array(
+			$this->getEngine()->getSiteInfo()->getSitePath(ResourceLocations::RESOURCE_LOCATION_SITE, $this, $filename),
+			$this->getEngine()->getSiteInfo()->getSitePath(ResourceLocations::RESOURCE_LOCATION_MODULE, $this, $filename)
+		));
+		// Register login-as-guest form.
+		$filename = $this->config('login-as-guest-form.filename');
+		$this->getEngine()->forms()->registerFormDefinitionFilePath($this->config('login-as-guest-form.key'), array(
+			$this->getEngine()->getSiteInfo()->getSitePath(ResourceLocations::RESOURCE_LOCATION_SITE, $this, $filename),
+			$this->getEngine()->getSiteInfo()->getSitePath(ResourceLocations::RESOURCE_LOCATION_MODULE, $this, $filename)
+		));
+		// Register password-recovery form.
+		$filename = $this->config('recover-password-form.filename');
+		$this->getEngine()->forms()->registerFormDefinitionFilePath($this->config('recover-password-form.key'), array(
 			$this->getEngine()->getSiteInfo()->getSitePath(ResourceLocations::RESOURCE_LOCATION_SITE, $this, $filename),
 			$this->getEngine()->getSiteInfo()->getSitePath(ResourceLocations::RESOURCE_LOCATION_MODULE, $this, $filename)
 		));
@@ -58,7 +76,8 @@ class UserIntegrationModule extends AbstractUrlMountableModule {
 		$routes->add('login', new Route(sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.login'))));
 		$routes->add('logout', new Route(sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.logout'))));
 		$routes->add('sign-up', new Route(sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.sign-up'))));
-		$routes->add('guest', new Route(sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.guest'))));
+		$routes->add('login-as-guest', new Route(sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.login-as-guest'))));
+		$routes->add('recover-password', new Route(sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.recover-password'))));
 		return $routes;
 	}
 
@@ -78,7 +97,6 @@ class UserIntegrationModule extends AbstractUrlMountableModule {
 	 */
 	public function loginController(ViewInterface $view) {
 		LoggerRegistry::debug('UserIntegrationModule::loginController');
-		$this->applyConfigToView('pages.login', $view);
 		$view['form-key'] = $this->config('login-form.key');
 	}
 
@@ -96,10 +114,40 @@ class UserIntegrationModule extends AbstractUrlMountableModule {
 		return new RedirectResponse($return ?: $request->getBaseUrl());
 	}
 
+	/**
+	 * Display the sign-up page.
+	 *
+	 * @param \Sitegear\Base\View\ViewInterface $view
+	 */
+	public function signUpController(ViewInterface $view) {
+		LoggerRegistry::debug('UserIntegrationModule::signUpController');
+		$view['form-key'] = $this->config('sign-up-form.key');
+	}
+
+	/**
+	 * Display the login-as-guest confirmation page.
+	 *
+	 * @param \Sitegear\Base\View\ViewInterface $view
+	 */
+	public function loginAsGuestController(ViewInterface $view) {
+		LoggerRegistry::debug('UserIntegrationModule::loginAsGuestController');
+		$view['form-key'] = $this->config('login-as-guest-form.key');
+	}
+
+	/**
+	 * Display the recover password page.
+	 *
+	 * @param ViewInterface $view
+	 */
+	public function recoverPasswordController(ViewInterface $view) {
+		LoggerRegistry::debug('UserIntegrationModule::recoverPasswordController');
+		$view['form-key'] = $this->config('recover-password-form.key');
+	}
+
 	//-- Component Target Controller Methods --------------------
 
 	/**
-	 * Display a selector between login, sign-up and proceed as guest links.
+	 * Display a selector between login, sign-up and login-as-guest links.
 	 *
 	 * @param ViewInterface $view
 	 * @param Request $request
@@ -107,7 +155,14 @@ class UserIntegrationModule extends AbstractUrlMountableModule {
 	public function selectorComponent(ViewInterface $view, Request $request) {
 		LoggerRegistry::debug('UserIntegrationModule::selectorComponent');
 		$links = array();
-		foreach (array( 'login' => 'Login', 'sign-up' => 'Sign Up', 'guest' => 'Proceed as Guest' ) as $route => $label) {
+		// TODO Configurable
+		$routeLabels = array(
+			'login' => 'Login',
+			'sign-up' => 'Create an Account',
+			'login-as-guest' => 'Login as Guest',
+			'recover-password' => 'Recover Password'
+		);
+		foreach ($routeLabels as $route => $label) {
 			$links[] = array(
 				'url' => $this->getAuthenticationLinkUrl($route, $request->getUri()),
 				'label' => $label,

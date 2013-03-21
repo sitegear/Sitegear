@@ -18,7 +18,8 @@ return array(
 		'login' => 'login',
 		'logout' => 'logout',
 		'sign-up' => 'sign-up',
-		'guest' => 'guest'
+		'login-as-guest' => 'login-as-guest',
+		'recover-password' => 'recover-password'
 	),
 
 	/**
@@ -52,21 +53,6 @@ return array(
 	),
 
 	/**
-	 * Page-specific settings.
-	 */
-	'pages' => array(
-
-		'login' => array(
-
-			/**
-			 * Text for the login form submit button.
-			 */
-			'submit-button-text' => 'Login'
-
-		)
-	),
-
-	/**
 	 * Settings for the login form.
 	 */
 	'login-form' => array(
@@ -80,6 +66,56 @@ return array(
 		 * Filename of the login form, relative to the module root at either the site-specific or built-in level.
 		 */
 		'filename' => 'login-form.json'
+	),
+
+	/**
+	 * Settings for the sign-up form.
+	 */
+	'sign-up-form' => array(
+
+		/**
+		 * Form key for the sign-up form.
+		 */
+		'key' => 'sign-up',
+
+		/**
+		 * Filename of the sign-up form, relative to the module root at either the site-specific or built-in level.
+		 */
+		'filename' => 'sign-up-form.json'
+	),
+
+	/**
+	 * Settings for the login-as-guest form.
+	 */
+	'login-as-guest-form' => array(
+
+		/**
+		 * Form key for the login-as-guest form.
+		 */
+		'key' => 'login-as-guest',
+
+		/**
+		 * Filename of the login-as-guest form, relative to the module root at either the site-specific or built-in
+		 * level.
+		 */
+		'filename' => 'login-as-guest-form.json'
+	),
+
+	/**
+	 * Settings for the recover-password form.
+	 */
+	'recover-password-form' => array(
+
+		/**
+		 * Form key for the recover-password form.
+		 */
+		'key' => 'recover-password',
+
+		/**
+		 * Filename of the recover-password form, relative to the module root at either the site-specific or built-in
+		 * level.
+		 */
+		'filename' => 'recover-password-form.json'
 	),
 
 	/**

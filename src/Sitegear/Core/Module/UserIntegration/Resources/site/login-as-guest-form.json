@@ -1,0 +1,21 @@
+{
+	"submit-button": "Guest Login",
+	"fields": {
+	},
+	"steps": [
+		{
+			"fieldsets": [
+				{
+					"fields": [
+					]
+				}
+			],
+			"processors": [
+				{
+					"module": "user-integration",
+					"method": "performLoginAsGuest"
+				}
+			]
+		}
+	]
+}

@@ -5,5 +5,8 @@
 $view->getStringsManager()->prepend('Login', 'title');
 ?>
 <h1>Login</h1>
+<p>
+Please enter your email address and password to login to our website using your existing account.
+</p>
 <?php echo $view->userIntegration()->selector(); ?>
 <?php echo $view->forms()->form($view['form-key']); ?>

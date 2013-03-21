@@ -1,0 +1,13 @@
+<?php
+/**
+ * @var \Sitegear\Core\View\View $view
+ */
+$view->getStringsManager()->prepend('Login as Guest', 'title');
+?>
+<h1>Login as Guest</h1>
+<p>
+Please enter below to login as guest.
+Note that information will not be stored for future visits.
+</p>
+<?php echo $view->userIntegration()->selector(); ?>
+<?php echo $view->forms()->form($view['form-key']); ?>
