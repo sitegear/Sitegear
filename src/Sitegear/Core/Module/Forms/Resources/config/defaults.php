@@ -77,7 +77,11 @@ return array(
 						'class' => 'field'
 					)
 				),
-				'Sitegear\\Core\\Module\\Forms\\Form\\Renderer\\FieldWrapperReadOnlyRenderer' => array(),
+				'Sitegear\\Core\\Module\\Forms\\Form\\Renderer\\FieldWrapperReadOnlyRenderer' => array(
+					'attributes' => array(
+						'class' => 'field read-only'
+					)
+				),
 				'Sitegear\\Core\\Module\\Forms\\Form\\Renderer\\FieldLabelRenderer' => array(),
 				'Sitegear\\Core\\Module\\Forms\\Form\\Renderer\\FieldErrorsRenderer' => array(
 					'element' => 'ul',
