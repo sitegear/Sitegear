@@ -11,8 +11,8 @@ namespace Sitegear\Core\Module\Forms\Form\Renderer;
 use Sitegear\Base\Form\FieldsetInterface;
 use Sitegear\Base\Form\Renderer\Factory\RendererFactoryInterface;
 use Sitegear\Core\Module\Forms\Form\Renderer\AbstractContainerRenderer;
-use Sitegear\Core\Module\Forms\Form\Renderer\Factory\RendererFactory;
 use Sitegear\Util\ArrayUtilities;
+use Sitegear\Util\NameUtilities;
 
 /**
  * RendererInterface implementation for a fieldset.
@@ -78,7 +78,10 @@ class FieldsetRenderer extends AbstractContainerRenderer {
 		return ArrayUtilities::combine(
 			parent::normaliseRenderOptions(),
 			array(
-				self::RENDER_OPTION_KEY_ELEMENT_NAME => 'fieldset'
+				self::RENDER_OPTION_KEY_ELEMENT_NAME => 'fieldset',
+				self::RENDER_OPTION_KEY_ATTRIBUTES => array(
+					'id' => sprintf('sitegear-fieldset-%s', NameUtilities::convertToDashedLower($this->getFieldset()->getHeading()))
+				)
 			)
 		);
 	}
