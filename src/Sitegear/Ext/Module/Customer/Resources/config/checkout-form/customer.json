@@ -3,9 +3,10 @@
 	"fields": [
 		"first-name",
 		"last-name",
-		"email",
-		"other-contact",
-		"password",
-		"confirm-password"
+		{
+			"field": "email",
+			"read-only": true
+		},
+		"other-contact"
 	]
 }

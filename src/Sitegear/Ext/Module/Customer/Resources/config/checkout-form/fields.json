@@ -43,48 +43,6 @@
 		"type": "input",
 		"label": "Other Contact"
 	},
-	"password": {
-		"type": "input",
-		"label": "To create an account, please set your password",
-		"settings": {
-			"type": "password",
-			"attributes": {
-				"autocomplete": "off"
-			}
-		},
-		"conditions": [
-			{
-				"condition": "exact-match",
-				"options": {
-					"field": "new-account",
-					"values": [
-						"1"
-					]
-				}
-			}
-		]
-	},
-	"confirm-password": {
-		"type": "input",
-		"label": "Please confirm your new password",
-		"settings": {
-			"type": "password",
-			"attributes": {
-				"autocomplete": "off"
-			}
-		},
-		"conditions": [
-			{
-				"condition": "exact-match",
-				"options": {
-					"field": "new-account",
-					"values": [
-						"1"
-					]
-				}
-			}
-		]
-	},
 	"street-1": {
 		"type": "input",
 		"label": "Street Address",
