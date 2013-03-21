@@ -4,5 +4,6 @@
  */
 $view->getStringsManager()->prepend('Login', 'title');
 $view->getResourcesManager()->activate('styles:sitegear:utilities');
-echo '<h1>Login</h1>', PHP_EOL;
-echo $view->forms()->form($view['form-key']);
+?>
+<h1>Login</h1>
+<?php echo $view->forms()->form($view['form-key']); ?>
