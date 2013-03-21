@@ -56,12 +56,7 @@ return array(
 		 * Text fragments.
 		 */
 		'text' => array(
-			'unknown-value' => 'TBA',
-			'no-items' => '<span class="sitegear-trolley-preview-no-items">Your trolley is empty</span>',
-			'items-count' => array(
-				'<span class="sitegear-trolley-preview-items-count">Your trolley contains %count% item</span>',
-				'<span class="sitegear-trolley-preview-items-count">Your trolley contains %count% items</span>'
-			)
+			'unknown-value' => 'TBA'
 		)
 	),
 
@@ -79,8 +74,11 @@ return array(
 			 * Text used in the trolley preview component.
 			 */
 			'text' => array(
-				'no-items' => '{{ config:common.text.no-items }}',
-				'items-count' => '{{ config:common.text.items-count }}',
+				'no-items' => '<span class="sitegear-trolley-preview-no-items">Trolley: empty</span>',
+				'items-count' => array(
+					'<span class="sitegear-trolley-preview-items-count">Trolley: %count% item</span>',
+					'<span class="sitegear-trolley-preview-items-count">Trolley: %count% items</span>'
+				),
 				'details-link' => '<a href="%detailsUrl%" class="sitegear-trolley-preview-details-link">Details</a>',
 				'checkout-link' => '<a href="%checkoutUrl%" class="sitegear-trolley-preview-checkout-link">Checkout</a>',
 			),
@@ -225,8 +223,11 @@ return array(
 			 * Text used on the trolley details page.
 			 */
 			'text' => array(
-				'no-items' => '{{ config:common.text.no-items }}',
-				'items-count' => '{{ config:common.text.items-count }}'
+				'no-items' => 'Your trolley is empty.',
+				'items-count' => array(
+					'Your trolley contains %count% item.',
+					'Your trolley contains %count% items.'
+				)
 			)
 		),
 
