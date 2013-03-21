@@ -8,7 +8,7 @@
 
 namespace Sitegear\Base\Form\Processor;
 
-use Sitegear\Base\Form\Processor\Condition\ConditionInterface;
+use Sitegear\Base\Form\Condition\ConditionInterface;
 
 /**
  * Partial abstract implementation of FormProcessorInterface.

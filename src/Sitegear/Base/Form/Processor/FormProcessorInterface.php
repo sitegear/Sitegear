@@ -8,7 +8,7 @@
 
 namespace Sitegear\Base\Form\Processor;
 
-use Sitegear\Base\Form\Processor\Condition\ConditionInterface;
+use Sitegear\Base\Form\Condition\ConditionInterface;
 
 /**
  * Defines the behaviour of a form processor, which can perform any arbitrary action upon successful (valid) submission
@@ -72,7 +72,7 @@ interface FormProcessorInterface {
 	/**
 	 * Add a condition to this form processor.
 	 *
-	 * @param ConditionInterface $condition Condition which must be satisfied before the processor will be executed.
+	 * @param \Sitegear\Base\Form\Condition\ConditionInterface $condition Condition which must be satisfied before the processor will be executed.
 	 *
 	 * @return self
 	 */

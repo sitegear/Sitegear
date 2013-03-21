@@ -6,9 +6,9 @@
  * http://sitegear.org/
  */
 
-namespace Sitegear\Base\Form\Processor\Condition;
+namespace Sitegear\Base\Form\Condition;
 
-use Sitegear\Base\Form\Processor\Condition\ConditionInterface;
+use Sitegear\Base\Form\Condition\ConditionInterface;
 
 /**
  * Implements a condition that requires a field to have a value exactly matching one of a given list of values.  That

@@ -10,7 +10,7 @@ namespace Sitegear\Core\Module\Forms\Form\Builder;
 
 use Sitegear\Base\Form\Form;
 use Sitegear\Base\Form\FormInterface;
-use Sitegear\Base\Form\Processor\Condition\ConditionInterface;
+use Sitegear\Base\Form\Condition\ConditionInterface;
 use Sitegear\Base\Form\Step;
 use Sitegear\Base\Form\StepInterface;
 use Sitegear\Base\Form\FieldReference;

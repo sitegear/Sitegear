@@ -6,7 +6,7 @@
  * http://sitegear.org/
  */
 
-namespace Sitegear\Base\Form\Processor\Condition;
+namespace Sitegear\Base\Form\Condition;
 
 /**
  * Describes the behaviour of a class responsible for checking a particular condition based on the values submitted
