@@ -284,6 +284,12 @@ return array(
 		'form-key' => 'customer.checkout',
 
 		/**
+		 * Whether or not to activate the script to show and hide the delivery address fields when the "delivery
+		 * address is different" checkbox is toggled.
+		 */
+		'activate-script' => true,
+
+		/**
 		 * Field definitions.  These are referenced by the fieldset definitions below.
 		 */
 		'fields' => '{{ include:$module/config/checkout-form/fields.json }}',
@@ -302,6 +308,12 @@ return array(
 			 * Contains fields for billing address details.
 			 */
 			'billing' => '{{ include:$module/config/checkout-form/billing.json }}',
+
+			/**
+			 * Contains a single selection field which indicates whether the delivery address is different from the
+			 * billing address.
+			 */
+			'delivery-different' => '{{ include:$module/config/checkout-form/delivery-different.json }}',
 
 			/**
 			 * Contains fields for delivery address details.
@@ -345,5 +357,23 @@ return array(
 		 */
 		'adjustments' => array()
 
+	),
+
+
+	/**
+	 * Resources
+	 */
+	'resources' => array(
+
+		/**
+		 * Google Maps Sitegear integration script.
+		 */
+		'script:customer:checkout' => array(
+			'type' => 'script',
+			'url' => 'sitegear/resources/customer/sitegear.checkout.js',
+			'requires' => array(
+				'script:vendor:jquery'
+			)
+		)
 	)
 );

@@ -1,7 +1,6 @@
 {
 	"heading": "Delivery Address",
 	"fields": [
-		"delivery-address-different",
 		"delivery-street-1",
 		"delivery-street-2",
 		"delivery-town",

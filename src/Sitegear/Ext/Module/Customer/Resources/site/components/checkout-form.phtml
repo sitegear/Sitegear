@@ -2,5 +2,8 @@
 /**
  * @var \Sitegear\Core\View\View $view
  */
+if ($view['activate-script']) {
+	$view->getResourcesManager()->activate('script:customer:checkout');
+}
 echo $view->forms()->steps($view['form-key']), PHP_EOL;
 echo $view->forms()->form($view['form-key']);

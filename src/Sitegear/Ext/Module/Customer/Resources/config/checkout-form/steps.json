@@ -16,6 +16,7 @@
 			"heading": "Delivery",
 			"one-way": true,
 			"fieldsets": [
+				"delivery-different",
 				"delivery"
 			],
 			"processors": [
@@ -45,6 +46,7 @@
 			"heading": "Delivery",
 			"one-way": true,
 			"fieldsets": [
+				"delivery-different",
 				"delivery"
 			],
 			"processors": [
@@ -69,6 +71,7 @@
 			"fieldsets": [
 				"customer",
 				"billing",
+				"delivery-different",
 				"delivery"
 			],
 			"processors": [
@@ -92,6 +95,7 @@
 			"fieldsets": [
 				"customer",
 				"billing",
+				"delivery-different",
 				"delivery",
 				"payment",
 				"terms"

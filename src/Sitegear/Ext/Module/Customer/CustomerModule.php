@@ -237,6 +237,7 @@ class CustomerModule extends AbstractUrlMountableModule {
 	public function checkoutFormComponent(ViewInterface $view) {
 		LoggerRegistry::debug('CustomerModule::checkoutFormComponent');
 		$view['form-key'] = $this->config('checkout.form-key');
+		$view['activate-script'] = $this->config('checkout.activate-script');
 	}
 
 	//-- Public Methods --------------------
