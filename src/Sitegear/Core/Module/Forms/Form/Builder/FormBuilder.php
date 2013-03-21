@@ -122,8 +122,8 @@ class FormBuilder extends AbstractFormsModuleFormBuilder {
 		}
 		// Get conditions.
 		$includeConditions = array();
-		if (isset($fieldData['conditions'])) {
-			foreach ($fieldData['conditions'] as $conditionDefinition) {
+		if (isset($fieldDefinition['conditions'])) {
+			foreach ($fieldDefinition['conditions'] as $conditionDefinition) {
 				$includeConditions[] = $this->buildCondition($conditionDefinition);
 			}
 		}
