@@ -188,16 +188,24 @@ class CustomerModule extends AbstractUrlMountableModule {
 	/**
 	 * Display the checkout page.
 	 *
-	 * @param \Sitegear\Base\View\ViewInterface $view
+	 * @param ViewInterface $view
+	 * @param Request $request
+	 *
+	 * @return RedirectResponse|null
 	 */
 	public function checkoutController(ViewInterface $view, Request $request) {
 		LoggerRegistry::debug('CustomerModule::checkoutController');
 		$trolleyData = $this->getTrolleyData();
 		if (!empty($trolleyData)) {
-			$this->applyConfigToView('pages.checkout', $view);
-			$view['form-key'] = $this->config('checkout.form-key');
-			$view['activate-script'] = $this->config('checkout.activate-script');
-			return null;
+			if ($this->getEngine()->getUserManager()->isLoggedIn()) {
+				$this->applyConfigToView('pages.checkout', $view);
+				$view['form-key'] = $this->config('checkout.form-key');
+				$view['activate-script'] = $this->config('checkout.activate-script');
+				return null;
+			} else {
+				$loginUrl = $this->getEngine()->userIntegration()->getAuthenticationLinkUrl('login', $request->getUri());
+				return new RedirectResponse($request->getUriForPath(sprintf('/%s', $loginUrl)));
+			}
 		} else {
 			return new RedirectResponse($request->getUriForPath(sprintf('/%s/%s', $this->getMountedUrl(), $this->config('routes.trolley'))));
 		}
@@ -246,7 +254,7 @@ class CustomerModule extends AbstractUrlMountableModule {
 	public function addTrolleyItemFormComponent(ViewInterface $view, Request $request, $moduleName, $type, $id) {
 		LoggerRegistry::debug('CustomerModule::addTrolleyItemFormComponent');
 		$formKey = $view['form-key'] = $this->config('add-trolley-item.form-key');
-		$this->getEngine()->forms()->registerForm($formKey, $this->buildAddTrolleyItemForm($formKey, $moduleName, $type, $id, $request->getPathInfo()));
+		$this->getEngine()->forms()->registerForm($formKey, $this->buildAddTrolleyItemForm($moduleName, $type, $id, $request->getPathInfo()));
 	}
 
 	//-- Public Methods --------------------
@@ -357,16 +365,11 @@ class CustomerModule extends AbstractUrlMountableModule {
 	}
 
 	/**
-	 * Prepare the payment, including calculating any adjustments that require checkout data excluding payment details.
+	 * Prepare the payment.
 	 */
 	public function preparePayment() {
 		LoggerRegistry::debug('CustomerModule::preparePayment');
-		$values = $this->getEngine()->forms()->getValues($this->config('checkout.form-key'));
-		foreach ($this->config('adjustments') as $name) {
-			/** @var PurchaseAdjustmentProviderModuleInterface $module */
-			$module = $this->getEngine()->getModule($name);
-			$adjustment = $module->getAdjustmentAmount($this->getTrolleyData(), $values);
-		}
+		// TODO Payment gateway integration
 	}
 
 	/**
@@ -374,7 +377,7 @@ class CustomerModule extends AbstractUrlMountableModule {
 	 */
 	public function makePayment() {
 		LoggerRegistry::debug('CustomerModule::makePayment');
-
+		// TODO Payment gateway integration
 	}
 
 	/**
