@@ -27,7 +27,7 @@ class FieldReadOnlyRenderer extends AbstractFieldRenderer {
 		if ($this->getField()->isArrayValue()) {
 			$value = implode(', ', $value);
 		}
-		return sprintf(
+		$output[] = sprintf(
 			'<%s%s>%s</%s>',
 			$this->getRenderOption(self::RENDER_OPTION_KEY_ELEMENT_NAME),
 			HtmlUtilities::attributes($this->getRenderOption(self::RENDER_OPTION_KEY_ATTRIBUTES)),
