@@ -44,7 +44,7 @@ return array(
 		/**
 		 * URL path element under the mounted root URL for the page that follows a successful checkout.
 		 */
-		'checkout-complete' => 'checkout-complete'
+		'thank-you' => 'thank-you'
 	),
 
 	/**
