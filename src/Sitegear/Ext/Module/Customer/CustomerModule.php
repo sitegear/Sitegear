@@ -190,11 +190,17 @@ class CustomerModule extends AbstractUrlMountableModule {
 	 *
 	 * @param \Sitegear\Base\View\ViewInterface $view
 	 */
-	public function checkoutController(ViewInterface $view) {
+	public function checkoutController(ViewInterface $view, Request $request) {
 		LoggerRegistry::debug('CustomerModule::checkoutController');
-		$this->applyConfigToView('pages.checkout', $view);
-		$view['form-key'] = $this->config('checkout.form-key');
-		$view['activate-script'] = $this->config('checkout.activate-script');
+		$trolleyData = $this->getTrolleyData();
+		if (!empty($trolleyData)) {
+			$this->applyConfigToView('pages.checkout', $view);
+			$view['form-key'] = $this->config('checkout.form-key');
+			$view['activate-script'] = $this->config('checkout.activate-script');
+			return null;
+		} else {
+			return new RedirectResponse($request->getUriForPath(sprintf('/%s/%s', $this->getMountedUrl(), $this->config('routes.trolley'))));
+		}
 	}
 
 	//-- Component Controller Methods --------------------
