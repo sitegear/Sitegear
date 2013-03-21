@@ -53,12 +53,26 @@ class FieldWrapperRenderer extends AbstractContainerRenderer {
 	 * {@inheritDoc}
 	 */
 	protected function renderChildren(array & $output, array $values, array $errors) {
-		$fieldLabelRenderer = $this->getFactory()->createFieldLabelRenderer($this->getField());
+		$fieldLabelRenderer = $this->getFieldLabelRenderer();
 		$fieldLabelRenderer->render($output, $values, $errors);
-		$fieldErrorsRenderer = $this->getFactory()->createFieldErrorsRenderer($this->getField());
+		$fieldErrorsRenderer = $this->getFieldErrorsRenderer();
 		$fieldErrorsRenderer->render($output, $values, $errors);
-		$fieldRenderer = $this->getFactory()->createFieldRenderer($this->getField());
+		$fieldRenderer = $this->getFieldRenderer();
 		$fieldRenderer->render($output, $values, $errors);
+	}
+
+	//-- Internal Methods --------------------
+
+	protected function getFieldLabelRenderer() {
+		return $this->getFactory()->createFieldLabelRenderer($this->getField());
+	}
+
+	protected function getFieldErrorsRenderer() {
+		return $this->getFactory()->createFieldErrorsRenderer($this->getField());
+	}
+
+	protected function getFieldRenderer() {
+		return $this->getFactory()->createFieldRenderer($this->getField());
 	}
 
 }
