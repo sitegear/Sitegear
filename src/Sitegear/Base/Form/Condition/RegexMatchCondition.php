@@ -9,11 +9,11 @@
 namespace Sitegear\Base\Form\Condition;
 
 /**
- * Implements a condition that requires a field to have a value exactly matching one of a given list of values.
+ * Implements a condition that requires a field to match one of a list of regular expressions.
  *
- * Required options: 'field' (string), 'values' (array of values to match against)
+ * Required options: 'field' (string), 'patterns' (array of regex).
  */
-class ExactMatchCondition extends AbstractCondition {
+class RegexMatchCondition extends AbstractCondition {
 
 	//-- ConditionInterface Methods --------------------
 
@@ -25,8 +25,8 @@ class ExactMatchCondition extends AbstractCondition {
 		$field = $this->getOption('field');
 		if (isset($values[$field])) {
 			$value = $values[$field];
-			foreach ($this->getOption('values') as $matchValue) {
-				$result = $result || ($matchValue === $value);
+			foreach ($this->getOption('patterns') as $pattern) {
+				$result = $result || preg_match($pattern, $value);
 			}
 		}
 		return $result;

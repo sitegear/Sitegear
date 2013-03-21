@@ -430,7 +430,7 @@ class FormsModule extends AbstractUrlMountableModule {
 		LoggerRegistry::debug(sprintf('FormsModule::validate(%s)', $formKey));
 		$validator = Validation::createValidator();
 		$errors = array();
-		foreach ($validator->validateValue($values, $this->getConstraints($fields)) as $violation) { /** @var \Symfony\Component\Validator\ConstraintViolationInterface $violation */
+		foreach ($validator->validateValue($values, $this->getConstraints($fields, $values)) as $violation) { /** @var \Symfony\Component\Validator\ConstraintViolationInterface $violation */
 			$fieldName = trim($violation->getPropertyPath(), '[]');
 			if (!isset($errors[$fieldName])) {
 				$errors[$fieldName] = array();
@@ -677,14 +677,20 @@ class FormsModule extends AbstractUrlMountableModule {
 	 * Get the validation constraints from the given fieldset collection.
 	 *
 	 * @param FieldInterface[] $fields
+	 * @param array $values
 	 *
 	 * @return \Symfony\Component\Validator\Constraints\Collection
 	 */
-	protected function getConstraints(array $fields) {
+	protected function getConstraints(array $fields, array $values) {
 		$constraints = array();
 		foreach ($fields as $field) {
-			// Store the value in the session for the next page load
-			$fieldConstraints = $field->getConstraints();
+			$fieldConditionalConstraints = $field->getConditionalConstraints();
+			$fieldConstraints = array();
+			foreach ($fieldConditionalConstraints as $fieldConditionalConstraint) {
+				if ($fieldConditionalConstraint->shouldApplyConstraint($values)) {
+					$fieldConstraints[] = $fieldConditionalConstraint->getConstraint();
+				}
+			}
 			switch (sizeof($fieldConstraints)) {
 				case 0:
 					break;

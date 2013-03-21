@@ -75,8 +75,8 @@ class AddTrolleyItemFormBuilder extends AbstractFormsModuleFormBuilder {
 		// Add the quantity field, which is a standard text field with a label.
 		$quantity = $this->getFieldValue('quantity', 1);
 		$quantityField = new InputField('quantity', $quantity, $formDefinition['labels']['quantity-field']);
-		$quantityField->addConstraint(new NotBlank());
-		$quantityField->addConstraint(new Range(array( 'min' => 1 )));
+		$quantityField->addConditionalConstraint(new NotBlank());
+		$quantityField->addConditionalConstraint(new Range(array( 'min' => 1 )));
 		if (isset($fieldErrors['quantity'])) {
 			$quantityField->setErrors($fieldErrors['quantity']);
 		}

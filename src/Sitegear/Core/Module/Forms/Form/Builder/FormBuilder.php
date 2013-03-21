@@ -10,15 +10,19 @@ namespace Sitegear\Core\Module\Forms\Form\Builder;
 
 use Sitegear\Base\Form\Form;
 use Sitegear\Base\Form\FormInterface;
-use Sitegear\Base\Form\Condition\ConditionInterface;
 use Sitegear\Base\Form\Step;
 use Sitegear\Base\Form\StepInterface;
 use Sitegear\Base\Form\FieldReference;
 use Sitegear\Base\Form\Fieldset;
+use Sitegear\Base\Form\Constraint\ConditionalConstraint;
+use Sitegear\Base\Form\Constraint\ConditionalConstraintInterface;
+use Sitegear\Base\Form\Condition\ConditionInterface;
 use Sitegear\Base\Form\Processor\ModuleProcessor;
 use Sitegear\Util\ArrayUtilities;
 use Sitegear\Util\NameUtilities;
 use Sitegear\Util\LoggerRegistry;
+
+use Symfony\Component\Validator\Constraint;
 
 /**
  * Core FormBuilderInterface implementation.  Maps the format defined by the `FormsModule` data files into the Form
@@ -41,7 +45,7 @@ class FormBuilder extends AbstractFormsModuleFormBuilder {
 	/**
 	 * Default class name for Constraint implementations.
 	 */
-	const CLASS_NAME_FORMAT_CONDITION = '\\Sitegear\\Base\\Form\\Processor\\Condition\\%sCondition';
+	const CLASS_NAME_FORMAT_CONDITION = '\\Sitegear\\Base\\Form\\Condition\\%sCondition';
 
 	//-- FormBuilderInterface Methods --------------------
 
@@ -123,7 +127,7 @@ class FormBuilder extends AbstractFormsModuleFormBuilder {
 	 *
 	 * @param array $constraintDefinition
 	 *
-	 * @return \Symfony\Component\Validator\Constraint
+	 * @return ConditionalConstraintInterface
 	 */
 	public function buildConstraint(array $constraintDefinition) {
 		LoggerRegistry::debug('FormBuilder::buildConstraint()');
@@ -132,7 +136,15 @@ class FormBuilder extends AbstractFormsModuleFormBuilder {
 					$constraintDefinition['class'] :
 					sprintf(self::CLASS_NAME_FORMAT_CONSTRAINT, NameUtilities::convertToStudlyCaps($constraintDefinition['name']))
 		);
-		return $constraintClass->newInstance(isset($constraintDefinition['options']) ? $constraintDefinition['options'] : null);
+		/** @var Constraint $constraint */
+		$constraint = $constraintClass->newInstance(isset($constraintDefinition['options']) ? $constraintDefinition['options'] : null);
+		$conditions = array();
+		if (isset($constraintDefinition['conditions'])) {
+			foreach ($constraintDefinition['conditions'] as $conditionDefinition) {
+				$conditions[] = $this->buildCondition($conditionDefinition);
+			}
+		}
+		return new ConditionalConstraint($constraint, $conditions);
 	}
 
 	/**
@@ -227,7 +239,7 @@ class FormBuilder extends AbstractFormsModuleFormBuilder {
 				NameUtilities::convertToStudlyCaps($conditionDefinition['condition'])
 			)
 		);
-		return $conditionClass->newInstance($conditionDefinition['field'], $conditionDefinition['values']);
+		return $conditionClass->newInstance($conditionDefinition['options']);
 	}
 
 }

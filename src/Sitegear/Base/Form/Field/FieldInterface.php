@@ -8,6 +8,7 @@
 
 namespace Sitegear\Base\Form\Field;
 
+use Sitegear\Base\Form\Constraint\ConditionalConstraintInterface;
 use Symfony\Component\Validator\Constraint;
 
 /**
@@ -81,23 +82,23 @@ interface FieldInterface {
 	public function isArrayValue();
 
 	/**
-	 * @return \Symfony\Component\Validator\Constraint[]
+	 * @return ConditionalConstraintInterface[]
 	 */
-	public function getConstraints();
+	public function getConditionalConstraints();
 
 	/**
-	 * @param \Symfony\Component\Validator\Constraint $validator
+	 * @param ConditionalConstraintInterface $conditionalConstraint
 	 *
 	 * @return self
 	 */
-	public function addConstraint(Constraint $validator);
+	public function addConditionalConstraint(ConditionalConstraintInterface $conditionalConstraint);
 
 	/**
-	 * @param \Symfony\Component\Validator\Constraint $constraint
+	 * @param ConditionalConstraintInterface $conditionalConstraint
 	 *
 	 * @return self
 	 */
-	public function removeConstraint($constraint);
+	public function removeConditionalConstraint(ConditionalConstraintInterface $conditionalConstraint);
 
 	/**
 	 * @return string[]

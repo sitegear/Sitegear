@@ -8,6 +8,7 @@
 
 namespace Sitegear\Base\Form\Field;
 
+use Sitegear\Base\Form\Constraint\ConditionalConstraintInterface;
 use Symfony\Component\Validator\Constraint;
 use Sitegear\Util\LoggerRegistry;
 
@@ -39,9 +40,9 @@ abstract class AbstractField implements FieldInterface {
 	private $labelMarkers;
 
 	/**
-	 * @var Constraint[]
+	 * @var ConditionalConstraintInterface[]
 	 */
-	private $constraints;
+	private $conditionalConstraints;
 
 	/**
 	 * @var string[]
@@ -60,7 +61,7 @@ abstract class AbstractField implements FieldInterface {
 	 * @param mixed $value
 	 * @param string|null $labelText
 	 * @param string[]|null $labelMarkers
-	 * @param Constraint[]|null $constraints
+	 * @param ConditionalConstraintInterface[]|null $constraints
 	 * @param string[]|null $errors
 	 * @param array $settings
 	 */
@@ -69,7 +70,7 @@ abstract class AbstractField implements FieldInterface {
 		$this->value = $value;
 		$this->labelText = $labelText;
 		$this->labelMarkers = $labelMarkers ?: array();
-		$this->constraints = $constraints ?: array();
+		$this->conditionalConstraints = $constraints ?: array();
 		$this->errors = $errors ?: array();
 		$this->settings = $settings ?: array();
 	}
@@ -147,18 +148,18 @@ abstract class AbstractField implements FieldInterface {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function getConstraints() {
-		return $this->constraints;
+	public function getConditionalConstraints() {
+		return $this->conditionalConstraints;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public function addConstraint(Constraint $constraint, $index=null) {
+	public function addConditionalConstraint(ConditionalConstraintInterface $conditionalConstraint, $index=null) {
 		if (is_null($index)) {
-			$this->constraints[] = $constraint;
+			$this->conditionalConstraints[] = $conditionalConstraint;
 		} else {
-			$this->constraints = array_splice($this->constraints, intval($index), 0, $constraint);
+			$this->conditionalConstraints = array_splice($this->conditionalConstraints, intval($index), 0, $conditionalConstraint);
 		}
 		return $this;
 	}
@@ -166,9 +167,10 @@ abstract class AbstractField implements FieldInterface {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function removeConstraint($constraint) {
-		$index = is_integer($constraint) ? $constraint : array_search($constraint, $this->constraints);
-		$this->constraints = array_splice($this->constraints, $index, 1);
+	public function removeConditionalConstraint(ConditionalConstraintInterface $conditionalConstraint) {
+		if (($index = array_search($conditionalConstraint, $this->conditionalConstraints)) !== false) {
+			$this->conditionalConstraints = array_splice($this->conditionalConstraints, $index, 1);
+		}
 		return $this;
 	}
 
