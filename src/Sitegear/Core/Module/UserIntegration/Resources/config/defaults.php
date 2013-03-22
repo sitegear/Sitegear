@@ -18,7 +18,7 @@ return array(
 		'login' => 'login',
 		'logout' => 'logout',
 		'sign-up' => 'sign-up',
-		'login-as-guest' => 'login-as-guest',
+		'guest-login' => 'guest-login',
 		'recover-password' => 'recover-password'
 	),
 
@@ -49,6 +49,22 @@ return array(
 			 */
 			'not-logged-in-message' => '<a href="%loginUrl%" class="login-link">Login</a>',
 
+		),
+
+		/**
+		 * Settings for the customer entry selector component.
+		 */
+		'selector' => array(
+
+			/**
+			 * Routes and labels for the links presented in the form.
+			 */
+			'route-labels' => array(
+				'login' => 'Login',
+				'sign-up' => 'Sign Up',
+				'guest-login' => 'Guest Login',
+				'recover-password' => 'Recover Password'
+			)
 		)
 	),
 
@@ -85,20 +101,20 @@ return array(
 	),
 
 	/**
-	 * Settings for the login-as-guest form.
+	 * Settings for the guest-login form.
 	 */
-	'login-as-guest-form' => array(
+	'guest-login-form' => array(
 
 		/**
-		 * Form key for the login-as-guest form.
+		 * Form key for the guest-login form.
 		 */
-		'key' => 'login-as-guest',
+		'key' => 'guest-login',
 
 		/**
-		 * Filename of the login-as-guest form, relative to the module root at either the site-specific or built-in
+		 * Filename of the guest-login form, relative to the module root at either the site-specific or built-in
 		 * level.
 		 */
-		'filename' => 'login-as-guest-form.json'
+		'filename' => 'guest-login-form.json'
 	),
 
 	/**
