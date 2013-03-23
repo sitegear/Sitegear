@@ -24,7 +24,7 @@
 		"gedmo/doctrine-extensions": "*",
 		"swiftmailer/swiftmailer": "4.*",
 		"rezzza/mailchimp": "*",
-		"leftclick/real-captcha": "dev-master",
+		"leftclick/real-captcha": "*",
 		"psr/log": "1.*"
 	},
 	"require-dev": {
