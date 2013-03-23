@@ -45,6 +45,10 @@
 					}
 				}
 			]
+		},
+		"captcha": {
+			"type": "captcha",
+			"label": "Human Check"
 		}
 	},
 	"steps": [
@@ -54,7 +58,8 @@
 					"fields": [
 						"email",
 						"password",
-						"confirm-password"
+						"confirm-password",
+						"captcha"
 					]
 				}
 			],
