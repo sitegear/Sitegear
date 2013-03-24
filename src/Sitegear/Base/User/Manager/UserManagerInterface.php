@@ -24,6 +24,11 @@ interface UserManagerInterface {
 	public function getAccessController();
 
 	/**
+	 * @return \Sitegear\Base\User\Storage\UserStorageInterface
+	 */
+	public function getStorage();
+
+	/**
 	 * @param \Symfony\Component\HttpFoundation\Session\SessionInterface $session
 	 */
 	public function setSession($session);

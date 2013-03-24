@@ -46,9 +46,10 @@ abstract class AbstractUserManager implements UserManagerInterface {
 		return $this->accessController;
 	}
 
-	//-- Internal Methods --------------------
-
-	protected function getStorage() {
+	/**
+	 * {@inheritDoc}
+	 */
+	public function getStorage() {
 		return $this->storage;
 	}
 
