@@ -236,4 +236,23 @@ class UserIntegrationModule extends AbstractUrlMountableModule {
 		}
 	}
 
+	/**
+	 * Perform a sign-up action with the given email address and credentials.
+	 *
+	 * @param string $email
+	 * @param array $credentials
+	 */
+	public function performSignUp($email, $credentials) {
+		// TODO Implement me
+	}
+
+	/**
+	 * Perform a password recovery action for the given email address.
+	 *
+	 * @param string $email
+	 */
+	public function recoverPassword($email) {
+		// TODO Implement me
+	}
+
 }
