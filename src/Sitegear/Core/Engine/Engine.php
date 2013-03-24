@@ -48,11 +48,16 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
  * The following magic methods are defined for known extension modules:
  *
  * @method \Sitegear\Ext\Module\Customer\CustomerModule customer()
+ * @method \Sitegear\Ext\Module\DiscountCodes\DiscountCodesModule discountCodes()
+ * @method \Sitegear\Ext\Module\Eway\EwayModule eway()
  * @method \Sitegear\Ext\Module\Google\GoogleModule google()
  * @method \Sitegear\Ext\Module\Locations\LocationsModule locations()
  * @method \Sitegear\Ext\Module\MailChimp\MailChimpModule mailChimp()
  * @method \Sitegear\Ext\Module\News\NewsModule news()
  * @method \Sitegear\Ext\Module\Products\ProductsModule products()
+ * @method \Sitegear\Ext\Module\RealCaptcha\RealCaptchaModule realCaptcha()
+ * @method \Sitegear\Ext\Module\SalesTax\SalesTaxModule salesTax()
+ * @method \Sitegear\Ext\Module\Shipping\ShippingModule shipping()
  * @method \Sitegear\Ext\Module\SwiftMailer\SwiftMailerModule swiftMailer()
  */
 class Engine extends AbstractConfigurableEngine {
