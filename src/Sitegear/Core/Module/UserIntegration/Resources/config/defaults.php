@@ -19,7 +19,7 @@ return array(
 		'logout' => 'logout',
 		'sign-up' => 'sign-up',
 		'guest-login' => 'guest-login',
-		'recover-password' => 'recover-password'
+		'recover-login' => 'recover-login'
 	),
 
 	/**
@@ -63,7 +63,7 @@ return array(
 				'login' => 'Login',
 				'sign-up' => 'Sign Up',
 				'guest-login' => 'Guest Login',
-				'recover-password' => 'Recover Password'
+				'recover-login' => 'Recover Login'
 			)
 		)
 	),
@@ -118,20 +118,20 @@ return array(
 	),
 
 	/**
-	 * Settings for the recover-password form.
+	 * Settings for the recover-login form.
 	 */
-	'recover-password-form' => array(
+	'recover-login-form' => array(
 
 		/**
-		 * Form key for the recover-password form.
+		 * Form key for the recover-login form.
 		 */
-		'key' => 'recover-password',
+		'key' => 'recover-login',
 
 		/**
-		 * Filename of the recover-password form, relative to the module root at either the site-specific or built-in
+		 * Filename of the recover-login form, relative to the module root at either the site-specific or built-in
 		 * level.
 		 */
-		'filename' => 'recover-password-form.json'
+		'filename' => 'recover-login-form.json'
 	),
 
 	/**

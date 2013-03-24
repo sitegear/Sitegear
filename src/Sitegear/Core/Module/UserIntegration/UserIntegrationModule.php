@@ -58,9 +58,9 @@ class UserIntegrationModule extends AbstractUrlMountableModule {
 			$this->getEngine()->getSiteInfo()->getSitePath(ResourceLocations::RESOURCE_LOCATION_SITE, $this, $filename),
 			$this->getEngine()->getSiteInfo()->getSitePath(ResourceLocations::RESOURCE_LOCATION_MODULE, $this, $filename)
 		));
-		// Register password-recovery form.
-		$filename = $this->config('recover-password-form.filename');
-		$this->getEngine()->forms()->registerFormDefinitionFilePath($this->config('recover-password-form.key'), array(
+		// Register credentials recovery form.
+		$filename = $this->config('recover-login-form.filename');
+		$this->getEngine()->forms()->registerFormDefinitionFilePath($this->config('recover-login-form.key'), array(
 			$this->getEngine()->getSiteInfo()->getSitePath(ResourceLocations::RESOURCE_LOCATION_SITE, $this, $filename),
 			$this->getEngine()->getSiteInfo()->getSitePath(ResourceLocations::RESOURCE_LOCATION_MODULE, $this, $filename)
 		));
@@ -77,7 +77,7 @@ class UserIntegrationModule extends AbstractUrlMountableModule {
 		$routes->add('logout', new Route(sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.logout'))));
 		$routes->add('sign-up', new Route(sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.sign-up'))));
 		$routes->add('guest-login', new Route(sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.guest-login'))));
-		$routes->add('recover-password', new Route(sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.recover-password'))));
+		$routes->add('recover-login', new Route(sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.recover-login'))));
 		return $routes;
 	}
 
@@ -139,15 +139,15 @@ class UserIntegrationModule extends AbstractUrlMountableModule {
 	 *
 	 * @param ViewInterface $view
 	 */
-	public function recoverPasswordController(ViewInterface $view) {
-		LoggerRegistry::debug('UserIntegrationModule::recoverPasswordController');
-		$view['form-key'] = $this->config('recover-password-form.key');
+	public function recoverLoginController(ViewInterface $view) {
+		LoggerRegistry::debug('UserIntegrationModule::recoverLoginController');
+		$view['form-key'] = $this->config('recover-login-form.key');
 	}
 
 	//-- Component Target Controller Methods --------------------
 
 	/**
-	 * Display a selector between login, sign-up, guest-login and recover-password pages.
+	 * Display a selector between login, sign-up, guest-login and recover-login pages.
 	 *
 	 * @param ViewInterface $view
 	 * @param Request $request
@@ -247,11 +247,11 @@ class UserIntegrationModule extends AbstractUrlMountableModule {
 	}
 
 	/**
-	 * Perform a password recovery action for the given email address.
+	 * Perform a login recovery action for the given email address.
 	 *
 	 * @param string $email
 	 */
-	public function recoverPassword($email) {
+	public function recoverLogin($email) {
 		// TODO Implement me
 	}
 

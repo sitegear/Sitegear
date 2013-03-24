@@ -1,5 +1,5 @@
 {
-	"submit-button": "Sign Up",
+	"submit-button": "Proceed",
 	"fields": {
 		"email": {
 			"type": "input",
@@ -15,6 +15,17 @@
 					"name": "email"
 				}
 			]
+		},
+		"captcha": {
+			"class": "\\Sitegear\\Ext\\Module\\RealCaptcha\\Form\\RealCaptchaField",
+			"label": "Human Check",
+			"constraints": [
+				{
+					"callback": "module",
+					"module": "real-captcha",
+					"method": "validate-captcha"
+				}
+			]
 		}
 	},
 	"steps": [
@@ -22,14 +33,15 @@
 			"fieldsets": [
 				{
 					"fields": [
-						"email"
+						"email",
+						"captcha"
 					]
 				}
 			],
 			"processors": [
 				{
 					"module": "user-integration",
-					"method": "recoverPassword",
+					"method": "recoverLogin",
 					"arguments": [
 						"{{ data:email }}"
 					],
