@@ -73,7 +73,7 @@
 			"processors": [
 				{
 					"module": "user-integration",
-					"method": "performSignUp",
+					"method": "signUp",
 					"arguments": [
 						"{{ data:email }}",
 						"{{ data:* }}"

@@ -45,7 +45,7 @@
 			"processors": [
 				{
 					"module": "user-integration",
-					"method": "performLogin",
+					"method": "login",
 					"arguments": [
 						"{{ data:email }}",
 						"{{ data:* }}"

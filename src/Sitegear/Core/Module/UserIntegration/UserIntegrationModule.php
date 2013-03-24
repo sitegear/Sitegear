@@ -109,7 +109,7 @@ class UserIntegrationModule extends AbstractUrlMountableModule {
 	 */
 	public function logoutController(Request $request) {
 		LoggerRegistry::debug('UserIntegrationModule::logoutController');
-		$this->performLogout();
+		$this->logout();
 		$return = UrlUtilities::getReturnUrl($request->getUri());
 		return new RedirectResponse($return ?: $request->getBaseUrl());
 	}
@@ -219,7 +219,7 @@ class UserIntegrationModule extends AbstractUrlMountableModule {
 	 *
 	 * @throws \RuntimeException
 	 */
-	public function performLogin($email, array $credentials) {
+	public function login($email, array $credentials) {
 		if (!$this->getEngine()->getUserManager()->login($email, $credentials)) {
 			throw new \RuntimeException($this->config('errors.login-failure'));
 		}
@@ -230,7 +230,7 @@ class UserIntegrationModule extends AbstractUrlMountableModule {
 	 *
 	 * @throws \RuntimeException
 	 */
-	public function performLogout() {
+	public function logout() {
 		if (!$this->getEngine()->getUserManager()->logout()) {
 			throw new \RuntimeException($this->config('errors.logout-failure'));
 		}
@@ -242,7 +242,7 @@ class UserIntegrationModule extends AbstractUrlMountableModule {
 	 * @param string $email
 	 * @param array $credentials
 	 */
-	public function performSignUp($email, $credentials) {
+	public function signUp($email, $credentials) {
 		// TODO Implement me
 	}
 
@@ -252,6 +252,14 @@ class UserIntegrationModule extends AbstractUrlMountableModule {
 	 * @param string $email
 	 */
 	public function recoverPassword($email) {
+		// TODO Implement me
+	}
+
+	/**
+	 * Perform a guest login.  This effectively allows the user identification process to be skipped and allows the
+	 * user to proceed without an account.
+	 */
+	public function guestLogin() {
 		// TODO Implement me
 	}
 
