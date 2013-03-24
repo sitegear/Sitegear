@@ -13,7 +13,6 @@ use Sitegear\Base\Form\FormInterface;
 use Sitegear\Base\Form\Field\FieldInterface;
 use Sitegear\Base\Form\Renderer\Factory\RendererFactoryInterface;
 use Sitegear\Core\Module\Forms\Form\Renderer\ButtonsRenderer;
-use Sitegear\Core\Module\Forms\Form\Renderer\CaptchaFieldRenderer;
 use Sitegear\Core\Module\Forms\Form\Renderer\FieldErrorsRenderer;
 use Sitegear\Core\Module\Forms\Form\Renderer\FieldLabelRenderer;
 use Sitegear\Core\Module\Forms\Form\Renderer\FieldReadOnlyRenderer;
@@ -125,9 +124,6 @@ class RendererFactory implements RendererFactoryInterface {
 		switch ($fieldClass->getShortName()) {
 			case 'InputField':
 				$renderer = new InputFieldRenderer($this, $field);
-				break;
-			case 'CaptchaField':
-				$renderer = new CaptchaFieldRenderer($this, $field);
 				break;
 			case 'TextareaField':
 				$renderer = new TextareaFieldRenderer($this, $field);

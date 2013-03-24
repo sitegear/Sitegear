@@ -196,10 +196,7 @@ class FormsModule extends AbstractUrlMountableModule {
 		// Return any of the following in order of preference: response returned by a processor method; redirection to
 		// the target URL; redirection to the return URL extracted from the form URL; the form URL; the home page.
 		if (!$response instanceof Response) {
-			if (is_null($targetUrl) && !is_null($formUrl)) {
-				$targetUrl = UrlUtilities::getReturnUrl($formUrl) ?: $formUrl;
-			}
-			$response = new RedirectResponse($targetUrl ?: $request->getUriForPath(''));
+			$response = new RedirectResponse($targetUrl ?: ($formUrl ?: $request->getUriForPath('')));
 		}
 		return $response;
 	}

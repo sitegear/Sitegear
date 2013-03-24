@@ -23,6 +23,7 @@ use Sitegear\Util\NameUtilities;
 use Sitegear\Util\LoggerRegistry;
 
 use Symfony\Component\Validator\Constraint;
+use Symfony\Component\Validator\Constraints\Callback;
 
 /**
  * Core FormBuilderInterface implementation.  Maps the format defined by the `FormsModule` data files into the Form
@@ -34,6 +35,8 @@ class FormBuilder extends AbstractFormsModuleFormBuilder {
 
 	/**
 	 * Default class name for FieldInterface implementations.
+	 *
+	 * TODO Change this so there is a registry of names to class names, then other modules can register their types and not have to specify the class in configuration
 	 */
 	const CLASS_NAME_FORMAT_FIELD = '\\Sitegear\\Base\\Form\\Field\\%sField';
 
@@ -44,6 +47,8 @@ class FormBuilder extends AbstractFormsModuleFormBuilder {
 
 	/**
 	 * Default class name for Constraint implementations.
+	 *
+	 * TODO Change this so there is a registry of names to class names, then other modules can register their types and not have to specify the class in configuration
 	 */
 	const CLASS_NAME_FORMAT_CONDITION = '\\Sitegear\\Base\\Form\\Condition\\%sCondition';
 
@@ -86,12 +91,12 @@ class FormBuilder extends AbstractFormsModuleFormBuilder {
 	 */
 	public function buildField($name, array $fieldDefinition, array $constraintLabelMarkers=null) {
 		LoggerRegistry::debug('FormBuilder::buildField()');
-		// Get the class for the field type.
-		$fieldType = $fieldDefinition['type'];
+		// Get the class for the field type, this is either a directly specified FQCN or a type value which is
+		// converted using the standard mapping.
 		$fieldTypeClass = new \ReflectionClass(
 			isset($fieldDefinition['class']) ?
 					$fieldDefinition['class'] :
-					sprintf(self::CLASS_NAME_FORMAT_FIELD, NameUtilities::convertToStudlyCaps($fieldType))
+					sprintf(self::CLASS_NAME_FORMAT_FIELD, NameUtilities::convertToStudlyCaps($fieldDefinition['type']))
 		);
 		// Get label text and markers.
 		$labelText = isset($fieldDefinition['label']) ? $fieldDefinition['label'] : '';
@@ -109,13 +114,13 @@ class FormBuilder extends AbstractFormsModuleFormBuilder {
 			if (is_null($constraintLabelMarkers)) {
 				$constraintLabelMarkers = array();
 			}
-			foreach ($fieldDefinition['constraints'] as $constraintData) {
-				$conditionalConstraints[] = $this->buildConditionalConstraint($constraintData);
-				if (isset($constraintLabelMarkers[$constraintData['name']])) {
-					if (is_array($constraintLabelMarkers[$constraintData['name']])) {
-						$labelMarkers = array_merge($labelMarkers, $constraintLabelMarkers[$constraintData['name']]);
+			foreach ($fieldDefinition['constraints'] as $constraintDefinition) {
+				$conditionalConstraints[] = $this->buildConditionalConstraint($constraintDefinition);
+				if (isset($constraintDefinition['name']) && isset($constraintLabelMarkers[$constraintDefinition['name']])) {
+					if (is_array($constraintLabelMarkers[$constraintDefinition['name']])) {
+						$labelMarkers = array_merge($labelMarkers, $constraintLabelMarkers[$constraintDefinition['name']]);
 					} else {
-						$labelMarkers[] = $constraintLabelMarkers[$constraintData['name']];
+						$labelMarkers[] = $constraintLabelMarkers[$constraintDefinition['name']];
 					}
 				}
 			}
@@ -139,16 +144,45 @@ class FormBuilder extends AbstractFormsModuleFormBuilder {
 	 * @param array $constraintDefinition
 	 *
 	 * @return ConditionalConstraintInterface
+	 *
+	 * @throws \InvalidArgumentException
 	 */
 	public function buildConditionalConstraint(array $constraintDefinition) {
 		LoggerRegistry::debug('FormBuilder::buildConstraint()');
-		$constraintClass = new \ReflectionClass(
-			isset($constraintDefinition['class']) ?
-					$constraintDefinition['class'] :
-					sprintf(self::CLASS_NAME_FORMAT_CONSTRAINT, NameUtilities::convertToStudlyCaps($constraintDefinition['name']))
-		);
 		/** @var Constraint $constraint */
-		$constraint = $constraintClass->newInstance(isset($constraintDefinition['options']) ? $constraintDefinition['options'] : null);
+		if (isset($constraintDefinition['class'])) {
+			// Constraint class is directly set in the definition.
+			$constraint = new $constraintDefinition['class']($constraintDefinition['options']);
+		} elseif (isset($constraintDefinition['callback'])) {
+			// Callback constraint which calls a method in either the engine or a module.
+			// Check the 'callback' value first, it should be either 'engine' or 'module'; in the latter case a
+			// 'module' key is also expected.
+			switch ($constraintDefinition['callback']) {
+				case 'engine':
+					$callbackObject = $this->getFormsModule()->getEngine();
+					break;
+				case 'module':
+					$callbackObject = $this->getFormsModule()->getEngine()->getModule($constraintDefinition['module']);
+					break;
+				default:
+					throw new \InvalidArgumentException(sprintf('FormBuilder encountered invalid callback type "%s"', $constraintDefinition['callback']));
+			}
+			// Setup the required options and return the Callback constraint object.
+			if (!isset($constraintDefinition['options'])) {
+				$constraintDefinition['options'] = array();
+			}
+			if (!isset($constraintDefinition['options']['methods'])) {
+				$constraintDefinition['options']['methods'] = array();
+			}
+			$constraintDefinition['options']['methods'][] = array( $callbackObject, NameUtilities::convertToCamelCase($constraintDefinition['method']) );
+			$constraint = new Callback($constraintDefinition['options']);
+		} else {
+			// Use the standard constraint class mappings.
+			$constraintClassName = sprintf(self::CLASS_NAME_FORMAT_CONSTRAINT, NameUtilities::convertToStudlyCaps($constraintDefinition['name']));
+			$constraintClass = new \ReflectionClass($constraintClassName);
+			$constraint = $constraintClass->newInstance(isset($constraintDefinition['options']) ? $constraintDefinition['options'] : null);
+		}
+		// Add conditions to the constraint if any are specified.
 		$conditions = array();
 		if (isset($constraintDefinition['conditions'])) {
 			foreach ($constraintDefinition['conditions'] as $conditionDefinition) {
@@ -169,19 +203,19 @@ class FormBuilder extends AbstractFormsModuleFormBuilder {
 	 */
 	public function buildStep(FormInterface $form, array $formDefinition, $stepIndex) {
 		LoggerRegistry::debug('FormBuilder::buildStep()');
-		$stepData = $formDefinition['steps'][$stepIndex];
-		$oneWay = isset($stepData['one-way']) ? $stepData['one-way'] : false;
-		$heading = isset($stepData['heading']) ? $stepData['heading'] : null;
-		$errorHeading = isset($stepData['error-heading']) ? $stepData['error-heading'] : null;
+		$stepDefinition = $formDefinition['steps'][$stepIndex];
+		$oneWay = isset($stepDefinition['one-way']) ? $stepDefinition['one-way'] : false;
+		$heading = isset($stepDefinition['heading']) ? $stepDefinition['heading'] : null;
+		$errorHeading = isset($stepDefinition['error-heading']) ? $stepDefinition['error-heading'] : null;
 		$step = new Step($form, $stepIndex, $oneWay, $heading, $errorHeading);
-		if (isset($stepData['fieldsets'])) {
-			foreach ($stepData['fieldsets'] as $fieldsetData) {
-				$step->addFieldset($this->buildFieldset($step, $fieldsetData));
+		if (isset($stepDefinition['fieldsets'])) {
+			foreach ($stepDefinition['fieldsets'] as $fieldsetDefinition) {
+				$step->addFieldset($this->buildFieldset($step, $fieldsetDefinition));
 			}
 		}
-		if (isset($stepData['processors'])) {
-			foreach ($stepData['processors'] as $processorData) {
-				$step->addProcessor($this->buildProcessor($processorData));
+		if (isset($stepDefinition['processors'])) {
+			foreach ($stepDefinition['processors'] as $processorDefinition) {
+				$step->addProcessor($this->buildProcessor($processorDefinition));
 			}
 		}
 		return $step;
@@ -199,14 +233,14 @@ class FormBuilder extends AbstractFormsModuleFormBuilder {
 		LoggerRegistry::debug('FormBuilder::buildFieldset()');
 		$heading = isset($fieldsetDefinition['heading']) ? $fieldsetDefinition['heading'] : null;
 		$fieldset = new Fieldset($step, $heading);
-		foreach ($fieldsetDefinition['fields'] as $fieldData) {
-			if (!is_array($fieldData)) {
-				$fieldData = array( 'field' => $fieldData );
+		foreach ($fieldsetDefinition['fields'] as $fieldDefinition) {
+			if (!is_array($fieldDefinition)) {
+				$fieldDefinition = array( 'field' => $fieldDefinition );
 			}
 			$fieldset->addFieldReference(new FieldReference(
-				$fieldData['field'],
-				isset($fieldData['read-only']) && $fieldData['read-only'],
-				!isset($fieldData['wrapped']) || $fieldData['wrapped']
+				$fieldDefinition['field'],
+				isset($fieldDefinition['read-only']) && $fieldDefinition['read-only'],
+				!isset($fieldDefinition['wrapped']) || $fieldDefinition['wrapped']
 			));
 		}
 		return $fieldset;
@@ -229,8 +263,8 @@ class FormBuilder extends AbstractFormsModuleFormBuilder {
 			isset($processorDefinition['exception-action']) ? $processorDefinition['exception-action'] : null
 		);
 		if (isset($processorDefinition['conditions'])) {
-			foreach ($processorDefinition['conditions'] as $conditionData) {
-				$processor->addCondition($this->buildCondition($conditionData));
+			foreach ($processorDefinition['conditions'] as $conditionDefinition) {
+				$processor->addCondition($this->buildCondition($conditionDefinition));
 			}
 		}
 		return $processor;

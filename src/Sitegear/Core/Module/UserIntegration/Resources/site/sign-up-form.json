@@ -47,8 +47,15 @@
 			]
 		},
 		"captcha": {
-			"type": "captcha",
-			"label": "Human Check"
+			"class": "\\Sitegear\\Ext\\Module\\RealCaptcha\\Form\\RealCaptchaField",
+			"label": "Human Check",
+			"constraints": [
+				{
+					"callback": "module",
+					"module": "real-captcha",
+					"method": "validate-captcha"
+				}
+			]
 		}
 	},
 	"steps": [
