@@ -24,7 +24,7 @@ return array(
 		/**
 		 * Error message used when the code entered does not match.
 		 */
-		'error-message' => 'The code entered is not valid, please try again.'
+		'error-message' => 'The code entered is not valid, please try again'
 	)
 
 );
