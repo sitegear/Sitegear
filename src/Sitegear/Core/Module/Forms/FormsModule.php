@@ -645,15 +645,18 @@ class FormsModule extends AbstractUrlMountableModule {
 	protected function loadFormFromDefinitions($formKey, $formUrl, array $paths) {
 		$path = FileUtilities::firstExistingPath($paths);
 		if (!empty($path)) {
+			// Setup the configuration container for the form definition.
+			$config = new SimpleConfigContainer($this->getConfigLoader());
+			$config->addProcessor(new ConfigTokenProcessor($this, 'config'));
+			$config->addProcessor(new ConfigTokenProcessor($this->getEngine(), 'engine-config'));
+			$config->addProcessor(new ArrayTokenProcessor($this->getValues($formKey), 'data'));
+			// Merge the configuration defaults and form definition file contents.
+			$config->merge($this->config('form-builder'));
+			$config->merge(array( 'form-url' => $formUrl ));
+			$config->merge($path);
+			// Build and return the form
 			$builder = new FormBuilder($this, $formKey);
-			return $builder->buildForm(array_merge(
-				$this->config('form-builder'),
-				array(
-					'form-url' => $formUrl,
-					'constraint-label-markers' => $this->config('constraints.label-markers')
-				),
-				json_decode(file_get_contents($path), true)
-			));
+			return $builder->buildForm($config->get(''));
 		}
 		return null;
 	}
@@ -705,33 +708,19 @@ class FormsModule extends AbstractUrlMountableModule {
 		$response = null;
 		foreach ($step->getProcessors() as $processor) {
 			if (!$response instanceof Response && $processor->shouldExecute($values)) {
-				$arguments = $this->parseProcessorArguments($processor, $values);
 				try {
-					$response = TypeUtilities::invokeCallable($processor->getProcessorMethod(), null, array( $request ), $arguments);
+					$response = TypeUtilities::invokeCallable(
+						$processor->getProcessorMethod(),
+						null,
+						array( $request ),
+						$processor->getArgumentDefaults()
+					);
 				} catch (\RuntimeException $exception) {
 					$this->handleProcessorException($formKey, $processor, $exception);
 				}
 			}
 		}
 		return $response;
-	}
-
-	/**
-	 * Execute configured processors for the given step, using the configuration library to process tokens in the
-	 * processor's argument defaults using the specified data.
-	 *
-	 * @param FormProcessorInterface $processor
-	 * @param string[] $data
-	 *
-	 * @return array
-	 */
-	protected function parseProcessorArguments(FormProcessorInterface $processor, array $data) {
-		$argumentsContainer = new SimpleConfigContainer($this->getConfigLoader());
-		$argumentsContainer->addProcessor(new ConfigTokenProcessor($this, 'config'));
-		$argumentsContainer->addProcessor(new ConfigTokenProcessor($this->getEngine(), 'engine-config'));
-		$argumentsContainer->addProcessor(new ArrayTokenProcessor($data, 'data'));
-		$argumentsContainer->merge($processor->getArgumentDefaults());
-		return $argumentsContainer->get('');
 	}
 
 	/**

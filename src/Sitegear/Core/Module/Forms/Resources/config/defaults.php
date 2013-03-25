@@ -21,18 +21,16 @@ return array(
 	),
 
 	/**
-	 * Settings for constraints.
-	 */
-	'constraints' => array(
-		'label-markers' => array(
-			'not-blank' => '<span class="required-marker">*</span>'
-		)
-	),
-
-	/**
 	 * Default configuration for the form builder.
 	 */
 	'form-builder' => array(
+
+		/**
+		 * Default markers to use per constraint assigned to a field.
+		 */
+		'constraint-label-markers' => array(
+			'not-blank' => '<span class="required-marker">*</span>'
+		),
 
 		/**
 		 * Submit button attributes, or a single string value to specify only the `value` attribute.
@@ -44,7 +42,6 @@ return array(
 		 * reset button completely.
 		 */
 		'reset-button' => null
-
 	),
 
 	/**
