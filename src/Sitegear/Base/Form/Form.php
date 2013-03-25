@@ -259,7 +259,7 @@ class Form implements FormInterface {
 	 * {@inheritDoc}
 	 */
 	public function getFieldErrors($fieldName) {
-		return isset($this->errors[$fieldName]) ? $this->values[$fieldName] : array();
+		return isset($this->errors[$fieldName]) ? $this->errors[$fieldName] : array();
 	}
 
 	/**
