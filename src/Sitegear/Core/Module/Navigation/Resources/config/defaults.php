@@ -41,7 +41,7 @@ return array(
 			/**
 			 * Whether or not to display tooltips (title attributes) on navigation items.
 			 */
-			'display-tooltips' => true,
+			'display-tooltips' => false,
 
 			/**
 			 * Classes to apply to specially marked navigation items.
