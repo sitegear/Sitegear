@@ -64,13 +64,15 @@ class FormBuilder extends AbstractFormsModuleFormBuilder {
 			isset($formDefinition['target-url']) ? $formDefinition['target-url'] : null,
 			isset($formDefinition['cancel-url']) ? $formDefinition['cancel-url'] : null,
 			isset($formDefinition['method']) ? $formDefinition['method'] : null,
+			$this->getFormsModule()->getValues($this->getFormKey()),
+			$this->getFormsModule()->getErrors($this->getFormKey()),
 			isset($formDefinition['submit-button']) ? $formDefinition['submit-button'] : null,
 			isset($formDefinition['reset-button']) ? $formDefinition['reset-button'] : null,
 			isset($formDefinition['back-button']) ? $formDefinition['back-button'] : null
 		);
 		$constraintLabelMarkers = isset($formDefinition['constraint-label-markers']) ? $formDefinition['constraint-label-markers'] : array();
 		foreach ($formDefinition['fields'] as $name => $fieldData) {
-			$form->addField($this->buildField($name, $fieldData, $constraintLabelMarkers));
+			$form->addField($this->buildField($form, $name, $fieldData, $constraintLabelMarkers));
 		}
 		for ($i=0, $l=sizeof($formDefinition['steps']); $i<$l; ++$i) {
 			$form->addStep($this->buildStep($form, $formDefinition, $i));
@@ -83,13 +85,14 @@ class FormBuilder extends AbstractFormsModuleFormBuilder {
 	/**
 	 * Create a single field.
 	 *
+	 * @param FormInterface $form
 	 * @param string $name
 	 * @param array $fieldDefinition
 	 * @param string[] $constraintLabelMarkers
 	 *
 	 * @return \Sitegear\Base\Form\Field\FieldInterface
 	 */
-	public function buildField($name, array $fieldDefinition, array $constraintLabelMarkers=null) {
+	public function buildField(FormInterface $form, $name, array $fieldDefinition, array $constraintLabelMarkers=null) {
 		LoggerRegistry::debug('FormBuilder::buildField()');
 		// Get the class for the field type, this is either a directly specified FQCN or a type value which is
 		// converted using the standard mapping.
@@ -135,7 +138,7 @@ class FormBuilder extends AbstractFormsModuleFormBuilder {
 		// Create the field instance.
 		$defaultValue = isset($fieldDefinition['default']) ? $fieldDefinition['default'] : null;
 		$settings = isset($fieldDefinition['settings']) ? $fieldDefinition['settings'] : array();
-		return $fieldTypeClass->newInstance($name, $defaultValue, $labelText, $labelMarkers, $conditionalConstraints, $includeConditions, $settings);
+		return $fieldTypeClass->newInstance($form, $name, $defaultValue, $labelText, $labelMarkers, $conditionalConstraints, $includeConditions, $settings);
 	}
 
 	/**

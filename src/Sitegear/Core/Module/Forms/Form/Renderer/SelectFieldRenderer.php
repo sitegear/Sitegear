@@ -24,13 +24,12 @@ class SelectFieldRenderer extends AbstractFieldRenderer {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function render(array & $output, array $values, array $errors) {
+	public function render(array & $output) {
 		$output[] = sprintf(
 			'<select%s>',
 			HtmlUtilities::attributes($this->getRenderOption(self::RENDER_OPTION_KEY_ATTRIBUTES))
 		);
-		$name = $this->getField()->getName();
-		$value = isset($values[$name]) ? $values[$name] : $this->getField()->getDefaultValue();
+		$value = $this->getFieldValue();
 		foreach ($this->getField()->getValues() as $option) {
 			$optionAttributes = array( 'value' => $option['value'] );
 			if ($option['value'] === $value) {

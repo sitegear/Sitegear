@@ -32,7 +32,7 @@ class RealCaptchaFieldRenderer extends InputFieldRenderer {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function render(array & $output, array $values, array $errors) {
+	public function render(array & $output) {
 		$output[] = sprintf('<%s%s />', 'img', HtmlUtilities::attributes(ArrayUtilities::combine(
 			$this->getRenderOption(self::RENDER_OPTION_KEY_CAPTCHA_IMAGE_ATTRIBUTES),
 			array(
@@ -41,7 +41,7 @@ class RealCaptchaFieldRenderer extends InputFieldRenderer {
 			)
 		)));
 		// TODO Optional reload button (basic javascript or jquery?)
-		parent::render($output, $values, $errors);
+		parent::render($output);
 	}
 
 	//-- AbstractInterface Methods --------------------

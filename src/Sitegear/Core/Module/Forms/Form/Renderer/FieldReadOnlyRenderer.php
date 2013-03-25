@@ -21,9 +21,8 @@ class FieldReadOnlyRenderer extends AbstractFieldRenderer {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function render(array & $output, array $values, array $errors) {
-		$name = $this->getField()->getName();
-		$value = isset($values[$name]) ? $values[$name] : $this->getField()->getDefaultValue();
+	public function render(array & $output) {
+		$value = $this->getFieldValue();
 		if ($this->getField()->isArrayValue()) {
 			$value = implode(', ', $value);
 		}

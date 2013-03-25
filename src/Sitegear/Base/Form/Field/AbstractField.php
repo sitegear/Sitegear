@@ -10,6 +10,7 @@ namespace Sitegear\Base\Form\Field;
 
 use Sitegear\Base\Form\Condition\ConditionInterface;
 use Sitegear\Base\Form\Constraint\ConditionalConstraintInterface;
+use Sitegear\Base\Form\FormInterface;
 use Sitegear\Util\LoggerRegistry;
 
 use Symfony\Component\Validator\Constraint;
@@ -20,6 +21,11 @@ use Symfony\Component\Validator\Constraint;
 abstract class AbstractField implements FieldInterface {
 
 	//-- Attributes --------------------
+
+	/**
+	 * @var \Sitegear\Base\Form\FormInterface
+	 */
+	private $form;
 
 	/**
 	 * @var string
@@ -59,6 +65,7 @@ abstract class AbstractField implements FieldInterface {
 	//-- Constructor --------------------
 
 	/**
+	 * @param FormInterface $form
 	 * @param string $name
 	 * @param mixed $defaultValue
 	 * @param string|null $labelText
@@ -67,7 +74,8 @@ abstract class AbstractField implements FieldInterface {
 	 * @param ConditionInterface[]|null $includeConditions
 	 * @param array $settings
 	 */
-	public function __construct($name, $defaultValue=null, $labelText=null, array $labelMarkers=null, array $conditionalConstraints=null, array $includeConditions=null, array $settings=null) {
+	public function __construct(FormInterface $form, $name, $defaultValue=null, $labelText=null, array $labelMarkers=null, array $conditionalConstraints=null, array $includeConditions=null, array $settings=null) {
+		$this->form = $form;
 		$this->name = $name;
 		$this->defaultValue = $defaultValue;
 		$this->labelText = $labelText;
@@ -78,6 +86,13 @@ abstract class AbstractField implements FieldInterface {
 	}
 
 	//-- FieldInterface Methods --------------------
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function getForm() {
+		return $this->form;
+	}
 
 	/**
 	 * {@inheritDoc}

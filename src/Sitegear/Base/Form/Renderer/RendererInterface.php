@@ -35,9 +35,7 @@ interface RendererInterface {
 	 * Render to the given output array; each element in the array is a line of output.
 	 *
 	 * @param string[] $output
-	 * @param array $values
-	 * @param array[] $errors
 	 */
-	public function render(array & $output, array $values, array $errors);
+	public function render(array & $output);
 
 }

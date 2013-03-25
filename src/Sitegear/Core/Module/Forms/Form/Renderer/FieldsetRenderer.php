@@ -51,23 +51,23 @@ class FieldsetRenderer extends AbstractContainerRenderer {
 	/**
 	 * {@inheritDoc}
 	 */
-	protected function renderChildren(array & $output, array $values, array $errors) {
+	protected function renderChildren(array & $output) {
 		$form = $this->getFieldset()->getStep()->getForm();
 		if (!is_null($this->getFieldset()->getHeading())) {
 			$output[] = sprintf('<legend>%s</legend>', $this->getFieldset()->getHeading());
 		}
 		foreach ($this->getFieldset()->getFieldReferences() as $fieldReference) {
 			$field = $form->getField($fieldReference->getFieldName());
-			if ($field->shouldBeIncluded($values)) {
+			if ($field->shouldBeIncluded($this->getFieldset()->getStep()->getForm()->getValues())) {
 				if ($fieldReference->isWrapped()) {
 					// isWrapped() is true, so render a wrapper.
 					$wrapperRenderer = ($fieldReference->isReadOnly()) ?
 							$this->getFactory()->createFieldWrapperReadOnlyRenderer($field) :
 							$this->getFactory()->createFieldWrapperRenderer($field);
-					$wrapperRenderer->render($output, $values, $errors);
+					$wrapperRenderer->render($output);
 				} else {
 					// isWrapped() is false, so just render the field.
-					$this->getFactory()->createFieldRenderer($field, array())->render($output, $values, $errors);
+					$this->getFactory()->createFieldRenderer($field, array())->render($output);
 				}
 			}
 		}

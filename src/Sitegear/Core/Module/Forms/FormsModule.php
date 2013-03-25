@@ -9,6 +9,7 @@
 namespace Sitegear\Core\Module\Forms;
 
 use Sitegear\Base\Form\Renderer\Factory\RendererFactoryInterface;
+use Sitegear\Base\Form\StepInterface;
 use Sitegear\Base\Module\AbstractUrlMountableModule;
 use Sitegear\Base\Config\Processor\ArrayTokenProcessor;
 use Sitegear\Base\Config\Processor\ConfigTokenProcessor;
@@ -159,16 +160,7 @@ class FormsModule extends AbstractUrlMountableModule {
 			$errors = $this->validateForm($formKey, $fields, $values);
 			if (empty($errors)) {
 				// No errors, so execute processors.
-				foreach ($step->getProcessors() as $processor) {
-					if (!$response instanceof Response && $processor->shouldExecute($values)) {
-						$arguments = $this->parseProcessorArguments($processor, $values);
-						try {
-							$response = TypeUtilities::invokeCallable($processor->getProcessorMethod(), null, array( $request ), $arguments);
-						} catch (\RuntimeException $exception) {
-							$this->handleProcessorException($formKey, $processor, $exception);
-						}
-					}
-				}
+				$response = $this->executeProcessors($formKey, $step, $request, $values);
 				// Reset the 'available steps' list if this is a one-way step.
 				if ($step->isOneWay()) {
 					$availableSteps = array( $nextStep );
@@ -699,6 +691,29 @@ class FormsModule extends AbstractUrlMountableModule {
 			'allowExtraFields' => true,
 			'allowMissingFields' => false
 		));
+	}
+
+	/**
+	 * @param string $formKey
+	 * @param StepInterface $step
+	 * @param Request $request
+	 * @param array $values
+	 *
+	 * @return Response|null
+	 */
+	protected function executeProcessors($formKey, StepInterface $step, Request $request, array $values) {
+		$response = null;
+		foreach ($step->getProcessors() as $processor) {
+			if (!$response instanceof Response && $processor->shouldExecute($values)) {
+				$arguments = $this->parseProcessorArguments($processor, $values);
+				try {
+					$response = TypeUtilities::invokeCallable($processor->getProcessorMethod(), null, array( $request ), $arguments);
+				} catch (\RuntimeException $exception) {
+					$this->handleProcessorException($formKey, $processor, $exception);
+				}
+			}
+		}
+		return $response;
 	}
 
 	/**

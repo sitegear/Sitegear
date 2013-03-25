@@ -41,7 +41,7 @@ class ButtonsRenderer extends AbstractContainerRenderer {
 
 	//-- AbstractContainerRenderer Methods --------------------
 
-	protected function renderChildren(array & $output, array $values, array $errors) {
+	protected function renderChildren(array & $output) {
 		// Back button.
 		$backButtonAttributes = $this->getForm()->getBackButtonAttributes();
 		if (is_array($backButtonAttributes)) {

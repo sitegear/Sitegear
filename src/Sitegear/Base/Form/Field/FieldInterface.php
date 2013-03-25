@@ -11,12 +11,18 @@ namespace Sitegear\Base\Form\Field;
 use Sitegear\Base\Form\Condition\ConditionInterface;
 use Sitegear\Base\Form\Constraint\ConditionalConstraintInterface;
 
+use Sitegear\Base\Form\FormInterface;
 use Symfony\Component\Validator\Constraint;
 
 /**
  * Defines the behaviour of all fields.
  */
 interface FieldInterface {
+
+	/**
+	 * @return FormInterface Link to the form.
+	 */
+	public function getForm();
 
 	/**
 	 * @return string The HTML name attribute, which is the name used in HTTP actions (POST, GET query string, etc)

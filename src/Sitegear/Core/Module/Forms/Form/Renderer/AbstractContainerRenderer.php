@@ -10,7 +10,6 @@ namespace Sitegear\Core\Module\Forms\Form\Renderer;
 
 use Sitegear\Core\Module\Forms\Form\Renderer\AbstractRenderer;
 use Sitegear\Util\HtmlUtilities;
-use string;
 
 /**
  * Base class for renderers of container elements.  This splits the rendering into three sections -- start tag,
@@ -23,10 +22,10 @@ abstract class AbstractContainerRenderer extends AbstractRenderer {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function render(array & $output, array $values, array $errors) {
-		$this->renderStartTag($output, $values, $errors);
-		$this->renderChildren($output, $values, $errors);
-		$this->renderEndTag($output, $values, $errors);
+	public function render(array & $output) {
+		$this->renderStartTag($output);
+		$this->renderChildren($output);
+		$this->renderEndTag($output);
 	}
 
 	//-- Internal Methods --------------------
@@ -35,10 +34,8 @@ abstract class AbstractContainerRenderer extends AbstractRenderer {
 	 * Render the start tag.
 	 *
 	 * @param string[] $output
-	 * @param array $values
-	 * @param array[] $errors
 	 */
-	protected function renderStartTag(array & $output, array $values, array $errors) {
+	protected function renderStartTag(array & $output) {
 		$output[] = sprintf(
 			'<%s%s>',
 			$this->getRenderOption(self::RENDER_OPTION_KEY_ELEMENT_NAME),
@@ -51,10 +48,8 @@ abstract class AbstractContainerRenderer extends AbstractRenderer {
 	 * of a `<form>` element are `<fieldset>` elements.
 	 *
 	 * @param string[] $output
-	 * @param array $values
-	 * @param array[] $errors
 	 */
-	protected function renderChildren(array & $output, array $values, array $errors) {
+	protected function renderChildren(array & $output) {
 		// Default implementation does nothing
 	}
 
@@ -62,10 +57,8 @@ abstract class AbstractContainerRenderer extends AbstractRenderer {
 	 * Render the end tag.
 	 *
 	 * @param string[] $output
-	 * @param array $values
-	 * @param array[] $errors
 	 */
-	protected function renderEndTag(array & $output, array $values, array $errors) {
+	protected function renderEndTag(array & $output) {
 		$output[] = sprintf(
 			'</%s>',
 			$this->getRenderOption(self::RENDER_OPTION_KEY_ELEMENT_NAME)

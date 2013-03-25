@@ -58,6 +58,16 @@ class Form implements FormInterface {
 	private $fields;
 
 	/**
+	 * @var array
+	 */
+	private $values;
+
+	/**
+	 * @var string[][]
+	 */
+	private $errors;
+
+	/**
 	 * @var StepInterface[]
 	 */
 	private $steps;
@@ -66,14 +76,16 @@ class Form implements FormInterface {
 
 	/**
 	 * @param string $submitUrl
-	 * @param string|null $method
 	 * @param string|null $targetUrl
 	 * @param string|null $cancelUrl
+	 * @param string|null $method
+	 * @param array|null $values
+	 * @param array[]|null $errors
 	 * @param string[]|null $submitButtonAttributes
 	 * @param string[]|null $resetButtonAttributes
 	 * @param string[]|null $backButtonAttributes
 	 */
-	public function __construct($submitUrl, $targetUrl=null, $cancelUrl=null, $method=null, $submitButtonAttributes=null, $resetButtonAttributes=null, $backButtonAttributes=null) {
+	public function __construct($submitUrl, $targetUrl=null, $cancelUrl=null, $method=null, array $values=null, array $errors=null, $submitButtonAttributes=null, $resetButtonAttributes=null, $backButtonAttributes=null) {
 		$this->submitUrl = $submitUrl;
 		$this->targetUrl = $targetUrl;
 		$this->cancelUrl = $cancelUrl;
@@ -82,6 +94,8 @@ class Form implements FormInterface {
 		$this->resetButtonAttributes = (is_null($resetButtonAttributes) || is_array($resetButtonAttributes)) ? $resetButtonAttributes : array( 'value' => $resetButtonAttributes );
 		$this->backButtonAttributes = (is_null($backButtonAttributes) || is_array($backButtonAttributes)) ? $backButtonAttributes : array( 'value' => $backButtonAttributes );
 		$this->fields = array();
+		$this->values = $values ?: array();
+		$this->errors = $errors ?: array();
 		$this->steps = array();
 	}
 
@@ -218,6 +232,34 @@ class Form implements FormInterface {
 		$fieldName = is_string($field) ? $field : $field->getName();
 		unset($this->fields[$fieldName]);
 		return $this;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function getValues() {
+		return $this->values;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function getFieldValue($fieldName, $default=null) {
+		return isset($this->values[$fieldName]) ? $this->values[$fieldName] : $default;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function getErrors() {
+		return $this->errors;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function getFieldErrors($fieldName) {
+		return isset($this->errors[$fieldName]) ? $this->values[$fieldName] : array();
 	}
 
 	/**

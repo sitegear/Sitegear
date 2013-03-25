@@ -63,11 +63,35 @@ abstract class AbstractFieldRenderer extends AbstractRenderer implements FieldRe
 				parent::normaliseRenderOptions(),
 				array(
 					self::RENDER_OPTION_KEY_ATTRIBUTES => array(
-						'name' => $this->getField()->getName()
+						'name' => $this->getFieldNameAttribute()
 					)
 				)
 			)
 		);
+	}
+
+	//-- Internal Methods --------------------
+
+	/**
+	 * Shortcut method to get the value set for this renderer's related field.
+	 *
+	 * @return mixed|null
+	 */
+	protected function getFieldValue() {
+		return $this->getField()->getForm()->getFieldValue($this->getField()->getName(), $this->getField()->getDefaultValue());
+	}
+
+	/**
+	 * Retrieve the field's name attribute value, which is the field name plus [] if it is an array value field.
+	 *
+	 * @return string
+	 */
+	protected function getFieldNameAttribute() {
+		$name = $this->getField()->getName();
+		if ($this->getField()->isArrayValue()) {
+			$name .= '[]';
+		}
+		return $name;
 	}
 
 }

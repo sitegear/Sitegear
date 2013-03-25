@@ -140,6 +140,39 @@ interface FormInterface {
 	public function removeField($field);
 
 	/**
+	 * Get the values for all fields.
+	 *
+	 * @return array
+	 */
+	public function getValues();
+
+	/**
+	 * Get the value for a single field.
+	 *
+	 * @param string $fieldName
+	 * @param mixed|null $default
+	 *
+	 * @return mixed|null
+	 */
+	public function getFieldValue($fieldName, $default=null);
+
+	/**
+	 * Get the errors for all fields.
+	 *
+	 * @return string[][]
+	 */
+	public function getErrors();
+
+	/**
+	 * Get the errors for a single field.
+	 *
+	 * @param string $fieldName
+	 *
+	 * @return string[]
+	 */
+	public function getFieldErrors($fieldName);
+
+	/**
 	 * @return integer
 	 */
 	public function getStepsCount();

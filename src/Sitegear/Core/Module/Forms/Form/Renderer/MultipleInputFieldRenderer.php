@@ -58,17 +58,26 @@ class MultipleInputFieldRenderer extends AbstractFieldRenderer {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function render(array & $output, array $values, array $errors) {
+	public function render(array & $output) {
 		$innerIdPrefix = sprintf(
 			'%s-%s',
 			$this->getField()->getName(), $this->getRenderOption(self::RENDER_OPTION_KEY_INNER_WRAPPER_ID_PREFIX)
 		);
+		// Add the outer container element open tag.
 		$output[] = sprintf(
 			'<%s%s>',
 			$this->getRenderOption(self::RENDER_OPTION_KEY_OUTER_WRAPPER_ELEMENT_NAME),
 			HtmlUtilities::attributes($this->getRenderOption(self::RENDER_OPTION_KEY_OUTER_WRAPPER_ATTRIBUTES))
 		);
+		// Add a hidden field (note: using the raw field name always without [] appended) to reset the value each post.
+		$output[] = sprintf(
+			'<input type="hidden" name="%s" value="" />',
+			$this->getField()->getName()
+		);
+		// Add the input elements and value labels, one for each available value.
+		$value = $this->getFieldValue();
 		foreach ($this->getField()->getValues() as $option) {
+			// Add the input element itself.
 			$optionId = sprintf(
 				'%s-%s',
 				$innerIdPrefix,
@@ -78,18 +87,19 @@ class MultipleInputFieldRenderer extends AbstractFieldRenderer {
 				$this->getRenderOption(self::RENDER_OPTION_KEY_ATTRIBUTES),
 				array(
 					'id' => $optionId,
-					'value' => $option['value']
+					'value' => $option['value'],
+					'type' => $this->getField()->getType(),
+					'class' => $this->getField()->getType()
 				)
 			);
-			$name = $this->getField()->getName();
-			$value = isset($values[$name]) ? $values[$name] : $this->getField()->getDefaultValue();
-			if ($option['value'] === $value) {
-				$optionAttributes['selected'] = 'selected';
+			if (is_array($value) && in_array($option['value'], $value)) {
+				$optionAttributes['checked'] = 'checked';
 			}
 			$input = sprintf(
 				'<input%s />',
 				HtmlUtilities::attributes($optionAttributes)
 			);
+			// Add the input label element.
 			$inputLabelAttributes = array(
 				'for' => $optionId,
 				'class' => sprintf('multiple-input-label %s-label', $this->getField()->getType())
@@ -99,6 +109,7 @@ class MultipleInputFieldRenderer extends AbstractFieldRenderer {
 				HtmlUtilities::attributes($inputLabelAttributes),
 				$option['label']
 			);
+			// Add the inner wrapper.
 			$optionWrapperAttributes = $this->getRenderOption(self::RENDER_OPTION_KEY_INNER_WRAPPER_ATTRIBUTES);
 			$optionWrapperAttributes['id'] = sprintf(
 				'%s-container',
@@ -121,6 +132,7 @@ class MultipleInputFieldRenderer extends AbstractFieldRenderer {
 				$this->getRenderOption(self::RENDER_OPTION_KEY_INNER_WRAPPER_ELEMENT_NAME)
 			);
 		}
+		// Add the outer container element end tag.
 		$output[] = sprintf(
 			'</%s>',
 			$this->getRenderOption(self::RENDER_OPTION_KEY_OUTER_WRAPPER_ELEMENT_NAME)
@@ -145,16 +157,7 @@ class MultipleInputFieldRenderer extends AbstractFieldRenderer {
 				self::RENDER_OPTION_KEY_INNER_WRAPPER_ID_PREFIX => 'value',
 				self::RENDER_OPTION_KEY_LABELS_FIRST => false
 			),
-			ArrayUtilities::combine(
-				parent::normaliseRenderOptions(),
-				array(
-					self::RENDER_OPTION_KEY_ATTRIBUTES => array(
-						'type' => $this->getField()->getType(),
-						'name' => $this->getField()->getName(),
-						'class' => $this->getField()->getType()
-					)
-				)
-			)
+			parent::normaliseRenderOptions()
 		);
 	}
 
