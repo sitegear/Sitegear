@@ -156,7 +156,6 @@ class UserIntegrationModule extends AbstractUrlMountableModule {
 	public function selectorComponent(ViewInterface $view, Request $request) {
 		LoggerRegistry::debug('UserIntegrationModule::selectorComponent');
 		$links = array();
-		// TODO Configurable
 		$routeLabels = $this->config('components.selector.route-labels');
 		foreach ($routeLabels as $route => $label) {
 			$links[] = array(
