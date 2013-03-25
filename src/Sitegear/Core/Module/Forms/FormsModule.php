@@ -136,6 +136,7 @@ class FormsModule extends AbstractUrlMountableModule {
 		$response = null;
 		$currentStep = $this->getCurrentStep($formKey);
 		$availableSteps = $this->getAvailableSteps($formKey);
+		/** @var StepInterface $step Incorrect warning mark in PhpStorm 6.0 */
 		$step = $form->getStep($currentStep);
 		$fields = $step->getReferencedFields();
 		$values = $form->getMethod() === 'GET' ? $request->query->all() : $request->request->all();
