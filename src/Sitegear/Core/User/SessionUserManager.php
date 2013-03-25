@@ -28,6 +28,11 @@ class SessionUserManager extends AbstractUserManager {
 	 */
 	const SESSION_KEY_USER_EMAIL = 'SitegearUser';
 
+	/**
+	 * Session key for storing a flag for logging in as guest.
+	 */
+	const SESSION_KEY_USER_IS_GUEST = 'SitegearUserIsGuest';
+
 	//-- Attributes --------------------
 
 	/**
@@ -58,7 +63,14 @@ class SessionUserManager extends AbstractUserManager {
 	 * {@inheritDoc}
 	 */
 	public function isLoggedIn() {
-		return !is_null($this->session->get(self::SESSION_KEY_USER_EMAIL));
+		return !is_null($this->session->get(self::SESSION_KEY_USER_EMAIL)) || $this->session->get(self::SESSION_KEY_USER_IS_GUEST);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function isLoggedInAsGuest() {
+		return $this->session->get(self::SESSION_KEY_USER_IS_GUEST);
 	}
 
 	/**
@@ -72,11 +84,12 @@ class SessionUserManager extends AbstractUserManager {
 	 * {@inheritDoc}
 	 */
 	public function login($email, array $credentials) {
-		LoggerRegistry::debug('SessionUserManager login');
+		LoggerRegistry::debug('SessionUserManager::login');
 		$result = false;
 		if (!is_null($this->getAuthenticator()->checkCredentials($email, $credentials))) {
 			LoggerRegistry::debug('SessionUserManager login successful');
 			$this->session->set(self::SESSION_KEY_USER_EMAIL, $email);
+			$this->session->remove(self::SESSION_KEY_USER_IS_GUEST);
 			$result = true;
 		}
 		return $result;
@@ -85,9 +98,19 @@ class SessionUserManager extends AbstractUserManager {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function logout() {
-		LoggerRegistry::debug('SessionUserManager logout');
+	public function guestLogin() {
+		LoggerRegistry::debug('SessionUserManager::guestLogin');
+		$this->session->set(self::SESSION_KEY_USER_IS_GUEST, true);
 		$this->session->remove(self::SESSION_KEY_USER_EMAIL);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function logout() {
+		LoggerRegistry::debug('SessionUserManager::logout');
+		$this->session->remove(self::SESSION_KEY_USER_EMAIL);
+		$this->session->remove(self::SESSION_KEY_USER_IS_GUEST);
 		return true;
 	}
 

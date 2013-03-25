@@ -95,10 +95,10 @@ class CustomerModule extends AbstractUrlMountableModule {
 	 */
 	public function indexController(ViewInterface $view, Request $request) {
 		LoggerRegistry::debug('CustomerModule::indexController');
-		$this->applyConfigToView('pages.index', $view);
 		if (!$this->getEngine()->getUserManager()->isLoggedIn()) {
 			return new RedirectResponse($this->getEngine()->userIntegration()->getAuthenticationLinkUrl('login', $request->getUri()));
 		}
+		$this->applyConfigToView('pages.index', $view);
 		$view['account'] = $this->getLoggedInUserAccount();
 		$view['fields'] = $this->getRepository('Field')->findAll();
 		return null;
@@ -439,12 +439,15 @@ class CustomerModule extends AbstractUrlMountableModule {
 	 */
 	public function getLoggedInUserAccount() {
 		LoggerRegistry::debug('CustomerModule::getLoggedInUserAccount');
+		$account = null;
 		$email = $this->getEngine()->getUserManager()->getLoggedInUserEmail();
-		$account = $this->getRepository('Account')->findOneBy(array( 'email' => 'ben@leftclick.com.au' ));
-		if (is_null($account)) {
-			$account = new Account();
-			$account->setEmail($email);
-			$this->getEngine()->doctrine()->getEntityManager()->persist($account);
+		if (!is_null($email)) {
+			$account = $this->getRepository('Account')->findOneBy(array( 'email' => 'ben@leftclick.com.au' ));
+			if (is_null($account)) {
+				$account = new Account();
+				$account->setEmail($email);
+				$this->getEngine()->doctrine()->getEntityManager()->persist($account);
+			}
 		}
 		return $account;
 	}

@@ -34,12 +34,24 @@ interface UserManagerInterface {
 	public function setSession($session);
 
 	/**
+	 * Check if a user is logged in, including guest logins.
+	 *
 	 * @return boolean
 	 */
 	public function isLoggedIn();
 
 	/**
-	 * @return string
+	 * Check if a user is logged in as guest (only).
+	 *
+	 * @return boolean
+	 */
+	public function isLoggedInAsGuest();
+
+	/**
+	 * Get the logged in user's email address.  This will be null if there is no user logged in or the user is logged
+	 * in as guest.
+	 *
+	 * @return string|null
 	 */
 	public function getLoggedInUserEmail();
 
@@ -52,6 +64,12 @@ interface UserManagerInterface {
 	 * @return boolean Whether or not login was successful.
 	 */
 	public function login($email, array $credentials);
+
+	/**
+	 * Mark the user logged in as a guest.  This means that isLoggedIn() will return true, but getLoggedInUserEmail()
+	 * will return null.
+	 */
+	public function guestLogin();
 
 	/**
 	 * Ensure the user is logged out.

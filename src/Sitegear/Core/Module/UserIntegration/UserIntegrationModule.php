@@ -180,7 +180,7 @@ class UserIntegrationModule extends AbstractUrlMountableModule {
 		LoggerRegistry::debug('UserIntegrationModule::authenticationLinkComponent');
 		$this->applyConfigToView('components.authentication-link', $view);
 		if ($this->getEngine()->getUserManager()->isLoggedIn()) {
-			// User is logged in, so we want a logout link
+			// User is logged in, so we want a logout link (not a link if guest user)
 			$view['customer-profile-url'] = $this->getEngine()->getModuleMountedUrl('customer');
 			$view['logout-url'] = $this->getAuthenticationLinkUrl('logout', $request->getUri());
 			$view['user-email'] = $this->getEngine()->getUserManager()->getLoggedInUserEmail();
@@ -221,6 +221,7 @@ class UserIntegrationModule extends AbstractUrlMountableModule {
 	 * @throws \RuntimeException
 	 */
 	public function login($email, array $credentials) {
+		LoggerRegistry::debug('UserIntegrationModule::login()');
 		if (!$this->getEngine()->getUserManager()->login($email, $credentials)) {
 			throw new \RuntimeException($this->config('errors.login-failure'));
 		}
@@ -232,6 +233,7 @@ class UserIntegrationModule extends AbstractUrlMountableModule {
 	 * @throws \RuntimeException
 	 */
 	public function logout() {
+		LoggerRegistry::debug('UserIntegrationModule::logout()');
 		if (!$this->getEngine()->getUserManager()->logout()) {
 			throw new \RuntimeException($this->config('errors.logout-failure'));
 		}
@@ -244,6 +246,7 @@ class UserIntegrationModule extends AbstractUrlMountableModule {
 	 * @param array $credentials
 	 */
 	public function signUp($email, $credentials) {
+		LoggerRegistry::debug('UserIntegrationModule::signUp()');
 		unset($credentials['captcha']);
 		foreach ($credentials as $key => $value) {
 			if (substr($key, 0, 8) === 'confirm-') {
@@ -259,6 +262,7 @@ class UserIntegrationModule extends AbstractUrlMountableModule {
 	 * @param string $email
 	 */
 	public function recoverLogin($email) {
+		LoggerRegistry::debug('UserIntegrationModule::recoverLogin()');
 		// TODO Implement me
 	}
 
@@ -267,7 +271,8 @@ class UserIntegrationModule extends AbstractUrlMountableModule {
 	 * user to proceed without an account.
 	 */
 	public function guestLogin() {
-		// TODO Implement me
+		LoggerRegistry::debug('UserIntegrationModule::guestLogin()');
+		$this->getEngine()->getUserManager()->guestLogin();
 	}
 
 	/**
@@ -277,6 +282,7 @@ class UserIntegrationModule extends AbstractUrlMountableModule {
 	 * @param ExecutionContextInterface $context
 	 */
 	public function validateEmailAvailable($email, ExecutionContextInterface $context) {
+		LoggerRegistry::debug('UserIntegrationModule::validateEmailAvailable()');
 		if ($this->getEngine()->getUserManager()->getStorage()->hasUser($email)) {
 			$context->addViolation($this->config('errors.email-already-registered'));
 		}

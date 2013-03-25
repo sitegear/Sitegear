@@ -33,14 +33,20 @@ return array(
 		'authentication-link' => array(
 
 			/**
-			 * Message to show when logged in.  The first placeholder is the username, and the second placeholder is the
-			 * URL for the logout link.  Tokens:
+			 * Message to show when logged in as a non-guest.  Tokens:
 			 *
 			 * %customerProfileUrl% -- the URL of the page displaying the user's customer profile.
 			 * %userEmail% -- the email address of the logged in user.
 			 * %logoutUrl% -- the URL of the logout action.
 			 */
 			'logged-in-message' => 'Logged in as <a href="%customerProfileUrl%">%userEmail%</a>. <a href="%logoutUrl%" class="logout-link">Logout</a>',
+
+			/**
+			 * Message to show when logged in as a guest.  Tokens:
+			 *
+			 * %logoutUrl% -- the URL of the logout action.
+			 */
+			'logged-in-as-guest-message' => 'Logged in as guest. <a href="%logoutUrl%" class="logout-link">Logout</a>',
 
 			/**
 			 * Message to show when not logged in.  The first (only) placeholder is the URL for the login link.  Tokens:

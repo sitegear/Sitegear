@@ -2,11 +2,20 @@
 /**
  * @var \Sitegear\Core\View\View $view
  */
-echo \Sitegear\Util\TokenUtilities::replaceTokens(
-	$view['logged-in-message'],
-	array(
-		'customerProfileUrl' => $view['customer-profile-url'],
-		'userEmail' => $view['user-email'],
-		'logoutUrl' => $view['logout-url']
-	)
-);
+if (is_null($view['user-email'])) {
+	echo \Sitegear\Util\TokenUtilities::replaceTokens(
+		$view['logged-in-as-guest-message'],
+		array(
+			'logoutUrl' => $view['logout-url']
+		)
+	);
+} else {
+	echo \Sitegear\Util\TokenUtilities::replaceTokens(
+		$view['logged-in-message'],
+		array(
+			'customerProfileUrl' => $view['customer-profile-url'],
+			'userEmail' => $view['user-email'],
+			'logoutUrl' => $view['logout-url']
+		)
+	);
+}

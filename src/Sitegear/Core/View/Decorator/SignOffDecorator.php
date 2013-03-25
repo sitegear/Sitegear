@@ -36,7 +36,7 @@ class SignOffDecorator implements DecoratorInterface {
 			'<!-- %s%s :: %s :: %s -->%s<!-- %s :: %s :: %s -->',
 			$request->getUri(),
 			is_null($view->getEngine()->getEnvironmentInfo()->getEnvironment()) ? '' : sprintf(' :: %s environment', $view->getEngine()->getEnvironmentInfo()->getEnvironment()),
-			$userManager->isLoggedIn() ? 'logged in as ' . $userManager->getLoggedInUserEmail() : 'guest user',
+			$userManager->isLoggedIn() ? 'logged in as ' . ($userManager->getLoggedInUserEmail() ?: 'guest') : 'not logged in',
 			$renderTime,
 			PHP_EOL,
 			$view->getEngine()->getSitegearInfo()->getSitegearHomepage(),
