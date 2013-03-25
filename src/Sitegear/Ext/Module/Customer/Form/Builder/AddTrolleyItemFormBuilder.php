@@ -53,13 +53,13 @@ class AddTrolleyItemFormBuilder extends AbstractFormsModuleFormBuilder {
 		}
 		// Add the hidden fields.
 		// TODO Make 'module-name', 'type' and 'id' a single hidden field with encoded value
-		$moduleField = new InputField('module', $formDefinition['module-name']);
+		$moduleField = new InputField($form, 'module', $formDefinition['module-name']);
 		$moduleField->setSetting('type', 'hidden');
 		$form->addField($moduleField);
-		$typeField = new InputField('type', $formDefinition['type']);
+		$typeField = new InputField($form, 'type', $formDefinition['type']);
 		$typeField->setSetting('type', 'hidden');
 		$form->addField($typeField);
-		$idField = new InputField('id', $formDefinition['id']);
+		$idField = new InputField($form, 'id', $formDefinition['id']);
 		$idField->setSetting('type', 'hidden');
 		$form->addField($idField);
 		// Create the array of field names for references used by the single step of the form.
@@ -69,13 +69,13 @@ class AddTrolleyItemFormBuilder extends AbstractFormsModuleFormBuilder {
 			$name = sprintf('attr_%s', $attribute['id']);
 			$constraints = array( new ConditionalConstraint(new NotBlank()) );
 			// TODO Other field types - MultiInputField with radios and checkboxes
-			$attributeField = new SelectField($name, null, $attribute['label'], null, $constraints);
+			$attributeField = new SelectField($form, $name, null, $attribute['label'], null, $constraints);
 			$attributeField->setSetting('values', $this->buildAddTrolleyItemFormAttributeFieldValues($attribute, $formDefinition['labels']['no-value-option'], $formDefinition['labels']['value-format']));
 			$form->addField($attributeField);
 			$fields[$name] = true;
 		}
 		// Add the quantity field, which is a standard text field with a label.
-		$quantityField = new InputField('quantity', 1, $formDefinition['labels']['quantity-field']);
+		$quantityField = new InputField($form, 'quantity', 1, $formDefinition['labels']['quantity-field']);
 		$quantityField->addConditionalConstraint(new ConditionalConstraint(new NotBlank()));
 		$quantityField->addConditionalConstraint(new ConditionalConstraint(new Range(array( 'min' => 1 ))));
 		$form->addField($quantityField);

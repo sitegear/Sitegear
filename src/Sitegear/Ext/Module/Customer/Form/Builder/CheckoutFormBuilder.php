@@ -48,7 +48,7 @@ class CheckoutFormBuilder extends FormBuilder {
 		);
 		// Create fields.
 		foreach ($formDefinition['fields'] as $name => $fieldDefinition) {
-			$field = $this->buildField($name, $fieldDefinition);
+			$field = $this->buildField($form, $name, $fieldDefinition);
 			if (!is_null($fieldValue = $this->account->getNamedFieldValue($name))) {
 				$field->setDefaultValue($fieldValue->getValue());
 			}
