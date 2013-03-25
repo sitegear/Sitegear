@@ -41,7 +41,7 @@
 			"processors": [
 				{
 					"module": "user-integration",
-					"method": "recoverLogin",
+					"method": "recover-login",
 					"arguments": [
 						"{{ data:email }}"
 					],
