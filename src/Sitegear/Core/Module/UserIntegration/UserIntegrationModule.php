@@ -18,6 +18,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\Route;
+use Symfony\Component\Validator\ExecutionContextInterface;
 
 /**
  * This module handles requests for all authentication-related commands.
@@ -243,7 +244,13 @@ class UserIntegrationModule extends AbstractUrlMountableModule {
 	 * @param array $credentials
 	 */
 	public function signUp($email, $credentials) {
-		// TODO Implement me
+		unset($credentials['captcha']);
+		foreach ($credentials as $key => $value) {
+			if (substr($key, 0, 8) === 'confirm-') {
+				unset($credentials[$key]);
+			}
+		}
+		$this->getEngine()->getUserManager()->getStorage()->createUser($email, $credentials);
 	}
 
 	/**
@@ -261,6 +268,18 @@ class UserIntegrationModule extends AbstractUrlMountableModule {
 	 */
 	public function guestLogin() {
 		// TODO Implement me
+	}
+
+	/**
+	 * Determine whether the given email is available (i.e. a user does not already exist with the given email).
+	 *
+	 * @param string $email
+	 * @param ExecutionContextInterface $context
+	 */
+	public function validateEmailAvailable($email, ExecutionContextInterface $context) {
+		if ($this->getEngine()->getUserManager()->getStorage()->hasUser($email)) {
+			$context->addViolation($this->config('errors.email-already-registered'));
+		}
 	}
 
 }

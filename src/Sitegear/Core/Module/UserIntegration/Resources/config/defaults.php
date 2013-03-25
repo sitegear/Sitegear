@@ -147,6 +147,11 @@ return array(
 		/**
 		 * Error message when the logout() method returns false to indicate failure.
 		 */
-		'logout-failure' => 'Something went wrong logging you out, please try again'
+		'logout-failure' => 'Something went wrong logging you out, please try again',
+
+		/**
+		 * Error message when a user attempts to sign up with an email address that is already registered.
+		 */
+		'email-already-registered' => 'That email address is already registered'
 	)
 );

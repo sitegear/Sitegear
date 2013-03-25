@@ -13,6 +13,14 @@
 				},
 				{
 					"name": "email"
+				},
+				{
+					"callback": "module",
+					"module": "user-integration",
+					"method": "validate-email-available",
+					"arguments": [
+						"{{ data:email }}"
+					]
 				}
 			]
 		},
