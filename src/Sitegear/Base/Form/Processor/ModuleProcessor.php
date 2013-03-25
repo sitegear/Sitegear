@@ -10,6 +10,7 @@ namespace Sitegear\Base\Form\Processor;
 
 use Sitegear\Base\Module\ModuleInterface;
 use Sitegear\Util\ArrayUtilities;
+use Sitegear\Util\NameUtilities;
 
 /**
  * FormProcessorInterface implementation which calls a specified method in a specified module object.
@@ -40,7 +41,7 @@ class ModuleProcessor extends AbstractFormProcessor {
 	public function __construct(ModuleInterface $module, $methodName, array $argumentDefaults=null, array $exceptionFieldNames=null, $exceptionAction=null) {
 		parent::__construct($argumentDefaults, $exceptionFieldNames, $exceptionAction);
 		$this->module = $module;
-		$this->methodName = $methodName;
+		$this->methodName = NameUtilities::convertToCamelCase($methodName);
 	}
 
 	//-- FormProcessorInterface Methods --------------------
