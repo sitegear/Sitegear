@@ -152,7 +152,7 @@ class ConfigLoader {
 		} elseif ($config instanceof \ArrayObject) {
 			$config = $config->getArrayCopy();
 		} elseif ($config instanceof ConfigContainerInterface) {
-			$config = $config->get('');
+			$config = $config->all();
 		} elseif (!is_array($config)) {
 			throw new \InvalidArgumentException(sprintf('Unhandled configuration type cannot be normalised [%s]', TypeUtilities::describe($config)));
 		}

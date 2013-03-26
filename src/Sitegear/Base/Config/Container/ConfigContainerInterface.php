@@ -59,4 +59,11 @@ interface ConfigContainerInterface {
 	 */
 	public function get($key, $default=null);
 
+	/**
+	 * Get all configuration items as an array structure.
+	 *
+	 * @return array Top-level configuration array.
+	 */
+	public function all();
+
 }

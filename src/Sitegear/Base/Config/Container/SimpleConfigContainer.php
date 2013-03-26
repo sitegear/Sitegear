@@ -94,6 +94,13 @@ class SimpleConfigContainer implements ConfigContainerInterface {
 		return $value ? $this->applyProcessors($value) : $default;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	public function all() {
+		return $this->get('', array());
+	}
+
 	//-- Internal Methods --------------------
 
 	/**
