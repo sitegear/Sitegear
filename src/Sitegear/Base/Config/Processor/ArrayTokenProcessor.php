@@ -15,6 +15,10 @@ namespace Sitegear\Base\Config\Processor;
  */
 class ArrayTokenProcessor extends AbstractPrefixedTokenProcessor {
 
+	//-- Constants --------------------
+
+	const TOKEN_ALL_DATA = '*';
+
 	//-- Attributes --------------------
 
 	/**
@@ -59,7 +63,7 @@ class ArrayTokenProcessor extends AbstractPrefixedTokenProcessor {
 	 * {@inheritDoc}
 	 */
 	protected function getTokenResultReplacement($token) {
-		if ($token === '*') {
+		if ($token === self::TOKEN_ALL_DATA) {
 			return $this->array;
 		} else {
 			return isset($this->array[$token]) ? $this->array[$token] : null;
