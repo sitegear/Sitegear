@@ -15,7 +15,7 @@ return call_user_func(function() {
 	$paths = array(
 		dirname(__DIR__) . '/vendor/autoload.php',
 		dirname(dirname(dirname(__DIR__))) . '/autoload.php',
-		dirname(dirname(dirname(__DIR__))) . '/workspace/testdrive.sitegear.org/vendor/autoload.ph'
+		dirname(dirname(dirname(__DIR__))) . '/workspace/testdrive.sitegear.org/vendor/autoload.php'
 	);
 
 	// Get the loader from the first valid path.
