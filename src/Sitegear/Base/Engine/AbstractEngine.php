@@ -167,9 +167,9 @@ abstract class AbstractEngine implements EngineInterface {
 				$module->mount('/' . trim($urlMapEntry['root'], '/'));
 				$routes = $module->getRoutes();
 				if (!empty($routes)) {
-					$baseRouteName = NameUtilities::convertToDashedLower($urlMapEntry['module']);
+					$routeNamespace = NameUtilities::convertToDashedLower($urlMapEntry['module']);
 					foreach ($routes as $routeName => $routeObject) {
-						$this->compiledRouteCollection->add(sprintf('%s:%s', $baseRouteName, $routeName), $routeObject);
+						$this->compiledRouteCollection->add(sprintf('%s:%s', $routeNamespace, $routeName), $routeObject);
 					}
 				}
 			}
