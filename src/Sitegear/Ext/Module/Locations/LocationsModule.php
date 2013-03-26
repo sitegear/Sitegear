@@ -11,6 +11,7 @@ namespace Sitegear\Ext\Module\Locations;
 use Sitegear\Base\Module\AbstractUrlMountableModule;
 use Sitegear\Base\Resources\ResourceLocations;
 use Sitegear\Base\View\ViewInterface;
+use Sitegear\Ext\Module\Locations\Repository\ItemRepository;
 use Sitegear\Util\TokenUtilities;
 use Sitegear\Util\LoggerRegistry;
 
@@ -172,7 +173,9 @@ class LocationsModule extends AbstractUrlMountableModule {
 		$radius = intval($radius);
 		$view['query'] = $query;
 		$view['radius'] = $radius;
-		$view['items'] = new ArrayCollection($radius > 0 ? $this->getRepository('Item')->findInRadius($location, $radius) : array());
+		/** @var ItemRepository $itemRepository */
+		$itemRepository = $this->getRepository('Item');
+		$view['items'] = new ArrayCollection($radius > 0 ? $itemRepository->findInRadius($location, $radius) : array());
 		$view['results-description'] = TokenUtilities::replaceTokens($view['results-description-format'], array( 'query' => $query, 'radius' => number_format($radius) ));
 		$view['no-items'] = 'no-items-search';
 		return null;
