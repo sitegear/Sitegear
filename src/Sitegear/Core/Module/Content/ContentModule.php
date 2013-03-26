@@ -144,7 +144,7 @@ class ContentModule extends AbstractUrlMountableModule {
 					$name = preg_replace('/\..*$/', '', $entry);
 					if (!preg_match('/^error-\d+$/', $name)) {
 						$route = sprintf('%s%s', $path, $name);
-						$pattern = $this->getMountedUrl() . ($name === 'index' ? rtrim($path, '/') : $route);
+						$pattern = sprintf('%s%s', $this->getMountedUrl(), ($name === 'index' ? rtrim($path, '/') : $route));
 						$collection->add($route, new Route($pattern));
 						LoggerRegistry::debug(sprintf('ContentModule generated route "%s" with pattern "%s"', $route, $pattern));
 					}
