@@ -16,8 +16,6 @@ use Sitegear\Util\LoggerRegistry;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\Routing\RouteCollection;
-use Symfony\Component\Routing\Route;
 use Symfony\Component\Validator\ExecutionContextInterface;
 
 /**
@@ -65,28 +63,6 @@ class UserIntegrationModule extends AbstractUrlMountableModule {
 			$this->getEngine()->getSiteInfo()->getSitePath(ResourceLocations::RESOURCE_LOCATION_SITE, $this, $filename),
 			$this->getEngine()->getSiteInfo()->getSitePath(ResourceLocations::RESOURCE_LOCATION_MODULE, $this, $filename)
 		));
-	}
-
-	//-- MountableModuleInterface Methods --------------------
-
-	/**
-	 * {@inheritDoc}
-	 */
-	protected function buildRoutes() {
-		$routes = new RouteCollection();
-		$routes->add('login', new Route(sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.login'))));
-		$routes->add('logout', new Route(sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.logout'))));
-		$routes->add('sign-up', new Route(sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.sign-up'))));
-		$routes->add('guest-login', new Route(sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.guest-login'))));
-		$routes->add('recover-login', new Route(sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.recover-login'))));
-		return $routes;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	protected function buildNavigationData($mode) {
-		return array();
 	}
 
 	//-- Page Controller Methods --------------------

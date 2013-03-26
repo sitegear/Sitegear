@@ -18,8 +18,6 @@ use Sitegear\Util\LoggerRegistry;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Routing\Route;
-use Symfony\Component\Routing\RouteCollection;
 
 use Doctrine\ORM\NoResultException;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -64,18 +62,6 @@ class LocationsModule extends AbstractUrlMountableModule {
 	}
 
 	//-- AbstractUrlMountableModule Methods --------------------
-
-	/**
-	 * {@inheritDoc}
-	 */
-	protected function buildRoutes() {
-		$routes = new RouteCollection();
-		$routes->add('index', new Route($this->getMountedUrl()));
-		$routes->add('region', new Route(sprintf('%s/%s/{slug}', $this->getMountedUrl(), $this->config('routes.region')), array(), array( 'slug' => '.+' )));
-		$routes->add('item', new Route(sprintf('%s/%s/{slug}', $this->getMountedUrl(), $this->config('routes.item')), array(), array( 'slug' => '.+' )));
-		$routes->add('search', new Route(sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.search'))));
-		return $routes;
-	}
 
 	/**
 	 * {@inheritDoc}

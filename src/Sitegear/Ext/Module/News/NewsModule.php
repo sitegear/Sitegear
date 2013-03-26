@@ -14,8 +14,6 @@ use Sitegear\Util\TokenUtilities;
 use Sitegear\Util\LoggerRegistry;
 
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\RouteCollection;
-use Symfony\Component\Routing\Route;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 use Doctrine\ORM\NoResultException;
@@ -55,16 +53,6 @@ class NewsModule extends AbstractUrlMountableModule {
 	/**
 	 * {@inheritDoc}
 	 */
-	protected function buildRoutes() {
-		$routes = new RouteCollection();
-		$routes->add('index', new Route($this->getMountedUrl()));
-		$routes->add('item', new Route(sprintf('%s/{slug}', $this->getMountedUrl()), array(), array( 'slug' => '.+' )));
-		return $routes;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
 	protected function buildNavigationData($mode) {
 		$result = array();
 		$itemLimit = intval($this->config('navigation.item-limit'));
@@ -75,7 +63,7 @@ class NewsModule extends AbstractUrlMountableModule {
 				'datePublished' => $item->getDatePublished()->format($dateFormat)
 			);
 			$result[] = array(
-				'url' => sprintf('%s/%s', $this->getMountedUrl(), $item->getUrlPath()),
+				'url' => sprintf('%s/item/%s', $this->getMountedUrl(), $item->getUrlPath()),
 				'label' => TokenUtilities::replaceTokens($this->config('navigation.item-link.label'), $values),
 				'tooltip' => TokenUtilities::replaceTokens($this->config('navigation.item-link.tooltip'), $values)
 			);
@@ -167,7 +155,7 @@ class NewsModule extends AbstractUrlMountableModule {
 	private function applyDefaults(ViewInterface $view) {
 		$this->applyConfigToView('common', $view);
 		$view['index-url'] = $this->getMountedUrl();
-		$view['item-base-url'] = $this->getMountedUrl();
+		$view['item-base-url'] = sprintf('%s/item', $this->getMountedUrl());
 	}
 
 	/**

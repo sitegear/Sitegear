@@ -16,8 +16,6 @@ use Sitegear\Util\LoggerRegistry;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Routing\RouteCollection;
-use Symfony\Component\Routing\Route;
 
 use Doctrine\ORM\NoResultException;
 
@@ -128,17 +126,6 @@ class ProductsModule extends AbstractUrlMountableModule implements PurchaseItemP
 	}
 
 	//-- AbstractUrlMountableModule Methods --------------------
-
-	/**
-	 * {@inheritDoc}
-	 */
-	protected function buildRoutes() {
-		$routes = new RouteCollection();
-		$routes->add('index', new Route($this->getMountedUrl()));
-		$routes->add('category', new Route(sprintf('%s/%s/{slug}', $this->getMountedUrl(), $this->config('routes.category')), array(), array( 'slug' => '.+' )));
-		$routes->add('item', new Route(sprintf('%s/%s/{slug}', $this->getMountedUrl(), $this->config('routes.item')), array(), array( 'slug' => '.+' )));
-		return $routes;
-	}
 
 	/**
 	 * {@inheritDoc}

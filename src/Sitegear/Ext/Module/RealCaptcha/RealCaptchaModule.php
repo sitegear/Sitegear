@@ -12,8 +12,6 @@ use Sitegear\Base\Module\AbstractUrlMountableModule;
 
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Route;
-use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Validator\ExecutionContextInterface;
 
 use RealCaptcha\RealCaptcha;
@@ -46,24 +44,6 @@ class RealCaptchaModule extends AbstractUrlMountableModule {
 	 */
 	public function start() {
 		$this->captcha = new RealCaptcha($this->config('real-captcha-options'));
-	}
-
-	//-- Controller Methods --------------------
-
-	/**
-	 * {@inheritDoc}
-	 */
-	protected function buildRoutes() {
-		$routes = new RouteCollection();
-		$routes->add('image', new Route(sprintf('%s/image', $this->getMountedUrl())));
-		return $routes;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	protected function buildNavigationData($mode) {
-		return array();
 	}
 
 	//-- Controller Methods --------------------

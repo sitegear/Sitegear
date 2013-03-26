@@ -53,7 +53,7 @@ return array(
 		 */
 		'script:google:maps' => array(
 			'type' => 'script',
-			'url' => 'sitegear/resources/google/sitegear.google-maps.js',
+			'url' => '{{ engine-config:system.command-url.root }}/{{ engine-config:system.command-url.resources }}/resource/google/sitegear.google-maps.js',
 			'requires' => array(
 				'script:vendor:jquery',
 				'script:sitegear:utilities'

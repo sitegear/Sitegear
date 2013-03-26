@@ -15,8 +15,8 @@ use Sitegear\Util\LoggerRegistry;
 
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\Route;
+use Symfony\Component\Routing\RouteCollection;
 
 /**
  * Serves as a default / fallback implementation of several module interfaces that are required for all engine cycles.
@@ -102,12 +102,13 @@ class ContentModule extends AbstractUrlMountableModule {
 
 	/**
 	 * {@inheritDoc}
+	 *
+	 * Build the routes collection based on the main section view scripts.  Delegates the work to the
+	 * `compileRoutesFromMainSectionViewScripts()` method.
 	 */
 	protected function buildRoutes() {
 		$routes = new RouteCollection();
-		$mainSectionPath = $this->getEngine()->getSiteInfo()->getSitePath(ResourceLocations::RESOURCE_LOCATION_SITE, $this, 'sections/main/');
-		$this->buildRoutesFromMainSectionViewScripts($routes, $mainSectionPath);
-		return $routes;
+		return $this->compileRoutesFromMainSectionViewScripts($routes, $this->getEngine()->getSiteInfo()->getSitePath(ResourceLocations::RESOURCE_LOCATION_SITE, $this, 'sections/main/'));
 	}
 
 	/**
@@ -127,30 +128,30 @@ class ContentModule extends AbstractUrlMountableModule {
 	 * therefore the error pages are only ever used as error pages and cannot be accessed directly by accessing a URL
 	 * like `/error-500` (this will show the 404 error page the same as any other non-existent URL).
 	 *
-	 * @param RouteCollection $collection
+	 * @param RouteCollection $routes Collection to add routes to.
 	 * @param string $mainSectionPath
 	 * @param string $path
 	 *
-	 * @return array
+	 * @return RouteCollection Modified $routes.
 	 */
-	private function buildRoutesFromMainSectionViewScripts(RouteCollection $collection, $mainSectionPath, $path='') {
+	private function compileRoutesFromMainSectionViewScripts(RouteCollection $routes, $mainSectionPath, $path='') {
 		foreach (scandir($mainSectionPath . $path) as $entry) {
 			if ($entry[0] !== '.') {
 				if (is_dir($mainSectionPath . $path . $entry)) {
 					$dirPath = $path . $entry . '/';
-					$this->buildRoutesFromMainSectionViewScripts($collection, $mainSectionPath, $dirPath);
+					$this->compileRoutesFromMainSectionViewScripts($routes, $mainSectionPath, $dirPath);
 				} else {
 					// Skip error pages.
 					$name = preg_replace('/\..*$/', '', $entry);
 					if (!preg_match('/^error-\d+$/', $name)) {
 						$route = sprintf('%s%s', $path, $name);
 						$pattern = sprintf('%s%s', $this->getMountedUrl(), ($name === 'index' ? rtrim($path, '/') : $route));
-						$collection->add($route, new Route($pattern));
-						LoggerRegistry::debug(sprintf('ContentModule generated route "%s" with pattern "%s"', $route, $pattern));
+						$routes->add($route, new Route($pattern));
 					}
 				}
 			}
 		}
+		return $routes;
 	}
 
 	/**

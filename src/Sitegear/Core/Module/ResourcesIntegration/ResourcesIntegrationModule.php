@@ -15,8 +15,6 @@ use Sitegear\Util\LoggerRegistry;
 use Sitegear\Util\NameUtilities;
 
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\RouteCollection;
-use Symfony\Component\Routing\Route;
 use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
 
 /**
@@ -54,6 +52,9 @@ class ResourcesIntegrationModule extends AbstractUrlMountableModule {
 	 */
 	public function resourceController(Request $request) {
 		LoggerRegistry::debug('ResourcesIntegrationModule::resourceController');
+
+		LoggerRegistry::info('location = ' . $request->attributes->get('location') . ', path = ' . $request->attributes->get('path'));
+
 		$location = $request->attributes->get('location');
 		switch ($location) {
 			case self::LOCATION_ATTRIBUTE_ENGINE:
@@ -72,21 +73,4 @@ class ResourcesIntegrationModule extends AbstractUrlMountableModule {
 		return $this->getEngine()->createFileResponse($request, $path);
 	}
 
-	//-- AbstractUrlMountableModule Methods -------------------
-
-	/**
-	 * {@inheritDoc}
-	 */
-	protected function buildRoutes() {
-		$routes = new RouteCollection();
-		$routes->add('resource', new Route($this->getMountedUrl() . '/{location}/{path}', array(), array( 'location' => '.+', 'path' => '.+' )));
-		return $routes;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	protected function buildNavigationData($mode) {
-		return array();
-	}
 }

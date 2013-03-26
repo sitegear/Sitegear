@@ -12,6 +12,13 @@
 return array(
 
 	/**
+	 * Routes configuration.
+	 */
+	'routes' => array(
+		'image' => 'image'
+	),
+
+	/**
 	 * The array of options to pass to the RealCaptcha constructor.
 	 */
 	'real-captcha-options' => array(),

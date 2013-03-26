@@ -384,7 +384,7 @@ return array(
 		 */
 		'script:customer:checkout' => array(
 			'type' => 'script',
-			'url' => 'sitegear/resources/customer/sitegear.checkout.js',
+			'url' => '{{ engine-config:system.command-url.root }}/{{ engine-config:system.command-url.resources }}/resource/customer/sitegear.checkout.js',
 			'requires' => array(
 				'script:vendor:jquery'
 			)

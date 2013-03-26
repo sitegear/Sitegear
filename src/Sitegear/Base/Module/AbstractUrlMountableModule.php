@@ -8,15 +8,25 @@
 
 namespace Sitegear\Base\Module;
 
+use Sitegear\Base\Config\Container\SimpleConfigContainer;
 use Sitegear\Base\Module\AbstractConfigurableModule;
 use Sitegear\Base\Module\MountableModuleInterface;
 use Sitegear\Base\Engine\EngineInterface;
+use Sitegear\Base\Resources\ResourceLocations;
+use Sitegear\Util\LoggerRegistry;
+
+use Symfony\Component\Routing\Route;
+use Symfony\Component\Routing\RouteCollection;
 
 /**
  * Extends AbstractConfigurableModule by providing the basic mounting functionality required by MountableModuleInterface.
  * The route and navigation data generation is left to the sub-class.
  */
 abstract class AbstractUrlMountableModule extends AbstractConfigurableModule implements MountableModuleInterface {
+
+	//-- Constants --------------------
+
+	const FILENAME_ROUTES = 'config/routes.php';
 
 	//-- Attributes --------------------
 
@@ -50,6 +60,7 @@ abstract class AbstractUrlMountableModule extends AbstractConfigurableModule imp
 	 * {@inheritDoc}
 	 */
 	public function mount($mountedUrl=null) {
+		LoggerRegistry::debug(sprintf('%s::mount(%s)', (new \ReflectionClass($this))->getShortName(), $mountedUrl));
 		$this->mountedUrl = trim($mountedUrl, '/');
 	}
 
@@ -57,6 +68,7 @@ abstract class AbstractUrlMountableModule extends AbstractConfigurableModule imp
 	 * {@inheritDoc}
 	 */
 	public function unmount() {
+		LoggerRegistry::debug(sprintf('%s::unmount()', (new \ReflectionClass($this))->getShortName()));
 		$this->mountedUrl = null;
 	}
 
@@ -71,7 +83,7 @@ abstract class AbstractUrlMountableModule extends AbstractConfigurableModule imp
 	 * {@inheritDoc}
 	 */
 	public function getRoutes() {
-		if ($this->routes === null) {
+		if (is_null($this->routes) && !is_null($this->mountedUrl)) {
 			$this->routes = $this->buildRoutes();
 		}
 		return $this->routes;
@@ -90,19 +102,57 @@ abstract class AbstractUrlMountableModule extends AbstractConfigurableModule imp
 	//-- Internal Methods --------------------
 
 	/**
-	 * Build the getRoutes collection for this module.  Called once during mount() so that getRoutes can be reused.
+	 * Build the routes for this module.  This is cached so that this method is only called once per request.
 	 *
-	 * @return \Symfony\Component\Routing\RouteCollection
+	 * @return array
 	 */
-	protected abstract function buildRoutes();
+	protected function buildRoutes() {
+		LoggerRegistry::debug(sprintf('%s::buildRouteCollection(), mounted to "%s"', (new \ReflectionClass($this))->getShortName(), $this->getMountedUrl()));
+		$routes = new RouteCollection();
+		// Check for an index controller and add a route for the module root.
+		if ((new \ReflectionObject($this))->hasMethod('indexController')) {
+			LoggerRegistry::debug('Adding index route');
+			$routes->add('index', new Route($this->getMountedUrl()));
+		}
+		// Load routes from file.
+		$filename = sprintf('%s/%s/%s', $this->getModuleRoot(), ResourceLocations::RESOURCES_DIRECTORY, self::FILENAME_ROUTES);
+		$container = new SimpleConfigContainer($this->getConfigLoader());
+		$container->merge($filename);
+		// Add a route for each record in the routes file.
+		foreach ($container->all() as $name => $parameters) {
+			$defaults = array();
+			$requirements = array();
+			$options = array();
+			$path = sprintf('%s/%s', $this->getMountedUrl(), $this->config(sprintf('routes.%s', $name), $name));
+			foreach ($parameters ?: array() as $parameter) {
+				$parameterName = $parameter['name'];
+				$path = sprintf('%s/{%s}', $path, $parameterName);
+				if (isset($parameter['default'])) {
+					$defaults[$parameterName] = $parameter['default'];
+				}
+				if (isset($parameter['requirements'])) {
+					$requirements[$parameterName] = $parameter['requirements'];
+				}
+				if (isset($parameter['options'])) {
+					$options[$parameterName] = $parameter['options'];
+				}
+			}
+			LoggerRegistry::debug(sprintf('Adding route "%s" with path "%s", defaults [ %s ], requirements [ %s ], options [ %s ]', $name, $path, preg_replace('/\\s+/', ' ', print_r($defaults, true)), preg_replace('/\\s+/', ' ', print_r($requirements, true)), preg_replace('/\\s+/', ' ', print_r($options, true))));
+			$routes->add($name, new Route($path, $defaults, $requirements, $options));
+		}
+		return $routes;
+	}
 
 	/**
 	 * Build the navigation data for this module.  Called once during mount() so that navigation data can be reused.
+	 * This method should be overridden by any module wishing to provide navigation data.
 	 *
 	 * @param integer $mode One of the NAVIGATION_DATA_MODE_* constants.
 	 *
 	 * @return array
 	 */
-	protected abstract function buildNavigationData($mode);
+	protected function buildNavigationData($mode) {
+		return array();
+	}
 
 }

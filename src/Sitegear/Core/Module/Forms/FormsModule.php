@@ -30,8 +30,6 @@ use Sitegear\Util\LoggerRegistry;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\Routing\RouteCollection;
-use Symfony\Component\Routing\Route;
 use Symfony\Component\Validator\Validation;
 use Symfony\Component\Validator\Constraints\Collection;
 
@@ -64,27 +62,8 @@ class FormsModule extends AbstractUrlMountableModule {
 	 * {@inheritDoc}
 	 */
 	public function start() {
+		parent::start();
 		$this->forms = array();
-	}
-
-	//-- AbstractUrlMountableModule Methods --------------------
-
-	/**
-	 * {@inheritDoc}
-	 */
-	protected function buildRoutes() {
-		$routes = new RouteCollection();
-		$routes->add('form', new Route(sprintf('%s/%s/{slug}', $this->getMountedUrl(), $this->config('routes.form')), array(), array( 'slug' => '.+' )));
-		$routes->add('initialise', new Route(sprintf('%s/%s/{slug}', $this->getMountedUrl(), $this->config('routes.initialise')), array(), array( 'slug' => '.+' )));
-		$routes->add('jump', new Route(sprintf('%s/%s/{slug}', $this->getMountedUrl(), $this->config('routes.jump')), array(), array( 'slug' => '.+' )));
-		return $routes;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	protected function buildNavigationData($mode) {
-		return array();
 	}
 
 	//-- Page Controller Methods --------------------
@@ -654,7 +633,7 @@ class FormsModule extends AbstractUrlMountableModule {
 			$config->merge($path);
 			// Build and return the form
 			$builder = new FormBuilder($this, $formKey);
-			return $builder->buildForm($config->get(''));
+			return $builder->buildForm($config->all());
 		}
 		return null;
 	}

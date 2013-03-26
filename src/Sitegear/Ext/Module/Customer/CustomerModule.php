@@ -22,8 +22,6 @@ use Sitegear\Util\LoggerRegistry;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\Routing\RouteCollection;
-use Symfony\Component\Routing\Route;
 
 /**
  * Provides customer management functionality.
@@ -62,30 +60,6 @@ class CustomerModule extends AbstractUrlMountableModule {
 		$this->getEngine()->doctrine()->getEntityManager()->getConfiguration()->addEntityNamespace(self::ENTITY_ALIAS, '\\Sitegear\\Ext\\Module\\Customer\\Model');
 		// Register the checkout form generator.
 		$this->getEngine()->forms()->registerFormGeneratorCallback($this->config('checkout.form-key'), array( $this, 'buildCheckoutForm' ));
-	}
-
-	//-- AbstractUrlMountableModule Methods --------------------
-
-	/**
-	 * {@inheritDoc}
-	 */
-	protected function buildRoutes() {
-		$routes = new RouteCollection();
-		$routes->add('index', new Route($this->getMountedUrl()));
-		$routes->add('add-trolley-item', new Route(sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.add-trolley-item'))));
-		$routes->add('remove-trolley-item', new Route(sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.remove-trolley-item'))));
-		$routes->add('modify-trolley-item', new Route(sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.modify-trolley-item'))));
-		$routes->add('trolley', new Route(sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.trolley'))));
-		$routes->add('checkout', new Route(sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.checkout'))));
-		$routes->add('thank-you', new Route(sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.thank-you'))));
-		return $routes;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	protected function buildNavigationData($mode) {
-		return array();
 	}
 
 	//-- Page Controller Methods --------------------
