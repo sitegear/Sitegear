@@ -111,7 +111,7 @@ abstract class AbstractUrlMountableModule extends AbstractConfigurableModule imp
 		$routes = new RouteCollection();
 		// Check for an index controller and add a route for the module root.
 		if ((new \ReflectionObject($this))->hasMethod('indexController')) {
-			LoggerRegistry::debug('Adding index route');
+//			LoggerRegistry::debug('Adding index route');
 			$routes->add('index', new Route($this->getMountedUrl()));
 		}
 		// Load routes from file.
@@ -137,7 +137,7 @@ abstract class AbstractUrlMountableModule extends AbstractConfigurableModule imp
 					$options[$parameterName] = $parameter['options'];
 				}
 			}
-			LoggerRegistry::debug(sprintf('Adding route "%s" with path "%s", defaults [ %s ], requirements [ %s ], options [ %s ]', $name, $path, preg_replace('/\\s+/', ' ', print_r($defaults, true)), preg_replace('/\\s+/', ' ', print_r($requirements, true)), preg_replace('/\\s+/', ' ', print_r($options, true))));
+//			LoggerRegistry::debug(sprintf('Adding route "%s" with path "%s", defaults [ %s ], requirements [ %s ], options [ %s ]', $name, $path, preg_replace('/\\s+/', ' ', print_r($defaults, true)), preg_replace('/\\s+/', ' ', print_r($requirements, true)), preg_replace('/\\s+/', ' ', print_r($options, true))));
 			$routes->add($name, new Route($path, $defaults, $requirements, $options));
 		}
 		return $routes;
