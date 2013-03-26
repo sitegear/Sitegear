@@ -235,7 +235,7 @@ class Engine extends AbstractConfigurableEngine {
 		if (isset($classMap[$name])) {
 			return $classMap[$name];
 		} else {
-			foreach ($this->config('engine.modules.namespaces') as $namespace) {
+			foreach ($this->config('engine.modules.namespaces', array()) as $namespace) {
 				$prefix = $this->config('engine.modules.class-name-prefix');
 				$suffix = $this->config('engine.modules.class-name-suffix');
 				$className = sprintf('%s\\%s\\%s%s%s', $namespace, $name, $prefix, $name, $suffix);
