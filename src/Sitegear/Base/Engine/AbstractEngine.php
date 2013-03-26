@@ -138,20 +138,10 @@ abstract class AbstractEngine implements EngineInterface {
 		$this->getViewFactory()->getDecoratorRegistry()->registerMap($this->getDecoratorMap());
 		$this->getViewFactory()->getResourcesManager()->registerTypeMap($this->getResourceTypeMap());
 		$this->getViewFactory()->getResourcesManager()->registerMap($this->normaliseResourceMap($this->getResourceMap()));
-		// Setup session storage.
-		if ($request->hasSession()) {
-			$this->session = $request->getSession();
-		} else {
-			$this->session = new Session();
-			$request->setSession($this->session);
-		}
-		$this->session->setName('sitegear');
-		if (!$this->session->isStarted()) {
-			$this->session->start();
-		}
 		// Setup memcached connection.
 		$this->memcache = $this->initMemcache();
-		// Get logged in user.
+		// Setup session storage and user management.
+		$this->session = $this->createSession($request);
 		$this->getUserManager()->setSession($this->session);
 		// Now run the bootstrap sequence.
 		return $this->bootstrap($request);
@@ -407,6 +397,27 @@ abstract class AbstractEngine implements EngineInterface {
 		} catch (\DomainException $e) {
 			throw new \InvalidArgumentException(sprintf('AbstractEngine cannot create module "%s" because it does not exist', $name), 0, $e);
 		}
+	}
+
+	/**
+	 * Initialise the session.
+	 *
+	 * @param Request $request
+	 *
+	 * @return Session
+	 */
+	protected function createSession(Request $request) {
+		if ($request->hasSession()) {
+			$session = $request->getSession();
+		} else {
+			$session = new Session();
+			$request->setSession($session);
+		}
+		$session->setName('sitegear');
+		if (!$session->isStarted()) {
+			$session->start();
+		}
+		return $session;
 	}
 
 	/**
