@@ -23,9 +23,9 @@ class SimpleResourcesManagerTest extends AbstractSitegearTestCase {
 
 	public function testRegisterType() {
 		$this->assertFalse($this->manager->isTypeRegistered('test-type'));
-		$this->manager->registerType('test-type', '<!-- This is a test type [[ url ]] -->');
+		$this->manager->registerType('test-type', '<!-- This is a test type %url% -->');
 		$this->assertTrue($this->manager->isTypeRegistered('test-type'));
-		$this->assertEquals('<!-- This is a test type [[ url ]] -->', $this->manager->getFormat('test-type'));
+		$this->assertEquals('<!-- This is a test type %url% -->', $this->manager->getFormat('test-type'));
 		$this->assertEquals(array( 'test-type' ), $this->manager->types());
 	}
 
@@ -33,13 +33,13 @@ class SimpleResourcesManagerTest extends AbstractSitegearTestCase {
 		$this->assertFalse($this->manager->isTypeRegistered('test-type'));
 		$this->assertFalse($this->manager->isTypeRegistered('test-type-2'));
 		$this->manager->registerTypeMap(array(
-			'test-type' => '<!-- This is a test type [[ url ]] -->',
-			'test-type-2' => '<!-- [[ url ]] -->'
+			'test-type' => '<!-- This is a test type %url% -->',
+			'test-type-2' => '<!-- %url% -->'
 		));
 		$this->assertTrue($this->manager->isTypeRegistered('test-type'));
 		$this->assertTrue($this->manager->isTypeRegistered('test-type-2'));
-		$this->assertEquals('<!-- This is a test type [[ url ]] -->', $this->manager->getFormat('test-type'));
-		$this->assertEquals('<!-- [[ url ]] -->', $this->manager->getFormat('test-type-2'));
+		$this->assertEquals('<!-- This is a test type %url% -->', $this->manager->getFormat('test-type'));
+		$this->assertEquals('<!-- %url% -->', $this->manager->getFormat('test-type-2'));
 		$this->assertEquals(array( 'test-type', 'test-type-2' ), $this->manager->types());
 	}
 
@@ -51,8 +51,8 @@ class SimpleResourcesManagerTest extends AbstractSitegearTestCase {
 	 * @expectedException \LogicException
 	 */
 	public function testRegisterTypeTwice() {
-		$this->manager->registerType('test-error', '<!-- [[ url ]] -->');
-		$this->manager->registerType('test-error', '<!-- [[ url ]] -->');
+		$this->manager->registerType('test-error', '<!-- %url% -->');
+		$this->manager->registerType('test-error', '<!-- %url% -->');
 	}
 
 	/**
@@ -63,7 +63,7 @@ class SimpleResourcesManagerTest extends AbstractSitegearTestCase {
 	}
 
 	public function testRegister() {
-		$this->manager->registerType('test-type', '<!-- This is a test type [[ url ]] -->');
+		$this->manager->registerType('test-type', '<!-- This is a test type %url% -->');
 		$this->manager->register('foo:bar', 'test-type', 'some/url', true);
 		$this->assertTrue($this->manager->isRegistered('foo:bar'));
 		$this->assertEquals('test-type', $this->manager->getType('foo:bar'));
@@ -72,7 +72,7 @@ class SimpleResourcesManagerTest extends AbstractSitegearTestCase {
 	}
 
 	public function testRegisterThenActivate() {
-		$this->manager->registerType('test-type', '<!-- This is a test type [[ url ]] -->');
+		$this->manager->registerType('test-type', '<!-- This is a test type %url% -->');
 		$this->manager->register('foo:bar', 'test-type', 'some/url');
 		$this->assertTrue($this->manager->isRegistered('foo:bar'));
 		$this->assertEquals('test-type', $this->manager->getType('foo:bar'));
@@ -83,7 +83,7 @@ class SimpleResourcesManagerTest extends AbstractSitegearTestCase {
 	}
 
 	public function testActivateDependencies() {
-		$this->manager->registerType('test-type', '<!-- This is a test type [[ url ]] -->');
+		$this->manager->registerType('test-type', '<!-- This is a test type %url% -->');
 		$this->manager->register('foo:bar', 'test-type', 'some/url');
 		$this->manager->register('foo:xyzzy', 'test-type', 'some/url/xyzzy', false, array( 'foo:bar' ));
 		$this->assertFalse($this->manager->isActive('foo:bar'));
@@ -94,7 +94,7 @@ class SimpleResourcesManagerTest extends AbstractSitegearTestCase {
 	}
 
 	public function testRenderShortcut() {
-		$this->manager->registerType('test-type', '<!-- This is a test type [[ url ]] -->');
+		$this->manager->registerType('test-type', '<!-- This is a test type %url% -->');
 		$this->manager->register('foo:bar', 'test-type', 'some/url');
 		$this->manager->register('foo:xyzzy', 'test-type', 'some/url/xyzzy', true, array( 'foo:bar' ));
 		$this->assertEquals($this->manager->render('test-type'), $this->manager->testType());
