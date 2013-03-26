@@ -9,28 +9,28 @@
 namespace Sitegear\Module\Content;
 
 use Sitegear\AbstractSitegearTestCase;
+use Sitegear\Core\Module\Content\ContentModule;
+use Sitegear\TestEngine;
+
+use Symfony\Component\HttpFoundation\Request;
 
 class ContentModuleTest extends AbstractSitegearTestCase {
 
-//	/**
-//	 * @var ContentModule
-//	 */
-//	private $module;
-//
-//	public function setUp() {
-//		parent::setUp();
-//		$this->module = new ContentModule($this->engine);
-//	}
-//
-	public function testDefaultPage() {
-//		/** @noinspection PhpVoidFunctionResultUsedInspection */
-//		$this->assertNull($this->module->defaultPage());
+	/**
+	 * @var ContentModule
+	 */
+	private $module;
+
+	public function setUp() {
+		parent::setUp();
+		$engine = new TestEngine($this->fixtures(), 'test');
+		$engine->configure()->start(Request::create('/'));
+		$this->module = new ContentModule($engine);
+		$this->module->configure()->start();
 	}
-//
-//	public function testHandleException() {
-//		$errorResponse = $this->module->handleException(FlattenException::create(new \Exception('This is a test')));
-//		$this->assertInstanceOf('\Symfony\Component\HttpFoundation\Response', $errorResponse);
-//		$this->assertStringMatchesFormat('%AThis is a test%A', strval($errorResponse));
-//	}
+
+	public function testDefaultController() {
+		$this->assertNull($this->module->defaultController());
+	}
 
 }
