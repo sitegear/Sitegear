@@ -42,6 +42,8 @@ class CheckoutFormBuilder extends FormBuilder {
 			$formDefinition['target-url'],
 			$formDefinition['cancel-url'],
 			null,
+			$this->getFormsModule()->getValues($this->getFormKey()),
+			$this->getFormsModule()->getErrors($this->getFormKey()),
 			array( 'value' => 'Next >' ),
 			null,
 			array( 'value' => '< Back' )
