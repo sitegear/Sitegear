@@ -97,26 +97,21 @@ class GoogleModule extends AbstractConfigurableModule {
 	 */
 	public function geocodeLocation($address) {
 		LoggerRegistry::debug('GoogleModule geocoding location');
-		$key = $this->config('maps.api.key');
-		$url = sprintf('http://%s/maps/geo?output=json&key=%s&q=%s', $this->config('maps.api.host'), $key, urlencode($address));
+		$url = sprintf('http://%s/maps/api/geocode/json?address=%s&sensor=false', $this->config('maps.api.host'), urlencode($address));
 		$data = json_decode(file_get_contents($url), true);
-		if (empty($data)) {
-			throw new \RuntimeException(sprintf('Could not geocode location "%s", empty geocode response', $address));
-		}
-		if (!isset($data['Status']) || !isset($data['Status']['code'])) {
+		if (!isset($data['status'])) {
 			throw new \RuntimeException(sprintf('Could not geocode location "%s", invalid geocode response structure', $address));
 		}
-		if ($data['Status']['code'] != '200') {
-			throw new \RuntimeException(sprintf('Could not geocode location "%s", geocode response status indicates an error', $address));
+		if ($data['status'] !== 'OK') {
+			throw new \RuntimeException(sprintf('Could not geocode location "%s", geocode response status indicates an error: %s', $address, $data['status']));
 		}
-		if (!isset($data['Placemark']) || empty($data['Placemark']) || !is_array($data['Placemark'])) {
-			throw new \RuntimeException(sprintf('Could not geocode location "%s", no location found by geocoder', $address));
+		if (!isset($data['results']) || !isset($data['results'][0]) || !isset($data['results'][0]['geometry']) || !isset($data['results'][0]['geometry']['location'])) {
+			throw new \RuntimeException(sprintf('Could not geocode location "%s", geocode response contains no results', $address));
 		}
-		$coordinates = $data['Placemark'][0]['Point']['coordinates'];
+		$coordinates = $data['results'][0]['geometry']['location'];
 		return array(
-			'latitude' => $coordinates[1],
-			'longitude' => $coordinates[0],
-			'altitude' => $coordinates[2]
+			'latitude' => $coordinates['lat'],
+			'longitude' => $coordinates['lng']
 		);
 	}
 

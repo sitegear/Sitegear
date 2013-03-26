@@ -36,11 +36,10 @@ return array(
 	'maps' => array(
 
 		/**
-		 * API configuration.  Key is normally provided as a view parameter, but may also be defined in configuration.
+		 * API configuration.
 		 */
 		'api' => array(
-			'host' => 'maps.google.com.au',
-			'key' => null,
+			'host' => 'maps.googleapis.com'
 		)
 	),
 
