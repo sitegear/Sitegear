@@ -94,19 +94,26 @@ class UserIntegrationModule extends AbstractUrlMountableModule {
 	/**
 	 * Display the login page.
 	 *
-	 * @param \Sitegear\Base\View\ViewInterface $view
+	 * @param ViewInterface $view
+	 * @param Request $request
+	 *
+	 * @return RedirectResponse|null
 	 */
-	public function loginController(ViewInterface $view) {
+	public function loginController(ViewInterface $view, Request $request) {
 		LoggerRegistry::debug('UserIntegrationModule::loginController');
+		if ($this->getEngine()->getUserManager()->isLoggedIn()) {
+			return new RedirectResponse(UrlUtilities::getReturnUrl($request));
+		}
 		$view['form-key'] = $this->config('login-form.key');
+		return null;
 	}
 
 	/**
 	 * Perform a logout action.
 	 *
-	 * @param \Symfony\Component\HttpFoundation\Request $request
+	 * @param Request $request
 	 *
-	 * @return \Symfony\Component\HttpFoundation\RedirectResponse
+	 * @return RedirectResponse
 	 */
 	public function logoutController(Request $request) {
 		LoggerRegistry::debug('UserIntegrationModule::logoutController');
@@ -118,31 +125,52 @@ class UserIntegrationModule extends AbstractUrlMountableModule {
 	/**
 	 * Display the sign-up page.
 	 *
-	 * @param \Sitegear\Base\View\ViewInterface $view
+	 * @param ViewInterface $view
+	 * @param Request $request
+	 *
+	 * @return RedirectResponse|null
 	 */
-	public function signUpController(ViewInterface $view) {
+	public function signUpController(ViewInterface $view, Request $request) {
 		LoggerRegistry::debug('UserIntegrationModule::signUpController');
+		if ($this->getEngine()->getUserManager()->isLoggedIn()) {
+			return new RedirectResponse(UrlUtilities::getReturnUrl($request));
+		}
 		$view['form-key'] = $this->config('sign-up-form.key');
+		return null;
 	}
 
 	/**
 	 * Display the guest login confirmation page.
 	 *
-	 * @param \Sitegear\Base\View\ViewInterface $view
+	 * @param ViewInterface $view
+	 * @param Request $request
+	 *
+	 * @return RedirectResponse|null
 	 */
-	public function guestLoginController(ViewInterface $view) {
+	public function guestLoginController(ViewInterface $view, Request $request) {
 		LoggerRegistry::debug('UserIntegrationModule::guestLoginController');
+		if ($this->getEngine()->getUserManager()->isLoggedIn()) {
+			return new RedirectResponse(UrlUtilities::getReturnUrl($request));
+		}
 		$view['form-key'] = $this->config('guest-login-form.key');
+		return null;
 	}
 
 	/**
 	 * Display the recover password page.
 	 *
 	 * @param ViewInterface $view
+	 * @param Request $request
+	 *
+	 * @return RedirectResponse|null
 	 */
-	public function recoverLoginController(ViewInterface $view) {
+	public function recoverLoginController(ViewInterface $view, Request $request) {
 		LoggerRegistry::debug('UserIntegrationModule::recoverLoginController');
+		if ($this->getEngine()->getUserManager()->isLoggedIn()) {
+			return new RedirectResponse(UrlUtilities::getReturnUrl($request));
+		}
 		$view['form-key'] = $this->config('recover-login-form.key');
+		return null;
 	}
 
 	//-- Component Target Controller Methods --------------------
