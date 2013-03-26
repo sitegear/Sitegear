@@ -16,7 +16,7 @@ return array(
 	 */
 	'routes' => array(
 		'form' => 'form',
-		'initialise' => 'init',
+		'initialise' => 'initialise',
 		'jump' => 'jump'
 	),
 
