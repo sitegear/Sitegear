@@ -102,7 +102,6 @@ class FormsModule extends AbstractUrlMountableModule {
 		$formKey = $request->attributes->get('slug');
 		$this->resetForm($formKey);
 		$form = $this->getForm($formKey, $request);
-		$formUrl = $request->getUriForPath('/' . $request->query->get('form-url', ''));
 		$data = array();
 		foreach ($request->query->all() as $key => $value) {
 			if ($key !== 'form-url') {
@@ -113,7 +112,7 @@ class FormsModule extends AbstractUrlMountableModule {
 			}
 		}
 		$this->setValues($formKey, $data);
-		return new RedirectResponse($formUrl);
+		return new RedirectResponse($request->getUriForPath('/' . $request->query->get('form-url', '')));
 	}
 
 	/**
@@ -130,6 +129,8 @@ class FormsModule extends AbstractUrlMountableModule {
 		LoggerRegistry::debug('FormsModule::formController()');
 		// Get the form and submission details
 		$formKey = $request->attributes->get('slug');
+		$values = $request->getMethod() === 'GET' ? $request->query->all() : $request->request->all();
+		$this->setValues($formKey, array_merge($this->getValues($formKey), $values));
 		$form = $this->getForm($formKey, $request);
 		$formUrl = $request->getUriForPath('/' . $request->query->get('form-url', ''));
 		$targetUrl = null;
@@ -139,7 +140,6 @@ class FormsModule extends AbstractUrlMountableModule {
 		/** @var StepInterface $step Incorrect warning mark in PhpStorm 6.0 */
 		$step = $form->getStep($currentStep);
 		$fields = $step->getReferencedFields();
-		$values = $form->getMethod() === 'GET' ? $request->query->all() : $request->request->all();
 		$errors = null;
 		$back = isset($values['back']) ? $values['back'] : false;
 		unset($values['back']);
@@ -152,16 +152,14 @@ class FormsModule extends AbstractUrlMountableModule {
 			if (!in_array($nextStep, $availableSteps)) {
 				throw new \OutOfBoundsException(sprintf('FormsModule cannot go to step %d in form "%s": step not available', $nextStep, $formKey));
 			}
-			// Set the values so that they will be present on the next iteration.
-			$this->setValues($formKey, array_merge($this->getValues($formKey), $values));
 		} else {
 			// The regular submit button was clicked, try to go to the next step; run validation and processors.
 			$nextStep = $currentStep + 1;
 			// Validation also sets the values and errors into the session.
 			$errors = $this->validateForm($formKey, $fields, $values);
 			if (empty($errors)) {
-				// No errors, so execute processors.
-				$response = $this->executeProcessors($formKey, $step, $request, $values);
+				// No errors, so execute processors.  Pass in all the values including those from previous steps.
+				$response = $this->executeProcessors($formKey, $step, $request, $this->getValues($formKey));
 				// Reset the 'available steps' list if this is a one-way step.
 				if ($step->isOneWay()) {
 					$availableSteps = array( $nextStep );
@@ -289,7 +287,7 @@ class FormsModule extends AbstractUrlMountableModule {
 	public function registerFormDefinitionFilePath($formKey, $path) {
 		LoggerRegistry::debug(sprintf('FormsModule::registerFormDefinitionFilePath(%s, %s)', $formKey, TypeUtilities::describe($path)));
 		if (isset($this->forms[$formKey])) {
-			if (!is_array($this->forms[$formKey])) {
+			if (isset($this->forms[$formKey]['form'])) {
 				throw new \DomainException(sprintf('FormsModule cannot add form definition path for form key "%s", form already generated', $formKey));
 			} elseif ($this->forms[$formKey]['type'] !== 'definition') {
 				throw new \DomainException(sprintf('FormsModule cannot add form definition path for form key "%s", form already specified with a generator callback', $formKey));
@@ -341,7 +339,7 @@ class FormsModule extends AbstractUrlMountableModule {
 		if (isset($this->forms[$formKey])) {
 			throw new \DomainException(sprintf('FormsModule cannot register form for form key "%s", form already registered', $formKey));
 		}
-		return $this->forms[$formKey] = $form;
+		return $this->forms[$formKey] = array( 'form' => $form );
 	}
 
 	/**
@@ -360,19 +358,19 @@ class FormsModule extends AbstractUrlMountableModule {
 		$formUrl = sprintf('%s%s', ltrim($request->getPathInfo(), '/'), $queryString);
 		if (!isset($this->forms[$formKey])) {
 			$defaultPath = array( $this->getEngine()->getSiteInfo()->getSitePath(ResourceLocations::RESOURCE_LOCATION_SITE, $this, sprintf('%s.json', $formKey)) );
-			$this->forms[$formKey] = $this->loadFormFromDefinitions($formKey, $formUrl, $defaultPath);
-		} elseif (is_array($this->forms[$formKey])) {
+			$this->forms[$formKey] = array( 'form' => $this->loadFormFromDefinitions($formKey, $formUrl, $defaultPath) );
+		} elseif (is_array($this->forms[$formKey]) && !isset($this->forms[$formKey]['form'])) {
 			switch ($this->forms[$formKey]['type']) {
 				case 'definitions':
-					$this->forms[$formKey] = $this->loadFormFromDefinitions($formKey, $formUrl, $this->forms[$formKey]['paths']);
+					$this->forms[$formKey]['form'] = $this->loadFormFromDefinitions($formKey, $formUrl, $this->forms[$formKey]['paths']);
 					break;
 				case 'callback':
-					$this->forms[$formKey] = call_user_func($this->forms[$formKey]['callback']);
+					$this->forms[$formKey]['form'] = call_user_func($this->forms[$formKey]['callback']);
 					break;
 				default: // No other values are ever assigned to 'type'
 			}
 		}
-		return $this->forms[$formKey];
+		return $this->forms[$formKey]['form'];
 	}
 
 	/**
@@ -423,7 +421,6 @@ class FormsModule extends AbstractUrlMountableModule {
 			}
 			$errors[$fieldName][] = $violation->getMessage();
 		}
-		$this->setValues($formKey, array_merge($this->getValues($formKey), $values));
 		$this->setErrors($formKey, $errors);
 		return $errors;
 	}
