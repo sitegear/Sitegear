@@ -92,6 +92,13 @@ abstract class AbstractUrlMountableModule extends AbstractConfigurableModule imp
 	/**
 	 * {@inheritDoc}
 	 */
+	public function getRouteUrl($name, array $parameters=null) {
+		// TODO Implement me
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public function getNavigationData($mode) {
 		if (!isset($this->navigationData[$mode])) {
 			$this->navigationData[$mode] = $this->buildNavigationData($mode);
