@@ -11,7 +11,7 @@
  */
 return call_user_func(function() {
 
-	// Autoloader paths to try.  The last path here is totally non-portable but works in my dev environment so meh.
+	// Autoloader paths to try.  The last path here is specific to a particular dev setup, add your own if necessary.
 	$paths = array(
 		dirname(__DIR__) . '/vendor/autoload.php',
 		dirname(dirname(dirname(__DIR__))) . '/autoload.php',
