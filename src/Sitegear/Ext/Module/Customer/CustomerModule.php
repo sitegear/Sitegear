@@ -227,7 +227,7 @@ class CustomerModule extends AbstractUrlMountableModule {
 		$view['details-url'] = sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.trolley'));
 		$view['checkout-url'] = UrlUtilities::generateLinkWithReturnUrl(
 			// TODO FIXME Hardcoded path
-			sprintf('forms/initialise/%s', $this->config('checkout.form-key')),
+			sprintf('%s/initialise/%s', $this->getEngine()->forms()->getMountedUrl(), $this->config('checkout.form-key')),
 			sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.checkout')),
 			'form-url'
 		);
@@ -248,7 +248,7 @@ class CustomerModule extends AbstractUrlMountableModule {
 		$view['adjustments'] = $this->getAdjustments();
 		$view['checkout-url'] = UrlUtilities::generateLinkWithReturnUrl(
 			// TODO FIXME Hardcoded path
-			sprintf('forms/initialise/%s', $this->config('checkout.form-key')),
+			sprintf('%s/initialise/%s', $this->getEngine()->forms()->getMountedUrl(), $this->config('checkout.form-key')),
 			sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.checkout')),
 			'form-url'
 		);
