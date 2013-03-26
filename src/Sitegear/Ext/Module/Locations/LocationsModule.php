@@ -168,11 +168,9 @@ class LocationsModule extends AbstractUrlMountableModule {
 		if (!is_numeric($radius)) {
 			throw new \InvalidArgumentException(sprintf('LocationsModule received invalid radius in search; must be numeric, "%s" received', $radius));
 		}
-		$query = TokenUtilities::replaceTokens($this->config('search.query-mask'), array( 'query' => $query ));
+		$view['query'] = $query = TokenUtilities::replaceTokens($this->config('search.query-mask'), array( 'query' => $query ));
+		$view['radius'] = $radius = intval($radius);
 		$location = $this->getEngine()->google()->geocodeLocation($query);
-		$radius = intval($radius);
-		$view['query'] = $query;
-		$view['radius'] = $radius;
 		/** @var ItemRepository $itemRepository */
 		$itemRepository = $this->getRepository('Item');
 		$view['items'] = new ArrayCollection($radius > 0 ? $itemRepository->findInRadius($location, $radius) : array());
