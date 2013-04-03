@@ -43,7 +43,7 @@ interface EngineInterface extends ModuleResolverInterface, ModuleContainerInterf
 	/**
 	 * Retrieve a RouteCollection that should be applied at the application level for URLs handled by this Engine.
 	 *
-	 * @return \Symfony\Component\Routing\RouteCollection Object representing this Engine's getRoutes.
+	 * @return \Symfony\Component\Routing\RouteCollection Object representing this Engine's routes.
 	 */
 	public function getRouteMap();
 
