@@ -9,7 +9,6 @@
 namespace Sitegear\Ext\Module\Customer;
 
 use Sitegear\Base\Form\FormInterface;
-use Sitegear\Base\Module\AbstractUrlMountableModule;
 use Sitegear\Base\Module\PurchaseAdjustmentProviderModuleInterface;
 use Sitegear\Base\Module\PurchaseItemProviderModuleInterface;
 use Sitegear\Base\View\ViewInterface;

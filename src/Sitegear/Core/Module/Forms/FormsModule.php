@@ -10,7 +10,6 @@ namespace Sitegear\Core\Module\Forms;
 
 use Sitegear\Base\Form\Renderer\Factory\RendererFactoryInterface;
 use Sitegear\Base\Form\StepInterface;
-use Sitegear\Base\Module\AbstractUrlMountableModule;
 use Sitegear\Base\Config\Processor\ArrayTokenProcessor;
 use Sitegear\Base\Config\Processor\ConfigTokenProcessor;
 use Sitegear\Base\Config\Container\SimpleConfigContainer;

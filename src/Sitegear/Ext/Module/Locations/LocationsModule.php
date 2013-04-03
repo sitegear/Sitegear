@@ -8,7 +8,6 @@
 
 namespace Sitegear\Ext\Module\Locations;
 
-use Sitegear\Base\Module\AbstractUrlMountableModule;
 use Sitegear\Base\Resources\ResourceLocations;
 use Sitegear\Base\View\ViewInterface;
 use Sitegear\Core\Module\AbstractCoreModule;

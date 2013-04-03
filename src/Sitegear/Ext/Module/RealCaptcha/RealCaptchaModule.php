@@ -8,9 +8,8 @@
 
 namespace Sitegear\Ext\Module\RealCaptcha;
 
-use Sitegear\Base\Module\AbstractUrlMountableModule;
-
 use Sitegear\Core\Module\AbstractCoreModule;
+
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\ExecutionContextInterface;

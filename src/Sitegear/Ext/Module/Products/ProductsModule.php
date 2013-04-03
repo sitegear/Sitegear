@@ -8,7 +8,6 @@
 
 namespace Sitegear\Ext\Module\Products;
 
-use Sitegear\Base\Module\AbstractUrlMountableModule;
 use Sitegear\Base\Module\PurchaseItemProviderModuleInterface;
 use Sitegear\Base\View\ViewInterface;
 use Sitegear\Core\Module\AbstractCoreModule;
