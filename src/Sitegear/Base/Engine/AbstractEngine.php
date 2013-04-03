@@ -22,6 +22,7 @@ use Sitegear\Util\LoggerRegistry;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
@@ -143,8 +144,13 @@ abstract class AbstractEngine implements EngineInterface {
 		// Setup session storage and user management.
 		$this->session = $this->createSession($request);
 		$this->getUserManager()->setSession($this->session);
-		// Now run the bootstrap sequence.
-		return $this->bootstrap($request);
+		// Run the bootstrap sequence.
+		$bootstrapResponse = $this->bootstrap($request);
+		// If the bootstrap ended normally, create the route collection.
+		if (is_null($bootstrapResponse)) {
+			$this->compileRouteCollection($request);
+		}
+		return $bootstrapResponse;
 	}
 
 	/**
@@ -160,20 +166,6 @@ abstract class AbstractEngine implements EngineInterface {
 	 * {@inheritDoc}
 	 */
 	public function getRouteMap() {
-		if (is_null($this->compiledRouteCollection)) {
-			$this->compiledRouteCollection = new RouteCollection();
-			foreach ($this->getRawRouteMap() as $urlMapEntry) {
-				$module = $this->getModule($urlMapEntry['module']); /** @var \Sitegear\Base\Module\MountableModuleInterface $module */
-				$module->mount('/' . trim($urlMapEntry['root'], '/'));
-				$routes = $module->getRoutes();
-				if (!empty($routes)) {
-					$routeNamespace = NameUtilities::convertToDashedLower($urlMapEntry['module']);
-					foreach ($routes as $routeName => $routeObject) {
-						$this->compiledRouteCollection->add(sprintf('%s:%s', $routeNamespace, $routeName), $routeObject);
-					}
-				}
-			}
-		}
 		return $this->compiledRouteCollection;
 	}
 
@@ -418,6 +410,28 @@ abstract class AbstractEngine implements EngineInterface {
 			$session->start();
 		}
 		return $session;
+	}
+
+	/**
+	 * Initialise the routing for this Engine.
+	 */
+	protected function compileRouteCollection(Request $request) {
+		// Setup the request context.
+		$context = new RequestContext();
+		$context->fromRequest($request);
+		// Compile the collection.
+		$this->compiledRouteCollection = new RouteCollection();
+		foreach ($this->getRawRouteMap() as $urlMapEntry) {
+			$module = $this->getModule($urlMapEntry['module']); /** @var \Sitegear\Base\Module\MountableModuleInterface $module */
+			$module->mount('/' . trim($urlMapEntry['root'], '/'), $context);
+			$routes = $module->getRoutes();
+			if (!empty($routes)) {
+				$routeNamespace = NameUtilities::convertToDashedLower($urlMapEntry['module']);
+				foreach ($routes as $routeName => $routeObject) {
+					$this->compiledRouteCollection->add(sprintf('%s:%s', $routeNamespace, $routeName), $routeObject);
+				}
+			}
+		}
 	}
 
 	/**

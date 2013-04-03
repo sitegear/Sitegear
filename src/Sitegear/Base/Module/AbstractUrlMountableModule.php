@@ -17,6 +17,8 @@ use Sitegear\Util\LoggerRegistry;
 
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
+use Symfony\Component\Routing\RequestContext;
+use Symfony\Component\Routing\Generator\UrlGenerator;
 
 /**
  * Extends AbstractConfigurableModule by providing the basic mounting functionality required by MountableModuleInterface.
@@ -33,12 +35,22 @@ abstract class AbstractUrlMountableModule extends AbstractConfigurableModule imp
 	/**
 	 * @var string|null
 	 */
+	private $baseUrl;
+
+	/**
+	 * @var string|null
+	 */
 	private $mountedUrl;
 
 	/**
 	 * @var \Symfony\Component\Routing\RouteCollection|null
 	 */
 	private $routes;
+
+	/**
+	 * @var UrlGenerator|null
+	 */
+	private $generator;
 
 	/**
 	 * @var array[]
@@ -49,8 +61,10 @@ abstract class AbstractUrlMountableModule extends AbstractConfigurableModule imp
 
 	public function __construct(EngineInterface $engine) {
 		parent::__construct($engine);
+		$this->baseUrl = null;
 		$this->mountedUrl = null;
 		$this->routes = null;
+		$this->generator = null;
 		$this->navigationData = array();
 	}
 
@@ -59,9 +73,12 @@ abstract class AbstractUrlMountableModule extends AbstractConfigurableModule imp
 	/**
 	 * {@inheritDoc}
 	 */
-	public function mount($mountedUrl=null) {
+	public function mount($mountedUrl=null, RequestContext $context) {
 		LoggerRegistry::debug(sprintf('%s::mount(%s)', (new \ReflectionClass($this))->getShortName(), $mountedUrl));
+		$this->baseUrl = '/' . trim($context->getBaseUrl(), '/') . '/';
 		$this->mountedUrl = trim($mountedUrl, '/');
+		$this->routes = $this->buildRoutes();
+		$this->generator = new UrlGenerator($this->routes, $context);
 	}
 
 	/**
@@ -83,9 +100,6 @@ abstract class AbstractUrlMountableModule extends AbstractConfigurableModule imp
 	 * {@inheritDoc}
 	 */
 	public function getRoutes() {
-		if (is_null($this->routes) && !is_null($this->mountedUrl)) {
-			$this->routes = $this->buildRoutes();
-		}
 		return $this->routes;
 	}
 
@@ -93,7 +107,15 @@ abstract class AbstractUrlMountableModule extends AbstractConfigurableModule imp
 	 * {@inheritDoc}
 	 */
 	public function getRouteUrl($name, array $parameters=null) {
-		// TODO Implement me
+		// TODO Allow configuration between absolute URL, absolute path, network URL, relative path, and path relative to base
+		return UrlGenerator::getRelativePath(
+			$this->baseUrl,
+			$this->generator->generate(
+				$this->config(sprintf('routes.%s', $name)),
+				$parameters ?: array(),
+				UrlGenerator::ABSOLUTE_PATH
+			)
+		);
 	}
 
 	/**
@@ -111,7 +133,7 @@ abstract class AbstractUrlMountableModule extends AbstractConfigurableModule imp
 	/**
 	 * Build the routes for this module.  This is cached so that this method is only called once per request.
 	 *
-	 * @return array
+	 * @return RouteCollection
 	 */
 	protected function buildRoutes() {
 		LoggerRegistry::debug(sprintf('%s::buildRouteCollection(), mounted to "%s"', (new \ReflectionClass($this))->getShortName(), $this->getMountedUrl()));
@@ -158,7 +180,7 @@ abstract class AbstractUrlMountableModule extends AbstractConfigurableModule imp
 	 *
 	 * @return array
 	 */
-	protected function buildNavigationData($mode) {
+	protected function buildNavigationData(/** @noinspection PhpUnusedParameterInspection */ $mode) {
 		return array();
 	}
 

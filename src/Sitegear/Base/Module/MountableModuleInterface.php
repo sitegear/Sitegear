@@ -8,6 +8,9 @@
 
 namespace Sitegear\Base\Module;
 
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\RequestContext;
+
 /**
  * Defines the behaviour of modules that can be mounted to a particular root URL, and provide routing and navigation
  * data for the descendants of that root URL.
@@ -38,10 +41,11 @@ interface MountableModuleInterface extends ModuleInterface {
 	 * Set the root URL assigned to this module.
 	 *
 	 * @param string $mountedUrl The root URL to assign to this module, relative to the site root URL.
+	 * @param RequestContext $context
 	 *
 	 * @throws \LogicException If the module is already mounted.
 	 */
-	public function mount($mountedUrl=null);
+	public function mount($mountedUrl=null, RequestContext $context);
 
 	/**
 	 * Remove the root URL assigned to this module.
