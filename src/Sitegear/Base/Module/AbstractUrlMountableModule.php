@@ -111,7 +111,7 @@ abstract class AbstractUrlMountableModule extends AbstractConfigurableModule imp
 		return UrlGenerator::getRelativePath(
 			$this->baseUrl,
 			$this->generator->generate(
-				$this->config(sprintf('routes.%s', $name)),
+				$this->config(sprintf('routes.%s', $name), $name),
 				$parameters ?: array(),
 				UrlGenerator::ABSOLUTE_PATH
 			)

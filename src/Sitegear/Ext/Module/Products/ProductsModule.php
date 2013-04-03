@@ -12,6 +12,7 @@ use Sitegear\Base\Module\AbstractUrlMountableModule;
 use Sitegear\Base\Module\PurchaseItemProviderModuleInterface;
 use Sitegear\Base\View\ViewInterface;
 use Sitegear\Ext\Module\Products\Model\Attribute;
+use Sitegear\Ext\Module\Products\Model\Item;
 use Sitegear\Util\LoggerRegistry;
 
 use Symfony\Component\HttpFoundation\Request;
@@ -122,7 +123,7 @@ class ProductsModule extends AbstractUrlMountableModule implements PurchaseItemP
 	 * {@inheritDoc}
 	 */
 	public function getPurchaseItemDetailsUrl($type, $id, array $attributeValues) {
-		return sprintf('%s/item/%s', $this->getMountedUrl(), $this->getRepository('Item')->find($id)->getUrlPath());
+		return $this->getRouteUrl('item', array( 'slug' => $this->getRepository('Item')->find($id)->getUrlPath() ));
 	}
 
 	//-- AbstractUrlMountableModule Methods --------------------
@@ -134,8 +135,9 @@ class ProductsModule extends AbstractUrlMountableModule implements PurchaseItemP
 		$data = $this->buildNavigationDataImpl($mode, intval($this->config('navigation.max-depth')));
 		if ($mode === self::NAVIGATION_DATA_MODE_EXPANDED) {
 			foreach ($this->getRepository('Item')->findByActive(true) as $item) {
+				/** @var Item $item */
 				$data[] = array(
-					'url' => sprintf('%s/%s/%s', $this->getMountedUrl(), $this->config('routes.item'), $item->getUrlPath()),
+					'url' => $this->getRouteUrl('item', array( 'slug' => $item->getUrlPath() )),
 					'label' => $item->getName()
 				);
 			}
@@ -203,6 +205,7 @@ class ProductsModule extends AbstractUrlMountableModule implements PurchaseItemP
 		$view['heading'] = $this->config('heading');
 		$view['category-path'] = trim($this->config('category-path'), '/');
 		$view['item-path'] = trim($this->config('item-path'), '/');
+		// TODO Not sure about these...
 		$view['item-base-url'] = sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.item'));
 		$view['category-base-url'] = sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.category'));
 	}
@@ -227,7 +230,7 @@ class ProductsModule extends AbstractUrlMountableModule implements PurchaseItemP
 				)
 			);
 			$categoryResult = array(
-				'url' => sprintf('%s/%s/%s', $this->getMountedUrl(), $this->config('routes.category'), $category->getUrlPath()),
+				'url' => $this->getRouteUrl('category', array( 'slug' => $category->getUrlPath() )),
 				'label' => $category->getName(),
 				'tooltip' => $tooltip
 			);

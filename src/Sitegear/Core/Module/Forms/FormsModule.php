@@ -249,7 +249,7 @@ class FormsModule extends AbstractUrlMountableModule {
 		$view['form'] = $this->getForm($formKey, $request);
 		$view['current-step'] = $this->getCurrentStep($formKey);
 		$view['available-steps'] = $this->getAvailableSteps($formKey);
-		$view['jump-url-format'] = sprintf('%s/jump/%s?form-url=%s&step=%%d', $this->getMountedUrl(), $formKey, ltrim($request->getPathInfo(), '/'));
+		$view['jump-url-format'] = $this->getRouteUrl('jump', array( 'slug' => $formKey )) . sprintf('?form-url=%s&step=%%d', ltrim($request->getPathInfo(), '/'));
 	}
 
 	//-- Form Management Methods --------------------
@@ -350,18 +350,6 @@ class FormsModule extends AbstractUrlMountableModule {
 			}
 		}
 		return $this->forms[$formKey]['form'];
-	}
-
-	/**
-	 * Get the action URL for the form with the given key.  This does not check for the existence of the specified
-	 * form, it only returns the URL.
-	 *
-	 * @param string $formKey
-	 *
-	 * @return string URL relative to the site root.
-	 */
-	public function getFormSubmitUrl($formKey) {
-		return sprintf('%s/%s/%s', $this->getMountedUrl(), $this->config('routes.form'), $formKey);
 	}
 
 	/**

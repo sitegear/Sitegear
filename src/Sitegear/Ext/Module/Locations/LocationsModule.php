@@ -72,7 +72,7 @@ class LocationsModule extends AbstractUrlMountableModule {
 			foreach ($this->getRepository('Item')->findByActive(true) as $item) {
 				/** @var \Sitegear\Ext\Module\Locations\Model\Item $item */
 				$data[] = array(
-					'url' => sprintf('%s/%s/%s', $this->getMountedUrl(), $this->config('routes.item'), $item->getUrlPath()),
+					'url' => $this->getRouteUrl('item', array( 'slug' => $item->getUrlPath() )),
 					'label' => $item->getName()
 				);
 			}
@@ -149,7 +149,7 @@ class LocationsModule extends AbstractUrlMountableModule {
 		$query = $request->query->get('query');
 		$radius = $request->query->get('radius');
 		if (strlen($query) === 0) {
-			return new RedirectResponse($request->getUriForPath('/' . $this->getMountedUrl()));
+			return new RedirectResponse($request->getUriForPath('/' . $this->getRouteUrl('index')));
 		}
 		if (!is_numeric($radius)) {
 			throw new \InvalidArgumentException(sprintf('LocationsModule received invalid radius in search; must be numeric, "%s" received', $radius));
@@ -178,7 +178,7 @@ class LocationsModule extends AbstractUrlMountableModule {
 		LoggerRegistry::debug('LocationsModule::searchFormComponent()');
 		$this->applyViewDefaults($view);
 		$this->applyConfigToView('component.search-form', $view);
-		$view['action-url'] = sprintf('%s/search', $this->getMountedUrl());
+		$view['action-url'] = $this->getRouteUrl('search');
 		if (!is_null($query)) {
 			$view['query'] = $query;
 		}
@@ -198,6 +198,7 @@ class LocationsModule extends AbstractUrlMountableModule {
 		$this->applyConfigToView('common', $view);
 		$view['region-path'] = trim($this->config('region-path'), '/');
 		$view['item-path'] = trim($this->config('item-path'), '/');
+		// TODO Not sure about these...
 		$view['item-base-url'] = sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.item'));
 		$view['region-base-url'] = sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.region'));
 	}
@@ -222,7 +223,7 @@ class LocationsModule extends AbstractUrlMountableModule {
 				)
 			);
 			$regionResult = array(
-				'url' => sprintf('%s/%s/%s', $this->getMountedUrl(), $this->config('routes.region'), $region->getUrlPath()),
+				'url' => $this->getRouteUrl('region', array( 'slug' => $region->getUrlPath() )),
 				'label' => $region->getName(),
 				'tooltip' => $tooltip
 			);

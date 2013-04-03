@@ -93,7 +93,7 @@ abstract class AbstractFormsModuleFormBuilder implements FormBuilderInterface {
 	 * @return string
 	 */
 	public function getSubmitUrl($formUrl=null) {
-		$submitUrl = $this->getFormsModule()->getFormSubmitUrl($this->getFormKey());
+		$submitUrl = $this->getFormsModule()->getRouteUrl('form', array( 'slug' => $this->getFormKey() ));
 		return is_null($formUrl) ? $submitUrl : UrlUtilities::generateLinkWithReturnUrl($submitUrl, $formUrl, 'form-url');
 	}
 

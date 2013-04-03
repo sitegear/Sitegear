@@ -165,7 +165,7 @@ class UserIntegrationModule extends AbstractUrlMountableModule {
 			$links[] = array(
 				'url' => $this->getAuthenticationLinkUrl($route, $request->getUri()),
 				'label' => $label,
-				'current' => $request->getPathInfo() === sprintf('/%s/%s', $this->getMountedUrl(), $this->config(sprintf('routes.%s', $route)))
+				'current' => ltrim($request->getPathInfo(), '/') === $this->getRouteUrl($route)
 			);
 		}
 		$view['links'] = $links;
