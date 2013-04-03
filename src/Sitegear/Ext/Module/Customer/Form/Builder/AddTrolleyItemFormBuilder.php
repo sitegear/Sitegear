@@ -46,7 +46,14 @@ class AddTrolleyItemFormBuilder extends AbstractFormsModuleFormBuilder {
 	 * @throws \InvalidArgumentException
 	 */
 	public function buildForm($formDefinition) {
-		$form = new Form($formDefinition['submit-url']);
+		$form = new Form(
+			$formDefinition['submit-url'],
+			null,
+			null,
+			null,
+			$this->getFormsModule()->getValues($this->getFormKey()),
+			$this->getFormsModule()->getErrors($this->getFormKey())
+		);
 		$module = $this->getFormsModule()->getEngine()->getModule($formDefinition['module-name']);
 		if (!$module instanceof PurchaseItemProviderModuleInterface) {
 			throw new \InvalidArgumentException(sprintf('The specified module "%s" is not a valid purchase item provider.', $formDefinition['module-name']));
