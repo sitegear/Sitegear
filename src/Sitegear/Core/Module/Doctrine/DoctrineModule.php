@@ -97,10 +97,10 @@ class DoctrineModule extends AbstractCoreModule implements DiscreteDataModuleInt
 			$annotationDriver = new AnnotationDriver($annotationReader, array( $this->getEngine()->getSitegearInfo()->getSitegearRoot() ));
 
 			// TODO Make model-providing modules declare their own namespaces
-			$driverChain->addDriver($annotationDriver, 'Sitegear\Ext\Module\Customer\Model');
-			$driverChain->addDriver($annotationDriver, 'Sitegear\Ext\Module\News\Model');
-			$driverChain->addDriver($annotationDriver, 'Sitegear\Ext\Module\Locations\Model');
-			$driverChain->addDriver($annotationDriver, 'Sitegear\Ext\Module\Products\Model');
+			$driverChain->addDriver($annotationDriver, 'Sitegear\Core\Module\Customer\Model');
+			$driverChain->addDriver($annotationDriver, 'Sitegear\Core\Module\News\Model');
+			$driverChain->addDriver($annotationDriver, 'Sitegear\Core\Module\Locations\Model');
+			$driverChain->addDriver($annotationDriver, 'Sitegear\Core\Module\Products\Model');
 
 			// Create the entity manager configuration, with proxy generation, cached metadata and lowercase-underscore
 			// database naming convention.

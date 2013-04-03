@@ -1,0 +1,35 @@
+<?php
+/**
+ * @var \Sitegear\Core\View\View $view
+ * @var \Sitegear\Core\Module\Locations\LocationsModule $module
+ * @var \Sitegear\Core\Module\Locations\Model\Region $region
+ * @var \Sitegear\Core\Module\Locations\Model\Item $item
+ */
+$module = $view['module'];
+$region = $view['region'];
+$locations = array();
+foreach ($region->getItems() as $item) {
+	$locations[] = array_merge(
+		$item->getMapOptions(),
+		array(
+			'latitude' => $item->getLatitude(),
+			'longitude' => $item->getLongitude(),
+			'name' => $item->getName(),
+			'url' => $module->getRouteUrl('item', $item->getUrlPath())
+		)
+	);
+}
+echo $view->google()->map(
+	'#map',
+	array_merge(
+		$region->getMapOptions(),
+		array(
+			'latitude' => $region->getLatitude(),
+			'longitude' => $region->getLongitude()
+		)
+	),
+	// TODO This is forcing the API key to be set in GoogleModule config, do we want this? Maybe it shouldn't even be a parameter here?
+	null,
+	$locations,
+	false
+);

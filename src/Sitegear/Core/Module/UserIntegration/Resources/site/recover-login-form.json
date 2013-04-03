@@ -17,7 +17,7 @@
 			]
 		},
 		"captcha": {
-			"class": "\\Sitegear\\Ext\\Module\\RealCaptcha\\Form\\RealCaptchaField",
+			"class": "\\Sitegear\\Core\\Module\\RealCaptcha\\Form\\RealCaptchaField",
 			"label": "Human Check",
 			"constraints": [
 				{

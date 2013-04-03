@@ -32,7 +32,7 @@ interface PurchaseAdjustmentProviderModuleInterface extends ModuleInterface {
 	/**
 	 * Get the adjustment amount based on the given items and data which is taken from the checkout form.
 	 *
-	 * @param \Sitegear\Ext\Module\Customer\Model\TransactionItem[] $items
+	 * @param \Sitegear\Core\Module\Customer\Model\TransactionItem[] $items
 	 * @param array $data
 	 *
 	 * @return integer Amount of whole cents.

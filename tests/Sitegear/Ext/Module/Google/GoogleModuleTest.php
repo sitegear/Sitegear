@@ -9,7 +9,7 @@
 namespace Sitegear\Module\Session;
 
 use Sitegear\AbstractSitegearTestCase;
-use Sitegear\Ext\Module\Google\GoogleModule;
+use Sitegear\Core\Module\Google\GoogleModule;
 use Sitegear\TestEngine;
 
 use Symfony\Component\HttpFoundation\Request;

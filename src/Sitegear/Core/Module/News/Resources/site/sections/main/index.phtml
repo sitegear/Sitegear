@@ -1,0 +1,73 @@
+<?php
+/**
+ * @var \Sitegear\Core\View\View $view
+ * @var \Sitegear\Core\Module\Locations\LocationsModule $module
+ * @var \Sitegear\Core\Module\News\Model\Item $item
+ */
+$module = $view['module'];
+$view->getStringsManager()->prepend('title', $view['title']);
+$itemDecorator = sprintf('excerpt(%d, "%s")', $view['excerpt-length'], 'Article content not found.');
+?>
+<h1><?php echo $view['heading']; ?></h1>
+
+<section class="news-item-preview-container">
+<?php
+if (empty($view['items'])) {
+	echo $view->news()->noHeadlines();
+} else {
+	foreach ($view['items'] as $item) {
+		$linkUrl = $module->getRouteUrl('item', $item->getUrlPath());
+		$viewScript = sprintf('%s/%s', $view['item-path'], $item->getUrlPath());
+?>
+	<section>
+<?php
+		if (isset($view['date-format'])) {
+			$published = \Sitegear\Util\TokenUtilities::replaceTokens(
+				$view['published'],
+				array(
+					'publishedDate' => $item->getDatePublished()->format($view['date-format'])
+				)
+			);
+?>
+        <div class="date-published"><?php echo $published; ?></div>
+<?php
+		}
+?>
+		<h2><?php echo $item->getHeadline(); ?></h2>
+		<div class="text">
+<?php echo $view->news($itemDecorator)->item($viewScript); ?>
+		</div>
+<?php
+		if (isset($view['read-more'])) {
+?>
+		<p class="read-more"><a href="<?php echo $linkUrl ?>"><?php echo $view['read-more']; ?></a></p>
+<?php
+		}
+?>
+	</section>
+<?php
+	}
+}
+?>
+</section>
+<?php
+if ($view['item-count'] > 0) {
+?>
+<p class="news-item-total">
+<?php echo sprintf('Showing %d of %d news items', sizeof($view['items']), $view['item-count']); ?>
+</p>
+<p>
+<?php
+	if ($view['more']) {
+?>
+<a href="<?php echo $view['index-url']; ?>"><?php echo $view['show-less']; ?></a>
+<?php
+	} else {
+?>
+<a href="<?php echo $view['index-url']; ?>?more=1"><?php echo $view['show-more']; ?></a>
+<?php
+	}
+?>
+</p>
+<?php
+}
