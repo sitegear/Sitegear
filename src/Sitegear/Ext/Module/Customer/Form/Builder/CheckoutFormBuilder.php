@@ -25,7 +25,7 @@ class CheckoutFormBuilder extends FormBuilder {
 
 	//-- Constructor --------------------
 
-	public function __construct(FormsModule $formsModule, $formKey, Account $account) {
+	public function __construct(FormsModule $formsModule, $formKey, Account $account=null) {
 		parent::__construct($formsModule, $formKey);
 		$this->account = $account;
 	}
@@ -51,7 +51,7 @@ class CheckoutFormBuilder extends FormBuilder {
 		// Create fields.
 		foreach ($formDefinition['fields'] as $name => $fieldDefinition) {
 			$field = $this->buildField($form, $name, $fieldDefinition);
-			if (!is_null($fieldValue = $this->account->getNamedFieldValue($name))) {
+			if (!is_null($this->account) && !is_null($fieldValue = $this->account->getNamedFieldValue($name))) {
 				$field->setDefaultValue($fieldValue->getValue());
 			}
 			$form->addField($field);
