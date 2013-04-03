@@ -45,6 +45,7 @@ use Symfony\Component\HttpFoundation\Request;
  * @method \Sitegear\Core\View\View doctrine()
  * @method \Sitegear\Core\View\View file()
  * @method \Sitegear\Core\View\View navigation()
+ * @method \Sitegear\Core\View\View pageMessages()
  * @method \Sitegear\Core\View\View resourcesIntegration()
  * @method \Sitegear\Core\View\View userIntegration()
  * @method \Sitegear\Core\View\View version()
