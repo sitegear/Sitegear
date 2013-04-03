@@ -1,0 +1,9 @@
+<?php
+/**
+ * @var \Sitegear\Core\View\View $view
+ * @var \Sitegear\Module\Forms\Form\Renderer\FormRenderer $formRenderer
+ */
+$output = array();
+$formRenderer = $view['form-renderer'];
+$formRenderer->render($output, $view['values'], $view['errors']);
+echo implode(PHP_EOL, $output), PHP_EOL;

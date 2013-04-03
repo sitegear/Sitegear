@@ -36,30 +36,30 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
  *
  * The following magic methods are defined for known core modules:
  *
- * @method \Sitegear\Core\Module\Content\ContentModule content()
- * @method \Sitegear\Core\Module\Doctrine\DoctrineModule doctrine()
- * @method \Sitegear\Core\Module\File\FileModule file()
- * @method \Sitegear\Core\Module\Forms\FormsModule forms()
- * @method \Sitegear\Core\Module\Navigation\NavigationModule navigation()
- * @method \Sitegear\Core\Module\PageMessages\PageMessagesModule pageMessages()
- * @method \Sitegear\Core\Module\ResourcesIntegration\ResourcesIntegrationModule resourcesIntegration()
- * @method \Sitegear\Core\Module\UserIntegration\UserIntegrationModule userIntegration()
- * @method \Sitegear\Core\Module\Version\VersionModule version()
+ * @method \Sitegear\Module\Content\ContentModule content()
+ * @method \Sitegear\Module\Doctrine\DoctrineModule doctrine()
+ * @method \Sitegear\Module\File\FileModule file()
+ * @method \Sitegear\Module\Forms\FormsModule forms()
+ * @method \Sitegear\Module\Navigation\NavigationModule navigation()
+ * @method \Sitegear\Module\PageMessages\PageMessagesModule pageMessages()
+ * @method \Sitegear\Module\ResourcesIntegration\ResourcesIntegrationModule resourcesIntegration()
+ * @method \Sitegear\Module\UserIntegration\UserIntegrationModule userIntegration()
+ * @method \Sitegear\Module\Version\VersionModule version()
  *
  * The following magic methods are defined for known extension modules:
  *
- * @method \Sitegear\Core\Module\Customer\CustomerModule customer()
- * @method \Sitegear\Core\Module\DiscountCodes\DiscountCodesModule discountCodes()
- * @method \Sitegear\Core\Module\Eway\EwayModule eway()
- * @method \Sitegear\Core\Module\Google\GoogleModule google()
- * @method \Sitegear\Core\Module\Locations\LocationsModule locations()
- * @method \Sitegear\Core\Module\MailChimp\MailChimpModule mailChimp()
- * @method \Sitegear\Core\Module\News\NewsModule news()
- * @method \Sitegear\Core\Module\Products\ProductsModule products()
- * @method \Sitegear\Core\Module\RealCaptcha\RealCaptchaModule realCaptcha()
- * @method \Sitegear\Core\Module\SalesTax\SalesTaxModule salesTax()
- * @method \Sitegear\Core\Module\Shipping\ShippingModule shipping()
- * @method \Sitegear\Core\Module\SwiftMailer\SwiftMailerModule swiftMailer()
+ * @method \Sitegear\Module\Customer\CustomerModule customer()
+ * @method \Sitegear\Module\DiscountCodes\DiscountCodesModule discountCodes()
+ * @method \Sitegear\Module\Eway\EwayModule eway()
+ * @method \Sitegear\Module\Google\GoogleModule google()
+ * @method \Sitegear\Module\Locations\LocationsModule locations()
+ * @method \Sitegear\Module\MailChimp\MailChimpModule mailChimp()
+ * @method \Sitegear\Module\News\NewsModule news()
+ * @method \Sitegear\Module\Products\ProductsModule products()
+ * @method \Sitegear\Module\RealCaptcha\RealCaptchaModule realCaptcha()
+ * @method \Sitegear\Module\SalesTax\SalesTaxModule salesTax()
+ * @method \Sitegear\Module\Shipping\ShippingModule shipping()
+ * @method \Sitegear\Module\SwiftMailer\SwiftMailerModule swiftMailer()
  */
 class Engine extends AbstractConfigurableEngine {
 

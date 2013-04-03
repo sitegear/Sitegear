@@ -1,0 +1,56 @@
+{
+	"submit-button": "Proceed",
+	"fields": {
+		"email": {
+			"type": "input",
+			"label": "Email",
+			"constraints": [
+				{
+					"name": "not-blank",
+					"options": {
+						"message": "Please provide your email address"
+					}
+				},
+				{
+					"name": "email"
+				}
+			]
+		},
+		"captcha": {
+			"class": "\\Sitegear\\Module\\RealCaptcha\\Form\\RealCaptchaField",
+			"label": "Human Check",
+			"constraints": [
+				{
+					"callback": "module",
+					"module": "real-captcha",
+					"method": "validate-captcha"
+				}
+			]
+		}
+	},
+	"steps": [
+		{
+			"fieldsets": [
+				{
+					"fields": [
+						"email",
+						"captcha"
+					]
+				}
+			],
+			"processors": [
+				{
+					"module": "user-integration",
+					"method": "recover-login",
+					"arguments": [
+						"{{ data:email }}"
+					],
+					"exception-action": "fail",
+					"exception-field-names": [
+						"email"
+					]
+				}
+			]
+		}
+	]
+}

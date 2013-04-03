@@ -253,7 +253,7 @@ return array(
 			 * absolute, beginning with a leading backslash "\" character.
 			 */
 			'namespaces' => array(
-				'\\Sitegear\\Core\\Module'
+				'\\Sitegear\\Module'
 			),
 
 			/**
