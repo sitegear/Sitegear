@@ -111,11 +111,7 @@ class CustomerModule extends AbstractUrlMountableModule {
 			$this->getEngine()->forms()->resetForm($formKey);
 		}
 		// Go back to the page where the submission was made.
-		return new RedirectResponse($request->getUriForPath(
-			empty($errors) ?
-				sprintf('/%s/%s', $this->getMountedUrl(), $this->config('routes.trolley')) :
-				sprintf('/%s', $formUrl)
-		));
+		return new RedirectResponse($request->getUriForPath(sprintf('/%s', $formUrl)));
 	}
 
 	/**
@@ -307,6 +303,13 @@ class CustomerModule extends AbstractUrlMountableModule {
 			$data[] = $item;
 		}
 		$this->setTrolleyData($data);
+
+		// Notify on next page load
+		$count = $quantity > 1 ? sprintf('%d x ', $quantity) : '';
+		$this->getEngine()->pageMessages()->add(sprintf('You have added %s"%s" to your trolley', $count, $item->getLabel()), 'success');
+		if ($item->getQuantity() > $quantity) {
+			$this->getEngine()->pageMessages()->add(sprintf('You now have %d x "%s" in your trolley', $item->getQuantity(), $item->getLabel()), 'success');
+		}
 	}
 
 	/**
@@ -322,8 +325,14 @@ class CustomerModule extends AbstractUrlMountableModule {
 		if ($index < 0 || $index >= sizeof($data)) {
 			throw new \OutOfBoundsException(sprintf('CustomerModule cannot modify trolley item with index (%d) out-of-bounds', $index));
 		}
-		array_splice($data, $index, 1);
+
+		// Modify the session data.
+		/** @var TransactionItem $item */
+		$item = array_splice($data, $index, 1)[0];
 		$this->setTrolleyData($data);
+
+		// Notify on next page load.
+		$this->getEngine()->pageMessages()->add(sprintf('You have removed "%s" from your trolley', $item->getLabel()), 'success');
 	}
 
 	/**
@@ -344,10 +353,15 @@ class CustomerModule extends AbstractUrlMountableModule {
 		if ($index < 0 || $index >= sizeof($data)) {
 			throw new \OutOfBoundsException(sprintf('CustomerModule cannot modify trolley item with index (%d) out-of-bounds', $index));
 		}
+
+		// Modify the session data.
 		$item = $data[$index]; /** @var TransactionItem $item */
 		$item->setQuantity($quantity);
 		$data[$index] = $item;
 		$this->setTrolleyData($data);
+
+		// Notify on next page load.
+		$this->getEngine()->pageMessages()->add(sprintf('You have changed the number of "%s" in your trolley to %d', $item->getLabel(), $quantity), 'success');
 	}
 
 	/**
