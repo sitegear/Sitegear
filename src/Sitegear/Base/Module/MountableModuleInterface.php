@@ -70,6 +70,25 @@ interface MountableModuleInterface extends ModuleInterface {
 	public function getRoutes();
 
 	/**
+	 * Get the URL for the named route with the given parameters.
+	 *
+	 * @param string $route
+	 * @param mixed $parameters May be a key-value array, or a single string which is used as the single, default
+	 *   parameter.
+	 *
+	 * @return mixed
+	 */
+	public function getRouteUrl($route, $parameters=null);
+
+	/**
+	 * Retrieve the name of the default route parameter, that is, the parameter name to assign a non-array value of the
+	 * `$parameters` argument in the `getRouteUrl()` method.
+	 *
+	 * @return string
+	 */
+	public function getDefaultRouteParameterName();
+
+	/**
 	 * Retrieve the navigation data from this module.  That is, a hierarchical structure of all the URLs handled by
 	 * this module.
 	 *

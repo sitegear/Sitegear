@@ -197,7 +197,7 @@ class CustomerModule extends AbstractUrlMountableModule {
 		$view['trolley-data'] = $this->getTrolleyData();
 		$view['details-url'] = $this->getRouteUrl('trolley');
 		$view['checkout-url'] = UrlUtilities::generateLinkWithReturnUrl(
-			$this->getEngine()->forms()->getRouteUrl('initialise', array( 'slug' => $this->config('checkout.form-key') )),
+			$this->getEngine()->forms()->getRouteUrl('initialise', $this->config('checkout.form-key')),
 			$this->getRouteUrl('checkout'),
 			'form-url'
 		);
@@ -217,7 +217,7 @@ class CustomerModule extends AbstractUrlMountableModule {
 		$view['trolley-data'] = $this->getTrolleyData();
 		$view['adjustments'] = $this->getAdjustments();
 		$view['checkout-url'] = UrlUtilities::generateLinkWithReturnUrl(
-			$this->getEngine()->forms()->getRouteUrl('initialise', array( 'slug' => $this->config('checkout.form-key') )),
+			$this->getEngine()->forms()->getRouteUrl('initialise', $this->config('checkout.form-key')),
 			$this->getRouteUrl('checkout'),
 			'form-url'
 		);

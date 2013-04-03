@@ -28,9 +28,11 @@ abstract class AbstractCoreFileViewContext extends AbstractFileViewContext {
 	 */
 	protected function renderForLocation($location, RendererRegistryInterface $rendererRegistry, ViewInterface $view, Request $request, $methodResult) {
 		$result = null;
+		$view['module'] = $view->getEngine()->getModule($this->getContextModule($view, $request));
+		$view['module']->applyViewDefaults($view);
 		foreach ($this->expandViewScriptPaths(trim($request->attributes->get('_view'), '/'), $view, $request, $methodResult) as $path) {
 			if (is_null($result)) {
-				$sitePath = $view->getEngine()->getSiteInfo()->getSitePath($location, $this->getContextModule($view, $request), $path);
+				$sitePath = $view->getEngine()->getSiteInfo()->getSitePath($location, $view['module'], $path);
 				$result = $rendererRegistry->render($sitePath, $view);
 			}
 		}

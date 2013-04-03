@@ -63,7 +63,7 @@ class NewsModule extends AbstractUrlMountableModule {
 				'datePublished' => $item->getDatePublished()->format($dateFormat)
 			);
 			$result[] = array(
-				'url' => $this->getRouteUrl('item', array( 'slug' => $item->getUrlPath() )),
+				'url' => $this->getRouteUrl('item', $item->getUrlPath()),
 				'label' => TokenUtilities::replaceTokens($this->config('navigation.item-link.label'), $values),
 				'tooltip' => TokenUtilities::replaceTokens($this->config('navigation.item-link.tooltip'), $values)
 			);
@@ -155,8 +155,6 @@ class NewsModule extends AbstractUrlMountableModule {
 	private function applyDefaults(ViewInterface $view) {
 		$this->applyConfigToView('common', $view);
 		$view['index-url'] = $this->getRouteUrl('index');
-		// TODO Not sure about this...
-		$view['item-base-url'] = sprintf('%s/item', $this->getMountedUrl());
 	}
 
 	/**

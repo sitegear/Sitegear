@@ -106,16 +106,29 @@ abstract class AbstractUrlMountableModule extends AbstractConfigurableModule imp
 	/**
 	 * {@inheritDoc}
 	 */
-	public function getRouteUrl($name, array $parameters=null) {
+	public function getRouteUrl($route, $parameters=null) {
+		// Convert non-array parameters to empty array or single-value array with default parameter name.
+		if (is_null($parameters)) {
+			$parameters = array();
+		} elseif (!is_array($parameters)) {
+			$parameters = array( $this->getDefaultRouteParameterName() => $parameters );
+		}
+		// Generate the URL
 		// TODO Allow configuration between absolute URL, absolute path, network URL, relative path, and path relative to base
+		$configuredRoute = $this->config(sprintf('routes.%s', $route), $route);
 		return UrlGenerator::getRelativePath(
 			$this->baseUrl,
-			$this->generator->generate(
-				$this->config(sprintf('routes.%s', $name), $name),
-				$parameters ?: array(),
-				UrlGenerator::ABSOLUTE_PATH
-			)
+			$this->generator->generate($configuredRoute, $parameters, UrlGenerator::ABSOLUTE_PATH)
 		);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @return string "slug"; can be overridden.
+	 */
+	public function getDefaultRouteParameterName() {
+		return 'slug';
 	}
 
 	/**

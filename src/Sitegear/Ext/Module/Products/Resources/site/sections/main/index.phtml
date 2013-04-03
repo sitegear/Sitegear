@@ -1,8 +1,10 @@
 <?php
 /**
  * @var \Sitegear\Core\View\View $view
+ * @var \Sitegear\Ext\Module\Products\ProductsModule $module
  * @var \Sitegear\Ext\Module\Products\Model\Category $category
  */
+$module = $view['module'];
 $view->getStringsManager()->prepend('title', $view['title']);
 $categoryDecorator = sprintf('excerpt(%d, "%s")', $view['excerpt-length'], 'Category description not found.');
 ?>
@@ -17,7 +19,7 @@ if (empty($view['categories'])) {
 	<h2>Categories</h2>
 <?php
 	foreach ($view['categories'] as $category) {
-		$linkUrl = sprintf('%s/%s', $view['category-base-url'], $category->getUrlPath());
+		$linkUrl = $module->getRouteUrl('category', $category->getUrlPath());
 		$viewScript = sprintf('%s/%s', $view['category-path'], $category->getUrlPath());
 ?>
 	<section>

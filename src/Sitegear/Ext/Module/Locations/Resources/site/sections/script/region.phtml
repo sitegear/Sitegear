@@ -1,9 +1,11 @@
 <?php
 /**
  * @var \Sitegear\Core\View\View $view
+ * @var \Sitegear\Ext\Module\Locations\LocationsModule $module
  * @var \Sitegear\Ext\Module\Locations\Model\Region $region
  * @var \Sitegear\Ext\Module\Locations\Model\Item $item
  */
+$module = $view['module'];
 $region = $view['region'];
 $locations = array();
 foreach ($region->getItems() as $item) {
@@ -13,7 +15,7 @@ foreach ($region->getItems() as $item) {
 			'latitude' => $item->getLatitude(),
 			'longitude' => $item->getLongitude(),
 			'name' => $item->getName(),
-			'url' => sprintf('%s/%s', $view['item-base-url'], $item->getUrlPath())
+			'url' => $module->getRouteUrl('item', $item->getUrlPath())
 		)
 	);
 }

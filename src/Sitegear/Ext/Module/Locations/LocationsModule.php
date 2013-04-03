@@ -61,6 +61,18 @@ class LocationsModule extends AbstractUrlMountableModule {
 		$this->getEngine()->doctrine()->getEntityManager()->getConfiguration()->addEntityNamespace(self::ENTITY_ALIAS, '\\Sitegear\\Ext\\Module\\Locations\\Model');
 	}
 
+	/**
+	 * Apply view defaults that are used by all pages in the locations module.
+	 *
+	 * @param \Sitegear\Base\View\ViewInterface $view
+	 */
+	public function applyViewDefaults(ViewInterface $view) {
+		parent::applyViewDefaults($view);
+		$this->applyConfigToView('common', $view);
+		$view['region-path'] = trim($this->config('region-path'), '/');
+		$view['item-path'] = trim($this->config('item-path'), '/');
+	}
+
 	//-- AbstractUrlMountableModule Methods --------------------
 
 	/**
@@ -72,7 +84,7 @@ class LocationsModule extends AbstractUrlMountableModule {
 			foreach ($this->getRepository('Item')->findByActive(true) as $item) {
 				/** @var \Sitegear\Ext\Module\Locations\Model\Item $item */
 				$data[] = array(
-					'url' => $this->getRouteUrl('item', array( 'slug' => $item->getUrlPath() )),
+					'url' => $this->getRouteUrl('item', $item->getUrlPath()),
 					'label' => $item->getName()
 				);
 			}
@@ -89,7 +101,6 @@ class LocationsModule extends AbstractUrlMountableModule {
 	 */
 	public function indexController(ViewInterface $view) {
 		LoggerRegistry::debug('LocationsModule::indexController()');
-		$this->applyViewDefaults($view);
 		$this->applyConfigToView('page.index', $view);
 		$view['regions'] = new ArrayCollection($this->getRepository('Region')->findByParent(null));
 	}
@@ -102,7 +113,6 @@ class LocationsModule extends AbstractUrlMountableModule {
 	 */
 	public function regionController(ViewInterface $view, Request $request) {
 		LoggerRegistry::debug('LocationsModule::regionController()');
-		$this->applyViewDefaults($view);
 		$this->applyConfigToView('page.region', $view);
 		/** @var \Sitegear\Ext\Module\Locations\Model\Region $region */
 		$region = $this->getRepository('Region')->findOneByUrlPath($request->attributes->get('slug'));
@@ -121,7 +131,6 @@ class LocationsModule extends AbstractUrlMountableModule {
 	 */
 	public function itemController(ViewInterface $view, Request $request) {
 		LoggerRegistry::debug('LocationsModule::itemController()');
-		$this->applyViewDefaults($view);
 		$this->applyConfigToView('page.item', $view);
 		try {
 			$view['item'] = $this->getRepository('Item')->findOneBy(array( 'urlPath' => $request->attributes->get('slug'), 'active' => true ));
@@ -144,7 +153,6 @@ class LocationsModule extends AbstractUrlMountableModule {
 	 */
 	public function searchController(ViewInterface $view, Request $request) {
 		LoggerRegistry::debug('LocationsModule::itemController()');
-		$this->applyViewDefaults($view);
 		$this->applyConfigToView('page.search', $view);
 		$query = $request->query->get('query');
 		$radius = $request->query->get('radius');
@@ -176,7 +184,6 @@ class LocationsModule extends AbstractUrlMountableModule {
 	 */
 	public function searchFormComponent(ViewInterface $view, $query=null, $radius=null) {
 		LoggerRegistry::debug('LocationsModule::searchFormComponent()');
-		$this->applyViewDefaults($view);
 		$this->applyConfigToView('component.search-form', $view);
 		$view['action-url'] = $this->getRouteUrl('search');
 		if (!is_null($query)) {
@@ -188,20 +195,6 @@ class LocationsModule extends AbstractUrlMountableModule {
 	}
 
 	//-- Internal Methods --------------------
-
-	/**
-	 * Apply view defaults that are used by all pages in the locations module.
-	 *
-	 * @param \Sitegear\Base\View\ViewInterface $view
-	 */
-	private function applyViewDefaults(ViewInterface $view) {
-		$this->applyConfigToView('common', $view);
-		$view['region-path'] = trim($this->config('region-path'), '/');
-		$view['item-path'] = trim($this->config('item-path'), '/');
-		// TODO Not sure about these...
-		$view['item-base-url'] = sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.item'));
-		$view['region-base-url'] = sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.region'));
-	}
 
 	/**
 	 * Recursive method for navigation generation.
@@ -223,7 +216,7 @@ class LocationsModule extends AbstractUrlMountableModule {
 				)
 			);
 			$regionResult = array(
-				'url' => $this->getRouteUrl('region', array( 'slug' => $region->getUrlPath() )),
+				'url' => $this->getRouteUrl('region', $region->getUrlPath()),
 				'label' => $region->getName(),
 				'tooltip' => $tooltip
 			);

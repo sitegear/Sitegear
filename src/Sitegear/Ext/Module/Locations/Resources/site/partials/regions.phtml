@@ -1,9 +1,11 @@
 <?php
 /**
  * @var \Sitegear\Core\View\View $view
+ * @var \Sitegear\Ext\Module\Locations\LocationsModule $module
  * @var \Doctrine\Common\Collections\Collection $regions
  * @var \Sitegear\Ext\Module\Locations\Model\Region $region
  */
+$module = $view['module'];
 $regions = $view['regions'];
 $excerptDecorator = sprintf('excerpt(%d, "%s")', $view['excerpt-length'], $view['missing-region-description']);
 if ($regions->count() === 0) {
@@ -14,7 +16,7 @@ if ($regions->count() === 0) {
 	<h2>Regions</h2>
 <?php
 	foreach ($regions as $region) {
-		$linkUrl = sprintf('%s/%s', $view['region-base-url'], $region->getUrlPath());
+		$linkUrl = $module->getRouteUrl('region', $region->getUrlPath());
 		$viewScript = sprintf('%s/%s', $view['region-path'], $region->getUrlPath());
 ?>
 	<section>

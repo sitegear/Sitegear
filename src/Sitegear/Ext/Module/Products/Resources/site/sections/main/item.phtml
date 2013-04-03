@@ -2,11 +2,13 @@
 // TODO Editable product name and specifications
 /**
  * @var \Sitegear\Core\View\View $view
+ * @var \Sitegear\Ext\Module\Products\ProductsModule $module
  * @var \Sitegear\Ext\Module\Products\Model\Item $item
  * @var \Sitegear\Ext\Module\Products\Model\Specification $specification
  * @var \Sitegear\Ext\Module\Products\Model\Relationship $relationship
  * @var \Sitegear\Ext\Module\Products\Model\CategoryAssignment $categoryAssignment
  */
+$module = $view['module'];
 $item = $view['item'];
 $view->getStringsManager()->prepend('title', $view['title'])->prepend('title', $item->getName());
 ?>
@@ -55,7 +57,7 @@ if (sizeof($item->getRelationships()) > 0) {
 	<ul>
 <?php
 	foreach ($item->getRelationships() as $relationship) {
-		$linkUrl = sprintf('%s/%s', $view['item-base-url'], $relationship->getRelatedItem()->getUrlPath());
+		$linkUrl = $module->getRouteUrl('item', $relationship->getRelatedItem()->getUrlPath());
 ?>
 		<li><a href="<?php echo $linkUrl; ?>"><?php echo $relationship->getRelatedItem()->getName(); ?></a></li>
 <?php
@@ -74,7 +76,7 @@ if (sizeof($item->getCategoryAssignments()) > 0) {
 	<ul>
 <?php
 	foreach ($item->getCategoryAssignments() as $categoryAssignment) {
-		$linkUrl = sprintf('%s/%s', $view['category-base-url'], $categoryAssignment->getCategory()->getUrlPath());
+		$linkUrl = $module->getRouteUrl('category', $categoryAssignment->getCategory()->getUrlPath());
 ?>
 		<li><a href="<?php echo $linkUrl; ?>"><?php echo $categoryAssignment->getCategory()->getName(); ?></a></li>
 <?php

@@ -9,6 +9,7 @@
 namespace Sitegear\Base\Module;
 
 use Sitegear\Base\Engine\EngineInterface;
+use Sitegear\Base\View\ViewInterface;
 use Sitegear\Util\NameUtilities;
 use Sitegear\Util\LoggerRegistry;
 
@@ -74,6 +75,15 @@ abstract class AbstractModule implements ModuleInterface {
 	 */
 	public function getResourceMap() {
 		return array();
+	}
+
+	/**
+	 * Apply the module's default view settings, which are present as a baseline for all views (components and pages).
+	 *
+	 * @param ViewInterface $view
+	 */
+	public function applyViewDefaults(ViewInterface $view) {
+		// Do nothing by default
 	}
 
 }

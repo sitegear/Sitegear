@@ -51,6 +51,18 @@ class ProductsModule extends AbstractUrlMountableModule implements PurchaseItemP
 		$this->getEngine()->doctrine()->getEntityManager()->getConfiguration()->addEntityNamespace(self::ENTITY_ALIAS, '\\Sitegear\\Ext\\Module\\Products\\Model');
 	}
 
+	/**
+	 * Apply view defaults that are used by all pages in the products module.
+	 *
+	 * @param \Sitegear\Base\View\ViewInterface $view
+	 */
+	public function applyViewDefaults(ViewInterface $view) {
+		$view['title'] = $this->config('title');
+		$view['heading'] = $this->config('heading');
+		$view['category-path'] = trim($this->config('category-path'), '/');
+		$view['item-path'] = trim($this->config('item-path'), '/');
+	}
+
 	//-- PurchaseItemProviderModuleInterface Methods --------------------
 
 	/**
@@ -123,7 +135,7 @@ class ProductsModule extends AbstractUrlMountableModule implements PurchaseItemP
 	 * {@inheritDoc}
 	 */
 	public function getPurchaseItemDetailsUrl($type, $id, array $attributeValues) {
-		return $this->getRouteUrl('item', array( 'slug' => $this->getRepository('Item')->find($id)->getUrlPath() ));
+		return $this->getRouteUrl('item', $this->getRepository('Item')->find($id)->getUrlPath());
 	}
 
 	//-- AbstractUrlMountableModule Methods --------------------
@@ -137,7 +149,7 @@ class ProductsModule extends AbstractUrlMountableModule implements PurchaseItemP
 			foreach ($this->getRepository('Item')->findByActive(true) as $item) {
 				/** @var Item $item */
 				$data[] = array(
-					'url' => $this->getRouteUrl('item', array( 'slug' => $item->getUrlPath() )),
+					'url' => $this->getRouteUrl('item', $item->getUrlPath()),
 					'label' => $item->getName()
 				);
 			}
@@ -154,7 +166,6 @@ class ProductsModule extends AbstractUrlMountableModule implements PurchaseItemP
 	 */
 	public function indexController(ViewInterface $view) {
 		LoggerRegistry::debug('ProductsModule::indexController');
-		$this->applyViewDefaults($view);
 		$this->applyConfigToView('page.index', $view);
 		$view['categories'] = $this->getRepository('Category')->findByParent(null);
 	}
@@ -167,7 +178,6 @@ class ProductsModule extends AbstractUrlMountableModule implements PurchaseItemP
 	 */
 	public function categoryController(ViewInterface $view, Request $request) {
 		LoggerRegistry::debug('ProductsModule::categoryController');
-		$this->applyViewDefaults($view);
 		$this->applyConfigToView('page.category', $view);
 		$view['category'] = $this->getRepository('Category')->findOneByUrlPath($request->attributes->get('slug'));
 		$view['categories'] = $this->getRepository('Category')->findByParent($view['category']);
@@ -184,7 +194,6 @@ class ProductsModule extends AbstractUrlMountableModule implements PurchaseItemP
 	 */
 	public function itemController(ViewInterface $view, Request $request) {
 		LoggerRegistry::debug('ProductsModule::itemController');
-		$this->applyViewDefaults($view);
 		$this->applyConfigToView('page.item', $view);
 		try {
 			$view['item'] = $this->getRepository('Item')->findOneBy(array( 'urlPath' => $request->attributes->get('slug'), 'active' => true ));
@@ -194,21 +203,6 @@ class ProductsModule extends AbstractUrlMountableModule implements PurchaseItemP
 	}
 
 	//-- Internal Methods --------------------
-
-	/**
-	 * Apply view defaults that are used by all pages in the products module.
-	 *
-	 * @param \Sitegear\Base\View\ViewInterface $view
-	 */
-	private function applyViewDefaults(ViewInterface $view) {
-		$view['title'] = $this->config('title');
-		$view['heading'] = $this->config('heading');
-		$view['category-path'] = trim($this->config('category-path'), '/');
-		$view['item-path'] = trim($this->config('item-path'), '/');
-		// TODO Not sure about these...
-		$view['item-base-url'] = sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.item'));
-		$view['category-base-url'] = sprintf('%s/%s', $this->getMountedUrl(), $this->config('routes.category'));
-	}
 
 	/**
 	 * Recursive method for navigation generation.
@@ -230,7 +224,7 @@ class ProductsModule extends AbstractUrlMountableModule implements PurchaseItemP
 				)
 			);
 			$categoryResult = array(
-				'url' => $this->getRouteUrl('category', array( 'slug' => $category->getUrlPath() )),
+				'url' => $this->getRouteUrl('category', $category->getUrlPath()),
 				'label' => $category->getName(),
 				'tooltip' => $tooltip
 			);

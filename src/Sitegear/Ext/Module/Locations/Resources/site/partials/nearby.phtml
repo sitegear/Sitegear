@@ -1,11 +1,13 @@
 <?php
 /**
  * @var \Sitegear\Core\View\View $view
+ * @var \Sitegear\Ext\Module\Locations\LocationsModule $module
  * @var \Sitegear\Ext\Module\Locations\Model\Item $item
  * @var \Sitegear\Ext\Module\Locations\Model\Item $sibling
  */
+$module = $view['module'];
 $item = $view['item'];
-$linkUrl = sprintf('%s/%s', $view['region-base-url'], $item->getRegion()->getUrlPath());
+$linkUrl = $module->getRouteUrl('region', $item->getRegion()->getUrlPath());
 ?>
 <section id="locations-nearby-container">
 	<h2>Nearby Locations</h2>
@@ -18,7 +20,7 @@ if ($siblings->count() > 1) { // 1 is always going to be this `$item`
 <?php
 	foreach ($siblings as $sibling) {
 		if ($sibling !== $item) {
-			$siblingLinkUrl = sprintf('%s/%s', $view['item-base-url'], $sibling->getUrlPath())
+			$siblingLinkUrl = $module->getRouteUrl('region', $sibling->getUrlPath());
 ?>
 		<li><a href="<?php echo $siblingLinkUrl; ?>"><?php echo $sibling->getName(); ?></a></li>
 <?php
