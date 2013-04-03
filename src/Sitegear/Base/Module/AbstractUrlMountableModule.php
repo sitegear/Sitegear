@@ -8,14 +8,11 @@
 
 namespace Sitegear\Base\Module;
 
-use Sitegear\Base\Config\Container\SimpleConfigContainer;
 use Sitegear\Base\Module\AbstractConfigurableModule;
 use Sitegear\Base\Module\MountableModuleInterface;
 use Sitegear\Base\Engine\EngineInterface;
-use Sitegear\Base\Resources\ResourceLocations;
 use Sitegear\Util\LoggerRegistry;
 
-use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\Generator\UrlGenerator;
