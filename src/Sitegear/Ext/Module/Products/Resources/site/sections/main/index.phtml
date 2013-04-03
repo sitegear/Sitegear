@@ -20,7 +20,7 @@ if (empty($view['categories'])) {
 <?php
 	foreach ($view['categories'] as $category) {
 		$linkUrl = $module->getRouteUrl('category', $category->getUrlPath());
-		$viewScript = sprintf('%s/%s', $view['category-path'], $category->getUrlPath());
+		$viewScript = $module->getContentPath('category', $category->getUrlPath());
 ?>
 	<section>
 		<h3><?php echo $category->getName(); ?></h3>

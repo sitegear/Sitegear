@@ -11,6 +11,7 @@ namespace Sitegear\Core\Module\Content;
 use Sitegear\Base\Module\AbstractUrlMountableModule;
 use Sitegear\Base\Resources\ResourceLocations;
 use Sitegear\Base\View\ViewInterface;
+use Sitegear\Core\Module\AbstractCoreModule;
 use Sitegear\Util\LoggerRegistry;
 
 use Symfony\Component\HttpFoundation\Response;
@@ -26,7 +27,7 @@ use Symfony\Component\Routing\RouteCollection;
  *
  * @method \Sitegear\Core\Engine\Engine getEngine()
  */
-class ContentModule extends AbstractUrlMountableModule {
+class ContentModule extends AbstractCoreModule {
 
 	//-- ModuleInterface Methods --------------------
 

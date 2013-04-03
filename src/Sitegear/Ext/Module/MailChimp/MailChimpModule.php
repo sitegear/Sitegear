@@ -8,13 +8,13 @@
 
 namespace Sitegear\Ext\Module\MailChimp;
 
-use Sitegear\Base\Module\AbstractConfigurableModule;
 use Rezzza\MailChimp\MCAPI;
+use Sitegear\Core\Module\AbstractCoreModule;
 
 /**
  * MailChimp integration module.
  */
-class MailChimpModule extends AbstractConfigurableModule {
+class MailChimpModule extends AbstractCoreModule {
 
 	//-- ModuleInterface Methods --------------------
 

@@ -8,14 +8,14 @@
 
 namespace Sitegear\Ext\Module\SalesTax;
 
-use Sitegear\Base\Module\AbstractConfigurableModule;
 use Sitegear\Base\Module\PurchaseAdjustmentProviderModuleInterface;
+use Sitegear\Core\Module\AbstractCoreModule;
 use Sitegear\Util\TokenUtilities;
 
 /**
  * Provides sales tax calculation and management tools for sales tax.
  */
-class SalesTaxModule extends AbstractConfigurableModule implements PurchaseAdjustmentProviderModuleInterface {
+class SalesTaxModule extends AbstractCoreModule implements PurchaseAdjustmentProviderModuleInterface {
 
 	//-- ModuleInterface Methods --------------------
 

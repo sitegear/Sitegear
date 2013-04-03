@@ -9,7 +9,7 @@
 namespace Sitegear\Core\Module\Version;
 
 use Sitegear\Base\View\ViewInterface;
-use Sitegear\Base\Module\AbstractConfigurableModule;
+use Sitegear\Core\Module\AbstractCoreModule;
 use Sitegear\Util\LoggerRegistry;
 
 /**
@@ -17,7 +17,7 @@ use Sitegear\Util\LoggerRegistry;
  *
  * @method \Sitegear\Core\Engine\Engine getEngine()
  */
-class VersionModule extends AbstractConfigurableModule {
+class VersionModule extends AbstractCoreModule {
 
 	//-- ModuleInterface Methods --------------------
 

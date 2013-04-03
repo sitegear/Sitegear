@@ -8,13 +8,13 @@
 
 namespace Sitegear\Ext\Module\Eway;
 
-use Sitegear\Base\Module\AbstractConfigurableModule;
 use Sitegear\Base\Module\PaymentGatewayModuleInterface;
+use Sitegear\Core\Module\AbstractCoreModule;
 
 /**
  * Eway integration module.
  */
-class EwayModule extends AbstractConfigurableModule implements PaymentGatewayModuleInterface {
+class EwayModule extends AbstractCoreModule implements PaymentGatewayModuleInterface {
 
 	//-- ModuleInterface Methods --------------------
 

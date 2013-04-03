@@ -1,14 +1,16 @@
 <?php
 /**
  * @var \Sitegear\Core\View\View $view
+ * @var \Sitegear\Ext\Module\Locations\LocationsModule $module
  * @var \Sitegear\Ext\Module\Locations\Model\Item $item
  * @var \Sitegear\Ext\Module\Locations\Model\Item $sibling
  */
 // TODO Editable name etc
+$module = $view['module'];
 $item = $view['item'];
 $view->getStringsManager()->prepend('title', $view['title'])->prepend('title', $item->getName());
 echo sprintf('<h1>%s</h1>', $item->getName()), PHP_EOL;
-echo $view->locations('editable')->item(sprintf('%s/%s', $view['item-path'], $item->getUrlPath()));
+echo $view->locations('editable')->item($module->getItemPath($item->getUrlPath()));
 echo $view->locations()->item('partials/address');
 echo $view->locations()->item('partials/map');
 echo $view->locations()->item('partials/nearby');

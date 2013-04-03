@@ -8,8 +8,8 @@
 
 namespace Sitegear\Ext\Module\Google;
 
-use Sitegear\Base\Module\AbstractConfigurableModule;
 use Sitegear\Base\View\ViewInterface;
+use Sitegear\Core\Module\AbstractCoreModule;
 use Sitegear\Util\LoggerRegistry;
 
 /**
@@ -18,7 +18,7 @@ use Sitegear\Util\LoggerRegistry;
  *
  * @method \Sitegear\Core\Engine\Engine getEngine()
  */
-class GoogleModule extends AbstractConfigurableModule {
+class GoogleModule extends AbstractCoreModule {
 
 	//-- ModuleInterface Methods --------------------
 

@@ -12,14 +12,20 @@
 return array(
 
 	/**
-	 * Directory in this module's path at the site level where the location content is stored as files.
+	 * Directory settings for description data files.
 	 */
-	'item-path' => 'items',
+	'paths' => array(
 
-	/**
-	 * Directory in this module's path at the site level where the region content is stored as files.
-	 */
-	'region-path' => 'regions',
+		/**
+		 * Directory in this module's path at the site level where the location region content is stored as files.
+		 */
+		'region' => 'regions',
+
+		/**
+		 * Directory in this module's path at the site level where the location item content is stored as files.
+		 */
+		'item' => 'items'
+	),
 
 	/**
 	 * Route settings.

@@ -8,7 +8,7 @@
 
 namespace Sitegear\Ext\Module\SwiftMailer;
 
-use Sitegear\Base\Module\AbstractConfigurableModule;
+use Sitegear\Core\Module\AbstractCoreModule;
 use Sitegear\Util\ArrayUtilities;
 use Sitegear\Util\TypeUtilities;
 use Sitegear\Util\NameUtilities;
@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Send mails using the Swiftmailer library and Sitegear's template rendering engine.
  */
-class SwiftMailerModule extends AbstractConfigurableModule {
+class SwiftMailerModule extends AbstractCoreModule {
 
 	//-- Attributes --------------------
 

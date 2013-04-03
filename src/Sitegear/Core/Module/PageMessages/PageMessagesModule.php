@@ -8,14 +8,14 @@
 
 namespace Sitegear\Core\Module\PageMessages;
 
-use Sitegear\Base\Module\AbstractConfigurableModule;
 use Sitegear\Base\View\ViewInterface;
+use Sitegear\Core\Module\AbstractCoreModule;
 
 /**
  * Provides a simple means of storing, retrieving and rendering messages that can be set by any other module and are
  * displayed "globally" at the same place within all pages (i.e. "flash messages").
  */
-class PageMessagesModule extends AbstractConfigurableModule {
+class PageMessagesModule extends AbstractCoreModule {
 
 	//-- Attributes --------------------
 

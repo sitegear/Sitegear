@@ -8,10 +8,10 @@
 
 namespace Sitegear\Core\Module\Navigation;
 
-use Sitegear\Base\Module\AbstractConfigurableModule;
 use Sitegear\Base\Module\MountableModuleInterface;
 use Sitegear\Base\Engine\EngineInterface;
 use Sitegear\Base\View\ViewInterface;
+use Sitegear\Core\Module\AbstractCoreModule;
 use Sitegear\Util\LoggerRegistry;
 
 use Symfony\Component\HttpFoundation\Request;
@@ -22,7 +22,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @method \Sitegear\Core\Engine\Engine getEngine()
  */
-class NavigationModule extends AbstractConfigurableModule {
+class NavigationModule extends AbstractCoreModule {
 
 	//-- Attributes --------------------
 

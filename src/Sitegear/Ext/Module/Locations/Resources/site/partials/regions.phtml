@@ -17,7 +17,7 @@ if ($regions->count() === 0) {
 <?php
 	foreach ($regions as $region) {
 		$linkUrl = $module->getRouteUrl('region', $region->getUrlPath());
-		$viewScript = sprintf('%s/%s', $view['region-path'], $region->getUrlPath());
+		$viewScript = $module->getContentPath('region', $region->getUrlPath());
 ?>
 	<section>
 		<h3><?php echo $region->getName(); ?></h3>

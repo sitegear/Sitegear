@@ -8,9 +8,9 @@
 
 namespace Sitegear\Core\Module\ResourcesIntegration;
 
-use Sitegear\Base\Module\AbstractUrlMountableModule;
 use Sitegear\Base\Resources\ResourceLocations;
 use Sitegear\Core\Engine\Engine;
+use Sitegear\Core\Module\AbstractCoreModule;
 use Sitegear\Util\LoggerRegistry;
 use Sitegear\Util\NameUtilities;
 
@@ -22,7 +22,7 @@ use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
  *
  * @method \Sitegear\Core\Engine\Engine getEngine()
  */
-class ResourcesIntegrationModule extends AbstractUrlMountableModule {
+class ResourcesIntegrationModule extends AbstractCoreModule {
 
 	//-- Constants --------------------
 

@@ -8,6 +8,7 @@
 
 namespace Sitegear\Core\View\Context;
 
+use Sitegear\Base\Module\ModuleInterface;
 use Sitegear\Base\View\ViewInterface;
 use Sitegear\Core\View\View;
 use Sitegear\Util\NameUtilities;
@@ -58,4 +59,14 @@ class ComponentViewContext extends AbstractCoreFileViewContext {
 		);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	protected function setupView(ViewInterface $view, Request $request, $viewName) {
+		/** @var ModuleInterface $module */
+		parent::setupView($view, $request, $viewName);
+		$module = $view['module'];
+		$module->applyViewDefaults($view, 'components', $viewName);
+	}
+	
 }

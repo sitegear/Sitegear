@@ -11,6 +11,7 @@ namespace Sitegear\Ext\Module\Locations;
 use Sitegear\Base\Module\AbstractUrlMountableModule;
 use Sitegear\Base\Resources\ResourceLocations;
 use Sitegear\Base\View\ViewInterface;
+use Sitegear\Core\Module\AbstractCoreModule;
 use Sitegear\Ext\Module\Locations\Repository\ItemRepository;
 use Sitegear\Util\TokenUtilities;
 use Sitegear\Util\LoggerRegistry;
@@ -28,7 +29,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  *
  * @method \Sitegear\Core\Engine\Engine getEngine()
  */
-class LocationsModule extends AbstractUrlMountableModule {
+class LocationsModule extends AbstractCoreModule {
 
 	//-- Constants --------------------
 
@@ -59,18 +60,6 @@ class LocationsModule extends AbstractUrlMountableModule {
 		));
 		// Setup Doctrine.
 		$this->getEngine()->doctrine()->getEntityManager()->getConfiguration()->addEntityNamespace(self::ENTITY_ALIAS, '\\Sitegear\\Ext\\Module\\Locations\\Model');
-	}
-
-	/**
-	 * Apply view defaults that are used by all pages in the locations module.
-	 *
-	 * @param \Sitegear\Base\View\ViewInterface $view
-	 */
-	public function applyViewDefaults(ViewInterface $view) {
-		parent::applyViewDefaults($view);
-		$this->applyConfigToView('common', $view);
-		$view['region-path'] = trim($this->config('region-path'), '/');
-		$view['item-path'] = trim($this->config('item-path'), '/');
 	}
 
 	//-- AbstractUrlMountableModule Methods --------------------

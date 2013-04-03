@@ -11,6 +11,7 @@ namespace Sitegear\Ext\Module\Products;
 use Sitegear\Base\Module\AbstractUrlMountableModule;
 use Sitegear\Base\Module\PurchaseItemProviderModuleInterface;
 use Sitegear\Base\View\ViewInterface;
+use Sitegear\Core\Module\AbstractCoreModule;
 use Sitegear\Ext\Module\Products\Model\Attribute;
 use Sitegear\Ext\Module\Products\Model\Item;
 use Sitegear\Util\LoggerRegistry;
@@ -25,7 +26,7 @@ use Doctrine\ORM\NoResultException;
  *
  * @method \Sitegear\Core\Engine\Engine getEngine()
  */
-class ProductsModule extends AbstractUrlMountableModule implements PurchaseItemProviderModuleInterface {
+class ProductsModule extends AbstractCoreModule implements PurchaseItemProviderModuleInterface {
 
 	//-- Constants --------------------
 
@@ -49,18 +50,6 @@ class ProductsModule extends AbstractUrlMountableModule implements PurchaseItemP
 	public function start() {
 		LoggerRegistry::debug('ProductsModule starting');
 		$this->getEngine()->doctrine()->getEntityManager()->getConfiguration()->addEntityNamespace(self::ENTITY_ALIAS, '\\Sitegear\\Ext\\Module\\Products\\Model');
-	}
-
-	/**
-	 * Apply view defaults that are used by all pages in the products module.
-	 *
-	 * @param \Sitegear\Base\View\ViewInterface $view
-	 */
-	public function applyViewDefaults(ViewInterface $view) {
-		$view['title'] = $this->config('title');
-		$view['heading'] = $this->config('heading');
-		$view['category-path'] = trim($this->config('category-path'), '/');
-		$view['item-path'] = trim($this->config('item-path'), '/');
 	}
 
 	//-- PurchaseItemProviderModuleInterface Methods --------------------
@@ -238,8 +227,6 @@ class ProductsModule extends AbstractUrlMountableModule implements PurchaseItemP
 		}
 		return $result;
 	}
-
-	//-- Internal Methods --------------------
 
 	/**
 	 * @param string $entity

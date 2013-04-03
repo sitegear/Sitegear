@@ -11,6 +11,7 @@ namespace Sitegear\Core\Module\UserIntegration;
 use Sitegear\Base\Module\AbstractUrlMountableModule;
 use Sitegear\Base\Resources\ResourceLocations;
 use Sitegear\Base\View\ViewInterface;
+use Sitegear\Core\Module\AbstractCoreModule;
 use Sitegear\Util\UrlUtilities;
 use Sitegear\Util\LoggerRegistry;
 
@@ -23,7 +24,7 @@ use Symfony\Component\Validator\ExecutionContextInterface;
  *
  * @method \Sitegear\Core\Engine\Engine getEngine()
  */
-class UserIntegrationModule extends AbstractUrlMountableModule {
+class UserIntegrationModule extends AbstractCoreModule {
 
 	//-- ModuleInterface Methods --------------------
 

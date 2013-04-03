@@ -13,6 +13,7 @@ use Sitegear\Base\Module\AbstractUrlMountableModule;
 use Sitegear\Base\Module\PurchaseAdjustmentProviderModuleInterface;
 use Sitegear\Base\Module\PurchaseItemProviderModuleInterface;
 use Sitegear\Base\View\ViewInterface;
+use Sitegear\Core\Module\AbstractCoreModule;
 use Sitegear\Ext\Module\Customer\Form\Builder\AddTrolleyItemFormBuilder;
 use Sitegear\Ext\Module\Customer\Form\Builder\CheckoutFormBuilder;
 use Sitegear\Ext\Module\Customer\Model\TransactionItem;
@@ -29,7 +30,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
  *
  * @method \Sitegear\Core\Engine\Engine getEngine()
  */
-class CustomerModule extends AbstractUrlMountableModule {
+class CustomerModule extends AbstractCoreModule {
 
 	//-- Constants --------------------
 

@@ -19,6 +19,7 @@ use Sitegear\Base\View\ViewInterface;
 use Sitegear\Base\Form\FormInterface;
 use Sitegear\Base\Form\Field\FieldInterface;
 use Sitegear\Base\Form\Processor\FormProcessorInterface;
+use Sitegear\Core\Module\AbstractCoreModule;
 use Sitegear\Core\Module\Forms\Form\Renderer\FormRenderer;
 use Sitegear\Core\Module\Forms\Form\Builder\FormBuilder;
 use Sitegear\Util\UrlUtilities;
@@ -38,7 +39,7 @@ use Symfony\Component\Validator\Constraints\Collection;
  *
  * @method \Sitegear\Core\Engine\Engine getEngine()
  */
-class FormsModule extends AbstractUrlMountableModule {
+class FormsModule extends AbstractCoreModule {
 
 	//-- Attributes --------------------
 

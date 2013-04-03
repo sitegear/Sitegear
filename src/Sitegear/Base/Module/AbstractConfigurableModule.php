@@ -9,12 +9,11 @@
 namespace Sitegear\Base\Module;
 
 use Sitegear\Base\Config\ConfigurableInterface;
+use Sitegear\Base\Config\ConfigLoader;
+use Sitegear\Base\Config\Container\SimpleConfigContainer;
 use Sitegear\Base\Config\Processor\IncludeTokenProcessor;
 use Sitegear\Base\Config\Processor\EngineTokenProcessor;
 use Sitegear\Base\Config\Processor\ConfigTokenProcessor;
-use Sitegear\Base\Config\ConfigLoader;
-use Sitegear\Base\Config\Container\SimpleConfigContainer;
-use Sitegear\Base\Resources\ResourceLocations;
 use Sitegear\Base\View\ViewInterface;
 use Sitegear\Util\TypeUtilities;
 
@@ -25,13 +24,6 @@ use Symfony\Component\HttpFoundation\Request;
  * not contain any specific functionality.
  */
 abstract class AbstractConfigurableModule extends AbstractModule implements ConfigurableInterface {
-
-	//-- Constants --------------------
-
-	/**
-	 * Default configuration filename relative to this source file's directory.
-	 */
-	const FILENAME_DEFAULTS = 'config/defaults.php';
 
 	//-- Attributes --------------------
 
@@ -90,31 +82,20 @@ abstract class AbstractConfigurableModule extends AbstractModule implements Conf
 		return $this->config->get($key, $default);
 	}
 
-	//-- ModuleInterface Methods --------------------
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function getResourceMap() {
-		return $this->config('resources', array());
-	}
-
 	//-- Internal Methods --------------------
-
-	/**
-	 * @return \Sitegear\Base\Config\ConfigLoader
-	 */
-	protected function getConfigLoader() {
-		return $this->configLoader;
-	}
 
 	/**
 	 * Get the default configuration for this module.
 	 *
 	 * @return null|string|array Filename, data array, etc.
 	 */
-	protected function defaults() {
-		return sprintf('%s/%s/%s', $this->getModuleRoot(), ResourceLocations::RESOURCES_DIRECTORY, self::FILENAME_DEFAULTS);
+	protected abstract function defaults();
+
+	/**
+	 * @return \Sitegear\Base\Config\ConfigLoader
+	 */
+	protected function getConfigLoader() {
+		return $this->configLoader;
 	}
 
 	/**

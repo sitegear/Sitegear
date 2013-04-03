@@ -60,10 +60,22 @@ interface ModuleInterface {
 	public function getResourceMap();
 
 	/**
-	 * Apply the module's default view settings, which are present as a baseline for all views (components and pages).
+	 * Get the content path for the given type and item.
+	 *
+	 * @param string $type
+	 * @param string $slug
+	 *
+	 * @return string
+	 */
+	public function getContentPath($type, $slug);
+
+	/**
+	 * Apply the module's default view settings, based on the given view type ("component" or "section") and view name.
 	 *
 	 * @param ViewInterface $view
+	 * @param string $viewType
+	 * @param string $viewName
 	 */
-	public function applyViewDefaults(ViewInterface $view);
+	public function applyViewDefaults(ViewInterface $view, $viewType, $viewName);
 
 }

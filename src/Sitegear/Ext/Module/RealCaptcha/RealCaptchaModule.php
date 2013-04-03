@@ -10,6 +10,7 @@ namespace Sitegear\Ext\Module\RealCaptcha;
 
 use Sitegear\Base\Module\AbstractUrlMountableModule;
 
+use Sitegear\Core\Module\AbstractCoreModule;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\ExecutionContextInterface;
@@ -21,7 +22,7 @@ use RealCaptcha\RealCaptcha;
  * standard configuration options to be passed to the RealCaptcha constructor, and an accessor for the constructed
  * RealCaptcha object.
  */
-class RealCaptchaModule extends AbstractUrlMountableModule {
+class RealCaptchaModule extends AbstractCoreModule {
 
 	//-- Attributes --------------------
 

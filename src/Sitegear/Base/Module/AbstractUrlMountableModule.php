@@ -26,16 +26,7 @@ use Symfony\Component\Routing\Generator\UrlGenerator;
  */
 abstract class AbstractUrlMountableModule extends AbstractConfigurableModule implements MountableModuleInterface {
 
-	//-- Constants --------------------
-
-	const FILENAME_ROUTES = 'config/routes.php';
-
 	//-- Attributes --------------------
-
-	/**
-	 * @var string|null
-	 */
-	private $baseUrl;
 
 	/**
 	 * @var string|null
@@ -48,11 +39,6 @@ abstract class AbstractUrlMountableModule extends AbstractConfigurableModule imp
 	private $routes;
 
 	/**
-	 * @var UrlGenerator|null
-	 */
-	private $generator;
-
-	/**
 	 * @var array[]
 	 */
 	private $navigationData;
@@ -61,10 +47,8 @@ abstract class AbstractUrlMountableModule extends AbstractConfigurableModule imp
 
 	public function __construct(EngineInterface $engine) {
 		parent::__construct($engine);
-		$this->baseUrl = null;
 		$this->mountedUrl = null;
 		$this->routes = null;
-		$this->generator = null;
 		$this->navigationData = array();
 	}
 
@@ -75,10 +59,8 @@ abstract class AbstractUrlMountableModule extends AbstractConfigurableModule imp
 	 */
 	public function mount($mountedUrl=null, RequestContext $context) {
 		LoggerRegistry::debug(sprintf('%s::mount(%s)', (new \ReflectionClass($this))->getShortName(), $mountedUrl));
-		$this->baseUrl = '/' . trim($context->getBaseUrl(), '/') . '/';
 		$this->mountedUrl = trim($mountedUrl, '/');
 		$this->routes = $this->buildRoutes();
-		$this->generator = new UrlGenerator($this->routes, $context);
 	}
 
 	/**
@@ -106,34 +88,6 @@ abstract class AbstractUrlMountableModule extends AbstractConfigurableModule imp
 	/**
 	 * {@inheritDoc}
 	 */
-	public function getRouteUrl($route, $parameters=null) {
-		// Convert non-array parameters to empty array or single-value array with default parameter name.
-		if (is_null($parameters)) {
-			$parameters = array();
-		} elseif (!is_array($parameters)) {
-			$parameters = array( $this->getDefaultRouteParameterName() => $parameters );
-		}
-		// Generate the URL
-		// TODO Allow configuration between absolute URL, absolute path, network URL, relative path, and path relative to base
-		$configuredRoute = $this->config(sprintf('routes.%s', $route), $route);
-		return UrlGenerator::getRelativePath(
-			$this->baseUrl,
-			$this->generator->generate($configuredRoute, $parameters, UrlGenerator::ABSOLUTE_PATH)
-		);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 *
-	 * @return string "slug"; can be overridden.
-	 */
-	public function getDefaultRouteParameterName() {
-		return 'slug';
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
 	public function getNavigationData($mode) {
 		if (!isset($this->navigationData[$mode])) {
 			$this->navigationData[$mode] = $this->buildNavigationData($mode);
@@ -148,42 +102,7 @@ abstract class AbstractUrlMountableModule extends AbstractConfigurableModule imp
 	 *
 	 * @return RouteCollection
 	 */
-	protected function buildRoutes() {
-		LoggerRegistry::debug(sprintf('%s::buildRouteCollection(), mounted to "%s"', (new \ReflectionClass($this))->getShortName(), $this->getMountedUrl()));
-		$routes = new RouteCollection();
-		// Check for an index controller and add a route for the module root.
-		if ((new \ReflectionObject($this))->hasMethod('indexController')) {
-//			LoggerRegistry::debug('Adding index route');
-			$routes->add('index', new Route($this->getMountedUrl()));
-		}
-		// Load routes from file.
-		$filename = sprintf('%s/%s/%s', $this->getModuleRoot(), ResourceLocations::RESOURCES_DIRECTORY, self::FILENAME_ROUTES);
-		$container = new SimpleConfigContainer($this->getConfigLoader());
-		$container->merge($filename);
-		// Add a route for each record in the routes file.
-		foreach ($container->all() as $name => $parameters) {
-			$defaults = array();
-			$requirements = array();
-			$options = array();
-			$path = sprintf('%s/%s', $this->getMountedUrl(), $this->config(sprintf('routes.%s', $name), $name));
-			foreach ($parameters ?: array() as $parameter) {
-				$parameterName = $parameter['name'];
-				$path = sprintf('%s/{%s}', $path, $parameterName);
-				if (isset($parameter['default'])) {
-					$defaults[$parameterName] = $parameter['default'];
-				}
-				if (isset($parameter['requirements'])) {
-					$requirements[$parameterName] = $parameter['requirements'];
-				}
-				if (isset($parameter['options'])) {
-					$options[$parameterName] = $parameter['options'];
-				}
-			}
-//			LoggerRegistry::debug(sprintf('Adding route "%s" with path "%s", defaults [ %s ], requirements [ %s ], options [ %s ]', $name, $path, preg_replace('/\\s+/', ' ', print_r($defaults, true)), preg_replace('/\\s+/', ' ', print_r($requirements, true)), preg_replace('/\\s+/', ' ', print_r($options, true))));
-			$routes->add($name, new Route($path, $defaults, $requirements, $options));
-		}
-		return $routes;
-	}
+	protected abstract function buildRoutes();
 
 	/**
 	 * Build the navigation data for this module.  Called once during mount() so that navigation data can be reused.
@@ -193,8 +112,6 @@ abstract class AbstractUrlMountableModule extends AbstractConfigurableModule imp
 	 *
 	 * @return array
 	 */
-	protected function buildNavigationData(/** @noinspection PhpUnusedParameterInspection */ $mode) {
-		return array();
-	}
+	protected abstract function buildNavigationData($mode);
 
 }

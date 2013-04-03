@@ -12,24 +12,20 @@
 return array(
 
 	/**
-	 * Directory in this module's path at the site level where the product item content is stored as files.
+	 * Directory settings for description data files.
 	 */
-	'item-path' => 'items',
+	'paths' => array(
 
-	/**
-	 * Directory in this module's path at the site level where the product category content is stored as files.
-	 */
-	'category-path' => 'categories',
+		/**
+		 * Directory in this module's path at the site level where the product item content is stored as files.
+		 */
+		'item' => 'items',
 
-	/**
-	 * Title displayed on the products index page, and on the product category and item pages after the name.
-	 */
-	'title' => 'Products',
-
-	/**
-	 * Main page heading.
-	 */
-	'heading' => 'Products',
+		/**
+		 * Directory in this module's path at the site level where the product category content is stored as files.
+		 */
+		'category' => 'categories'
+	),
 
 	/**
 	 * Route settings.
@@ -69,6 +65,22 @@ return array(
 //		'all-products-link' => false
 //		'all-categories-link' => false
 
+	),
+
+	/**
+	 * Settings that are used in multiple places and should have the same value everywhere.
+	 */
+	'common' => array(
+
+		/**
+		 * Title displayed on the products index page, and on the product category and item pages after the name.
+		 */
+		'title' => 'Products',
+
+		/**
+		 * Main page heading.
+		 */
+		'heading' => 'Products'
 	),
 
 	/**

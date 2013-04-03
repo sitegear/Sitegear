@@ -8,12 +8,12 @@
 
 namespace Sitegear\Core\Module\Iso;
 
-use Sitegear\Base\Module\AbstractConfigurableModule;
+use Sitegear\Core\Module\AbstractCoreModule;
 
 /**
  * Modular implementation of relevant ISO standards.
  */
-class IsoModule extends AbstractConfigurableModule {
+class IsoModule extends AbstractCoreModule {
 
 	//-- ModuleInterface Methods --------------------
 

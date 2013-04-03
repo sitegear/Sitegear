@@ -12,6 +12,7 @@ use Sitegear\Base\View\Context\AbstractFileViewContext;
 use Sitegear\Base\View\ViewInterface;
 use Sitegear\Base\View\Renderer\Registry\RendererRegistryInterface;
 
+use Sitegear\Core\View\View;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -28,8 +29,7 @@ abstract class AbstractCoreFileViewContext extends AbstractFileViewContext {
 	 */
 	protected function renderForLocation($location, RendererRegistryInterface $rendererRegistry, ViewInterface $view, Request $request, $methodResult) {
 		$result = null;
-		$view['module'] = $view->getEngine()->getModule($this->getContextModule($view, $request));
-		$view['module']->applyViewDefaults($view);
+		$this->setupView($view, $request, $methodResult ?: $view->getTarget(View::TARGET_LEVEL_METHOD));
 		foreach ($this->expandViewScriptPaths(trim($request->attributes->get('_view'), '/'), $view, $request, $methodResult) as $path) {
 			if (is_null($result)) {
 				$sitePath = $view->getEngine()->getSiteInfo()->getSitePath($location, $view['module'], $path);
@@ -54,5 +54,16 @@ abstract class AbstractCoreFileViewContext extends AbstractFileViewContext {
 	 * @return array One or more resolved locations.
 	 */
 	protected abstract function expandViewScriptPaths($viewScriptName, ViewInterface $view, Request $request, $methodResult);
+
+	/**
+	 * Setup the view with a reference to the module and any other context-specific data.
+	 *
+	 * @param ViewInterface $view
+	 * @param Request $request
+	 * @param string $viewName
+	 */
+	protected function setupView(ViewInterface $view, Request $request, $viewName) {
+		$view['module'] = $view->getEngine()->getModule($this->getContextModule($view, $request));
+	}
 
 }

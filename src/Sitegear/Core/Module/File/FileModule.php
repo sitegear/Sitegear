@@ -8,11 +8,11 @@
 
 namespace Sitegear\Core\Module\File;
 
-use Sitegear\Base\Module\AbstractConfigurableModule;
 use Sitegear\Base\Module\BootstrapModuleInterface;
 use Sitegear\Base\Module\DiscreteDataModuleInterface;
 use Sitegear\Base\Resources\ResourceLocations;
 use Sitegear\Core\Engine\Engine;
+use Sitegear\Core\Module\AbstractCoreModule;
 use Sitegear\Util\ExtensionMimeTypeGuesser;
 use Sitegear\Util\LoggerRegistry;
 
@@ -27,7 +27,7 @@ use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesser;
  *
  * @method \Sitegear\Core\Engine\Engine getEngine()
  */
-class FileModule extends AbstractConfigurableModule implements BootstrapModuleInterface, DiscreteDataModuleInterface {
+class FileModule extends AbstractCoreModule implements BootstrapModuleInterface, DiscreteDataModuleInterface {
 
 	//-- ModuleInterface Methods --------------------
 

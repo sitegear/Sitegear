@@ -8,6 +8,7 @@
 
 namespace Sitegear\Core\View\Context;
 
+use Sitegear\Base\Module\ModuleInterface;
 use Sitegear\Core\View\View;
 use Sitegear\Base\View\ViewInterface;
 
@@ -34,6 +35,16 @@ class TemplateViewContext extends AbstractCoreFileViewContext {
 		return array(
 			sprintf('templates/%s', ($methodResult ?: $view->getTarget(View::TARGET_LEVEL_METHOD)))
 		);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	protected function setupView(ViewInterface $view, Request $request, $viewName) {
+		/** @var ModuleInterface $module */
+		parent::setupView($view, $request, $viewName);
+		$module = $view['module'];
+		$module->applyViewDefaults($view, 'pages', $viewName);
 	}
 
 }

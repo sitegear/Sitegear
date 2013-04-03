@@ -8,8 +8,8 @@
 
 namespace Sitegear\Core\Module\Doctrine;
 
-use Sitegear\Base\Module\AbstractConfigurableModule;
 use Sitegear\Base\Module\DiscreteDataModuleInterface;
+use Sitegear\Core\Module\AbstractCoreModule;
 use Sitegear\Util\TypeUtilities;
 use Sitegear\Util\NameUtilities;
 use Sitegear\Util\LoggerRegistry;
@@ -37,7 +37,7 @@ use Gedmo\DoctrineExtensions;
  *
  * @method \Sitegear\Core\Engine\Engine getEngine()
  */
-class DoctrineModule extends AbstractConfigurableModule implements DiscreteDataModuleInterface {
+class DoctrineModule extends AbstractCoreModule implements DiscreteDataModuleInterface {
 
 	//-- Constants --------------------
 

@@ -14,7 +14,7 @@ $excerptDecorator = sprintf('excerpt(%d, "%s")', $view['excerpt-length'], 'Categ
 ?>
 <h1><?php echo $category->getName(); ?></h1>
 
-<?php echo $view->products('editable')->item(sprintf('%s/%s', $view['category-path'], $category->getUrlPath())); ?>
+<?php echo $view->products('editable')->item($module->getContentPath('category', $category->getUrlPath())); ?>
 
 <?php
 if (empty($view['items'])) {
@@ -26,7 +26,7 @@ if (empty($view['items'])) {
 <?php
 	foreach ($view['items'] as $item) {
 		$linkUrl = $module->getRouteUrl('item', $item->getUrlPath());
-		$viewScript = sprintf('%s/%s', $view['item-path'], $item->getUrlPath());
+		$viewScript = $module->getContentPath('item', $item->getUrlPath());
 ?>
 	<section>
 		<h3><?php echo $item->getName(); ?></h3>
@@ -58,7 +58,7 @@ if (!empty($view['categories'])) {
 <?php
 	foreach ($view['categories'] as $subcategory) {
 		$linkUrl = $module->getRouteUrl('category', $subcategory->getUrlPath());
-		$viewScript = sprintf('%s/%s', $view['category-path'], $subcategory->getUrlPath());
+		$viewScript = $module->getContentPath('category', $subcategory->getUrlPath());
 ?>
 	<section>
 		<h3><?php echo $subcategory->getName(); ?></h3>

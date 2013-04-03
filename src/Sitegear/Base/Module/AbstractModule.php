@@ -78,11 +78,9 @@ abstract class AbstractModule implements ModuleInterface {
 	}
 
 	/**
-	 * Apply the module's default view settings, which are present as a baseline for all views (components and pages).
-	 *
-	 * @param ViewInterface $view
+	 * {@inheritDoc}
 	 */
-	public function applyViewDefaults(ViewInterface $view) {
+	public function applyViewDefaults(ViewInterface $view, $viewType, $viewName) {
 		// Do nothing by default
 	}
 

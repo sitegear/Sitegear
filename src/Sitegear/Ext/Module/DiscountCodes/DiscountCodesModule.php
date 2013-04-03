@@ -8,14 +8,14 @@
 
 namespace Sitegear\Ext\Module\DiscountCodes;
 
-use Sitegear\Base\Module\AbstractConfigurableModule;
 use Sitegear\Base\Module\PurchaseAdjustmentProviderModuleInterface;
+use Sitegear\Core\Module\AbstractCoreModule;
 
 /**
  * Provides a method for accepting discount codes during the checkout process.  Also provides management tools for
  * discount codes so that they can be created, enabled and disabled, and statistics revealed about the usage of codes.
  */
-class DiscountCodesModule extends AbstractConfigurableModule implements PurchaseAdjustmentProviderModuleInterface {
+class DiscountCodesModule extends AbstractCoreModule implements PurchaseAdjustmentProviderModuleInterface {
 
 	//-- ModuleInterface Methods --------------------
 

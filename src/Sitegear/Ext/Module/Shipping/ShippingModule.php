@@ -8,13 +8,13 @@
 
 namespace Sitegear\Ext\Module\Shipping;
 
-use Sitegear\Base\Module\AbstractConfigurableModule;
 use Sitegear\Base\Module\PurchaseAdjustmentProviderModuleInterface;
+use Sitegear\Core\Module\AbstractCoreModule;
 
 /**
  * Provides shipping rate calculation and management.
  */
-class ShippingModule extends AbstractConfigurableModule implements PurchaseAdjustmentProviderModuleInterface {
+class ShippingModule extends AbstractCoreModule implements PurchaseAdjustmentProviderModuleInterface {
 
 	//-- ModuleInterface Methods --------------------
 
