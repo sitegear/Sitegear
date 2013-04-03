@@ -60,6 +60,13 @@ return array(
 		)
 	),
 
+	'page-messages' => array(
+		'item-added' => 'You have added %quantity% x "%label%" to your trolley.',
+		'item-total' => 'You now have %quantity% x "%label%" in your trolley.',
+		'item-removed' => 'You have removed "%label%" from your trolley.',
+		'item-modified' => 'You have changed the number of "%label%" in your trolley to %quantity%.'
+	),
+
 	/**
 	 * Settings for components.
 	 */

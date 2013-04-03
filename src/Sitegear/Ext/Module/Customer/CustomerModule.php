@@ -17,6 +17,7 @@ use Sitegear\Ext\Module\Customer\Form\Builder\AddTrolleyItemFormBuilder;
 use Sitegear\Ext\Module\Customer\Form\Builder\CheckoutFormBuilder;
 use Sitegear\Ext\Module\Customer\Model\TransactionItem;
 use Sitegear\Ext\Module\Customer\Model\Account;
+use Sitegear\Util\TokenUtilities;
 use Sitegear\Util\UrlUtilities;
 use Sitegear\Util\LoggerRegistry;
 
@@ -305,10 +306,9 @@ class CustomerModule extends AbstractUrlMountableModule {
 		$this->setTrolleyData($data);
 
 		// Notify on next page load
-		$count = $quantity > 1 ? sprintf('%d x ', $quantity) : '';
-		$this->getEngine()->pageMessages()->add(sprintf('You have added %s"%s" to your trolley', $count, $item->getLabel()), 'success');
+		$this->getEngine()->pageMessages()->add(TokenUtilities::replaceTokens($this->config('page-messages.item-added'), array( 'label' => $item->getLabel(), 'quantity' => $quantity )), 'success');
 		if ($item->getQuantity() > $quantity) {
-			$this->getEngine()->pageMessages()->add(sprintf('You now have %d x "%s" in your trolley', $item->getQuantity(), $item->getLabel()), 'success');
+			$this->getEngine()->pageMessages()->add(TokenUtilities::replaceTokens($this->config('page-messages.item-total'), array( 'label' => $item->getLabel(), 'quantity' => $item->getQuantity() )), 'success');
 		}
 	}
 
@@ -332,7 +332,7 @@ class CustomerModule extends AbstractUrlMountableModule {
 		$this->setTrolleyData($data);
 
 		// Notify on next page load.
-		$this->getEngine()->pageMessages()->add(sprintf('You have removed "%s" from your trolley', $item->getLabel()), 'success');
+		$this->getEngine()->pageMessages()->add(TokenUtilities::replaceTokens($this->config('page-messages.item-removed'), array( 'label' => $item->getLabel() )), 'success');
 	}
 
 	/**
@@ -361,7 +361,7 @@ class CustomerModule extends AbstractUrlMountableModule {
 		$this->setTrolleyData($data);
 
 		// Notify on next page load.
-		$this->getEngine()->pageMessages()->add(sprintf('You have changed the number of "%s" in your trolley to %d', $item->getLabel(), $quantity), 'success');
+		$this->getEngine()->pageMessages()->add(TokenUtilities::replaceTokens($this->config('page-messages.item-modified'), array( 'label' => $item->getLabel(), 'quantity' => $quantity )), 'success');
 	}
 
 	/**
