@@ -43,9 +43,10 @@ class FormsModule extends AbstractCoreModule {
 	//-- Attributes --------------------
 
 	/**
-	 * @var array Each entry is either a FormInterface implementation representing an already-built form, or an array
-	 *   containing a 'type' key with value either 'definitions' or 'callback'.  Depending on the value of the 'type'
-	 *   key an additional key will store the path(s) to the definition file(s) or the callback itself.
+	 * @var array[] Each entry is a key-value array, which ultimately contains a 'form' key that refers to a
+	 *   FormInterface implementation.  For forms that are defined but not built, the 'type' key should have a value of
+	 *   either 'definitions' or 'callback'.  Depending on the value of the 'type' key an additional key will store the
+	 *   path(s) to the definition file(s) or a callback.
 	 */
 	private $forms;
 
