@@ -104,12 +104,9 @@ abstract class AbstractCoreModule extends AbstractUrlMountableModule {
 			$parameters = array( $this->getDefaultRouteParameterName() => $parameters );
 		}
 		// Generate the URL
-		// TODO Allow configuration between absolute URL, absolute path, network URL, relative path, and path relative to base
 		$configuredRoute = $this->config(sprintf('routes.%s', $route), $route);
-		return UrlGenerator::getRelativePath(
-			$this->baseUrl,
-			$this->urlGenerator->generate($configuredRoute, $parameters, UrlGenerator::ABSOLUTE_PATH)
-		);
+		// TODO Allow configuration between absolute URL, absolute path, network URL, relative path, and path relative to base
+		return $this->urlGenerator->generate($configuredRoute, $parameters, UrlGenerator::ABSOLUTE_URL);
 	}
 
 	/**
