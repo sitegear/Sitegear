@@ -94,8 +94,7 @@ class UserIntegrationModule extends AbstractCoreModule {
 	public function logoutController(Request $request) {
 		LoggerRegistry::debug('UserIntegrationModule::logoutController');
 		$this->logout();
-		$return = UrlUtilities::getReturnUrl($request->getUri());
-		return new RedirectResponse($return ?: $request->getBaseUrl());
+		return new RedirectResponse(UrlUtilities::getReturnUrl($request));
 	}
 
 	/**
@@ -159,13 +158,14 @@ class UserIntegrationModule extends AbstractCoreModule {
 	 */
 	public function selectorComponent(ViewInterface $view, Request $request) {
 		LoggerRegistry::debug('UserIntegrationModule::selectorComponent');
-		$links = array();
 		$routeLabels = $this->config('components.selector.route-labels');
+		$currentUrl = $request->getSchemeAndHttpHost() . $request->getBaseUrl() . $request->getPathInfo();
+		$links = array();
 		foreach ($routeLabels as $route => $label) {
 			$links[] = array(
-				'url' => $this->getAuthenticationLinkUrl($route, $request->getUri()),
+				'url' => $this->getAuthenticationLinkUrl($route, $request),
 				'label' => $label,
-				'current' => ltrim($request->getPathInfo(), '/') === $this->getRouteUrl($route)
+				'current' => $currentUrl === $this->getRouteUrl($route)
 			);
 		}
 		$view['links'] = $links;
@@ -185,12 +185,12 @@ class UserIntegrationModule extends AbstractCoreModule {
 		if ($this->getEngine()->getUserManager()->isLoggedIn()) {
 			// User is logged in, so we want a logout link (not a link if guest user)
 			$view['customer-profile-url'] = $this->getEngine()->getModuleMountedUrl('customer');
-			$view['logout-url'] = $this->getAuthenticationLinkUrl('logout', $request->getUri());
+			$view['logout-url'] = $this->getAuthenticationLinkUrl('logout', $request);
 			$view['user-email'] = $this->getEngine()->getUserManager()->getLoggedInUserEmail();
 			return 'logout-link';
 		} else {
 			// User is not logged in, so we want a login link
-			$view['login-url'] = $this->getAuthenticationLinkUrl('login', $request->getUri());
+			$view['login-url'] = $this->getAuthenticationLinkUrl('login', $request);
 			return 'login-link';
 		}
 	}
@@ -201,18 +201,12 @@ class UserIntegrationModule extends AbstractCoreModule {
 	 * Get the URL for a login or logout link according to the specified key.
 	 *
 	 * @param string $key Either 'login' or 'logout'.
-	 * @param string $returnUrl The URL to return to, after completing the action.
+	 * @param Request $request The request providing the URL to return to, after completing the action.
 	 *
 	 * @return string Generated URL.
 	 */
-	public function getAuthenticationLinkUrl($key, $returnUrl) {
-		$url = sprintf(
-			'%s/%s/%s',
-			$this->getEngine()->config('system.command-url.root'),
-			$this->getEngine()->config('system.command-url.user'),
-			$this->config(sprintf('routes.%s', $key))
-		);
-		return UrlUtilities::generateLinkWithReturnUrl($url, $returnUrl);
+	public function getAuthenticationLinkUrl($key, Request $request) {
+		return UrlUtilities::generateLinkWithReturnUrl($this->getRouteUrl($key), $request->getUri());
 	}
 
 	/**
