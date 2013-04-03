@@ -91,7 +91,7 @@ class FormsModule extends AbstractCoreModule {
 			}
 		}
 		$this->setValues($formKey, $data);
-		return new RedirectResponse($request->getUriForPath('/' . $request->query->get('form-url', '')));
+		return new RedirectResponse(UrlUtilities::getReturnUrl($request, 'form-url'));
 	}
 
 	/**
@@ -111,7 +111,6 @@ class FormsModule extends AbstractCoreModule {
 		$values = $request->getMethod() === 'GET' ? $request->query->all() : $request->request->all();
 		$this->setValues($formKey, array_merge($this->getValues($formKey), $values));
 		$form = $this->getForm($formKey, $request);
-		$formUrl = $request->getUriForPath('/' . $request->query->get('form-url', ''));
 		$targetUrl = null;
 		$response = null;
 		$currentStep = $this->getCurrentStep($formKey);
@@ -166,7 +165,7 @@ class FormsModule extends AbstractCoreModule {
 		// Return any of the following in order of preference: response returned by a processor method; redirection to
 		// the target URL; redirection to the return URL extracted from the form URL; the form URL; the home page.
 		if (!$response instanceof Response) {
-			$response = new RedirectResponse($targetUrl ?: ($formUrl ?: $request->getUriForPath('')));
+			$response = new RedirectResponse($targetUrl ?: UrlUtilities::getReturnUrl($request, 'form-url'));
 		}
 		return $response;
 	}
@@ -198,7 +197,7 @@ class FormsModule extends AbstractCoreModule {
 		}
 		// Update progress and redirect back to the form URL.
 		$this->setCurrentStep($formKey, $jumpStep);
-		return new RedirectResponse($request->getUriForPath('/' . $request->query->get('form-url', '')));
+		return new RedirectResponse(UrlUtilities::getReturnUrl($request, 'form-url'));
 	}
 
 	//-- Component Controller Methods --------------------
@@ -249,7 +248,7 @@ class FormsModule extends AbstractCoreModule {
 		$view['form'] = $this->getForm($formKey, $request);
 		$view['current-step'] = $this->getCurrentStep($formKey);
 		$view['available-steps'] = $this->getAvailableSteps($formKey);
-		$view['jump-url-format'] = $this->getRouteUrl('jump', $formKey) . sprintf('?form-url=%s&step=%%d', ltrim($request->getPathInfo(), '/'));
+		$view['jump-url-format'] = $this->getRouteUrl('jump', $formKey) . sprintf('?form-url=%s&step=%%d', $request->getUri());
 	}
 
 	//-- Form Management Methods --------------------
@@ -333,8 +332,7 @@ class FormsModule extends AbstractCoreModule {
 	 */
 	public function getForm($formKey, Request $request) {
 		LoggerRegistry::debug(sprintf('FormsModule::getForm(%s)', $formKey));
-		$queryString = strlen($request->getQueryString()) > 0 ? '?' . $request->getQueryString() : '';
-		$formUrl = sprintf('%s%s', ltrim($request->getPathInfo(), '/'), $queryString);
+		$formUrl = $request->getUri();
 		if (!isset($this->forms[$formKey])) {
 			$defaultPath = array( $this->getEngine()->getSiteInfo()->getSitePath(ResourceLocations::RESOURCE_LOCATION_SITE, $this, sprintf('%s.json', $formKey)) );
 			$this->forms[$formKey] = array( 'form' => $this->loadFormFromDefinitions($formKey, $formUrl, $defaultPath) );
