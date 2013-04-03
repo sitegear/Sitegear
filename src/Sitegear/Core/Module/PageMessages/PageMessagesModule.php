@@ -19,8 +19,9 @@ class PageMessagesModule extends AbstractConfigurableModule {
 
 	//-- Attributes --------------------
 
-	private $sessionKey;
-
+	/**
+	 * @var array[] Cached messages.
+	 */
 	private $messages;
 
 	//-- ModuleInterface Methods --------------------
@@ -36,8 +37,7 @@ class PageMessagesModule extends AbstractConfigurableModule {
 	 * {@inheritDoc}
 	 */
 	public function start() {
-		$this->sessionKey = $this->config('session-key');
-		$this->messages = $this->getEngine()->getSession()->get($this->sessionKey);
+		$this->messages = $this->getEngine()->getSession()->get($this->config('session-key'));
 	}
 
 	//-- Component Controller Methods --------------------
@@ -65,7 +65,7 @@ class PageMessagesModule extends AbstractConfigurableModule {
 			'message' => $message,
 			'class' => $class
 		);
-		$this->getEngine()->getSession()->set($this->sessionKey, $this->messages);
+		$this->getEngine()->getSession()->set($this->config('session-key'), $this->messages);
 	}
 
 	/**
@@ -89,7 +89,7 @@ class PageMessagesModule extends AbstractConfigurableModule {
 	 */
 	public function clear() {
 		$this->messages = array();
-		$this->getEngine()->getSession()->remove($this->sessionKey);
+		$this->getEngine()->getSession()->remove($this->config('session-key'));
 	}
 
 }
