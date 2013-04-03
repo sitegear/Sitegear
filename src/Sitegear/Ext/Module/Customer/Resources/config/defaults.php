@@ -60,10 +60,29 @@ return array(
 		)
 	),
 
+	/**
+	 * Page message formats.
+	 */
 	'page-messages' => array(
+
+		/**
+		 * Message displayed when an item has been added to the trolley.
+		 */
 		'item-added' => 'You have added %quantity% x "%label%" to your trolley.',
+
+		/**
+		 * Additional message displayed when the added item was already in the trolley, displaying the new total qty.
+		 */
 		'item-total' => 'You now have %quantity% x "%label%" in your trolley.',
+
+		/**
+		 * Message displayed when an item has been removed from the trolley.
+		 */
 		'item-removed' => 'You have removed "%label%" from your trolley.',
+
+		/**
+		 * Message displayed when the quantity of an item has been modified.
+		 */
 		'item-modified' => 'You have changed the number of "%label%" in your trolley to %quantity%.'
 	),
 
