@@ -145,7 +145,7 @@ class LocationsModule extends AbstractCoreModule {
 		$query = $request->query->get('query');
 		$radius = $request->query->get('radius');
 		if (strlen($query) === 0) {
-			return new RedirectResponse($request->getUriForPath('/' . $this->getRouteUrl('index')));
+			return new RedirectResponse($this->getRouteUrl('index'));
 		}
 		if (!is_numeric($radius)) {
 			throw new \InvalidArgumentException(sprintf('LocationsModule received invalid radius in search; must be numeric, "%s" received', $radius));
