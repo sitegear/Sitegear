@@ -19,7 +19,7 @@ use Sitegear\Util\LoggerRegistry;
 /**
  * Provides a centralised point of managing user information.
  */
-class SessionUserManager extends AbstractUserManager {
+class UserManager extends AbstractUserManager {
 
 	//-- Constants --------------------
 
@@ -84,10 +84,10 @@ class SessionUserManager extends AbstractUserManager {
 	 * {@inheritDoc}
 	 */
 	public function login($email, array $credentials) {
-		LoggerRegistry::debug('SessionUserManager::login');
+		LoggerRegistry::debug('UserManager::login');
 		$result = false;
 		if (!is_null($this->getAuthenticator()->checkCredentials($email, $credentials))) {
-			LoggerRegistry::debug('SessionUserManager login successful');
+			LoggerRegistry::debug('UserManager login successful');
 			$this->session->set(self::SESSION_KEY_USER_EMAIL, $email);
 			$this->session->remove(self::SESSION_KEY_USER_IS_GUEST);
 			$result = true;
@@ -99,7 +99,7 @@ class SessionUserManager extends AbstractUserManager {
 	 * {@inheritDoc}
 	 */
 	public function guestLogin() {
-		LoggerRegistry::debug('SessionUserManager::guestLogin');
+		LoggerRegistry::debug('UserManager::guestLogin');
 		$this->session->set(self::SESSION_KEY_USER_IS_GUEST, true);
 		$this->session->remove(self::SESSION_KEY_USER_EMAIL);
 	}
@@ -108,7 +108,7 @@ class SessionUserManager extends AbstractUserManager {
 	 * {@inheritDoc}
 	 */
 	public function logout() {
-		LoggerRegistry::debug('SessionUserManager::logout');
+		LoggerRegistry::debug('UserManager::logout');
 		$this->session->remove(self::SESSION_KEY_USER_EMAIL);
 		$this->session->remove(self::SESSION_KEY_USER_IS_GUEST);
 		return true;

@@ -17,7 +17,7 @@ use Sitegear\Base\View\Strings\SimpleStringsManager;
 use Sitegear\Core\Info\SitegearInfoProvider;
 use Sitegear\Core\Info\EnvironmentInfoProvider;
 use Sitegear\Core\Info\SiteInfoProvider;
-use Sitegear\Core\User\SessionUserManager;
+use Sitegear\Core\User\UserManager;
 use Sitegear\Core\View\View;
 use Sitegear\Core\View\ViewFactory;
 use Sitegear\Util\ExtensionMimeTypeGuesser;
@@ -102,7 +102,7 @@ class Engine extends AbstractConfigurableEngine {
 		$environment = !is_null($environment) && !is_string($environment) ? $environment : new EnvironmentInfoProvider($environment);
 		$sitegearInfo = $sitegearInfo ?: new SitegearInfoProvider($this);
 		$viewFactory = $viewFactory ?: new ViewFactory($this);
-		$userManager = new SessionUserManager($userStorage ?: $this->createUserStorage($siteInfo->getSiteRoot(), $environment->getEnvironment()));
+		$userManager = new UserManager($userStorage ?: $this->createUserStorage($siteInfo->getSiteRoot(), $environment->getEnvironment()));
 		parent::__construct($siteInfo, $environment, $sitegearInfo, $viewFactory, $userManager);
 	}
 
