@@ -34,8 +34,9 @@ final class UrlUtilities {
 		if ($linkUrl instanceof Request) {
 			$linkUrl = $linkUrl->getUri();
 		}
-		if (!is_null(self::getReturnUrl($returnUrl, $returnUrlParam))) {
-			$returnUrl = self::getReturnUrl($returnUrl, $returnUrlParam);
+		$existingReturnUrl = self::getReturnUrl($returnUrl, $returnUrlParam);
+		if (!is_null($existingReturnUrl)) {
+			$returnUrl = $existingReturnUrl;
 		} elseif ($returnUrl instanceof Request) {
 			$returnUrl = $returnUrl->getUri();
 		}
@@ -46,18 +47,24 @@ final class UrlUtilities {
 	/**
 	 * Extract the return URL parameter from the given URL.
 	 *
-	 * @param string|\Symfony\Component\HttpFoundation\Request $url A URL, or a Request object representing the URL to
-	 *   extract the return URL from.
+	 * @param string|\Symfony\Component\HttpFoundation\Request $request A Request object representing the URL to
+	 *   extract the return URL from, or the URL as a string.
 	 * @param string $returnUrlParam HTTP GET parameter name to look for the return URL in; if omitted, the default is
-	 *   used.
+	 *   used ('return').
+	 * @param string $default Default URL to return if no return parameter is found, null by default.  If no default is
+	 *   given, and the $request parameter is a Request object, then the home page URI is used as a default.
 	 *
 	 * @return string Return URL extracted from the given URL, or null if no such return URL parameter is set.
 	 */
-	public static function getReturnUrl($url, $returnUrlParam='return') {
-		if (!($url instanceof Request)) {
-			$url = Request::create($url);
+	public static function getReturnUrl($request, $returnUrlParam=null, $default=null) {
+		if ($request instanceof Request) {
+			if (is_null($default)) {
+				$default = $request->getSchemeAndHttpHost() . $request->getBaseUrl();
+			}
+		} else {
+			$request = Request::create($request);
 		}
-		return $url->get($returnUrlParam);
+		return $request->get($returnUrlParam ?: 'return', $default);
 	}
 
 	/**
