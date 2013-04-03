@@ -71,7 +71,7 @@ class CustomerModule extends AbstractCoreModule {
 	public function indexController(ViewInterface $view, Request $request) {
 		LoggerRegistry::debug('CustomerModule::indexController');
 		if (!$this->getEngine()->getUserManager()->isLoggedIn()) {
-			return new RedirectResponse($this->getEngine()->userIntegration()->getAuthenticationLinkUrl('login', $request->getUri()));
+			return new RedirectResponse($this->getEngine()->userIntegration()->getAuthenticationLinkUrl('login', $request));
 		}
 		$this->applyConfigToView('pages.index', $view);
 		$view['account'] = $this->getLoggedInUserAccount();
@@ -176,8 +176,7 @@ class CustomerModule extends AbstractCoreModule {
 				$view['activate-script'] = $this->config('checkout.activate-script');
 				return null;
 			} else {
-				$loginUrl = $this->getEngine()->userIntegration()->getAuthenticationLinkUrl('login', $request->getUri());
-				return new RedirectResponse($request->getUriForPath(sprintf('/%s', $loginUrl)));
+				return new RedirectResponse($this->getEngine()->userIntegration()->getAuthenticationLinkUrl('login', $request));
 			}
 		} else {
 			return new RedirectResponse($request->getUriForPath($this->getRouteUrl('trolley')));
