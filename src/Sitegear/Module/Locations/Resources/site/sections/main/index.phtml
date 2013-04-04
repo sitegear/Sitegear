@@ -6,5 +6,10 @@
 $view->getStringsManager()->prepend('title', $view['title']);
 $regionDecorator = sprintf('excerpt(%d, "%s")', $view['excerpt-length'], 'Region description not found.');
 echo sprintf('<h1>%s</h1>', $view['heading']), PHP_EOL;
-echo $view->locations('element(section, class="locations-search-form-container")')->searchForm();
+if ($view['show-search'] === 'before') {
+	echo $view->locations('element(section, class="locations-search-form-container")')->searchForm();
+}
 echo $view->locations()->item('partials/regions');
+if ($view['show-search'] === 'after') {
+	echo $view->locations('element(section, class="locations-search-form-container")')->searchForm();
+}

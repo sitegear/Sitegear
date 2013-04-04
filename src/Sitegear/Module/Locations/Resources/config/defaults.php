@@ -121,7 +121,12 @@ return array(
 			/**
 			 * Component to use when no regions are found.
 			 */
-			'no-regions' => 'no-regions'
+			'no-regions' => 'no-regions',
+
+			/**
+			 * Where to show the search form, either 'before' or 'after' or false to not show it at all.
+			 */
+			'show-search' => 'before'
 
 		),
 
