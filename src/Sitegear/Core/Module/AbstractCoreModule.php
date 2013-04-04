@@ -77,7 +77,7 @@ abstract class AbstractCoreModule extends AbstractUrlMountableModule {
 	 * {@inheritDoc}
 	 */
 	public function applyViewDefaults(ViewInterface $view, $viewType, $viewName) {
-		parent::applyViewDefaults($view, $viewType, $viewName);
+		LoggerRegistry::debug(sprintf('%s applying view defaults', (new \ReflectionClass($this))->getShortName()));
 		$this->applyConfigToView('common', $view);
 		$this->applyConfigToView(sprintf('%s.%s', $viewType, $viewName), $view);
 	}
