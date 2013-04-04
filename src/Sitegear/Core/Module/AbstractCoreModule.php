@@ -28,12 +28,12 @@ abstract class AbstractCoreModule extends AbstractUrlMountableModule {
 	//-- Constants --------------------
 
 	/**
-	 * Default configuration filename relative to this source file's directory.
+	 * Filename relative to this source file's directory containing default configuration values.
 	 */
 	const FILENAME_DEFAULTS = 'config/defaults.php';
 
 	/**
-	 * Default route configuration filename relative to this source file's directory.
+	 * Filename relative to this source file's directory containing route settings.
 	 */
 	const FILENAME_ROUTES = 'config/routes.php';
 
