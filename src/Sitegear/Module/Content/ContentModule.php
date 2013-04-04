@@ -108,7 +108,8 @@ class ContentModule extends AbstractCoreModule {
 	 */
 	protected function buildRoutes() {
 		$routes = new RouteCollection();
-		return $this->compileRoutesFromMainSectionViewScripts($routes, $this->getEngine()->getSiteInfo()->getSitePath(ResourceLocations::RESOURCE_LOCATION_SITE, $this, 'sections/main/'));
+		$root = $this->getEngine()->getSiteInfo()->getSitePath(ResourceLocations::RESOURCE_LOCATION_SITE, $this, 'sections/main/');
+		return $this->compileRoutesFromMainSectionViewScripts($routes, $root);
 	}
 
 	/**
