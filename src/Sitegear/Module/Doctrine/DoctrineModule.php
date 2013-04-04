@@ -93,16 +93,7 @@ class DoctrineModule extends AbstractCoreModule implements DiscreteDataModuleInt
 			/** @var AnnotationReader $cachedAnnotationReader (for all intents and purposes...) */
 			$cachedAnnotationReader = new CachedReader(new AnnotationReader(), $cache);
 			$driverChain = new MappingDriverChain();
-			$dir = dirname((new \ReflectionClass('\\Gedmo\\DoctrineExtensions'))->getFileName());
-			$annotationDriver = new AnnotationDriver(
-				$cachedAnnotationReader,
-				array(
-					$this->getEngine()->getSitegearInfo()->getSitegearRoot(),
-					$dir . '/Translatable/Entity/MappedSuperclass',
-					$dir . '/Loggable/Entity/MappedSuperclass',
-					$dir . '/Tree/Entity/MappedSuperclass'
-				)
-			);
+			$annotationDriver = new AnnotationDriver($cachedAnnotationReader, array( $this->getEngine()->getSitegearInfo()->getSitegearRoot() ));
 			$driverChain->addDriver($annotationDriver, 'Gedmo');
 
 			// TODO Make model-providing modules declare their own namespaces
