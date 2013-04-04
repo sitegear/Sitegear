@@ -15,6 +15,7 @@ use Sitegear\Base\Config\Processor\IncludeTokenProcessor;
 use Sitegear\Base\Config\Processor\EngineTokenProcessor;
 use Sitegear\Base\Config\Processor\ConfigTokenProcessor;
 use Sitegear\Base\View\ViewInterface;
+use Sitegear\Util\LoggerRegistry;
 use Sitegear\Util\TypeUtilities;
 
 use Symfony\Component\HttpFoundation\Request;
@@ -47,6 +48,7 @@ abstract class AbstractConfigurableModule extends AbstractModule implements Conf
 	 * This implementation automatically adds a ConfigTokenProcessor and an EngineTokenProcessor.
 	 */
 	public function configure($config=null, ConfigLoader $loader=null, array $additionalProcessors=null) {
+		LoggerRegistry::debug(sprintf('Configuring %s...', (new \ReflectionClass($this))->getShortName()));
 		$this->configLoader = $loader ?: new ConfigLoader($this->getEngine()->getEnvironmentInfo());
 		$this->config = new SimpleConfigContainer($this->configLoader);
 		$this->config->addProcessor(new EngineTokenProcessor($this->getEngine(), 'engine'));
@@ -107,6 +109,7 @@ abstract class AbstractConfigurableModule extends AbstractModule implements Conf
 	 * @param \Sitegear\Base\View\ViewInterface $view
 	 */
 	protected function applyConfigToView($configKey, ViewInterface $view) {
+		LoggerRegistry::debug(sprintf('Applying config from key "%s" to view', $configKey));
 		if (is_array($config = $this->config($configKey))) {
 			foreach ($config as $key => $value) {
 				$view[$key] = $value;
