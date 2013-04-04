@@ -105,7 +105,9 @@ class DoctrineModule extends AbstractCoreModule implements DiscreteDataModuleInt
 			// Create the entity manager configuration, with proxy generation, cached metadata and lowercase-underscore
 			// database naming convention.
 			$entityManagerConfig = new Configuration();
+			// TODO Make this a temp directory set in the engine config
 			$entityManagerConfig->setProxyDir(sys_get_temp_dir());
+			// TODO Configurable namespace and naming strategy
 			$entityManagerConfig->setProxyNamespace('Proxy');
 			$entityManagerConfig->setAutoGenerateProxyClasses($this->getEngine()->getEnvironmentInfo()->isDevMode());
 			$entityManagerConfig->setMetadataDriverImpl($driverChain);
