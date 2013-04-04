@@ -22,15 +22,14 @@ use Doctrine\Common\Annotations\CachedReader;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Cache\MemcacheCache;
 use Doctrine\Common\Cache\ArrayCache;
+use Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain;
 use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
-use Doctrine\ORM\Mapping\Driver\DriverChain;
 use Doctrine\ORM\Mapping\UnderscoreNamingStrategy;
 
 use Gedmo\Mapping\MappedEventSubscriber;
-use Gedmo\DoctrineExtensions;
 
 /**
  * Wrapper around a Doctrine entity manager.
@@ -84,17 +83,27 @@ class DoctrineModule extends AbstractCoreModule implements DiscreteDataModuleInt
 			);
 
 			// Setup annotation metadata
+			\Gedmo\DoctrineExtensions::registerAnnotations();
 			if ($this->getEngine()->getEnvironmentInfo()->isDevMode() || !$this->getEngine()->config('memcache.enabled')) {
 				$cache = new ArrayCache();
 			} else {
 				$cache = new MemcacheCache();
 				$cache->setMemcache($this->getEngine()->getMemcache());
 			}
-			$annotationReader = new AnnotationReader();
-			$cachedAnnotationReader = new CachedReader($annotationReader, $cache);
-			$driverChain = new DriverChain();
-			DoctrineExtensions::registerAbstractMappingIntoDriverChainORM($driverChain, $cachedAnnotationReader);
-			$annotationDriver = new AnnotationDriver($annotationReader, array( $this->getEngine()->getSitegearInfo()->getSitegearRoot() ));
+			/** @var AnnotationReader $cachedAnnotationReader (for all intents and purposes...) */
+			$cachedAnnotationReader = new CachedReader(new AnnotationReader(), $cache);
+			$driverChain = new MappingDriverChain();
+			$dir = dirname((new \ReflectionClass('\\Gedmo\\DoctrineExtensions'))->getFileName());
+			$annotationDriver = new AnnotationDriver(
+				$cachedAnnotationReader,
+				array(
+					$this->getEngine()->getSitegearInfo()->getSitegearRoot(),
+					$dir . '/Translatable/Entity/MappedSuperclass',
+					$dir . '/Loggable/Entity/MappedSuperclass',
+					$dir . '/Tree/Entity/MappedSuperclass'
+				)
+			);
+			$driverChain->addDriver($annotationDriver, 'Gedmo');
 
 			// TODO Make model-providing modules declare their own namespaces
 			$driverChain->addDriver($annotationDriver, 'Sitegear\Module\Customer\Model');
