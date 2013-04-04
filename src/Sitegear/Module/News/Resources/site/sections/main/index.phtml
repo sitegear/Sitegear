@@ -1,7 +1,7 @@
 <?php
 /**
  * @var \Sitegear\Core\View\View $view
- * @var \Sitegear\Module\Locations\LocationsModule $module
+ * @var \Sitegear\Module\News\NewsModule $module
  * @var \Sitegear\Module\News\Model\Item $item
  */
 $module = $view['module'];
@@ -17,7 +17,7 @@ if (empty($view['items'])) {
 } else {
 	foreach ($view['items'] as $item) {
 		$linkUrl = $module->getRouteUrl('item', $item->getUrlPath());
-		$viewScript = sprintf('%s/%s', $view['item-path'], $item->getUrlPath());
+		$viewScript = $module->getContentPath('item', $item->getUrlPath());
 ?>
 	<section>
 <?php
@@ -60,11 +60,11 @@ if ($view['item-count'] > 0) {
 <?php
 	if ($view['more']) {
 ?>
-<a href="<?php echo $view['index-url']; ?>"><?php echo $view['show-less']; ?></a>
+<a href="<?php echo $module->getRouteUrl('index'); ?>"><?php echo $view['show-less']; ?></a>
 <?php
 	} else {
 ?>
-<a href="<?php echo $view['index-url']; ?>?more=1"><?php echo $view['show-more']; ?></a>
+<a href="<?php echo $module->getRouteUrl('index');; ?>?more=1"><?php echo $view['show-more']; ?></a>
 <?php
 	}
 ?>

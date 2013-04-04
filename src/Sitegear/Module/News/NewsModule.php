@@ -91,13 +91,11 @@ class NewsModule extends AbstractCoreModule {
 	 */
 	public function indexController(ViewInterface $view, Request $request) {
 		LoggerRegistry::debug('NewsModule::indexController');
-		$this->applyDefaults($view);
 		$this->applyConfigToView('page.index', $view);
 		$itemCount = $this->getRepository('Item')->getItemCount();
 		$view['items'] = $this->getRepository('Item')->findLatestItems($request->query->has('more') ? 0 : intval($this->config('page.index.item-limit')));
 		$view['item-count'] = $itemCount;
 		$view['more'] = $request->query->has('more');
-		$view['item-path'] = trim($this->config('item-path'), '/');
 	}
 
 	/**
@@ -113,7 +111,6 @@ class NewsModule extends AbstractCoreModule {
 	 */
 	public function itemController(ViewInterface $view, Request $request) {
 		LoggerRegistry::debug('NewsModule::itemController');
-		$this->applyDefaults($view);
 		$this->applyConfigToView('page.item', $view);
 		try {
 			$view['item'] = $this->getRepository('Item')->findOneByUrlPath($request->attributes->get('slug'));
@@ -135,7 +132,6 @@ class NewsModule extends AbstractCoreModule {
 	 */
 	public function latestHeadlinesComponent(ViewInterface $view, $itemLimit=null, $excerptLength=null, $readMore=null) {
 		LoggerRegistry::debug('NewsModule::latestHeadlinesComponent');
-		$this->applyDefaults($view);
 		$itemLimit = intval(!is_null($itemLimit) ? $itemLimit : $this->config('component.latest-headlines.item-limit'));
 		$view['items'] = $this->getRepository('Item')->findLatestItems($itemLimit);
 		$view['date-format'] = $this->config('component.latest-headlines.date-format');
@@ -146,16 +142,6 @@ class NewsModule extends AbstractCoreModule {
 	}
 
 	//-- Internal Methods --------------------
-
-	/**
-	 * Apply default configuration used throughout this module.
-	 *
-	 * @param \Sitegear\Base\View\ViewInterface $view
-	 */
-	private function applyDefaults(ViewInterface $view) {
-		$this->applyConfigToView('common', $view);
-		$view['index-url'] = $this->getRouteUrl('index');
-	}
 
 	/**
 	 * @param string $entity

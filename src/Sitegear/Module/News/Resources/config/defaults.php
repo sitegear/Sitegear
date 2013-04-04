@@ -12,9 +12,15 @@
 return array(
 
 	/**
-	 * Directory in this module's path at the site level where the news item content is stored as files.
+	 * Directory settings for description data files.
 	 */
-	'item-path' => 'items',
+	'paths' => array(
+
+		/**
+		 * Directory in this module's path at the site level where the news item content is stored as files.
+		 */
+		'item' => 'items'
+	),
 
 	/**
 	 * Settings that are used in multiple places and should have the same value everywhere.
