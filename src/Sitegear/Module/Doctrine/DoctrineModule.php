@@ -82,20 +82,25 @@ class DoctrineModule extends AbstractCoreModule implements DiscreteDataModuleInt
 			    $this->getEngine()->getSiteInfo()->getSiteRoot() . '/vendor/doctrine/orm/lib/Doctrine/ORM/Mapping/Driver/DoctrineAnnotations.php'
 			);
 
-			// Setup annotation metadata
-			\Gedmo\DoctrineExtensions::registerAnnotations();
+			// Setup annotation metadata cache
 			if ($this->getEngine()->getEnvironmentInfo()->isDevMode() || !$this->getEngine()->config('memcache.enabled')) {
 				$cache = new ArrayCache();
 			} else {
 				$cache = new MemcacheCache();
 				$cache->setMemcache($this->getEngine()->getMemcache());
 			}
+
+			// Setup annotation metadata reader and driver
 			/** @var AnnotationReader $cachedAnnotationReader (for all intents and purposes...) */
 			$cachedAnnotationReader = new CachedReader(new AnnotationReader(), $cache);
 			$driverChain = new MappingDriverChain();
 			$annotationDriver = new AnnotationDriver($cachedAnnotationReader, array( $this->getEngine()->getSitegearInfo()->getSitegearRoot() ));
+
+			// Setup Gedmo extension annotations
+			\Gedmo\DoctrineExtensions::registerAnnotations();
 			$driverChain->addDriver($annotationDriver, 'Gedmo');
 
+			// Setup Sitegear extension annotations
 			// TODO Make model-providing modules declare their own namespaces
 			$driverChain->addDriver($annotationDriver, 'Sitegear\Module\Customer\Model');
 			$driverChain->addDriver($annotationDriver, 'Sitegear\Module\News\Model');
