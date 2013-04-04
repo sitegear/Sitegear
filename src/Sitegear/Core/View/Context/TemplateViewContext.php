@@ -43,7 +43,7 @@ class TemplateViewContext extends AbstractCoreFileViewContext {
 	protected function setupView(ViewInterface $view, Request $request, $viewName) {
 		/** @var ModuleInterface $module */
 		parent::setupView($view, $request, $viewName);
-		$module = $view['module'];
+		$module = $request->attributes->get('_controller_module');
 		$module->applyViewDefaults($view, 'pages', $viewName);
 	}
 
