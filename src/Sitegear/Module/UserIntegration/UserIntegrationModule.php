@@ -11,6 +11,7 @@ namespace Sitegear\Module\UserIntegration;
 use Sitegear\Base\Resources\ResourceLocations;
 use Sitegear\Base\View\ViewInterface;
 use Sitegear\Core\Module\AbstractCoreModule;
+use Sitegear\Util\TokenUtilities;
 use Sitegear\Util\UrlUtilities;
 use Sitegear\Util\LoggerRegistry;
 
@@ -41,26 +42,26 @@ class UserIntegrationModule extends AbstractCoreModule {
 		LoggerRegistry::debug('UserIntegrationModule starting');
 		parent::start();
 		// Register login form.
-		$filename = $this->config('login-form.filename');
-		$this->getEngine()->forms()->registerFormDefinitionFilePath($this->config('login-form.key'), array(
+		$filename = $this->config('login.form.filename');
+		$this->getEngine()->forms()->registerFormDefinitionFilePath($this->config('login.form.key'), array(
 			$this->getEngine()->getSiteInfo()->getSitePath(ResourceLocations::RESOURCE_LOCATION_SITE, $this, $filename),
 			$this->getEngine()->getSiteInfo()->getSitePath(ResourceLocations::RESOURCE_LOCATION_MODULE, $this, $filename)
 		));
 		// Register sign-up form.
-		$filename = $this->config('sign-up-form.filename');
-		$this->getEngine()->forms()->registerFormDefinitionFilePath($this->config('sign-up-form.key'), array(
+		$filename = $this->config('sign-up.form.filename');
+		$this->getEngine()->forms()->registerFormDefinitionFilePath($this->config('sign-up.form.key'), array(
 			$this->getEngine()->getSiteInfo()->getSitePath(ResourceLocations::RESOURCE_LOCATION_SITE, $this, $filename),
 			$this->getEngine()->getSiteInfo()->getSitePath(ResourceLocations::RESOURCE_LOCATION_MODULE, $this, $filename)
 		));
 		// Register guest-login form.
-		$filename = $this->config('guest-login-form.filename');
-		$this->getEngine()->forms()->registerFormDefinitionFilePath($this->config('guest-login-form.key'), array(
+		$filename = $this->config('guest-login.form.filename');
+		$this->getEngine()->forms()->registerFormDefinitionFilePath($this->config('guest-login.form.key'), array(
 			$this->getEngine()->getSiteInfo()->getSitePath(ResourceLocations::RESOURCE_LOCATION_SITE, $this, $filename),
 			$this->getEngine()->getSiteInfo()->getSitePath(ResourceLocations::RESOURCE_LOCATION_MODULE, $this, $filename)
 		));
 		// Register credentials recovery form.
-		$filename = $this->config('recover-login-form.filename');
-		$this->getEngine()->forms()->registerFormDefinitionFilePath($this->config('recover-login-form.key'), array(
+		$filename = $this->config('recover-login.form.filename');
+		$this->getEngine()->forms()->registerFormDefinitionFilePath($this->config('recover-login.form.key'), array(
 			$this->getEngine()->getSiteInfo()->getSitePath(ResourceLocations::RESOURCE_LOCATION_SITE, $this, $filename),
 			$this->getEngine()->getSiteInfo()->getSitePath(ResourceLocations::RESOURCE_LOCATION_MODULE, $this, $filename)
 		));
@@ -81,7 +82,7 @@ class UserIntegrationModule extends AbstractCoreModule {
 		if ($this->getEngine()->getUserManager()->isLoggedIn()) {
 			return new RedirectResponse(UrlUtilities::getReturnUrl($request));
 		}
-		$view['form-key'] = $this->config('login-form.key');
+		$view['form-key'] = $this->config('login.form.key');
 		return null;
 	}
 
@@ -111,7 +112,7 @@ class UserIntegrationModule extends AbstractCoreModule {
 		if ($this->getEngine()->getUserManager()->isLoggedIn()) {
 			return new RedirectResponse(UrlUtilities::getReturnUrl($request));
 		}
-		$view['form-key'] = $this->config('sign-up-form.key');
+		$view['form-key'] = $this->config('sign-up.form.key');
 		return null;
 	}
 
@@ -128,7 +129,7 @@ class UserIntegrationModule extends AbstractCoreModule {
 		if ($this->getEngine()->getUserManager()->isLoggedIn()) {
 			return new RedirectResponse(UrlUtilities::getReturnUrl($request));
 		}
-		$view['form-key'] = $this->config('guest-login-form.key');
+		$view['form-key'] = $this->config('guest-login.form.key');
 		return null;
 	}
 
@@ -145,7 +146,7 @@ class UserIntegrationModule extends AbstractCoreModule {
 		if ($this->getEngine()->getUserManager()->isLoggedIn()) {
 			return new RedirectResponse(UrlUtilities::getReturnUrl($request));
 		}
-		$view['form-key'] = $this->config('recover-login-form.key');
+		$view['form-key'] = $this->config('recover-login.form.key');
 		return null;
 	}
 
@@ -220,8 +221,10 @@ class UserIntegrationModule extends AbstractCoreModule {
 	 */
 	public function login($email, array $credentials) {
 		LoggerRegistry::debug('UserIntegrationModule::login()');
-		if (!$this->getEngine()->getUserManager()->login($email, $credentials)) {
-			throw new \RuntimeException($this->config('errors.login-failure'));
+		if ($this->getEngine()->getUserManager()->login($email, $credentials)) {
+			$this->getEngine()->pageMessages()->add($this->config('login.messages.success'), 'success');
+		} else {
+			throw new \RuntimeException($this->config('login.messages.invalid-credentials'));
 		}
 	}
 
@@ -232,8 +235,10 @@ class UserIntegrationModule extends AbstractCoreModule {
 	 */
 	public function logout() {
 		LoggerRegistry::debug('UserIntegrationModule::logout()');
-		if (!$this->getEngine()->getUserManager()->logout()) {
-			throw new \RuntimeException($this->config('errors.logout-failure'));
+		if ($this->getEngine()->getUserManager()->logout()) {
+			$this->getEngine()->pageMessages()->add($this->config('logout.messages.success'), 'success');
+		} else {
+			throw new \RuntimeException($this->config('logout.messages.failure'));
 		}
 	}
 
@@ -252,16 +257,47 @@ class UserIntegrationModule extends AbstractCoreModule {
 			}
 		}
 		$this->getEngine()->getUserManager()->getStorage()->createUser($email, $credentials);
+		$this->getEngine()->pageMessages()->add($this->config('sign-up.messages.success'), 'success');
 	}
 
 	/**
 	 * Perform a login recovery action for the given email address.
 	 *
 	 * @param string $email
+	 *
+	 * @throws \InvalidArgumentException
 	 */
 	public function recoverLogin($email) {
 		LoggerRegistry::debug('UserIntegrationModule::recoverLogin()');
-		// TODO Implement me
+		$url = 'http://URL-TODO/'; // TODO
+		$siteInfo = $this->getEngine()->getSiteInfo();
+		$subject = sprintf('Login Recovery from %s', $siteInfo->getDisplayName());
+		$addresses = array(
+			'sender' => $siteInfo->getAdministratorEmail(),
+			'to' => $email
+		);
+		$data = array(
+			'name' => $siteInfo->getDisplayName(),
+			'admin-name' => $siteInfo->getAdministratorName(),
+			'admin-email' => $siteInfo->getAdministratorEmail(),
+			'email' => $email,
+			'url' => $url
+		);
+		$type = $this->config('recover-login.notification.type');
+		$contentType = $this->config('recover-login.notification.content-type');
+		$content = $this->config('recover-login.notification.content');
+		switch ($type) {
+			case 'tokens':
+				$body = TokenUtilities::replaceTokens($content, $data);
+				$this->getEngine()->swiftMailer()->send($subject, $addresses, $body, $contentType);
+				break;
+			case 'template':
+				$this->getEngine()->swiftMailer()->sendTemplate(new Request(), $subject, $addresses, $content, $data, $contentType);
+				break;
+			default:
+				throw new \InvalidArgumentException(sprintf('Could not process login recovery due to invalid configuration: invalid email type "%s" specified', $type));
+		}
+		$this->getEngine()->pageMessages()->add($this->config('recover-login.messages.success'), 'success');
 	}
 
 	/**
@@ -271,6 +307,7 @@ class UserIntegrationModule extends AbstractCoreModule {
 	public function guestLogin() {
 		LoggerRegistry::debug('UserIntegrationModule::guestLogin()');
 		$this->getEngine()->getUserManager()->guestLogin();
+		$this->getEngine()->pageMessages()->add($this->config('guest-login.messages.success'), 'success');
 	}
 
 	/**
@@ -282,7 +319,7 @@ class UserIntegrationModule extends AbstractCoreModule {
 	public function validateEmailAvailable($email, ExecutionContextInterface $context) {
 		LoggerRegistry::debug('UserIntegrationModule::validateEmailAvailable()');
 		if ($this->getEngine()->getUserManager()->getStorage()->hasUser($email)) {
-			$context->addViolation($this->config('errors.email-already-registered'));
+			$context->addViolation($this->config('sign-up.messages.email-already-registered'));
 		}
 	}
 

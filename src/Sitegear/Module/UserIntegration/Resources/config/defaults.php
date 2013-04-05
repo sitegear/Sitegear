@@ -75,89 +75,207 @@ return array(
 	),
 
 	/**
-	 * Settings for the login form.
+	 * Settings for the login form and process.
 	 */
-	'login-form' => array(
+	'login' => array(
 
 		/**
-		 * Form key for the login form.
+		 * Form settings.
 		 */
-		'key' => 'login',
+		'form' => array(
+
+			/**
+			 * Form key for the login form.
+			 */
+			'key' => 'login',
+
+			/**
+			 * Filename of the login form, relative to the module root at either the site-specific or built-in level.
+			 */
+			'filename' => 'login-form.json'
+		),
 
 		/**
-		 * Filename of the login form, relative to the module root at either the site-specific or built-in level.
+		 * Message settings.
 		 */
-		'filename' => 'login-form.json'
+		'messages' => array(
+
+			/**
+			 * Message when logged in successfully.
+			 */
+			'success' => 'You have been logged in.',
+
+			/**
+			 * Message when an login attempt is unsuccessful due to invalid credentials.
+			 */
+			'invalid-credentials' => 'Invalid username or password supplied, please check your credentials and try again.'
+		)
 	),
 
 	/**
-	 * Settings for the sign-up form.
+	 * Settings for the logout process.
 	 */
-	'sign-up-form' => array(
+	'logout' => array(
 
 		/**
-		 * Form key for the sign-up form.
+		 * Message settings.
 		 */
-		'key' => 'sign-up',
+		'messages' => array(
 
-		/**
-		 * Filename of the sign-up form, relative to the module root at either the site-specific or built-in level.
-		 */
-		'filename' => 'sign-up-form.json'
+			/**
+			 * Message when logged out successfully.
+			 */
+			'success' => 'You have been logged out',
+
+			/**
+			 * Message when an logout attempt is unsuccessful; this should never happen.
+			 */
+			'failure' => 'Something went wrong logging you out, please try again.'
+		)
 	),
 
 	/**
-	 * Settings for the guest-login form.
+	 * Settings for the sign-up form and process.
 	 */
-	'guest-login-form' => array(
+	'sign-up' => array(
 
 		/**
-		 * Form key for the guest-login form.
+		 * Form settings.
 		 */
-		'key' => 'guest-login',
+		'form' => array(
+
+			/**
+			 * Form key for the sign-up form.
+			 */
+			'key' => 'sign-up',
+
+			/**
+			 * Filename of the sign-up form, relative to the module root at either the site-specific or built-in level.
+			 */
+			'filename' => 'sign-up-form.json'
+		),
 
 		/**
-		 * Filename of the guest-login form, relative to the module root at either the site-specific or built-in
-		 * level.
+		 * Message settings.
 		 */
-		'filename' => 'guest-login-form.json'
+		'messages' => array(
+
+			/**
+			 * Message when an account is successfully created.
+			 */
+			'success' => 'You have successfully created an account',
+
+			/**
+			 * Message when a user attempts to sign up with an email address that is already registered.
+			 */
+			'email-already-registered' => 'That email address is already registered'
+		)
 	),
 
 	/**
-	 * Settings for the recover-login form.
+	 * Settings for the guest-login form and process.
 	 */
-	'recover-login-form' => array(
+	'guest-login' => array(
 
 		/**
-		 * Form key for the recover-login form.
+		 * Form settings.
 		 */
-		'key' => 'recover-login',
+		'form' => array(
+
+			/**
+			 * Form key for the guest-login form.
+			 */
+			'key' => 'guest-login',
+
+			/**
+			 * Filename of the guest-login form, relative to the module root at either the site-specific or built-in
+			 * level.
+			 */
+			'filename' => 'guest-login-form.json'
+		),
 
 		/**
-		 * Filename of the recover-login form, relative to the module root at either the site-specific or built-in
-		 * level.
+		 * Message settings.
 		 */
-		'filename' => 'recover-login-form.json'
+		'messages' => array(
+
+			/**
+			 * Message when logged in successfully as a guest user.
+			 */
+			'success' => 'You have been logged in as a guest user.'
+		)
 	),
 
 	/**
-	 * Error messages.
+	 * Settings for the recover-login form and process.
 	 */
-	'errors' => array(
+	'recover-login' => array(
 
 		/**
-		 * Error message when the login() method returns false to indicate failure.
+		 * Form settings.
 		 */
-		'login-failure' => 'Invalid username or password supplied, please check your credentials and try again',
+		'form' => array(
+
+			/**
+			 * Form key for the recover-login form.
+			 */
+			'key' => 'recover-login',
+
+			/**
+			 * Filename of the recover-login form, relative to the module root at either the site-specific or built-in
+			 * level.
+			 */
+			'filename' => 'recover-login-form.json'
+		),
 
 		/**
-		 * Error message when the logout() method returns false to indicate failure.
+		 * Message settings.
 		 */
-		'logout-failure' => 'Something went wrong logging you out, please try again',
+		'messages' => array(
+
+			/**
+			 * Message when login recovery email has been sent.
+			 */
+			'success' => 'You have been sent an email with instructions for completing your login recovery, please check your inbox.'
+		),
 
 		/**
-		 * Error message when a user attempts to sign up with an email address that is already registered.
+		 * Settings for the email notification sent when the recover-login form is submitted and valid.
 		 */
-		'email-already-registered' => 'That email address is already registered'
+		'notification' => array(
+
+			/**
+			 * Type of email generation method to use:
+			 *
+			 * 'tokens' uses the SwiftMailerModule::send() method to send a message with body content specified
+			 *   directly by the 'content' key.
+			 * 'template' uses the SwiftMailerModule::sendTemplate() method to render and send a Sitegear HTML
+			 *   template, whose location is specified by the 'content' key.
+			 *
+			 * The following tokens apply to the 'tokens' content, and are available (without the percent symbols) as
+			 * $view offsets when using the 'template' type.
+			 *
+			 * %name% which is replaced by the site's configured display name.
+			 * %admin-name% which is replaced by the site's configured administrator name.
+			 * %admin-email% which is replaced by the site's configured administrator email address.
+			 * %email% which is replaced by the email submitted in the recover-login form.
+			 * %url% which is replaced by the URL for the recovery link.  If using a HTML email this link should be
+			 *   displayed as user-visible text in addition to as a href attribute value, to allow copy-paste.
+			 */
+			'type' => 'tokens',
+
+			/**
+			 * Content type to use for the notification email, should normally be 'text/plain' or 'text/html'.
+			 */
+			'content-type' => 'text/plain',
+
+			/**
+			 * The content of the email notification.  If the 'type' key is set to tokens', then this should be
+			 * tokenised text (plain or marked up as appropriate).  If the 'type' key is set to 'template' then this
+			 * should be the name of the template to render, and the template should be located in the default content
+			 * module's site/ directory.
+			 */
+			'content' => "Login Recovery from %name%:\r\n\r\nSomeone requested a login recovery from our website using your email address %email%.\r\n\r\nIf you requested this, then please continue by copying and pasting the following URL into your web browser and following the instructions:\r\n\r\n%url%\r\n\r\nIf you did not request this then please ignore or delete this email.\r\n\r\nKind regards,\r\n%admin-name%\r\n%name% site administrator\r\n%admin-email%"
+		)
 	)
 );
