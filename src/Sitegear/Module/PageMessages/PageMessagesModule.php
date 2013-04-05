@@ -10,6 +10,7 @@ namespace Sitegear\Module\PageMessages;
 
 use Sitegear\Base\View\ViewInterface;
 use Sitegear\Core\Module\AbstractCoreModule;
+use Sitegear\Util\LoggerRegistry;
 
 /**
  * Provides a simple means of storing, retrieving and rendering messages that can be set by any other module and are
@@ -37,6 +38,8 @@ class PageMessagesModule extends AbstractCoreModule {
 	 * {@inheritDoc}
 	 */
 	public function start() {
+		LoggerRegistry::debug('LocationsModule starting');
+		parent::start();
 		$this->messages = $this->getEngine()->getSession()->get($this->config('session-key'));
 	}
 

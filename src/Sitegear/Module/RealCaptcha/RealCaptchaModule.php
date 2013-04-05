@@ -10,6 +10,7 @@ namespace Sitegear\Module\RealCaptcha;
 
 use Sitegear\Core\Module\AbstractCoreModule;
 
+use Sitegear\Util\LoggerRegistry;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\ExecutionContextInterface;
@@ -43,12 +44,20 @@ class RealCaptchaModule extends AbstractCoreModule {
 	 * {@inheritDoc}
 	 */
 	public function start() {
+		LoggerRegistry::debug('LocationsModule starting');
+		parent::start();
 		$this->captcha = new RealCaptcha($this->config('real-captcha-options'));
 	}
 
 	//-- Controller Methods --------------------
 
+	/**
+	 * Controller to display the image data.
+	 *
+	 * @return Response
+	 */
 	public function imageController() {
+		LoggerRegistry::debug('LocationsModule::imageController');
 		ob_start();
 		$this->getCaptcha()->writeImage();
 		return new Response(ob_get_clean(), 200);

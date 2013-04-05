@@ -50,6 +50,7 @@ class LocationsModule extends AbstractCoreModule {
 	 * {@inheritDoc}
 	 */
 	public function start() {
+		LoggerRegistry::debug('LocationsModule starting');
 		parent::start();
 		// Register "location-search" form.
 		$filename = $this->config('location-search-form.filename');
@@ -57,8 +58,8 @@ class LocationsModule extends AbstractCoreModule {
 			$this->getEngine()->getSiteInfo()->getSitePath(ResourceLocations::RESOURCE_LOCATION_SITE, $this, $filename),
 			$this->getEngine()->getSiteInfo()->getSitePath(ResourceLocations::RESOURCE_LOCATION_MODULE, $this, $filename)
 		));
-		// Setup Doctrine.
-		$this->getEngine()->doctrine()->getEntityManager()->getConfiguration()->addEntityNamespace(self::ENTITY_ALIAS, '\\Sitegear\\Module\\Locations\\Model');
+		// Register the Doctrine entity namespace.
+		$this->getEngine()->doctrine()->registerEntityNamespace(self::ENTITY_ALIAS, '\\Sitegear\\Module\\Locations\\Model');
 	}
 
 	//-- AbstractUrlMountableModule Methods --------------------

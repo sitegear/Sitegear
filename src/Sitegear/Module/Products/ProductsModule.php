@@ -48,7 +48,9 @@ class ProductsModule extends AbstractCoreModule implements PurchaseItemProviderM
 	 */
 	public function start() {
 		LoggerRegistry::debug('ProductsModule starting');
-		$this->getEngine()->doctrine()->getEntityManager()->getConfiguration()->addEntityNamespace(self::ENTITY_ALIAS, '\\Sitegear\\Module\\Products\\Model');
+		parent::start();
+		// Register the Doctrine entity namespace.
+		$this->getEngine()->doctrine()->registerEntityNamespace(self::ENTITY_ALIAS, '\\Sitegear\\Module\\Products\\Model');
 	}
 
 	//-- PurchaseItemProviderModuleInterface Methods --------------------

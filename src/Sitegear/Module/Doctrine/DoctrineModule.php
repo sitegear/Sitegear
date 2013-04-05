@@ -58,6 +58,16 @@ class DoctrineModule extends AbstractCoreModule implements DiscreteDataModuleInt
 	 */
 	private $entityManager;
 
+	/**
+	 * @var \Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain
+	 */
+	private $driverChain;
+
+	/**
+	 * @var \Doctrine\ORM\Mapping\Driver\AnnotationDriver
+	 */
+	private $annotationDriver;
+
 	//-- ModuleInterface Methods --------------------
 
 	/**
@@ -72,6 +82,7 @@ class DoctrineModule extends AbstractCoreModule implements DiscreteDataModuleInt
 	 */
 	public function start() {
 		LoggerRegistry::debug('DoctrineModule starting' . ($this->getEngine()->getEnvironmentInfo()->isDevMode() ? ' in dev mode' : ''));
+		parent::start();
 		$connectionConfig = $this->config('connection');
 		if (!empty($connectionConfig) && is_array($connectionConfig)) {
 			// Setup Doctrine. Largely borrowed from
@@ -93,19 +104,19 @@ class DoctrineModule extends AbstractCoreModule implements DiscreteDataModuleInt
 			// Setup annotation metadata reader and driver
 			/** @var AnnotationReader $cachedAnnotationReader (for all intents and purposes...) */
 			$cachedAnnotationReader = new CachedReader(new AnnotationReader(), $cache);
-			$driverChain = new MappingDriverChain();
-			$annotationDriver = new AnnotationDriver($cachedAnnotationReader, array( $this->getEngine()->getSitegearInfo()->getSitegearRoot() ));
+			$this->driverChain = new MappingDriverChain();
+			$this->annotationDriver = new AnnotationDriver($cachedAnnotationReader, array( $this->getEngine()->getSitegearInfo()->getSitegearRoot() ));
 
 			// Setup Gedmo extension annotations
 			\Gedmo\DoctrineExtensions::registerAnnotations();
-			$driverChain->addDriver($annotationDriver, 'Gedmo');
+			$this->driverChain->addDriver($this->annotationDriver, 'Gedmo');
 
 			// Setup Sitegear extension annotations
 			// TODO Make model-providing modules declare their own namespaces
-			$driverChain->addDriver($annotationDriver, 'Sitegear\Module\Customer\Model');
-			$driverChain->addDriver($annotationDriver, 'Sitegear\Module\News\Model');
-			$driverChain->addDriver($annotationDriver, 'Sitegear\Module\Locations\Model');
-			$driverChain->addDriver($annotationDriver, 'Sitegear\Module\Products\Model');
+			$this->driverChain->addDriver($this->annotationDriver, 'Sitegear\Module\Customer\Model');
+			$this->driverChain->addDriver($this->annotationDriver, 'Sitegear\Module\News\Model');
+			$this->driverChain->addDriver($this->annotationDriver, 'Sitegear\Module\Locations\Model');
+			$this->driverChain->addDriver($this->annotationDriver, 'Sitegear\Module\Products\Model');
 
 			// Create the entity manager configuration, with proxy generation, cached metadata and lowercase-underscore
 			// database naming convention.
@@ -115,7 +126,7 @@ class DoctrineModule extends AbstractCoreModule implements DiscreteDataModuleInt
 			// TODO Configurable namespace and naming strategy
 			$entityManagerConfig->setProxyNamespace('Proxy');
 			$entityManagerConfig->setAutoGenerateProxyClasses($this->getEngine()->getEnvironmentInfo()->isDevMode());
-			$entityManagerConfig->setMetadataDriverImpl($driverChain);
+			$entityManagerConfig->setMetadataDriverImpl($this->driverChain);
 			$entityManagerConfig->setMetadataCacheImpl($cache);
 			$entityManagerConfig->setQueryCacheImpl($cache);
 			$entityManagerConfig->setNamingStrategy(new UnderscoreNamingStrategy(CASE_LOWER));
@@ -205,6 +216,18 @@ class DoctrineModule extends AbstractCoreModule implements DiscreteDataModuleInt
 	 */
 	public function getEntityManager() {
 		return $this->entityManager;
+	}
+
+	/**
+	 * Setup the entity manager and annotation driver with the given additional namespace for entity classes, under the
+	 * specified alias.
+	 *
+	 * @param string $alias
+	 * @param string $namespace
+	 */
+	public function registerEntityNamespace($alias, $namespace) {
+		$this->getEngine()->doctrine()->getEntityManager()->getConfiguration()->addEntityNamespace($alias, $namespace);
+		$this->driverChain->addDriver($this->annotationDriver, $namespace);
 	}
 
 	//-- Internal Methods --------------------

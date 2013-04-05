@@ -8,6 +8,7 @@
 
 namespace Sitegear\Module\Forms;
 
+use Sitegear\Base\Engine\EngineInterface;
 use Sitegear\Base\Form\Renderer\Factory\RendererFactoryInterface;
 use Sitegear\Base\Form\StepInterface;
 use Sitegear\Base\Config\Processor\ArrayTokenProcessor;
@@ -50,6 +51,13 @@ class FormsModule extends AbstractCoreModule {
 	 */
 	private $forms;
 
+	//-- Constructor --------------------
+
+	public function __construct(EngineInterface $engine) {
+		parent::__construct($engine);
+		$this->forms = array();
+	}
+
 	//-- ModuleInterface Methods --------------------
 
 	/**
@@ -57,14 +65,6 @@ class FormsModule extends AbstractCoreModule {
 	 */
 	public function getDisplayName() {
 		return 'Web Forms';
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function start() {
-		parent::start();
-		$this->forms = array();
 	}
 
 	//-- Page Controller Methods --------------------

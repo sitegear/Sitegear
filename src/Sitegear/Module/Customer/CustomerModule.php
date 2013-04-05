@@ -57,8 +57,9 @@ class CustomerModule extends AbstractCoreModule {
 	 */
 	public function start() {
 		LoggerRegistry::debug('CustomerModule starting');
+		parent::start();
 		// Register the Doctrine entity namespace.
-		$this->getEngine()->doctrine()->getEntityManager()->getConfiguration()->addEntityNamespace(self::ENTITY_ALIAS, '\\Sitegear\\Module\\Customer\\Model');
+		$this->getEngine()->doctrine()->registerEntityNamespace(self::ENTITY_ALIAS, '\\Sitegear\\Module\\Customer\\Model');
 		// Register the checkout form generator.
 		$this->getEngine()->forms()->registerFormGeneratorCallback($this->config('checkout.form-key'), array( $this, 'buildCheckoutForm' ));
 	}

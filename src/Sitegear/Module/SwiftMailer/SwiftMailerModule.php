@@ -42,6 +42,7 @@ class SwiftMailerModule extends AbstractCoreModule {
 	 */
 	public function start() {
 		LoggerRegistry::debug('SwiftMailerModule starting');
+		parent::start();
 		// The transport name cannot be converted due to old-school class names in SwiftMailer with underscores
 		$transportName = $this->config('transport');
 		$transportClass = new \ReflectionClass($transportName);
