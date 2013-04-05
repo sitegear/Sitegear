@@ -12,42 +12,6 @@
 return array(
 
 	/**
-	 * Route settings.
-	 */
-	'routes' => array(
-
-		/**
-		 * URL path element under the mounted root URL for the add trolley item action.
-		 */
-		'add-trolley-item' => 'add-trolley-item',
-
-		/**
-		 * URL path element under the mounted root URL for the remove trolley item action.
-		 */
-		'remove-trolley-item' => 'remove-trolley-item',
-
-		/**
-		 * URL path element under the mounted root URL for the modify trolley item action.
-		 */
-		'modify-trolley-item' => 'modify-trolley-item',
-
-		/**
-		 * URL path element under the mounted root URL for the trolley details action.
-		 */
-		'trolley' => 'trolley',
-
-		/**
-		 * URL path element under the mounted root URL for the checkout action.
-		 */
-		'checkout' => 'checkout',
-
-		/**
-		 * URL path element under the mounted root URL for the page that follows a successful checkout.
-		 */
-		'thank-you' => 'thank-you'
-	),
-
-	/**
 	 * Settings that are shared by two or more components and/or pages.
 	 */
 	'common' => array(

@@ -28,28 +28,6 @@ return array(
 	),
 
 	/**
-	 * Route settings.
-	 */
-	'routes' => array(
-
-		/**
-		 * URL path element under the mounted root URL, containing all region landing pages.
-		 */
-		'region' => 'region',
-
-		/**
-		 * URL path element under the mounted root URL, containing all location details pages.
-		 */
-		'item' => 'item',
-
-		/**
-		 * URL path element under the mounted root URL, containing the search page.
-		 */
-		'search' => 'search'
-
-	),
-
-	/**
 	 * Settings for navigation data generation.
 	 */
 	'navigation' => array(

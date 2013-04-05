@@ -12,15 +12,6 @@
 return array(
 
 	/**
-	 * Route settings.
-	 */
-	'routes' => array(
-		'form' => 'form',
-		'initialise' => 'initialise',
-		'jump' => 'jump'
-	),
-
-	/**
 	 * Default configuration for the form builder.
 	 */
 	'form-builder' => array(

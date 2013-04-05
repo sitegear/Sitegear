@@ -28,23 +28,6 @@ return array(
 	),
 
 	/**
-	 * Route settings.
-	 */
-	'routes' => array(
-
-		/**
-		 * URL path element under the mounted root URL, containing all product category landing pages.
-		 */
-		'category' => 'category',
-
-		/**
-		 * URL path element under the mounted root URL, containing all product item details pages.
-		 */
-		'item' => 'item'
-
-	),
-
-	/**
 	 * Settings for navigation data generation.
 	 */
 	'navigation' => array(

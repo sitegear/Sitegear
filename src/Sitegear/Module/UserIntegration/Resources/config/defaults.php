@@ -12,17 +12,6 @@
 return array(
 
 	/**
-	 * Route settings.
-	 */
-	'routes' => array(
-		'login' => 'login',
-		'logout' => 'logout',
-		'sign-up' => 'sign-up',
-		'guest-login' => 'guest-login',
-		'recover-login' => 'recover-login'
-	),
-
-	/**
 	 * Component-specific settings.
 	 */
 	'components' => array(
