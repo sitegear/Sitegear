@@ -250,4 +250,25 @@ class TypeUtilities {
 		return call_user_func_array($callable, TypeUtilities::getArguments($callable, $fixedValues, $typedValues, $remainingValues));
 	}
 
+	/**
+	 * Taking an array of format strings, and an array of values to replace into the format strings (using
+	 * TokenUtilities::replaceTokens()), find the first format string which corresponds to an existing class and return
+	 * a ReflectionClass object representing that class.  If none of the formats correspond to an existing class,
+	 * then null is returned.
+	 *
+	 * @param string[] $namespaces
+	 * @param string $className
+	 *
+	 * @return null|\ReflectionClass
+	 */
+	public static function firstExistingClass(array $namespaces, $className) {
+		$class = null;
+		foreach ($namespaces as $namespace) {
+			if (is_null($class) && class_exists($namespaceClassName = sprintf('%s\\%s', $namespace, $className))) {
+				$class = new \ReflectionClass($namespaceClassName);
+			}
+		}
+		return $class;
+	}
+
 }
