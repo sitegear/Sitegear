@@ -399,7 +399,8 @@ class FormsModule extends AbstractCoreModule {
 		LoggerRegistry::debug(sprintf('FormsModule::validate(%s)', $formKey));
 		$validator = Validation::createValidator();
 		$errors = array();
-		foreach ($validator->validateValue($values, $this->getConstraints($fields, $values)) as $violation) { /** @var \Symfony\Component\Validator\ConstraintViolationInterface $violation */
+		foreach ($validator->validateValue($values, $this->getConstraints($fields, $values)) as $violation) {
+			/** @var \Symfony\Component\Validator\ConstraintViolationInterface $violation */
 			$fieldName = trim($violation->getPropertyPath(), '[]');
 			if (!isset($errors[$fieldName])) {
 				$errors[$fieldName] = array();
