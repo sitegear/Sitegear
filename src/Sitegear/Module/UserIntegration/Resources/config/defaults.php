@@ -246,8 +246,8 @@ return array(
 			 * $view offsets when using the 'template' type.
 			 *
 			 * %name% which is replaced by the site's configured display name.
-			 * %admin-name% which is replaced by the site's configured administrator name.
-			 * %admin-email% which is replaced by the site's configured administrator email address.
+			 * %adminName% which is replaced by the site's configured administrator name.
+			 * %adminEmail% which is replaced by the site's configured administrator email address.
 			 * %email% which is replaced by the email submitted in the recover-login form.
 			 * %url% which is replaced by the URL for the recovery link.  If using a HTML email this link should be
 			 *   displayed as user-visible text in addition to as a href attribute value, to allow copy-paste.
@@ -265,7 +265,7 @@ return array(
 			 * should be the name of the template to render, and the template should be located in the default content
 			 * module's site/ directory.
 			 */
-			'content' => "Login Recovery from %name%:\r\n\r\nSomeone requested a login recovery from our website using your email address %email%.\r\n\r\nIf you requested this, then please continue by copying and pasting the following URL into your web browser and following the instructions:\r\n\r\n%url%\r\n\r\nIf you did not request this then please ignore or delete this email.\r\n\r\nKind regards,\r\n%admin-name%\r\n%name% site administrator\r\n%admin-email%"
+			'content' => "Login Recovery from %name%:\r\n\r\nSomeone requested a login recovery from our website using your email address %email%.\r\n\r\nIf you requested this, then please continue by copying and pasting the following URL into your web browser and following the instructions:\r\n\r\n%url%\r\n\r\nIf you did not request this then please ignore or delete this email.\r\n\r\nKind regards,\r\n%adminName%\r\n%name% site administrator\r\n%adminEmail%"
 		)
 	)
 );

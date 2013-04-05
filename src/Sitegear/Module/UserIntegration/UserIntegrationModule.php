@@ -279,8 +279,8 @@ class UserIntegrationModule extends AbstractCoreModule {
 		);
 		$data = array(
 			'name' => $siteInfo->getDisplayName(),
-			'admin-name' => $siteInfo->getAdministratorName(),
-			'admin-email' => $siteInfo->getAdministratorEmail(),
+			'adminName' => $siteInfo->getAdministratorName(),
+			'adminEmail' => $siteInfo->getAdministratorEmail(),
 			'email' => $email,
 			'url' => $url
 		);
