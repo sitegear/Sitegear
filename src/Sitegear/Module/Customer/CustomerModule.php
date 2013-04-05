@@ -97,10 +97,10 @@ class CustomerModule extends AbstractCoreModule {
 		// Setup the generated form.
 		$form = $this->buildAddTrolleyItemForm($moduleName, $type, $id, $formUrl);
 		$formKey = $this->config('add-trolley-item.form-key');
-		$this->getEngine()->forms()->registerForm($formKey, $form);
+		$this->getEngine()->forms()->registry()->registerForm($formKey, $form);
 		// Validate the data against the generated form, and add the trolley item if valid.
-		$errors = $this->getEngine()->forms()->validateForm($formKey, $form->getStep(0)->getReferencedFields(), $request->request->all());
-		$this->getEngine()->forms()->setValues($formKey, $request->request->all());
+		$errors = $this->getEngine()->forms()->registry()->validateForm($formKey, $form->getStep(0)->getReferencedFields(), $request->request->all());
+		$this->getEngine()->forms()->registry()->setValues($formKey, $request->request->all());
 		if (empty($errors)) {
 			$attributeValues = array();
 			foreach ($request->request->all() as $key => $value) {
@@ -109,7 +109,7 @@ class CustomerModule extends AbstractCoreModule {
 				}
 			}
 			$this->addTrolleyItem($moduleName, $type, $id, $attributeValues, intval($request->request->get('quantity')));
-			$this->getEngine()->forms()->resetForm($formKey);
+			$this->getEngine()->forms()->registry()->resetForm($formKey);
 		}
 		// Go back to the page where the submission was made.
 		return new RedirectResponse($request->getUriForPath(sprintf('/%s', $formUrl)));
@@ -234,7 +234,7 @@ class CustomerModule extends AbstractCoreModule {
 	public function addTrolleyItemFormComponent(ViewInterface $view, Request $request, $moduleName, $type, $id) {
 		LoggerRegistry::debug('CustomerModule::addTrolleyItemFormComponent');
 		$formKey = $view['form-key'] = $this->config('add-trolley-item.form-key');
-		$this->getEngine()->forms()->registerForm($formKey, $this->buildAddTrolleyItemForm($moduleName, $type, $id, $request->getPathInfo()));
+		$this->getEngine()->forms()->registry()->registerForm($formKey, $this->buildAddTrolleyItemForm($moduleName, $type, $id, $request->getPathInfo()));
 	}
 
 	//-- Public Methods --------------------
