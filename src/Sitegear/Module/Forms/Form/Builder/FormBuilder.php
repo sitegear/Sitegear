@@ -22,6 +22,7 @@ use Sitegear\Util\ArrayUtilities;
 use Sitegear\Util\NameUtilities;
 use Sitegear\Util\LoggerRegistry;
 
+use Sitegear\Util\TypeUtilities;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\Constraints\Callback;
 
@@ -30,27 +31,6 @@ use Symfony\Component\Validator\Constraints\Callback;
  * objects.
  */
 class FormBuilder extends AbstractFormsModuleFormBuilder {
-
-	//-- Constants --------------------
-
-	/**
-	 * Default class name for FieldInterface implementations.
-	 *
-	 * TODO Change this so there is a registry of names to class names, then other modules can register their types and not have to specify the class in configuration
-	 */
-	const CLASS_NAME_FORMAT_FIELD = '\\Sitegear\\Base\\Form\\Field\\%sField';
-
-	/**
-	 * Default class name for Constraint implementations.
-	 */
-	const CLASS_NAME_FORMAT_CONSTRAINT = '\\Symfony\\Component\\Validator\\Constraints\\%s';
-
-	/**
-	 * Default class name for Constraint implementations.
-	 *
-	 * TODO Change this so there is a registry of names to class names, then other modules can register their types and not have to specify the class in configuration
-	 */
-	const CLASS_NAME_FORMAT_CONDITION = '\\Sitegear\\Base\\Form\\Condition\\%sCondition';
 
 	//-- FormBuilderInterface Methods --------------------
 
@@ -91,16 +71,24 @@ class FormBuilder extends AbstractFormsModuleFormBuilder {
 	 * @param string[] $constraintLabelMarkers
 	 *
 	 * @return \Sitegear\Base\Form\Field\FieldInterface
+	 *
+	 * @throws \InvalidArgumentException
 	 */
 	public function buildField(FormInterface $form, $name, array $fieldDefinition, array $constraintLabelMarkers=null) {
 		LoggerRegistry::debug('FormBuilder::buildField()');
 		// Get the class for the field type, this is either a directly specified FQCN or a type value which is
-		// converted using the standard mapping.
-		$fieldTypeClass = new \ReflectionClass(
-			isset($fieldDefinition['class']) ?
-					$fieldDefinition['class'] :
-					sprintf(self::CLASS_NAME_FORMAT_FIELD, NameUtilities::convertToStudlyCaps($fieldDefinition['type']))
-		);
+		// converted using a registered format.
+		$fieldTypeClass = null;
+		if (isset($fieldDefinition['class'])) {
+			if (class_exists($fieldDefinition['class'])) {
+				$fieldTypeClass = new \ReflectionClass($fieldDefinition['class']);
+			}
+		} else {
+			$fieldTypeClass = TypeUtilities::firstExistingClass($this->getFormsModule()->getFieldNamespaces(), NameUtilities::convertToStudlyCaps($fieldDefinition['type']) . 'Field');
+		}
+		if (is_null($fieldTypeClass)) {
+			throw new \InvalidArgumentException(sprintf('FormBuilder could not find a field class for the name "%s"', $fieldDefinition['type']));
+		}
 		// Get label text and markers.
 		$labelText = isset($fieldDefinition['label']) ? $fieldDefinition['label'] : '';
 		$labelMarkers = array();
@@ -180,9 +168,11 @@ class FormBuilder extends AbstractFormsModuleFormBuilder {
 			$constraintDefinition['options']['methods'][] = array( $callbackObject, NameUtilities::convertToCamelCase($constraintDefinition['method']) );
 			$constraint = new Callback($constraintDefinition['options']);
 		} else {
-			// Use the standard constraint class mappings.
-			$constraintClassName = sprintf(self::CLASS_NAME_FORMAT_CONSTRAINT, NameUtilities::convertToStudlyCaps($constraintDefinition['name']));
-			$constraintClass = new \ReflectionClass($constraintClassName);
+			// Use the registered constraint class mappings.
+			$constraintClass = TypeUtilities::firstExistingClass($this->getFormsModule()->getConstraintNamespaces(), NameUtilities::convertToStudlyCaps($constraintDefinition['name']));
+			if (is_null($constraintClass)) {
+				throw new \InvalidArgumentException(sprintf('FormBuilder could not find a constraint class for the name "%s"', $constraintDefinition['name']));
+			}
 			$constraint = $constraintClass->newInstance(isset($constraintDefinition['options']) ? $constraintDefinition['options'] : null);
 		}
 		// Add conditions to the constraint if any are specified.
@@ -278,14 +268,14 @@ class FormBuilder extends AbstractFormsModuleFormBuilder {
 	 * @param array $conditionDefinition
 	 *
 	 * @return ConditionInterface
+	 *
+	 * @throws \InvalidArgumentException
 	 */
 	public function buildCondition(array $conditionDefinition) {
-		$conditionClass = new \ReflectionClass(
-			sprintf(
-				self::CLASS_NAME_FORMAT_CONDITION,
-				NameUtilities::convertToStudlyCaps($conditionDefinition['condition'])
-			)
-		);
+		$conditionClass = TypeUtilities::firstExistingClass($this->getFormsModule()->getConditionNamespaces(), NameUtilities::convertToStudlyCaps($conditionDefinition['condition']) . 'Condition');
+		if (is_null($conditionClass)) {
+			throw new \InvalidArgumentException(sprintf('FormBuilder could not find a condition class for the name "%s"', $conditionDefinition['condition']));
+		}
 		return $conditionClass->newInstance($conditionDefinition['options']);
 	}
 

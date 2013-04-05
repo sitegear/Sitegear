@@ -8,17 +8,16 @@
 
 namespace Sitegear\Module\Forms;
 
-use Sitegear\Base\Engine\EngineInterface;
-use Sitegear\Base\Form\Renderer\Factory\RendererFactoryInterface;
-use Sitegear\Base\Form\StepInterface;
 use Sitegear\Base\Config\Processor\ArrayTokenProcessor;
 use Sitegear\Base\Config\Processor\ConfigTokenProcessor;
 use Sitegear\Base\Config\Container\SimpleConfigContainer;
 use Sitegear\Base\Resources\ResourceLocations;
 use Sitegear\Base\View\ViewInterface;
 use Sitegear\Base\Form\FormInterface;
+use Sitegear\Base\Form\StepInterface;
 use Sitegear\Base\Form\Field\FieldInterface;
 use Sitegear\Base\Form\Processor\FormProcessorInterface;
+use Sitegear\Base\Form\Renderer\Factory\RendererFactoryInterface;
 use Sitegear\Core\Module\AbstractCoreModule;
 use Sitegear\Module\Forms\Form\Renderer\FormRenderer;
 use Sitegear\Module\Forms\Form\Builder\FormBuilder;
@@ -51,12 +50,21 @@ class FormsModule extends AbstractCoreModule {
 	 */
 	private $forms;
 
-	//-- Constructor --------------------
+	/**
+	 * @var string[] Array of namespaces containing field classes.  Field class names are suffixed with "Field".
+	 */
+	private $fieldNamespaces;
 
-	public function __construct(EngineInterface $engine) {
-		parent::__construct($engine);
-		$this->forms = array();
-	}
+	/**
+	 * @var string[] Array of namespaces containing constraint classes.
+	 */
+	private $constraintNamespaces;
+
+	/**
+	 * @var string[] Array of namespaces containing condition classes.  Condition class names are suffixed with
+	 *   "Condition".
+	 */
+	private $conditionNamespaces;
 
 	//-- ModuleInterface Methods --------------------
 
@@ -65,6 +73,18 @@ class FormsModule extends AbstractCoreModule {
 	 */
 	public function getDisplayName() {
 		return 'Web Forms';
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function start() {
+		LoggerRegistry::debug('FormsModule starting');
+		parent::start();
+		$this->forms = array();
+		$this->fieldNamespaces = $this->config('field-namespaces', array());
+		$this->constraintNamespaces = $this->config('constraint-namespaces', array());
+		$this->conditionNamespaces = $this->config('condition-namespaces', array());
 	}
 
 	//-- Page Controller Methods --------------------
@@ -389,6 +409,65 @@ class FormsModule extends AbstractCoreModule {
 		}
 		$this->setErrors($formKey, $errors);
 		return $errors;
+	}
+
+	//-- Form Generation Control Methods --------------------
+
+	/**
+	 * Register a format string for the fully qualified class name of field classes, which may contain the token %name%
+	 * which is replaced by the name of the field in studly caps form.
+	 *
+	 * @param string $format
+	 */
+	public function registerFieldNamespace($format) {
+		$this->fieldNamespaces[] = $format;
+	}
+
+	/**
+	 * Get the list of registered class name formats for field objects.
+	 *
+	 * @return string[]
+	 */
+	public function getFieldNamespaces() {
+		return $this->fieldNamespaces;
+	}
+
+	/**
+	 * Register a format string for the fully qualified class name of constraint classes, which may contain the token
+	 * %name% which is replaced by the name of the constraint in studly caps form.
+	 *
+	 * @param string $namespace
+	 */
+	public function registerConstraintNamespace($namespace) {
+		$this->constraintNamespaces[] = $namespace;
+	}
+
+	/**
+	 * Get the list of registered class name formats for constraint objects.
+	 *
+	 * @return string[]
+	 */
+	public function getConstraintNamespaces() {
+		return $this->constraintNamespaces;
+	}
+
+	/**
+	 * Register a format string for the fully qualified class name of condition classes, which may contain the token
+	 * %name% which is replaced by the name of the condition in studly caps form.
+	 *
+	 * @param string $format
+	 */
+	public function registerConditionNamespace($format) {
+		$this->conditionNamespaces[] = $format;
+	}
+
+	/**
+	 * Get the list of registered class name formats for condition objects.
+	 *
+	 * @return string[]
+	 */
+	public function getConditionNamespaces() {
+		return $this->conditionNamespaces;
 	}
 
 	//-- Form Accessor Methods --------------------

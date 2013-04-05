@@ -17,10 +17,7 @@
 				{
 					"callback": "module",
 					"module": "user-integration",
-					"method": "validate-email-available",
-					"arguments": [
-						"{{ data:email }}"
-					]
+					"method": "validate-email-available"
 				}
 			]
 		},
@@ -51,11 +48,20 @@
 					"options": {
 						"message": "Please confirm your password"
 					}
+				},
+				{
+					"callback": "module",
+					"module": "user-integration",
+					"method": "validate-passwords-match",
+					"arguments": [
+						"{{ data:password }}",
+						"{{ data:confirm-password }}"
+					]
 				}
 			]
 		},
 		"captcha": {
-			"class": "\\Sitegear\\Module\\RealCaptcha\\Form\\RealCaptchaField",
+			"type": "real-captcha",
 			"label": "Human Check",
 			"constraints": [
 				{

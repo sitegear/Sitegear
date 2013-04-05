@@ -12,6 +12,30 @@
 return array(
 
 	/**
+	 * Array of namespaces containing FieldInterface implementations.  These are the namespaces built in to the
+	 * FormsModule, other namespaces may be registered programmatically.
+	 */
+	'field-namespaces' => array(
+		'\\Sitegear\\Base\\Form\\Field'
+	),
+
+	/**
+	 * Array of class name formats containing Constraint implementations.  These are the namespaces built in to the
+	 * FormsModule, other namespaces may be registered programmatically.
+	 */
+	'constraint-namespaces' => array(
+		'\\Symfony\\Component\\Validator\\Constraints'
+	),
+
+	/**
+	 * Array of namespaces containing ConditionInterface implementations.  These are the namespaces built in to the
+	 * FormsModule, other namespaces may be registered programmatically.
+	 */
+	'condition-namespaces' => array(
+		'\\Sitegear\\Base\\Form\\Condition'
+	),
+
+	/**
 	 * Default configuration for the form builder.
 	 */
 	'form-builder' => array(

@@ -44,9 +44,13 @@ class RealCaptchaModule extends AbstractCoreModule {
 	 * {@inheritDoc}
 	 */
 	public function start() {
-		LoggerRegistry::debug('LocationsModule starting');
+		LoggerRegistry::debug('RealCaptchaModule starting');
 		parent::start();
+		// Create RealCaptcha object for use during this request.
 		$this->captcha = new RealCaptcha($this->config('real-captcha-options'));
+		// Register the namespace for the RealCaptcha field.
+		$this->getEngine()->forms()->registerFieldNamespace('\\Sitegear\\Module\\RealCaptcha\\Form');
+
 	}
 
 	//-- Controller Methods --------------------
