@@ -72,13 +72,17 @@ class SwiftMailerModule extends AbstractCoreModule {
 	public function send($subject, $addresses, $body, $contentType=null, $charset=null) {
 		LoggerRegistry::debug(sprintf('SwiftMailerModule sending email with subject "%s" and body of length %d characters', $subject, strlen($body)));
 		$message = \Swift_Message::newInstance($subject);
-		if (!isset($addresses['sender']) && (!isset($addresses['from']) || !is_array($addresses['from']) || empty($addresses['from']))) {
+		if (!isset($addresses['sender']) && !isset($addresses['from'])) {
 			throw new \DomainException('SwiftMailer module cannot send without specifying a sender or from address.');
 		}
 		if (!isset($addresses['sender'])) {
 			$addresses['sender'] = $addresses['from'];
 		}
 		foreach ($addresses as $type => $typeAddresses) {
+			if (!is_array($typeAddresses)) {
+				$typeAddresses = array( $typeAddresses );
+			}
+
 			// Get the setter method, do it now so we don't determine arguments when the method doesn't even exist.
 			$setter = new \ReflectionMethod($message, sprintf('set%s', NameUtilities::convertToStudlyCaps($type)));
 
