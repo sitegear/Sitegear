@@ -76,8 +76,8 @@ class FormBuilder extends AbstractFormsModuleFormBuilder {
 	 */
 	public function buildField(FormInterface $form, $name, array $fieldDefinition, array $constraintLabelMarkers=null) {
 		LoggerRegistry::debug('FormBuilder::buildField()');
-		// Get the class for the field type, this is either a directly specified FQCN or a type value which is
-		// converted using a registered format.
+		// Get the class for the field type, this is either a directly specified fully specified class name, or a type
+		// value which is appended to a matching registered namespace.
 		$fieldTypeClass = null;
 		if (isset($fieldDefinition['class'])) {
 			if (class_exists($fieldDefinition['class'])) {
