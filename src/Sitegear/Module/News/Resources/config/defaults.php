@@ -86,7 +86,7 @@ return array(
 	/**
 	 * Page specific settings.
 	 */
-	'page' => array(
+	'pages' => array(
 
 		/**
 		 * Settings for the index page, which lists the latest or all news items.
@@ -147,7 +147,7 @@ return array(
 	/**
 	 * Component specific settings.
 	 */
-	'component' => array(
+	'components' => array(
 
 		/**
 		 * Settings for the latest headlines component.

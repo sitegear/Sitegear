@@ -87,7 +87,7 @@ return array(
 	/**
 	 * Page specific settings.
 	 */
-	'page' => array(
+	'pages' => array(
 
 		'index' => array(
 

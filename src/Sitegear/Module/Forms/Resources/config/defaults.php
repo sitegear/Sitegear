@@ -133,7 +133,7 @@ return array(
 	/**
 	 * Component specific settings.
 	 */
-	'component' => array(
+	'components' => array(
 
 		/**
 		 * Settings for the form component.

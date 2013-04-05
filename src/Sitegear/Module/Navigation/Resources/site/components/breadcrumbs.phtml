@@ -8,7 +8,7 @@ foreach (array_slice($view['trail'], 0, -1) as $crumb) {
 		$view['formats']['link'],
 		array(
 			'url' => $crumb['url'],
-			'classes' => $view['classes']['link'],
+			'class' => $view['classes']['link'],
 			'label' => $crumb['label']
 		)
 	);
@@ -20,7 +20,7 @@ switch ($view['current-page-style']) {
 			$view['formats']['link'],
 			array(
 				'url' => $currentPageCrumb['url'],
-				'classes' => $view['classes']['link'] . ' ' . $view['classes']['current-page'],
+				'class' => $view['classes']['link'] . ' ' . $view['classes']['current-page'],
 				'label' => $currentPageCrumb['label']
 			)
 		);
@@ -29,7 +29,7 @@ switch ($view['current-page-style']) {
 		$trail[] = \Sitegear\Util\TokenUtilities::replaceTokens(
 			$view['formats']['label'],
 			array(
-				'classes' => $view['classes']['link'],
+				'class' => $view['classes']['link'],
 				'label' => $currentPageCrumb['label']
 			)
 		);
