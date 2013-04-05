@@ -15,9 +15,11 @@
 					"name": "email"
 				},
 				{
-					"callback": "module",
-					"module": "user-integration",
-					"method": "validate-email-available"
+					"name": "email-available",
+					"options": {
+						"userManager": "{{ engine:getUserManager() }}",
+						"message": "{{ config:sign-up.messages.email-already-registered }}"
+					}
 				}
 			]
 		},
@@ -50,13 +52,13 @@
 					}
 				},
 				{
-					"callback": "module",
-					"module": "user-integration",
-					"method": "validate-passwords-match",
-					"arguments": [
-						"{{ data:password }}",
-						"{{ data:confirm-password }}"
-					]
+					"name": "in-array",
+					"options": {
+						"values": [
+							"{{ data:password }}"
+						],
+						"message": "{{ config:sign-up.messages.passwords-do-not-match }}"
+					}
 				}
 			]
 		},

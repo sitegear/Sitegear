@@ -4,8 +4,6 @@
  * Copyright (c) Ben New, Leftclick.com.au
  * See the LICENSE and README files in the main source directory for details.
  * http://sitegear.org/
- *
- * This file originally (2013-04-05) copied from http://www.yewchube.com/2011/08/symfony-2-field-comparison-validator/
  */
 
 namespace Sitegear\Module\Forms\Constraint;
@@ -14,9 +12,11 @@ use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Constraint;
 
 /**
- * Validator for EqualsField constraint implementation.
+ * Validator for InArray constraint implementation.
  */
-class EqualsFieldValidator extends ConstraintValidator {
+class InArrayValidator extends ConstraintValidator {
+
+	//-- ConstraintValidatorInterface Methods --------------------
 
     /**
      * Checks if the passed value is valid.
@@ -27,8 +27,9 @@ class EqualsFieldValidator extends ConstraintValidator {
      * @return Boolean Whether or not the value is valid
      */
     public function validate($value, Constraint $constraint) {
-        if ($value !== $this->context->getRoot()->get($constraint->field)->getData()) {
-            $this->setMessage($constraint->message, array( '{{ field }}' => $constraint->field ));
+		/** @var InArray $constraint */
+        if (!in_array($value, $constraint->values)) {
+            $this->context->addViolation($constraint->message);
             return false;
         }
         return true;

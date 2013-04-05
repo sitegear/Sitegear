@@ -40,30 +40,20 @@ class UserIntegrationModule extends AbstractCoreModule {
 	 */
 	public function start() {
 		parent::start();
+		// Register constraint namespace.
+		$this->getEngine()->forms()->registerConstraintNamespace('\\Sitegear\\Module\\UserIntegration\\Constraint');
 		// Register login form.
 		$filename = $this->config('login.form.filename');
-		$this->getEngine()->forms()->registerFormDefinitionFilePath($this->config('login.form.key'), array(
-			$this->getEngine()->getSiteInfo()->getSitePath(ResourceLocations::RESOURCE_LOCATION_SITE, $this, $filename),
-			$this->getEngine()->getSiteInfo()->getSitePath(ResourceLocations::RESOURCE_LOCATION_MODULE, $this, $filename)
-		));
+		$this->getEngine()->forms()->registerFormDefinitionFilePath($this->config('login.form.key'), $this, $filename);
 		// Register sign-up form.
 		$filename = $this->config('sign-up.form.filename');
-		$this->getEngine()->forms()->registerFormDefinitionFilePath($this->config('sign-up.form.key'), array(
-			$this->getEngine()->getSiteInfo()->getSitePath(ResourceLocations::RESOURCE_LOCATION_SITE, $this, $filename),
-			$this->getEngine()->getSiteInfo()->getSitePath(ResourceLocations::RESOURCE_LOCATION_MODULE, $this, $filename)
-		));
+		$this->getEngine()->forms()->registerFormDefinitionFilePath($this->config('sign-up.form.key'), $this, $filename);
 		// Register guest-login form.
 		$filename = $this->config('guest-login.form.filename');
-		$this->getEngine()->forms()->registerFormDefinitionFilePath($this->config('guest-login.form.key'), array(
-			$this->getEngine()->getSiteInfo()->getSitePath(ResourceLocations::RESOURCE_LOCATION_SITE, $this, $filename),
-			$this->getEngine()->getSiteInfo()->getSitePath(ResourceLocations::RESOURCE_LOCATION_MODULE, $this, $filename)
-		));
+		$this->getEngine()->forms()->registerFormDefinitionFilePath($this->config('guest-login.form.key'), $this, $filename);
 		// Register credentials recovery form.
 		$filename = $this->config('recover-login.form.filename');
-		$this->getEngine()->forms()->registerFormDefinitionFilePath($this->config('recover-login.form.key'), array(
-			$this->getEngine()->getSiteInfo()->getSitePath(ResourceLocations::RESOURCE_LOCATION_SITE, $this, $filename),
-			$this->getEngine()->getSiteInfo()->getSitePath(ResourceLocations::RESOURCE_LOCATION_MODULE, $this, $filename)
-		));
+		$this->getEngine()->forms()->registerFormDefinitionFilePath($this->config('recover-login.form.key'), $this, $filename);
 	}
 
 	//-- Page Controller Methods --------------------
@@ -317,19 +307,6 @@ class UserIntegrationModule extends AbstractCoreModule {
 		LoggerRegistry::debug('UserIntegrationModule::guestLogin()');
 		$this->getEngine()->getUserManager()->guestLogin();
 		$this->getEngine()->pageMessages()->add($this->config('guest-login.messages.success'), 'success');
-	}
-
-	/**
-	 * Determine whether the given email is available (i.e. a user does not already exist with the given email).
-	 *
-	 * @param string $email
-	 * @param ExecutionContextInterface $context
-	 */
-	public function validateEmailAvailable($email, ExecutionContextInterface $context) {
-		LoggerRegistry::debug('UserIntegrationModule::validateEmailAvailable()');
-		if ($this->getEngine()->getUserManager()->getStorage()->hasUser($email)) {
-			$context->addViolation($this->config('sign-up.messages.email-already-registered'));
-		}
 	}
 
 }

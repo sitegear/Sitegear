@@ -11,6 +11,8 @@ namespace Sitegear\Module\Forms;
 use Sitegear\Base\Config\Processor\ArrayTokenProcessor;
 use Sitegear\Base\Config\Processor\ConfigTokenProcessor;
 use Sitegear\Base\Config\Container\SimpleConfigContainer;
+use Sitegear\Base\Config\Processor\EngineTokenProcessor;
+use Sitegear\Base\Module\ModuleInterface;
 use Sitegear\Base\Resources\ResourceLocations;
 use Sitegear\Base\View\ViewInterface;
 use Sitegear\Base\Form\FormInterface;
@@ -274,15 +276,17 @@ class FormsModule extends AbstractCoreModule {
 	//-- Form Management Methods --------------------
 
 	/**
-	 * Configure the specified form to load its data from the given data file.  This is usually done during the
-	 * bootstrap sequence, other modules should call this method to setup their forms for potential later use.
+	 * Configure the specified form to load its data from the given data file relative to the given module.  This is
+	 * usually done during the bootstrap sequence, other modules should call this method to setup their forms for
+	 * potential later use.
 	 *
 	 * @param string $formKey
+	 * @param ModuleInterface $module
 	 * @param string|string[] $path May be one path or an array of paths.
 	 *
 	 * @throws \DomainException
 	 */
-	public function registerFormDefinitionFilePath($formKey, $path) {
+	public function registerFormDefinitionFilePath($formKey, ModuleInterface $module, $path) {
 		LoggerRegistry::debug(sprintf('FormsModule::registerFormDefinitionFilePath(%s, %s)', $formKey, TypeUtilities::describe($path)));
 		if (isset($this->forms[$formKey])) {
 			if (isset($this->forms[$formKey]['form'])) {
@@ -293,13 +297,9 @@ class FormsModule extends AbstractCoreModule {
 		} else {
 			$this->forms[$formKey] = array(
 				'type' => 'definitions',
-				'paths' => array()
+				'module' => $module,
+				'path' => $path
 			);
-		}
-		if (is_array($path)) {
-			$this->forms[$formKey]['paths'] = array_merge($this->forms[$formKey]['paths'], $path);
-		} else {
-			$this->forms[$formKey]['paths'][] = $path;
 		}
 	}
 
@@ -354,12 +354,17 @@ class FormsModule extends AbstractCoreModule {
 		LoggerRegistry::debug(sprintf('FormsModule::getForm(%s)', $formKey));
 		$formUrl = $request->getUri();
 		if (!isset($this->forms[$formKey])) {
-			$defaultPath = array( $this->getEngine()->getSiteInfo()->getSitePath(ResourceLocations::RESOURCE_LOCATION_SITE, $this, sprintf('%s.json', $formKey)) );
-			$this->forms[$formKey] = array( 'form' => $this->loadFormFromDefinitions($formKey, $formUrl, $defaultPath) );
+			$this->forms[$formKey] = array();
+			$this->forms[$formKey]['form'] = $this->loadFormFromDefinitions($formKey, $formUrl, array(
+				$this->getEngine()->getSiteInfo()->getSitePath(ResourceLocations::RESOURCE_LOCATION_SITE, $this, sprintf('%s.json', $formKey))
+			));
 		} elseif (is_array($this->forms[$formKey]) && !isset($this->forms[$formKey]['form'])) {
 			switch ($this->forms[$formKey]['type']) {
 				case 'definitions':
-					$this->forms[$formKey]['form'] = $this->loadFormFromDefinitions($formKey, $formUrl, $this->forms[$formKey]['paths']);
+					$this->forms[$formKey]['form'] = $this->loadFormFromDefinitions($formKey, $formUrl, array(
+						$this->getEngine()->getSiteInfo()->getSitePath(ResourceLocations::RESOURCE_LOCATION_SITE, $this->forms[$formKey]['module'], $this->forms[$formKey]['path']),
+						$this->getEngine()->getSiteInfo()->getSitePath(ResourceLocations::RESOURCE_LOCATION_MODULE, $this->forms[$formKey]['module'], $this->forms[$formKey]['path'])
+					));
 					break;
 				case 'callback':
 					$this->forms[$formKey]['form'] = call_user_func($this->forms[$formKey]['callback']);
@@ -690,7 +695,8 @@ class FormsModule extends AbstractCoreModule {
 		if (!empty($path)) {
 			// Setup the configuration container for the form definition.
 			$config = new SimpleConfigContainer($this->getConfigLoader());
-			$config->addProcessor(new ConfigTokenProcessor($this, 'config'));
+			$config->addProcessor(new EngineTokenProcessor($this->getEngine(), 'engine'));
+			$config->addProcessor(new ConfigTokenProcessor($this->forms[$formKey]['module'], 'config'));
 			$config->addProcessor(new ConfigTokenProcessor($this->getEngine(), 'engine-config'));
 			$config->addProcessor(new ArrayTokenProcessor($this->getValues($formKey), 'data'));
 			// Merge the configuration defaults and form definition file contents.
