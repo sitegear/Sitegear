@@ -15,6 +15,7 @@ use Sitegear\Base\Resources\ResourceLocations;
 use Sitegear\Base\View\ViewInterface;
 use Sitegear\Util\LoggerRegistry;
 
+use Sitegear\Util\NameUtilities;
 use Symfony\Component\Routing\Generator\UrlGenerator;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\Route;
@@ -93,7 +94,7 @@ abstract class AbstractCoreModule extends AbstractUrlMountableModule {
 	public function applyViewDefaults(ViewInterface $view, $viewType, $viewName) {
 		LoggerRegistry::debug(sprintf('%s applying view defaults', (new \ReflectionClass($this))->getShortName()));
 		$this->applyConfigToView('common', $view);
-		$this->applyConfigToView(sprintf('%s.%s', $viewType, $viewName), $view);
+		$this->applyConfigToView(sprintf('%s.%s', NameUtilities::convertToDashedLower($viewType), NameUtilities::convertToDashedLower($viewName)), $view);
 	}
 
 	//-- MountableModuleInterface Methods --------------------
