@@ -71,7 +71,7 @@ class SiteInfoProvider implements SiteInfoProviderInterface {
 	 * {@inheritDoc}
 	 */
 	public function getAdministratorEmail() {
-		return $this->engine->config('site.administrator.email-address');
+		return $this->engine->config('site.administrator.email');
 	}
 
 	/**
