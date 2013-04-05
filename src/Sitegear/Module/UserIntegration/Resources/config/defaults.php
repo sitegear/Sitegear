@@ -158,7 +158,12 @@ return array(
 			/**
 			 * Message when a user attempts to sign up with an email address that is already registered.
 			 */
-			'email-already-registered' => 'That email address is already registered'
+			'email-already-registered' => 'That email address is already registered',
+
+			/**
+			 * Message when the password and confirm-password fields do not match.
+			 */
+			'passwords-do-not-match' => 'The passwords you supplied do not match, please type exactly the same password twice'
 		),
 
 		/**
