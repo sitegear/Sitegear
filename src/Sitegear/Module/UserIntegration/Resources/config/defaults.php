@@ -159,6 +159,13 @@ return array(
 			 * Message when a user attempts to sign up with an email address that is already registered.
 			 */
 			'email-already-registered' => 'That email address is already registered'
+		),
+
+		/**
+		 * Privileges to grant automatically to new accounts.
+		 */
+		'privileges' => array(
+			'user'
 		)
 	),
 

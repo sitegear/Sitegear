@@ -251,14 +251,23 @@ class UserIntegrationModule extends AbstractCoreModule {
 	 */
 	public function signUp($email, $credentials) {
 		LoggerRegistry::debug('UserIntegrationModule::signUp()');
+		// Remove confirmation credentials and captcha.
 		unset($credentials['captcha']);
 		foreach ($credentials as $key => $value) {
 			if (substr($key, 0, 8) === 'confirm-') {
 				unset($credentials[$key]);
 			}
 		}
-		$this->getEngine()->getUserManager()->getStorage()->createUser($email, $credentials);
+		// Create user and grant privileges.
+		$storage = $this->getEngine()->getUserManager()->getStorage();
+		$storage->createUser($email, $credentials);
+		foreach ($this->config('sign-up.privileges') as $privilege) {
+			$storage->grantPrivilege($email, $privilege);
+		}
+		// TODO Send email confirmation / activation request (based on config)
+		// Log the user in automatically and set a message for the next page.
 		$this->getEngine()->pageMessages()->add($this->config('sign-up.messages.success'), 'success');
+		$this->login($email, $credentials);
 	}
 
 	/**
