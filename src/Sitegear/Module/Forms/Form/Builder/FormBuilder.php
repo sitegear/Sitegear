@@ -21,8 +21,8 @@ use Sitegear\Base\Form\Processor\ModuleProcessor;
 use Sitegear\Util\ArrayUtilities;
 use Sitegear\Util\NameUtilities;
 use Sitegear\Util\LoggerRegistry;
-
 use Sitegear\Util\TypeUtilities;
+
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\Constraints\Callback;
 
