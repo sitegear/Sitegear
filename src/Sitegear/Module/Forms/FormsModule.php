@@ -138,7 +138,7 @@ class FormsModule extends AbstractCoreModule {
 			$errors = $this->validateForm($formKey, $fields, $values);
 			if (empty($errors)) {
 				// No errors, so execute processors.  Pass in all the values including those from previous steps.
-				$response = $this->executeProcessors($formKey, $step, $request, $this->getValues($formKey));
+				$response = $this->executeProcessors($step, $request, $this->getValues($formKey));
 				// Reset the 'available steps' list if this is a one-way step.
 				if ($step->isOneWay()) {
 					$availableSteps = array( $nextStep );
@@ -661,14 +661,13 @@ class FormsModule extends AbstractCoreModule {
 	}
 
 	/**
-	 * @param string $formKey
 	 * @param StepInterface $step
 	 * @param Request $request
 	 * @param array $values
 	 *
 	 * @return Response|null
 	 */
-	protected function executeProcessors($formKey, StepInterface $step, Request $request, array $values) {
+	protected function executeProcessors(StepInterface $step, Request $request, array $values) {
 		$response = null;
 		foreach ($step->getProcessors() as $processor) {
 			if (!$response instanceof Response && $processor->shouldExecute($values)) {
