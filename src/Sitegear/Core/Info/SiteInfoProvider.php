@@ -126,7 +126,7 @@ class SiteInfoProvider implements SiteInfoProviderInterface {
 	public function getPublicPath($location, $module, $resource) {
 		// Get the name of the module
 		if (!is_string($module) || strpos('\\', $module) !== false) {
-			$module = $this->engine->getModuleName($module);
+			$module = NameUtilities::convertToDashedLower($this->engine->getModuleName($module));
 		}
 		// Ensure the passed-in resource has no leading slashes and no surrounding whitespace
 		$resource = ltrim(trim($resource), '/');
