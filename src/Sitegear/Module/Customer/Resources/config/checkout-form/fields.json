@@ -360,7 +360,13 @@
 				"name": "regex",
 				"options": {
 					"pattern": "/^\\d{15}\\d?$/",
-					"message": "Sorry, I don't understand your credit card number. Please double check that it is correct, it should have 15 or 16 digits and no spaces."
+					"message": "Sorry, I don't understand your credit card number; please double check that it is correct, it should have 15 or 16 digits and no spaces"
+				}
+			},
+			{
+				"name": "luhn",
+				"options": {
+					"message": "Please provide a valid credit card number"
 				}
 			}
 		]
@@ -378,14 +384,14 @@
 			{
 				"name": "not-blank",
 				"options": {
-					"message": "Please provide your credit card verification code."
+					"message": "Please provide your credit card verification code"
 				}
 			},
 			{
 				"name": "regex",
 				"options": {
 					"pattern": "/^\\d{3}\\d?$/",
-					"message": "Sorry, I don't understand your verification code. Please double check that it is correct, it should have 3 or 4 digits only and no spaces."
+					"message": "Sorry, I don't understand your verification code; please double check that it is correct, it should have 3 or 4 digits only and no spaces"
 				}
 			}
 		]
@@ -414,7 +420,7 @@
 			{
 				"name": "not-blank",
 				"options": {
-					"message": "Please provide your full name as printed on your credit card."
+					"message": "Please provide your full name as printed on your credit card"
 				}
 			}
 		]
@@ -435,7 +441,7 @@
 			{
 				"name": "not-blank",
 				"options": {
-					"message": "Please tick the box to indicate your acceptance of our terms."
+					"message": "Please tick the box to indicate your acceptance of our terms"
 				}
 			}
 		]
