@@ -51,8 +51,8 @@ class AddTrolleyItemFormBuilder extends AbstractFormsModuleFormBuilder {
 			null,
 			null,
 			null,
-			$this->getFormsModule()->getValues($this->getFormKey()),
-			$this->getFormsModule()->getErrors($this->getFormKey())
+			$this->getFormsModule()->registry()->getValues($this->getFormKey()),
+			$this->getFormsModule()->registry()->getErrors($this->getFormKey())
 		);
 		$module = $this->getFormsModule()->getEngine()->getModule($formDefinition['module-name']);
 		if (!$module instanceof PurchaseItemProviderModuleInterface) {

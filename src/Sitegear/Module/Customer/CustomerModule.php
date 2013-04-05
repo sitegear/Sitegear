@@ -10,14 +10,11 @@ namespace Sitegear\Module\Customer;
 
 use Sitegear\Base\Form\FormInterface;
 use Sitegear\Base\Module\PurchaseAdjustmentProviderModuleInterface;
-use Sitegear\Base\Module\PurchaseItemProviderModuleInterface;
 use Sitegear\Base\View\ViewInterface;
 use Sitegear\Core\Module\AbstractCoreModule;
 use Sitegear\Module\Customer\Form\Builder\AddTrolleyItemFormBuilder;
 use Sitegear\Module\Customer\Form\Builder\CheckoutFormBuilder;
-use Sitegear\Module\Customer\Model\TransactionItem;
 use Sitegear\Module\Customer\Model\Account;
-use Sitegear\Util\TokenUtilities;
 use Sitegear\Util\UrlUtilities;
 use Sitegear\Util\LoggerRegistry;
 
@@ -38,10 +35,12 @@ class CustomerModule extends AbstractCoreModule {
 	 */
 	const ENTITY_ALIAS = 'Customer';
 
+	//-- Attributes --------------------
+
 	/**
-	 * Session key to use for the trolley contents.
+	 * @var Trolley
 	 */
-	const SESSION_KEY_TROLLEY = 'customer.trolley';
+	private $trolley;
 
 	//-- ModuleInterface Methods --------------------
 
@@ -61,6 +60,8 @@ class CustomerModule extends AbstractCoreModule {
 		$this->getEngine()->doctrine()->registerEntityNamespace(self::ENTITY_ALIAS, '\\Sitegear\\Module\\Customer\\Model');
 		// Register the checkout form generator.
 		$this->getEngine()->forms()->registry()->registerFormGeneratorCallback($this->config('checkout.form-key'), array( $this, 'buildCheckoutForm' ));
+		// Create the trolley object.
+		$this->trolley = new Trolley($this, $this->config('page-messages'));
 	}
 
 	//-- Page Controller Methods --------------------
@@ -73,7 +74,6 @@ class CustomerModule extends AbstractCoreModule {
 		if (!$this->getEngine()->getUserManager()->isLoggedIn()) {
 			return new RedirectResponse($this->getEngine()->userIntegration()->getAuthenticationLinkUrl('login', $request));
 		}
-		$this->applyConfigToView('pages.index', $view);
 		$view['account'] = $this->getLoggedInUserAccount();
 		$view['fields'] = $this->getRepository('Field')->findAll();
 		return null;
@@ -108,7 +108,7 @@ class CustomerModule extends AbstractCoreModule {
 					$attributeValues[substr($key, 5)] = $value;
 				}
 			}
-			$this->addTrolleyItem($moduleName, $type, $id, $attributeValues, intval($request->request->get('quantity')));
+			$this->trolley()->addItem($moduleName, $type, $id, $attributeValues, intval($request->request->get('quantity')));
 			$this->getEngine()->forms()->registry()->resetForm($formKey);
 		}
 		// Go back to the page where the submission was made.
@@ -125,7 +125,7 @@ class CustomerModule extends AbstractCoreModule {
 	public function removeTrolleyItemController(Request $request) {
 		LoggerRegistry::debug('CustomerModule::removeTrolleyItemController');
 		// Remove the item from the stored trolley data.
-		$this->removeTrolleyItem(intval($request->request->get('index')));
+		$this->trolley()->removeItem(intval($request->request->get('index')));
 		// Go back to the page where the submission was made.
 		return new RedirectResponse($request->getUriForPath($this->getRouteUrl('trolley')));
 	}
@@ -140,7 +140,7 @@ class CustomerModule extends AbstractCoreModule {
 	public function modifyTrolleyItemController(Request $request) {
 		LoggerRegistry::debug('CustomerModule::modifyTrolleyItemController');
 		// Update the stored trolley data.
-		$this->modifyTrolleyItem(intval($request->request->get('index')), intval($request->request->get('quantity')));
+		$this->trolley()->modifyItem(intval($request->request->get('index')), intval($request->request->get('quantity')));
 		// Go back to the page where the submission was made.
 		return new RedirectResponse($request->getUriForPath($this->getRouteUrl('trolley')));
 	}
@@ -154,8 +154,7 @@ class CustomerModule extends AbstractCoreModule {
 	 */
 	public function trolleyController(ViewInterface $view) {
 		LoggerRegistry::debug('CustomerModule::trolleyController');
-		$this->applyConfigToView('pages.trolley', $view);
-		$view['trolley-data'] = $this->getTrolleyData();
+		$view['trolley-data'] = $this->trolley()->getData();
 	}
 
 	/**
@@ -168,10 +167,9 @@ class CustomerModule extends AbstractCoreModule {
 	 */
 	public function checkoutController(ViewInterface $view, Request $request) {
 		LoggerRegistry::debug('CustomerModule::checkoutController');
-		$trolleyData = $this->getTrolleyData();
+		$trolleyData = $this->trolley()->getData();
 		if (!empty($trolleyData)) {
 			if ($this->getEngine()->getUserManager()->isLoggedIn()) {
-				$this->applyConfigToView('pages.checkout', $view);
 				$view['form-key'] = $this->config('checkout.form-key');
 				$view['activate-script'] = $this->config('checkout.activate-script');
 				return null;
@@ -192,8 +190,7 @@ class CustomerModule extends AbstractCoreModule {
 	 */
 	public function trolleyPreviewComponent(ViewInterface $view) {
 		LoggerRegistry::debug('CustomerModule::trolleyPreviewComponent');
-		$this->applyConfigToView('components.trolley-preview', $view);
-		$view['trolley-data'] = $this->getTrolleyData();
+		$view['trolley-data'] = $this->trolley()->getData();
 		$view['details-url'] = $this->getRouteUrl('trolley');
 		$view['checkout-url'] = UrlUtilities::generateLinkWithReturnUrl(
 			$this->getEngine()->forms()->getRouteUrl('initialise', $this->config('checkout.form-key')),
@@ -209,11 +206,10 @@ class CustomerModule extends AbstractCoreModule {
 	 */
 	public function trolleyDetailsComponent(ViewInterface $view) {
 		LoggerRegistry::debug('CustomerModule::trolleyDetailsComponent');
-		$this->applyConfigToView('components.trolley-details', $view);
 		$view['modify-item-url'] = $this->getRouteUrl('modify-trolley-item');
 		$view['remove-item-url'] = $this->getRouteUrl('remove-trolley-item');
 		$view['form-url'] = $this->getRouteUrl('trolley');
-		$view['trolley-data'] = $this->getTrolleyData();
+		$view['trolley-data'] = $this->trolley()->getData();
 		$view['adjustments'] = $this->getAdjustments();
 		$view['checkout-url'] = UrlUtilities::generateLinkWithReturnUrl(
 			$this->getEngine()->forms()->getRouteUrl('initialise', $this->config('checkout.form-key')),
@@ -240,141 +236,10 @@ class CustomerModule extends AbstractCoreModule {
 	//-- Public Methods --------------------
 
 	/**
-	 * Add a single item (of any quantity) to the trolley.
-	 *
-	 * @param string $moduleName Name of the module that provides the item being added.
-	 * @param string $type Name of the item type being added.
-	 * @param int $itemId Unique identifier of the item being added.
-	 * @param array $attributeValues Attribute selections, a key-value array where the keys are attribute identifiers and
-	 *   the values are value identifiers.
-	 * @param int $quantity Quantity being added, 1 by default.
-	 *
-	 * @throws \InvalidArgumentException
-	 * @throws \DomainException
+	 * @return Trolley
 	 */
-	public function addTrolleyItem($moduleName, $type, $itemId, array $attributeValues=null, $quantity=null) {
-		LoggerRegistry::debug('CustomerModule::addTrolleyItem');
-		if ($quantity < 1) {
-			throw new \DomainException('CustomerModule cannot modify trolley item to a zero or negative quantity; use removeTrolleyItem instead.');
-		}
-		$module = $this->getPurchaseItemProviderModule($moduleName);
-		$attributeDefinitions = $module->getPurchaseItemAttributeDefinitions($type, $itemId);
-		$attributes = array();
-
-		// Get an array of attributes, which each have a value and a label.
-		foreach ($attributeValues as $attributeValue) {
-			$attributeValue = intval($attributeValue);
-			foreach ($attributeDefinitions as $attributeDefinition) {
-				foreach ($attributeDefinition['values'] as $value) {
-					if ($value['id'] === $attributeValue) {
-						$attributes[] = array(
-							'value' => $attributeValue,
-							'label' => sprintf('%s: %s', $attributeDefinition['label'], $value['label'])
-						);
-					}
-				}
-			}
-		}
-
-		// Add the item data to the trolley, or merge it in to an existing matching item.
-		$data = $this->getTrolleyData();
-		$matched = false;
-		foreach ($data as $index => $item) { /** @var TransactionItem $item */
-			if (($item->getModule() === $moduleName) && ($item->getType() === $type) && ($item->getAttributes() === $attributes)) {
-				$matched = $index;
-			}
-		}
-		if ($matched !== false) {
-			$item = $data[$matched];
-			$item->setQuantity($item->getQuantity() + $quantity);
-			$data[$matched] = $item;
-		} else {
-			$item = new TransactionItem();
-			$item->setModule($moduleName);
-			$item->setType($type);
-			$item->setItemId($itemId);
-			$item->setLabel($module->getPurchaseItemLabel($type, $itemId));
-			$item->setDetailsUrl($module->getPurchaseItemDetailsUrl($type, $itemId, $attributeValues));
-			$item->setAttributes($attributes);
-			$item->setUnitPrice($module->getPurchaseItemUnitPrice($type, $itemId, $attributeValues));
-			$item->setQuantity($quantity);
-			$data[] = $item;
-		}
-		$this->setTrolleyData($data);
-
-		// Notify on next page load
-		$this->getEngine()->pageMessages()->add(TokenUtilities::replaceTokens($this->config('page-messages.item-added'), array( 'label' => $item->getLabel(), 'quantity' => $quantity )), 'success');
-		if ($item->getQuantity() > $quantity) {
-			$this->getEngine()->pageMessages()->add(TokenUtilities::replaceTokens($this->config('page-messages.item-total'), array( 'label' => $item->getLabel(), 'quantity' => $item->getQuantity() )), 'success');
-		}
-	}
-
-	/**
-	 * Remove the trolley item at the given index.
-	 *
-	 * @param $index
-	 *
-	 * @throws \OutOfBoundsException
-	 */
-	public function removeTrolleyItem($index) {
-		LoggerRegistry::debug('CustomerModule::removeTrolleyItem');
-		$data = $this->getTrolleyData();
-		if ($index < 0 || $index >= sizeof($data)) {
-			throw new \OutOfBoundsException(sprintf('CustomerModule cannot modify trolley item with index (%d) out-of-bounds', $index));
-		}
-
-		// Modify the session data.
-		/** @var TransactionItem $item */
-		$item = array_splice($data, $index, 1)[0];
-		$this->setTrolleyData($data);
-
-		// Notify on next page load.
-		$this->getEngine()->pageMessages()->add(TokenUtilities::replaceTokens($this->config('page-messages.item-removed'), array( 'label' => $item->getLabel() )), 'success');
-	}
-
-	/**
-	 * Set the quantity of the trolley item at the given index.  The quantity must be greater than zero.
-	 *
-	 * @param $index
-	 * @param $quantity
-	 *
-	 * @throws \DomainException
-	 * @throws \OutOfBoundsException
-	 */
-	public function modifyTrolleyItem($index, $quantity) {
-		LoggerRegistry::debug('CustomerModule::modifyTrolleyItem');
-		if ($quantity < 1) {
-			throw new \DomainException('CustomerModule cannot modify trolley item to a zero or negative quantity; use removeTrolleyItem instead.');
-		}
-		$data = $this->getTrolleyData();
-		if ($index < 0 || $index >= sizeof($data)) {
-			throw new \OutOfBoundsException(sprintf('CustomerModule cannot modify trolley item with index (%d) out-of-bounds', $index));
-		}
-
-		// Modify the session data.
-		$item = $data[$index]; /** @var TransactionItem $item */
-		$item->setQuantity($quantity);
-		$data[$index] = $item;
-		$this->setTrolleyData($data);
-
-		// Notify on next page load.
-		$this->getEngine()->pageMessages()->add(TokenUtilities::replaceTokens($this->config('page-messages.item-modified'), array( 'label' => $item->getLabel(), 'quantity' => $quantity )), 'success');
-	}
-
-	/**
-	 * Prepare the payment.
-	 */
-	public function preparePayment() {
-		LoggerRegistry::debug('CustomerModule::preparePayment');
-		// TODO Payment gateway integration
-	}
-
-	/**
-	 * Make the payment.  This requires payment details.
-	 */
-	public function makePayment() {
-		LoggerRegistry::debug('CustomerModule::makePayment');
-		// TODO Payment gateway integration
+	public function trolley() {
+		return $this->trolley;
 	}
 
 	/**
@@ -452,21 +317,12 @@ class CustomerModule extends AbstractCoreModule {
 	//-- Internal Methods --------------------
 
 	/**
-	 * Get the current contents of the trolley.
+	 * @param string $entity
 	 *
-	 * @return TransactionItem[]
+	 * @return \Doctrine\ORM\EntityRepository
 	 */
-	protected function getTrolleyData() {
-		return $this->getEngine()->getSession()->get(self::SESSION_KEY_TROLLEY, array());
-	}
-
-	/**
-	 * Set the contents of the trolley.
-	 *
-	 * @param TransactionItem[] $data
-	 */
-	protected function setTrolleyData(array $data) {
-		$this->getEngine()->getSession()->set(self::SESSION_KEY_TROLLEY, $data);
+	private function getRepository($entity) {
+		return $this->getEngine()->doctrine()->getEntityManager()->getRepository(sprintf('%s:%s', self::ENTITY_ALIAS, $entity));
 	}
 
 	/**
@@ -486,7 +342,7 @@ class CustomerModule extends AbstractCoreModule {
 				throw new \RuntimeException(sprintf('FormsModule found invalid entry in "checkout.adjustments"; must be a purchase adjustment provider module, found "%s"', $name));
 			}
 			// TODO Pass in $data array to getAdjustmentAmount()
-			$value = $module->getAdjustmentAmount($this->getTrolleyData(), array());
+			$value = $module->getAdjustmentAmount($this->trolley()->getData(), array());
 			if (!empty($value) || $module->isVisibleUnset()) {
 				$adjustments[] = array(
 					'label' => $module->getAdjustmentLabel(),
@@ -495,32 +351,6 @@ class CustomerModule extends AbstractCoreModule {
 			}
 		}
 		return $adjustments;
-	}
-
-	/**
-	 * Retrieve a named module from the engine and check that it is an instance of PurchaseItemProviderModuleInterface.
-	 * Essentially this is a shortcut to getEngine()->getModule() with an additional type check.
-	 *
-	 * @param $name
-	 *
-	 * @return \Sitegear\Base\Module\PurchaseItemProviderModuleInterface
-	 * @throws \InvalidArgumentException
-	 */
-	protected function getPurchaseItemProviderModule($name) {
-		$module = $this->getEngine()->getModule($name);
-		if (!$module instanceof PurchaseItemProviderModuleInterface) {
-			throw new \InvalidArgumentException(sprintf('The specified module "%s" is not a valid purchase item provider.', $name));
-		}
-		return $module;
-	}
-
-	/**
-	 * @param string $entity
-	 *
-	 * @return \Doctrine\ORM\EntityRepository
-	 */
-	private function getRepository($entity) {
-		return $this->getEngine()->doctrine()->getEntityManager()->getRepository(sprintf('%s:%s', self::ENTITY_ALIAS, $entity));
 	}
 
 }
