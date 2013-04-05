@@ -172,7 +172,6 @@ class UserIntegrationModule extends AbstractCoreModule {
 	 */
 	public function authenticationLinkComponent(ViewInterface $view, Request $request) {
 		LoggerRegistry::debug('UserIntegrationModule::authenticationLinkComponent');
-		$this->applyConfigToView('components.authentication-link', $view);
 		if ($this->getEngine()->getUserManager()->isLoggedIn()) {
 			// User is logged in, so we want a logout link (not a link if guest user)
 			$view['customer-profile-url'] = $this->getEngine()->getModuleMountedUrl('customer');

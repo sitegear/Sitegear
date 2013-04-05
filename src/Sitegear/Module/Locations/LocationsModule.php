@@ -86,7 +86,6 @@ class LocationsModule extends AbstractCoreModule {
 	 */
 	public function indexController(ViewInterface $view) {
 		LoggerRegistry::debug('LocationsModule::indexController()');
-		$this->applyConfigToView('page.index', $view);
 		$view['regions'] = new ArrayCollection($this->getRepository('Region')->findByParent(null));
 	}
 
@@ -98,7 +97,6 @@ class LocationsModule extends AbstractCoreModule {
 	 */
 	public function regionController(ViewInterface $view, Request $request) {
 		LoggerRegistry::debug('LocationsModule::regionController()');
-		$this->applyConfigToView('page.region', $view);
 		/** @var \Sitegear\Module\Locations\Model\Region $region */
 		$region = $this->getRepository('Region')->findOneByUrlPath($request->attributes->get('slug'));
 		$view['region'] = $region;
@@ -116,7 +114,6 @@ class LocationsModule extends AbstractCoreModule {
 	 */
 	public function itemController(ViewInterface $view, Request $request) {
 		LoggerRegistry::debug('LocationsModule::itemController()');
-		$this->applyConfigToView('page.item', $view);
 		try {
 			$view['item'] = $this->getRepository('Item')->findOneBy(array( 'urlPath' => $request->attributes->get('slug'), 'active' => true ));
 		} catch (NoResultException $e) {
@@ -138,7 +135,6 @@ class LocationsModule extends AbstractCoreModule {
 	 */
 	public function searchController(ViewInterface $view, Request $request) {
 		LoggerRegistry::debug('LocationsModule::itemController()');
-		$this->applyConfigToView('page.search', $view);
 		$query = $request->query->get('query');
 		$radius = $request->query->get('radius');
 		if (strlen($query) === 0) {
@@ -169,7 +165,6 @@ class LocationsModule extends AbstractCoreModule {
 	 */
 	public function searchFormComponent(ViewInterface $view, $query=null, $radius=null) {
 		LoggerRegistry::debug('LocationsModule::searchFormComponent()');
-		$this->applyConfigToView('component.search-form', $view);
 		$view['action-url'] = $this->getRouteUrl('search');
 		if (!is_null($query)) {
 			$view['query'] = $query;

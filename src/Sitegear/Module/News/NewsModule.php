@@ -93,7 +93,6 @@ class NewsModule extends AbstractCoreModule {
 	 */
 	public function indexController(ViewInterface $view, Request $request) {
 		LoggerRegistry::debug('NewsModule::indexController');
-		$this->applyConfigToView('page.index', $view);
 		$itemCount = $this->getRepository('Item')->getItemCount();
 		$view['items'] = $this->getRepository('Item')->findLatestItems($request->query->has('more') ? 0 : intval($this->config('page.index.item-limit')));
 		$view['item-count'] = $itemCount;
@@ -113,7 +112,6 @@ class NewsModule extends AbstractCoreModule {
 	 */
 	public function itemController(ViewInterface $view, Request $request) {
 		LoggerRegistry::debug('NewsModule::itemController');
-		$this->applyConfigToView('page.item', $view);
 		try {
 			$view['item'] = $this->getRepository('Item')->findOneByUrlPath($request->attributes->get('slug'));
 		} catch (NoResultException $e) {

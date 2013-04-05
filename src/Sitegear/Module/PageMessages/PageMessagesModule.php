@@ -50,7 +50,6 @@ class PageMessagesModule extends AbstractCoreModule {
 	 * @param ViewInterface $view
 	 */
 	public function messagesComponent(ViewInterface $view) {
-		$this->applyConfigToView('components.messages', $view);
 		$view['messages'] = $this->retrieve();
 	}
 

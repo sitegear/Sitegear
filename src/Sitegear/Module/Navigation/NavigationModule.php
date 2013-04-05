@@ -57,7 +57,6 @@ class NavigationModule extends AbstractCoreModule {
 	 */
 	public function navigationComponent(ViewInterface $view, Request $request, array $path=null, $maxDepth=null, $indent=0) {
 		LoggerRegistry::debug('NavigationModule::navigationComponent');
-		$this->applyConfigToView('components.navigation', $view);
 		$data = $this->getData(MountableModuleInterface::NAVIGATION_DATA_MODE_MAIN);
 		$path = $path ?: array();
 		foreach ($path as $index) {
@@ -82,7 +81,6 @@ class NavigationModule extends AbstractCoreModule {
 	 */
 	public function breadcrumbsComponent(ViewInterface $view, Request $request, $url=null) {
 		LoggerRegistry::debug('NavigationModule::breadcrumbsComponent');
-		$this->applyConfigToView('components.breadcrumbs', $view);
 		$url = trim(!is_null($url) ? $url : $request->getPathInfo(), '/');
 		if (empty($url) && !$this->config('components.breadcrumbs.show-on-homepage')) {
 			// This is the home page, and we are configured not to show the breadcrumbs here.

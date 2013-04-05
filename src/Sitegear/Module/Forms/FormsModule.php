@@ -216,7 +216,6 @@ class FormsModule extends AbstractCoreModule {
 			$form->setBackButtonAttributes(array_merge($form->getBackButtonAttributes(), array( 'disabled' => 'disabled' )));
 		}
 		// Setup the view.
-		$this->applyConfigToView('component.form', $view);
 		$view['form-renderer'] = $this->createRendererFactory()->createFormRenderer($form, $currentStep);
 		$view['values'] = array_merge($this->registry()->getValues($formKey), $values ?: array());
 		$view['errors'] = array_merge($this->registry()->getErrors($formKey), $errors ?: array());
@@ -234,7 +233,6 @@ class FormsModule extends AbstractCoreModule {
 	 * @param string $formKey
 	 */
 	public function stepsComponent(ViewInterface $view, Request $request, $formKey) {
-		$this->applyConfigToView('component.steps', $view);
 		$view['form'] = $this->registry()->getForm($formKey, $request);
 		$view['current-step'] = $this->registry()->getCurrentStep($formKey);
 		$view['available-steps'] = $this->registry()->getAvailableSteps($formKey);

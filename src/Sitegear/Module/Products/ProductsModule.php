@@ -155,7 +155,6 @@ class ProductsModule extends AbstractCoreModule implements PurchaseItemProviderM
 	 */
 	public function indexController(ViewInterface $view) {
 		LoggerRegistry::debug('ProductsModule::indexController');
-		$this->applyConfigToView('page.index', $view);
 		$view['categories'] = $this->getRepository('Category')->findByParent(null);
 	}
 
@@ -167,7 +166,6 @@ class ProductsModule extends AbstractCoreModule implements PurchaseItemProviderM
 	 */
 	public function categoryController(ViewInterface $view, Request $request) {
 		LoggerRegistry::debug('ProductsModule::categoryController');
-		$this->applyConfigToView('page.category', $view);
 		$view['category'] = $this->getRepository('Category')->findOneByUrlPath($request->attributes->get('slug'));
 		$view['categories'] = $this->getRepository('Category')->findByParent($view['category']);
 		$view['items'] = $this->getRepository('Item')->getActiveItemsInCategory($view['category']);
@@ -183,7 +181,6 @@ class ProductsModule extends AbstractCoreModule implements PurchaseItemProviderM
 	 */
 	public function itemController(ViewInterface $view, Request $request) {
 		LoggerRegistry::debug('ProductsModule::itemController');
-		$this->applyConfigToView('page.item', $view);
 		try {
 			$view['item'] = $this->getRepository('Item')->findOneBy(array( 'urlPath' => $request->attributes->get('slug'), 'active' => true ));
 		} catch (NoResultException $e) {
