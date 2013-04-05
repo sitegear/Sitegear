@@ -680,7 +680,7 @@ class FormsModule extends AbstractCoreModule {
 						$processor->getArgumentDefaults()
 					);
 				} catch (\RuntimeException $exception) {
-					$this->handleProcessorException($formKey, $processor, $exception);
+					$this->handleProcessorException($processor, $exception);
 				}
 			}
 		}
@@ -690,7 +690,6 @@ class FormsModule extends AbstractCoreModule {
 	/**
 	 * Handle the given exception, which was raised by the given processor.
 	 *
-	 * @param string $formKey
 	 * @param \Sitegear\Base\Form\Processor\FormProcessorInterface $processor
 	 * @param \RuntimeException $exception
 	 *
@@ -698,12 +697,13 @@ class FormsModule extends AbstractCoreModule {
 	 *
 	 * @throws \RuntimeException
 	 */
-	protected function handleProcessorException($formKey, FormProcessorInterface $processor, \RuntimeException $exception) {
+	protected function handleProcessorException(FormProcessorInterface $processor, \RuntimeException $exception) {
 		$result = true;
-		foreach ($processor->getExceptionFieldNames() as $fieldName) {
-			$this->addFieldError($formKey, $fieldName, $exception->getMessage());
-		}
 		switch ($processor->getExceptionAction()) {
+			case FormProcessorInterface::EXCEPTION_ACTION_MESSAGE:
+				$this->getEngine()->pageMessages()->add($exception->getMessage(), 'error');
+				$result = false;
+				break;
 			case FormProcessorInterface::EXCEPTION_ACTION_RETHROW:
 				throw $exception;
 				break;

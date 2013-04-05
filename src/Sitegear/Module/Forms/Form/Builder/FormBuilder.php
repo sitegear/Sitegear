@@ -262,7 +262,6 @@ class FormBuilder extends AbstractFormsModuleFormBuilder {
 			$this->getFormsModule()->getEngine()->getModule($processorDefinition['module']),
 			$processorDefinition['method'],
 			isset($processorDefinition['arguments']) ? $processorDefinition['arguments'] : array(),
-			isset($processorDefinition['exception-field-names']) ? $processorDefinition['exception-field-names'] : null,
 			isset($processorDefinition['exception-action']) ? $processorDefinition['exception-action'] : null
 		);
 		if (isset($processorDefinition['conditions'])) {

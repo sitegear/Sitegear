@@ -44,10 +44,6 @@
 					"method": "recover-login",
 					"arguments": [
 						"{{ data:email }}"
-					],
-					"exception-action": "fail",
-					"exception-field-names": [
-						"email"
 					]
 				}
 			]

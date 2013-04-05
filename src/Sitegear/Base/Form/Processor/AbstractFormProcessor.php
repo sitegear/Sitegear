@@ -15,6 +15,13 @@ use Sitegear\Base\Form\Condition\ConditionInterface;
  */
 abstract class AbstractFormProcessor implements FormProcessorInterface {
 
+	//-- Constants --------------------
+
+	/**
+	 * Action to use on exceptions by default if nothing specified.
+	 */
+	const DEFAULT_EXCEPTION_ACTION = FormProcessorInterface::EXCEPTION_ACTION_MESSAGE;
+
 	//-- Attributes --------------------
 
 	/**
@@ -28,11 +35,6 @@ abstract class AbstractFormProcessor implements FormProcessorInterface {
 	private $conditions;
 
 	/**
-	 * @var string[]
-	 */
-	private $exceptionFieldNames;
-
-	/**
 	 * @var string
 	 */
 	private $exceptionAction;
@@ -41,14 +43,12 @@ abstract class AbstractFormProcessor implements FormProcessorInterface {
 
 	/**
 	 * @param array $argumentDefaults
-	 * @param string[]|null $exceptionFieldNames
 	 * @param string|null $exceptionAction EXCEPTION_ACTION_RETHROW by default
 	 */
-	public function __construct(array $argumentDefaults=null, array $exceptionFieldNames=null, $exceptionAction=null) {
+	public function __construct(array $argumentDefaults=null, $exceptionAction=null) {
 		$this->argumentDefaults = $argumentDefaults ?: array();
 		$this->conditions = array();
-		$this->exceptionFieldNames = $exceptionFieldNames ?: array();
-		$this->exceptionAction = $exceptionAction ?: FormProcessorInterface::EXCEPTION_ACTION_RETHROW;
+		$this->exceptionAction = $exceptionAction ?: self::DEFAULT_EXCEPTION_ACTION;
 	}
 
 	//-- FormProcessorInterface Methods --------------------
@@ -97,21 +97,6 @@ abstract class AbstractFormProcessor implements FormProcessorInterface {
 			$result = $result && $condition->matches($values);
 		}
 		return $result;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function getExceptionFieldNames() {
-		return $this->exceptionFieldNames;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function setExceptionFieldNames(array $exceptionFieldNames) {
-		$this->exceptionFieldNames = $exceptionFieldNames;
-		return $this;
 	}
 
 	/**

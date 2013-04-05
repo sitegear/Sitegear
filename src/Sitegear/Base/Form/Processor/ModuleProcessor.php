@@ -32,14 +32,13 @@ class ModuleProcessor extends AbstractFormProcessor {
 	//-- Constructor --------------------
 
 	/**
-	 * @param array|null $argumentDefaults
-	 * @param string[]|null $exceptionFieldNames
-	 * @param string|null $exceptionAction
 	 * @param \Sitegear\Base\Module\ModuleInterface $module
 	 * @param string $methodName
+	 * @param array|null $argumentDefaults
+	 * @param string|null $exceptionAction
 	 */
-	public function __construct(ModuleInterface $module, $methodName, array $argumentDefaults=null, array $exceptionFieldNames=null, $exceptionAction=null) {
-		parent::__construct($argumentDefaults, $exceptionFieldNames, $exceptionAction);
+	public function __construct(ModuleInterface $module, $methodName, array $argumentDefaults=null, $exceptionAction=null) {
+		parent::__construct($argumentDefaults, $exceptionAction);
 		$this->module = $module;
 		$this->methodName = NameUtilities::convertToCamelCase($methodName);
 	}

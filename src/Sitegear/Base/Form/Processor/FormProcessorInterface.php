@@ -19,6 +19,12 @@ interface FormProcessorInterface {
 	//-- Constants --------------------
 
 	/**
+	 * Exception action constant signifying that if the processor method throws an exception, the message should be
+	 * displayed to the user and the form submission should fail.
+	 */
+	const EXCEPTION_ACTION_MESSAGE = 'message';
+
+	/**
 	 * Exception action constant signifying that if the processor method throws an exception, it should be ignored,
 	 * i.e. not rethrown and not cause the form submission to fail (this does not affect the action of exception field
 	 * names).
@@ -93,22 +99,6 @@ interface FormProcessorInterface {
 	 * @return boolean
 	 */
 	public function shouldExecute(array $values);
-
-	/**
-	 * Get the names of fields to attach any error messages to.
-	 *
-	 * @return string[]
-	 */
-	public function getExceptionFieldNames();
-
-	/**
-	 * Modify the names of fields to attach any error messages to.
-	 *
-	 * @param string[] $exceptionFieldNames
-	 *
-	 * @return self
-	 */
-	public function setExceptionFieldNames(array $exceptionFieldNames);
 
 	/**
 	 * Retrieve the exception action, which indicates how exceptions occurring during execution of the processor should

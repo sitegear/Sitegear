@@ -49,11 +49,6 @@
 					"arguments": [
 						"{{ data:email }}",
 						"{{ data:* }}"
-					],
-					"exception-action": "fail",
-					"exception-field-names": [
-						"email",
-						"password"
 					]
 				}
 			]
