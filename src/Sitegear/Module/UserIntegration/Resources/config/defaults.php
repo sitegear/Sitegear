@@ -28,21 +28,22 @@ return array(
 			 * %userEmail% -- the email address of the logged in user.
 			 * %logoutUrl% -- the URL of the logout action.
 			 */
-			'logged-in-message' => 'Logged in as <a href="%customerProfileUrl%">%userEmail%</a>. <a href="%logoutUrl%" class="logout-link">Logout</a>',
+			'logged-in' => 'Logged in as <a href="%customerProfileUrl%">%userEmail%</a>. <a href="%logoutUrl%" class="logout-link">Logout</a>',
 
 			/**
 			 * Message to show when logged in as a guest.  Tokens:
 			 *
 			 * %logoutUrl% -- the URL of the logout action.
 			 */
-			'logged-in-as-guest-message' => 'Logged in as guest. <a href="%logoutUrl%" class="logout-link">Logout</a>',
+			'logged-in-as-guest' => 'Logged in as guest. <a href="%logoutUrl%" class="logout-link">Logout</a>',
 
 			/**
 			 * Message to show when not logged in.  The first (only) placeholder is the URL for the login link.  Tokens:
 			 *
 			 * %loginUrl% -- the URL of the login action.
+			 * %signUpUrl% -- the URL of the sign-up action.
 			 */
-			'not-logged-in-message' => '<a href="%loginUrl%" class="login-link">Login</a>',
+			'not-logged-in' => '<a href="%loginUrl%" class="login-link">Login</a> | <a href="%signUpUrl%" class="sign-up-link">Sign Up</a>',
 
 		),
 

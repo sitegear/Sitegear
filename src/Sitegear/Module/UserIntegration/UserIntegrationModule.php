@@ -193,6 +193,7 @@ class UserIntegrationModule extends AbstractCoreModule {
 		} else {
 			// User is not logged in, so we want a login link
 			$view['login-url'] = $this->getAuthenticationLinkUrl('login', $request);
+			$view['sign-up-url'] = $this->getAuthenticationLinkUrl('sign-up', $request);
 			return 'login-link';
 		}
 	}

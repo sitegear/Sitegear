@@ -4,14 +4,14 @@
  */
 if (is_null($view['user-email'])) {
 	echo \Sitegear\Util\TokenUtilities::replaceTokens(
-		$view['logged-in-as-guest-message'],
+		$view['logged-in-as-guest'],
 		array(
 			'logoutUrl' => $view['logout-url']
 		)
 	);
 } else {
 	echo \Sitegear\Util\TokenUtilities::replaceTokens(
-		$view['logged-in-message'],
+		$view['logged-in'],
 		array(
 			'customerProfileUrl' => $view['customer-profile-url'],
 			'userEmail' => $view['user-email'],
