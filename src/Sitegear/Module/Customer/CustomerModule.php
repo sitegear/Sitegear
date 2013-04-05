@@ -243,6 +243,22 @@ class CustomerModule extends AbstractCoreModule {
 	}
 
 	/**
+	 * Prepare the payment.
+	 */
+	public function preparePayment() {
+		LoggerRegistry::debug('Trolley::preparePayment');
+		// TODO Payment gateway integration
+	}
+
+	/**
+	 * Make the payment.  This requires payment details.
+	 */
+	public function makePayment() {
+		LoggerRegistry::debug('Trolley::makePayment');
+		// TODO Payment gateway integration
+	}
+
+	/**
 	 * Utilise AddTrolleyItemFormBuilder to create the 'add trolley item' form.
 	 *
 	 * @param string $moduleName

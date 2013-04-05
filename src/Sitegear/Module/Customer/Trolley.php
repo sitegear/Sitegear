@@ -64,7 +64,7 @@ class Trolley {
 	 * @throws \DomainException
 	 */
 	public function addItem($moduleName, $type, $itemId, array $attributeValues=null, $quantity=null) {
-		LoggerRegistry::debug('Trolley::addTrolleyItem');
+		LoggerRegistry::debug('Trolley::addItem');
 		if ($quantity < 1) {
 			throw new \DomainException('Trolley cannot modify trolley item to a zero or negative quantity; use removeTrolleyItem instead.');
 		}
@@ -129,10 +129,10 @@ class Trolley {
 	 * @throws \OutOfBoundsException
 	 */
 	public function removeItem($index) {
-		LoggerRegistry::debug('Trolley::removeTrolleyItem');
+		LoggerRegistry::debug('Trolley::removeItem');
 		$data = $this->getData();
 		if ($index < 0 || $index >= sizeof($data)) {
-			throw new \OutOfBoundsException(sprintf('Trolley cannot modify trolley item with index (%d) out-of-bounds', $index));
+			throw new \OutOfBoundsException(sprintf('Trolley cannot remove trolley item with index (%d) out-of-bounds', $index));
 		}
 
 		// Modify the session data.
@@ -154,7 +154,7 @@ class Trolley {
 	 * @throws \OutOfBoundsException
 	 */
 	public function modifyItem($index, $quantity) {
-		LoggerRegistry::debug('Trolley::modifyTrolleyItem');
+		LoggerRegistry::debug('Trolley::modifyItem');
 		if ($quantity < 1) {
 			throw new \DomainException('Trolley cannot modify trolley item to a zero or negative quantity; use removeTrolleyItem instead.');
 		}
@@ -189,22 +189,6 @@ class Trolley {
 	 */
 	public function setData(array $data) {
 		$this->customerModule->getEngine()->getSession()->set(self::SESSION_KEY_TROLLEY, $data);
-	}
-
-	/**
-	 * Prepare the payment.
-	 */
-	public function preparePayment() {
-		LoggerRegistry::debug('Trolley::preparePayment');
-		// TODO Payment gateway integration
-	}
-
-	/**
-	 * Make the payment.  This requires payment details.
-	 */
-	public function makePayment() {
-		LoggerRegistry::debug('Trolley::makePayment');
-		// TODO Payment gateway integration
 	}
 
 	//-- Internal Methods --------------------
