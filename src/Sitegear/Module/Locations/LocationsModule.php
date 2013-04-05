@@ -53,7 +53,7 @@ class LocationsModule extends AbstractCoreModule {
 		parent::start();
 		// Register "location-search" form.
 		$filename = $this->config('location-search-form.filename');
-		$this->getEngine()->forms()->registerFormDefinitionFilePath($this->config('location-search-form.key'), $this, $filename);
+		$this->getEngine()->forms()->registry()->registerFormDefinitionFilePath($this->config('location-search-form.key'), $this, $filename);
 		// Register the Doctrine entity namespace.
 		$this->getEngine()->doctrine()->registerEntityNamespace(self::ENTITY_ALIAS, '\\Sitegear\\Module\\Locations\\Model');
 	}

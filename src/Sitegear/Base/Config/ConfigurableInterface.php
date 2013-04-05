@@ -43,4 +43,11 @@ interface ConfigurableInterface {
 	 */
 	public function config($key, $default=null);
 
+	/**
+	 * Get this object's configuration loader.
+	 *
+	 * @return \Sitegear\Base\Config\ConfigLoader
+	 */
+	public function getConfigLoader();
+
 }

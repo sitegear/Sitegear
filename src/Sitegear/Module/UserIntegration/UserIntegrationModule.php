@@ -41,19 +41,19 @@ class UserIntegrationModule extends AbstractCoreModule {
 	public function start() {
 		parent::start();
 		// Register constraint namespace.
-		$this->getEngine()->forms()->registerConstraintNamespace('\\Sitegear\\Module\\UserIntegration\\Constraint');
+		$this->getEngine()->forms()->registry()->registerConstraintNamespace('\\Sitegear\\Module\\UserIntegration\\Constraint');
 		// Register login form.
 		$filename = $this->config('login.form.filename');
-		$this->getEngine()->forms()->registerFormDefinitionFilePath($this->config('login.form.key'), $this, $filename);
+		$this->getEngine()->forms()->registry()->registerFormDefinitionFilePath($this->config('login.form.key'), $this, $filename);
 		// Register sign-up form.
 		$filename = $this->config('sign-up.form.filename');
-		$this->getEngine()->forms()->registerFormDefinitionFilePath($this->config('sign-up.form.key'), $this, $filename);
+		$this->getEngine()->forms()->registry()->registerFormDefinitionFilePath($this->config('sign-up.form.key'), $this, $filename);
 		// Register guest-login form.
 		$filename = $this->config('guest-login.form.filename');
-		$this->getEngine()->forms()->registerFormDefinitionFilePath($this->config('guest-login.form.key'), $this, $filename);
+		$this->getEngine()->forms()->registry()->registerFormDefinitionFilePath($this->config('guest-login.form.key'), $this, $filename);
 		// Register credentials recovery form.
 		$filename = $this->config('recover-login.form.filename');
-		$this->getEngine()->forms()->registerFormDefinitionFilePath($this->config('recover-login.form.key'), $this, $filename);
+		$this->getEngine()->forms()->registry()->registerFormDefinitionFilePath($this->config('recover-login.form.key'), $this, $filename);
 	}
 
 	//-- Page Controller Methods --------------------

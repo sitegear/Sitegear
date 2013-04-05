@@ -92,6 +92,13 @@ abstract class AbstractConfigurableEngine extends AbstractEngine implements Conf
 		return $this->config->get($key, $default);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	public function getConfigLoader() {
+		return $this->configLoader;
+	}
+
 	//-- AbstractEngine Methods --------------------
 
 	/**
@@ -108,13 +115,6 @@ abstract class AbstractConfigurableEngine extends AbstractEngine implements Conf
 	}
 
 	//-- Internal Methods --------------------
-
-	/**
-	 * @return \Sitegear\Base\Config\ConfigLoader
-	 */
-	protected function getConfigLoader() {
-		return $this->configLoader;
-	}
 
 	/**
 	 * Get the default configuration for this engine.

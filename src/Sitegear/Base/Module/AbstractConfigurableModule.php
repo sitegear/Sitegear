@@ -84,6 +84,13 @@ abstract class AbstractConfigurableModule extends AbstractModule implements Conf
 		return $this->config->get($key, $default);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	public function getConfigLoader() {
+		return $this->configLoader;
+	}
+
 	//-- Internal Methods --------------------
 
 	/**
@@ -92,13 +99,6 @@ abstract class AbstractConfigurableModule extends AbstractModule implements Conf
 	 * @return null|string|array Filename, data array, etc.
 	 */
 	protected abstract function defaults();
-
-	/**
-	 * @return \Sitegear\Base\Config\ConfigLoader
-	 */
-	protected function getConfigLoader() {
-		return $this->configLoader;
-	}
 
 	/**
 	 * Apply all children of the given config key from this module, as values stored in the given view.  This is a

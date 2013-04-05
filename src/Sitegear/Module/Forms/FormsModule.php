@@ -8,25 +8,15 @@
 
 namespace Sitegear\Module\Forms;
 
-use Sitegear\Base\Config\Processor\ArrayTokenProcessor;
-use Sitegear\Base\Config\Processor\ConfigTokenProcessor;
-use Sitegear\Base\Config\Container\SimpleConfigContainer;
-use Sitegear\Base\Config\Processor\EngineTokenProcessor;
-use Sitegear\Base\Module\ModuleInterface;
-use Sitegear\Base\Resources\ResourceLocations;
 use Sitegear\Base\View\ViewInterface;
-use Sitegear\Base\Form\FormInterface;
 use Sitegear\Base\Form\StepInterface;
-use Sitegear\Base\Form\Field\FieldInterface;
 use Sitegear\Base\Form\Processor\FormProcessorInterface;
 use Sitegear\Base\Form\Renderer\Factory\RendererFactoryInterface;
 use Sitegear\Core\Module\AbstractCoreModule;
 use Sitegear\Module\Forms\Form\Renderer\FormRenderer;
-use Sitegear\Module\Forms\Form\Builder\FormBuilder;
 use Sitegear\Util\UrlUtilities;
 use Sitegear\Util\NameUtilities;
 use Sitegear\Util\TypeUtilities;
-use Sitegear\Util\FileUtilities;
 use Sitegear\Util\LoggerRegistry;
 
 use Symfony\Component\HttpFoundation\Request;
@@ -45,28 +35,9 @@ class FormsModule extends AbstractCoreModule {
 	//-- Attributes --------------------
 
 	/**
-	 * @var array[] Each entry is a key-value array, which ultimately contains a 'form' key that refers to a
-	 *   FormInterface implementation.  For forms that are defined but not built, the 'type' key should have a value of
-	 *   either 'definitions' or 'callback'.  Depending on the value of the 'type' key an additional key will store the
-	 *   path(s) to the definition file(s) or a callback.
+	 * @var FormRegistry
 	 */
-	private $forms;
-
-	/**
-	 * @var string[] Array of namespaces containing field classes.  Field class names are suffixed with "Field".
-	 */
-	private $fieldNamespaces;
-
-	/**
-	 * @var string[] Array of namespaces containing constraint classes.
-	 */
-	private $constraintNamespaces;
-
-	/**
-	 * @var string[] Array of namespaces containing condition classes.  Condition class names are suffixed with
-	 *   "Condition".
-	 */
-	private $conditionNamespaces;
+	private $registry;
 
 	//-- ModuleInterface Methods --------------------
 
@@ -82,10 +53,7 @@ class FormsModule extends AbstractCoreModule {
 	 */
 	public function start() {
 		parent::start();
-		$this->forms = array();
-		$this->fieldNamespaces = $this->config('field-namespaces', array());
-		$this->constraintNamespaces = $this->config('constraint-namespaces', array());
-		$this->conditionNamespaces = $this->config('condition-namespaces', array());
+		$this->registry = new FormRegistry($this, $this->config('form-builder'), $this->config('field-namespaces', array()), $this->config('constraint-namespaces', array()), $this->config('condition-namespaces', array()));
 	}
 
 	//-- Page Controller Methods --------------------
@@ -101,8 +69,8 @@ class FormsModule extends AbstractCoreModule {
 	public function initialiseController(Request $request) {
 		LoggerRegistry::debug('FormsModule::initialiseController()');
 		$formKey = $request->attributes->get('slug');
-		$this->resetForm($formKey);
-		$form = $this->getForm($formKey, $request);
+		$this->registry()->resetForm($formKey);
+		$form = $this->registry()->getForm($formKey, $request);
 		$data = array();
 		foreach ($request->query->all() as $key => $value) {
 			if ($key !== 'form-url') {
@@ -112,7 +80,7 @@ class FormsModule extends AbstractCoreModule {
 				}
 			}
 		}
-		$this->setValues($formKey, $data);
+		$this->registry()->setValues($formKey, $data);
 		return new RedirectResponse(UrlUtilities::getReturnUrl($request, 'form-url'));
 	}
 
@@ -131,12 +99,12 @@ class FormsModule extends AbstractCoreModule {
 		// Get the form and submission details
 		$formKey = $request->attributes->get('slug');
 		$values = $request->getMethod() === 'GET' ? $request->query->all() : $request->request->all();
-		$this->setValues($formKey, array_merge($this->getValues($formKey), $values));
-		$form = $this->getForm($formKey, $request);
+		$this->registry()->setValues($formKey, array_merge($this->registry()->getValues($formKey), $values));
+		$form = $this->registry()->getForm($formKey, $request);
 		$targetUrl = null;
 		$response = null;
-		$currentStep = $this->getCurrentStep($formKey);
-		$availableSteps = $this->getAvailableSteps($formKey);
+		$currentStep = $this->registry()->getCurrentStep($formKey);
+		$availableSteps = $this->registry()->getAvailableSteps($formKey);
 		/** @var StepInterface $step Incorrect warning mark in PhpStorm 6.0 */
 		$step = $form->getStep($currentStep);
 		$fields = $step->getReferencedFields();
@@ -156,10 +124,10 @@ class FormsModule extends AbstractCoreModule {
 			// The regular submit button was clicked, try to go to the next step; run validation and processors.
 			$nextStep = $currentStep + 1;
 			// Validation also sets the values and errors into the session.
-			$errors = $this->validateForm($formKey, $fields, $values);
+			$errors = $this->registry()->validateForm($formKey, $fields, $values);
 			if (empty($errors)) {
 				// No errors, so execute processors.  Pass in all the values including those from previous steps.
-				$response = $this->executeProcessors($step, $request, $this->getValues($formKey));
+				$response = $this->executeProcessors($step, $request, $this->registry()->getValues($formKey));
 				// Reset the 'available steps' list if this is a one-way step.
 				if ($step->isOneWay()) {
 					$availableSteps = array( $nextStep );
@@ -171,7 +139,7 @@ class FormsModule extends AbstractCoreModule {
 			if ($nextStep >= $form->getStepsCount()) {
 				// We're at the end of the form, and all the processors of the last step have run.  Reset the form and
 				// redirect to the final target URL.
-				$this->resetForm($formKey);
+				$this->registry()->resetForm($formKey);
 				if (!is_null($form->getTargetUrl())) {
 					$targetUrl = $request->getUriForPath('/' . $form->getTargetUrl());
 				}
@@ -180,8 +148,8 @@ class FormsModule extends AbstractCoreModule {
 				if (!in_array($nextStep, $availableSteps)) {
 					$availableSteps[] = $nextStep;
 				}
-				$this->setAvailableSteps($formKey, $availableSteps);
-				$this->setCurrentStep($formKey, $nextStep);
+				$this->registry()->setAvailableSteps($formKey, $availableSteps);
+				$this->registry()->setCurrentStep($formKey, $nextStep);
 			}
 		}
 		// Return any of the following in order of preference: response returned by a processor method; redirection to
@@ -207,18 +175,18 @@ class FormsModule extends AbstractCoreModule {
 		LoggerRegistry::debug('FormsModule::jumpController()');
 		// Get the form details.
 		$formKey = $request->attributes->get('slug');
-		$form = $this->getForm($formKey, $request);
+		$form = $this->registry()->getForm($formKey, $request);
 		// Get the step being requested in the jump
-		$jumpStep = intval($request->query->get('step', $this->getCurrentStep($formKey)));
+		$jumpStep = intval($request->query->get('step', $this->registry()->getCurrentStep($formKey)));
 		// Validation
 		if ($jumpStep < 0 || $jumpStep >= $form->getStepsCount()) {
 			throw new \OutOfBoundsException(sprintf('FormsModule cannot jump to step %d in form "%s": out of range', $jumpStep, $formKey));
 		}
-		if (!in_array($jumpStep, $this->getAvailableSteps($formKey))) {
+		if (!in_array($jumpStep, $this->registry()->getAvailableSteps($formKey))) {
 			throw new \OutOfBoundsException(sprintf('FormsModule cannot jump to step %d in form "%s": step not available', $jumpStep, $formKey));
 		}
 		// Update progress and redirect back to the form URL.
-		$this->setCurrentStep($formKey, $jumpStep);
+		$this->registry()->setCurrentStep($formKey, $jumpStep);
 		return new RedirectResponse(UrlUtilities::getReturnUrl($request, 'form-url'));
 	}
 
@@ -240,21 +208,21 @@ class FormsModule extends AbstractCoreModule {
 	public function formComponent(ViewInterface $view, Request $request, $formKey, array $values=null, array $errors=null) {
 		LoggerRegistry::debug('FormsModule::formComponent()');
 		// Retrieve the form object.
-		$form = $this->getForm($formKey, $request);
+		$form = $this->registry()->getForm($formKey, $request);
 		// Disable the back button if the previous step is not available.
-		$currentStep = $this->getCurrentStep($formKey);
-		$availableSteps = $this->getAvailableSteps($formKey);
+		$currentStep = $this->registry()->getCurrentStep($formKey);
+		$availableSteps = $this->registry()->getAvailableSteps($formKey);
 		if (!in_array($currentStep - 1, $availableSteps) && is_array($form->getBackButtonAttributes())) {
 			$form->setBackButtonAttributes(array_merge($form->getBackButtonAttributes(), array( 'disabled' => 'disabled' )));
 		}
 		// Setup the view.
 		$this->applyConfigToView('component.form', $view);
 		$view['form-renderer'] = $this->createRendererFactory()->createFormRenderer($form, $currentStep);
-		$view['values'] = array_merge($this->getValues($formKey), $values ?: array());
-		$view['errors'] = array_merge($this->getErrors($formKey), $errors ?: array());
+		$view['values'] = array_merge($this->registry()->getValues($formKey), $values ?: array());
+		$view['errors'] = array_merge($this->registry()->getErrors($formKey), $errors ?: array());
 		// Remove errors as they are about to be displayed (they are already set in the view), and we don't want to
 		// show the same errors again.
-		$this->clearErrors($formKey);
+		$this->registry()->clearErrors($formKey);
 	}
 
 	/**
@@ -267,483 +235,22 @@ class FormsModule extends AbstractCoreModule {
 	 */
 	public function stepsComponent(ViewInterface $view, Request $request, $formKey) {
 		$this->applyConfigToView('component.steps', $view);
-		$view['form'] = $this->getForm($formKey, $request);
-		$view['current-step'] = $this->getCurrentStep($formKey);
-		$view['available-steps'] = $this->getAvailableSteps($formKey);
+		$view['form'] = $this->registry()->getForm($formKey, $request);
+		$view['current-step'] = $this->registry()->getCurrentStep($formKey);
+		$view['available-steps'] = $this->registry()->getAvailableSteps($formKey);
 		$view['jump-url-format'] = $this->getRouteUrl('jump', $formKey) . sprintf('?form-url=%s&step=%%d', $request->getUri());
 	}
 
-	//-- Form Management Methods --------------------
+	//-- Public Methods --------------------
 
 	/**
-	 * Configure the specified form to load its data from the given data file relative to the given module.  This is
-	 * usually done during the bootstrap sequence, other modules should call this method to setup their forms for
-	 * potential later use.
-	 *
-	 * @param string $formKey
-	 * @param ModuleInterface $module
-	 * @param string|string[] $path May be one path or an array of paths.
-	 *
-	 * @throws \DomainException
+	 * @return FormRegistry
 	 */
-	public function registerFormDefinitionFilePath($formKey, ModuleInterface $module, $path) {
-		LoggerRegistry::debug(sprintf('FormsModule::registerFormDefinitionFilePath(%s, %s)', $formKey, TypeUtilities::describe($path)));
-		if (isset($this->forms[$formKey])) {
-			if (isset($this->forms[$formKey]['form'])) {
-				throw new \DomainException(sprintf('FormsModule cannot add form definition path for form key "%s", form already generated', $formKey));
-			} elseif ($this->forms[$formKey]['type'] !== 'definition') {
-				throw new \DomainException(sprintf('FormsModule cannot add form definition path for form key "%s", form already specified with a generator callback', $formKey));
-			}
-		} else {
-			$this->forms[$formKey] = array(
-				'type' => 'definitions',
-				'module' => $module,
-				'path' => $path
-			);
-		}
-	}
-
-	/**
-	 * Register a callback which will return a generated implementation of FormInterface.
-	 *
-	 * @param string $formKey
-	 * @param callable|array $callback
-	 *
-	 * @throws \DomainException
-	 */
-	public function registerFormGeneratorCallback($formKey, $callback) {
-		LoggerRegistry::debug(sprintf('FormsModule::registerFormGeneratorCallback(%s, ...)', $formKey));
-		if (isset($this->forms[$formKey])) {
-			throw new \DomainException(sprintf('FormsModule cannot add form generator callback for form key "%s", form already registered', $formKey));
-		}
-		$this->forms[$formKey] = array(
-			'type' => 'callback',
-			'callback' => $callback
-		);
-	}
-
-	/**
-	 * Register the given form against the given key.  Registering the same form key twice is an error.
-	 *
-	 * @param string $formKey
-	 * @param \Sitegear\Base\Form\FormInterface $form
-	 *
-	 * @return \Sitegear\Base\Form\FormInterface
-	 *
-	 * @throws \DomainException
-	 */
-	public function registerForm($formKey, FormInterface $form) {
-		LoggerRegistry::debug(sprintf('FormsModule::registerForm(%s)', $formKey));
-		if (isset($this->forms[$formKey])) {
-			throw new \DomainException(sprintf('FormsModule cannot register form for form key "%s", form already registered', $formKey));
-		}
-		return $this->forms[$formKey] = array( 'form' => $form );
-	}
-
-	/**
-	 * Retrieve the form with the given key.
-	 *
-	 * @param string $formKey
-	 * @param Request $request
-	 *
-	 * @return \Sitegear\Base\Form\FormInterface|null
-	 *
-	 * @throws \InvalidArgumentException
-	 */
-	public function getForm($formKey, Request $request) {
-		LoggerRegistry::debug(sprintf('FormsModule::getForm(%s)', $formKey));
-		$formUrl = $request->getUri();
-		if (!isset($this->forms[$formKey])) {
-			$this->forms[$formKey] = array();
-			$this->forms[$formKey]['form'] = $this->loadFormFromDefinitions($formKey, $formUrl, array(
-				$this->getEngine()->getSiteInfo()->getSitePath(ResourceLocations::RESOURCE_LOCATION_SITE, $this, sprintf('%s.json', $formKey))
-			));
-		} elseif (is_array($this->forms[$formKey]) && !isset($this->forms[$formKey]['form'])) {
-			switch ($this->forms[$formKey]['type']) {
-				case 'definitions':
-					$this->forms[$formKey]['form'] = $this->loadFormFromDefinitions($formKey, $formUrl, array(
-						$this->getEngine()->getSiteInfo()->getSitePath(ResourceLocations::RESOURCE_LOCATION_SITE, $this->forms[$formKey]['module'], $this->forms[$formKey]['path']),
-						$this->getEngine()->getSiteInfo()->getSitePath(ResourceLocations::RESOURCE_LOCATION_MODULE, $this->forms[$formKey]['module'], $this->forms[$formKey]['path'])
-					));
-					break;
-				case 'callback':
-					$this->forms[$formKey]['form'] = call_user_func($this->forms[$formKey]['callback']);
-					break;
-				default: // No other values are ever assigned to 'type'
-			}
-		}
-		return $this->forms[$formKey]['form'];
-	}
-
-	/**
-	 * Remove all current values, error messages and progress from the specified form.
-	 *
-	 * @param string $formKey
-	 */
-	public function resetForm($formKey) {
-		LoggerRegistry::debug(sprintf('FormsModule::resetForm(%s)', $formKey));
-		$this->clearProgress($formKey);
-		$this->clearValues($formKey);
-		$this->clearErrors($formKey);
-	}
-
-	/**
-	 * Validate the given set of fields against the given data.
-	 *
-	 * If there are any violations, store the supplied values and the error messages in the session against the
-	 * relevant field names.
-	 *
-	 * @param string $formKey
-	 * @param FieldInterface[] $fields
-	 * @param array $values
-	 *
-	 * @return \Symfony\Component\Validator\ConstraintViolationListInterface[] True if the data is valid, or an array
-	 *   of lists of violations per field with errors.
-	 */
-	public function validateForm($formKey, array $fields, array $values) {
-		LoggerRegistry::debug(sprintf('FormsModule::validate(%s)', $formKey));
-		$validator = Validation::createValidator();
-		$errors = array();
-		foreach ($validator->validateValue($values, $this->getConstraints($fields, $values)) as $violation) {
-			/** @var \Symfony\Component\Validator\ConstraintViolationInterface $violation */
-			$fieldName = trim($violation->getPropertyPath(), '[]');
-			if (!isset($errors[$fieldName])) {
-				$errors[$fieldName] = array();
-			}
-			$errors[$fieldName][] = $violation->getMessage();
-		}
-		$this->setErrors($formKey, $errors);
-		return $errors;
-	}
-
-	//-- Form Generation Control Methods --------------------
-
-	/**
-	 * Register a format string for the fully qualified class name of field classes, which may contain the token %name%
-	 * which is replaced by the name of the field in studly caps form.
-	 *
-	 * @param string $format
-	 */
-	public function registerFieldNamespace($format) {
-		$this->fieldNamespaces[] = $format;
-	}
-
-	/**
-	 * Get the list of registered class name formats for field objects.
-	 *
-	 * @return string[]
-	 */
-	public function getFieldNamespaces() {
-		return $this->fieldNamespaces;
-	}
-
-	/**
-	 * Register a format string for the fully qualified class name of constraint classes, which may contain the token
-	 * %name% which is replaced by the name of the constraint in studly caps form.
-	 *
-	 * @param string $namespace
-	 */
-	public function registerConstraintNamespace($namespace) {
-		$this->constraintNamespaces[] = $namespace;
-	}
-
-	/**
-	 * Get the list of registered class name formats for constraint objects.
-	 *
-	 * @return string[]
-	 */
-	public function getConstraintNamespaces() {
-		return $this->constraintNamespaces;
-	}
-
-	/**
-	 * Register a format string for the fully qualified class name of condition classes, which may contain the token
-	 * %name% which is replaced by the name of the condition in studly caps form.
-	 *
-	 * @param string $format
-	 */
-	public function registerConditionNamespace($format) {
-		$this->conditionNamespaces[] = $format;
-	}
-
-	/**
-	 * Get the list of registered class name formats for condition objects.
-	 *
-	 * @return string[]
-	 */
-	public function getConditionNamespaces() {
-		return $this->conditionNamespaces;
-	}
-
-	//-- Form Accessor Methods --------------------
-
-	/**
-	 * Retrieve the currently set values for the given form.
-	 *
-	 * @param string $formKey
-	 *
-	 * @return array
-	 */
-	public function getValues($formKey) {
-		return $this->getEngine()->getSession()->get($this->getSessionKey($formKey, 'values'), array());
-	}
-
-	/**
-	 * Manually override the form values for the given form.
-	 *
-	 * @param string $formKey
-	 * @param array $values
-	 */
-	public function setValues($formKey, array $values) {
-		$this->getEngine()->getSession()->set($this->getSessionKey($formKey, 'values'), $values);
-	}
-
-	/**
-	 * Manually remove all form values from the given form.
-	 *
-	 * @param string $formKey
-	 */
-	public function clearValues($formKey) {
-		$this->getEngine()->getSession()->remove($this->getSessionKey($formKey, 'values'));
-	}
-
-	/**
-	 * Retrieve a single specified field value from the specified form.
-	 *
-	 * @param string $formKey
-	 * @param string $fieldName
-	 *
-	 * @return mixed|null Value, or null if no such value is set.
-	 */
-	public function getFieldValue($formKey, $fieldName) {
-		$values = $this->getValues($formKey);
-		return isset($values[$fieldName]) ? $values[$fieldName] : null;
-	}
-
-	/**
-	 * Override a single specified field value from the specified form with the given value.
-	 *
-	 * @param string $formKey
-	 * @param string $fieldName
-	 * @param mixed $value
-	 */
-	public function setFieldValue($formKey, $fieldName, $value) {
-		$values = $this->getValues($formKey);
-		$values[$fieldName] = $value;
-		$this->setValues($formKey, $values);
-	}
-
-	/**
-	 * Retrieve the errors currently set for the given form key.
-	 *
-	 * @param string $formKey
-	 *
-	 * @return array[]
-	 */
-	public function getErrors($formKey) {
-		return $this->getEngine()->getSession()->get($this->getSessionKey($formKey, 'errors'), array());
-	}
-
-	/**
-	 * Manually override the given errors for the specified form.
-	 *
-	 * @param string $formKey
-	 * @param array $errors
-	 */
-	public function setErrors($formKey, array $errors) {
-		$this->getEngine()->getSession()->set($this->getSessionKey($formKey, 'errors'), $errors);
-	}
-
-	/**
-	 * Manually remove all errors for the specified form.
-	 *
-	 * @param string $formKey
-	 */
-	public function clearErrors($formKey) {
-		$this->getEngine()->getSession()->remove($this->getSessionKey($formKey, 'errors'));
-	}
-
-	/**
-	 * Get the errors, if any, for the specified field in the specified form.
-	 *
-	 * @param string $formKey
-	 * @param string $fieldName
-	 *
-	 * @return string[]
-	 */
-	public function getFieldErrors($formKey, $fieldName) {
-		$errors = $this->getErrors($formKey);
-		return isset($errors[$fieldName]) ? $errors[$fieldName] : array();
-	}
-
-	/**
-	 * Manually override the field errors for a single field in the specified form.
-	 *
-	 * @param string $formKey
-	 * @param string $fieldName
-	 * @param string[] $fieldErrors
-	 */
-	public function setFieldErrors($formKey, $fieldName, array $fieldErrors) {
-		$errors = $this->getErrors($formKey);
-		$errors[$fieldName] = $fieldErrors;
-		$this->setErrors($formKey, $errors);
-	}
-
-	/**
-	 * Add an error to the specified field in the specified form.
-	 *
-	 * @param string $formKey
-	 * @param string $fieldName
-	 * @param string $error
-	 */
-	public function addFieldError($formKey, $fieldName, $error) {
-		$errors = $this->getErrors($formKey);
-		if (!isset($errors[$fieldName])) {
-			$errors[$fieldName] = array();
-		}
-		$errors[$fieldName][] = $error;
-		$this->setErrors($formKey, $errors);
-	}
-
-	/**
-	 * Manually remove all errors from the specified field in the specified form.
-	 *
-	 * @param string $formKey
-	 * @param string $fieldName
-	 */
-	public function clearFieldErrors($formKey, $fieldName) {
-		$errors = $this->getErrors($formKey);
-		unset($errors[$fieldName]);
-		$this->setErrors($formKey, $errors);
-	}
-
-	/**
-	 * Get the progress data for the specified form.
-	 *
-	 * @param string $formKey
-	 *
-	 * @return integer
-	 */
-	protected function getCurrentStep($formKey) {
-		return $this->getEngine()->getSession()->get($this->getSessionKey($formKey, 'current-step'), 0);
-	}
-
-	/**
-	 * Update the progress for the specified form.
-	 *
-	 * @param string $formKey
-	 * @param integer $currentStep
-	 */
-	protected function setCurrentStep($formKey, $currentStep) {
-		$this->getEngine()->getSession()->set($this->getSessionKey($formKey, 'current-step'), intval($currentStep));
-	}
-
-	/**
-	 * Get the progress data for the specified form.
-	 *
-	 * @param string $formKey
-	 *
-	 * @return integer[]
-	 */
-	protected function getAvailableSteps($formKey) {
-		return $this->getEngine()->getSession()->get($this->getSessionKey($formKey, 'available-steps'), array( 0 ));
-	}
-
-	/**
-	 * Update the progress for the specified form.
-	 *
-	 * @param string $formKey
-	 * @param integer[] $availableSteps
-	 */
-	protected function setAvailableSteps($formKey, array $availableSteps) {
-		$this->getEngine()->getSession()->set($this->getSessionKey($formKey, 'available-steps'), $availableSteps);
-	}
-
-	/**
-	 * Remove any existing progress data for the given key.
-	 *
-	 * @param string $formKey
-	 */
-	protected function clearProgress($formKey) {
-		$this->getEngine()->getSession()->remove($this->getSessionKey($formKey, 'current-step'));
-		$this->getEngine()->getSession()->remove($this->getSessionKey($formKey, 'available-steps'));
+	public function registry() {
+		return $this->registry;
 	}
 
 	//-- Internal Methods --------------------
-
-	/**
-	 * Retrieve the session key to store a subset of data about the given form.
-	 *
-	 * @param string $formKey
-	 * @param string $subKey
-	 *
-	 * @return string Session key
-	 */
-	protected function getSessionKey($formKey, $subKey) {
-		return sprintf('forms.%s.%s', $formKey, $subKey);
-	}
-
-	/**
-	 * @param string $formKey
-	 * @param string $formUrl
-	 * @param string[] $paths
-	 *
-	 * @return FormInterface|null
-	 */
-	protected function loadFormFromDefinitions($formKey, $formUrl, array $paths) {
-		$path = FileUtilities::firstExistingPath($paths);
-		if (!empty($path)) {
-			// Setup the configuration container for the form definition.
-			$config = new SimpleConfigContainer($this->getConfigLoader());
-			$config->addProcessor(new EngineTokenProcessor($this->getEngine(), 'engine'));
-			$config->addProcessor(new ConfigTokenProcessor($this->forms[$formKey]['module'], 'config'));
-			$config->addProcessor(new ConfigTokenProcessor($this->getEngine(), 'engine-config'));
-			$config->addProcessor(new ArrayTokenProcessor($this->getValues($formKey), 'data'));
-			// Merge the configuration defaults and form definition file contents.
-			$config->merge($this->config('form-builder'));
-			$config->merge(array( 'form-url' => $formUrl ));
-			$config->merge($path);
-			// Build and return the form
-			$builder = new FormBuilder($this, $formKey);
-			return $builder->buildForm($config->all());
-		}
-		return null;
-	}
-
-	/**
-	 * Get the validation constraints from the given fieldset collection.
-	 *
-	 * @param FieldInterface[] $fields
-	 * @param array $values
-	 *
-	 * @return \Symfony\Component\Validator\Constraints\Collection
-	 */
-	protected function getConstraints(array $fields, array $values) {
-		$constraints = array();
-		foreach ($fields as $field) {
-			$fieldConditionalConstraints = $field->getConditionalConstraints();
-			$fieldConstraints = array();
-			foreach ($fieldConditionalConstraints as $fieldConditionalConstraint) {
-				if ($fieldConditionalConstraint->shouldApplyConstraint($values)) {
-					$fieldConstraints[] = $fieldConditionalConstraint->getConstraint();
-				}
-			}
-			switch (sizeof($fieldConstraints)) {
-				case 0:
-					break;
-				case 1:
-					$constraints[$field->getName()] = $fieldConstraints[0];
-					break;
-				default:
-					$constraints[$field->getName()] = $fieldConstraints;
-			}
-		}
-		return new Collection(array(
-			'fields' => $constraints,
-			'allowExtraFields' => true,
-			'allowMissingFields' => false
-		));
-	}
 
 	/**
 	 * @param StepInterface $step
