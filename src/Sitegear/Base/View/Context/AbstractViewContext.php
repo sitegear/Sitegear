@@ -24,23 +24,44 @@ abstract class AbstractViewContext implements ViewContextInterface {
 	 */
 	private $view;
 
+	/**
+	 * @var \Symfony\Component\HttpFoundation\Request
+	 */
+	private $request;
+
 	//-- Constructor --------------------
 
 	/**
 	 * @param \Sitegear\Base\View\ViewInterface $view
+	 * @param \Symfony\Component\HttpFoundation\Request $request
 	 */
-	public function __construct(ViewInterface $view) {
+	public function __construct(ViewInterface $view, Request $request) {
 		$this->view = $view;
+		$this->request = $request;
 	}
 
 	//-- ViewContextInterface Methods --------------------
 
 	/**
 	 * {@inheritDoc}
+	 */
+	public function view() {
+		return $this->view;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function request() {
+		return $this->request;
+	}
+
+	/**
+	 * {@inheritDoc}
 	 *
 	 * Default implementation that returns null.
 	 */
-	public function getTargetController(ViewInterface $view, Request $request) {
+	public function getTargetController() {
 		return null;
 	}
 

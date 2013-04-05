@@ -21,18 +21,18 @@ abstract class AbstractFileViewContext extends AbstractViewContext {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function render(RendererRegistryInterface $rendererRegistry, ViewInterface $view, Request $request, $methodResult) {
+	public function render(RendererRegistryInterface $rendererRegistry, $methodResult) {
 		// If the preparation method returns false, don't output anything
 		// If the preparation method returns a string, it overrides the target component name
 		// If the preparation method doesn't exist or returns null or nothing, just display the original view script
 		$result = null;
 		if ($methodResult !== false) {
-			$result = $this->renderForLocation(ResourceLocations::RESOURCE_LOCATION_SITE, $rendererRegistry, $view, $request, $methodResult);
+			$result = $this->renderForLocation(ResourceLocations::RESOURCE_LOCATION_SITE, $rendererRegistry, $methodResult);
 			if (is_null($result)) {
-				$result = $this->renderForLocation(ResourceLocations::RESOURCE_LOCATION_MODULE, $rendererRegistry, $view, $request, $methodResult);
+				$result = $this->renderForLocation(ResourceLocations::RESOURCE_LOCATION_MODULE, $rendererRegistry, $methodResult);
 			}
 			if (is_null($result)) {
-				$result = $this->renderForLocation(ResourceLocations::RESOURCE_LOCATION_ENGINE, $rendererRegistry, $view, $request, $methodResult);
+				$result = $this->renderForLocation(ResourceLocations::RESOURCE_LOCATION_ENGINE, $rendererRegistry, $methodResult);
 			}
 		}
 		return $result;
@@ -45,22 +45,17 @@ abstract class AbstractFileViewContext extends AbstractViewContext {
 	 *
 	 * @param string $location
 	 * @param \Sitegear\Base\View\Renderer\Registry\RendererRegistryInterface $rendererRegistry
-	 * @param \Sitegear\Base\View\ViewInterface $view
-	 * @param \Symfony\Component\HttpFoundation\Request $request
 	 * @param mixed $methodResult
 	 *
 	 * @return null|string
 	 */
-	protected abstract function renderForLocation($location, RendererRegistryInterface $rendererRegistry, ViewInterface $view, Request $request, $methodResult);
+	protected abstract function renderForLocation($location, RendererRegistryInterface $rendererRegistry, $methodResult);
 
 	/**
 	 * Get the module name for this view context.
 	 *
-	 * @param \Sitegear\Base\View\ViewInterface $view
-	 * @param \Symfony\Component\HttpFoundation\Request $request
-	 *
 	 * @return string Module name.
 	 */
-	protected abstract function getContextModule(ViewInterface $view, Request $request);
+	protected abstract function getContextModule();
 
 }

@@ -10,9 +10,7 @@ namespace Sitegear\Core\View\Context;
 
 use Sitegear\Base\Module\ModuleInterface;
 use Sitegear\Core\View\View;
-use Sitegear\Base\View\ViewInterface;
-
-use Symfony\Component\HttpFoundation\Request;
+use Sitegear\Util\TypeUtilities;
 
 /**
  * View context for rendering page (top-level) templates.
@@ -24,27 +22,28 @@ class TemplateViewContext extends AbstractCoreFileViewContext {
 	/**
 	 * {@inheritDoc}
 	 */
-	protected function getContextModule(ViewInterface $view, Request $request) {
-		return $view->getEngine()->getDefaultContentModule();
+	protected function getContextModule() {
+		return $this->view()->getEngine()->getDefaultContentModule();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public function expandViewScriptPaths($viewScriptName, ViewInterface $view, Request $request, $methodResult) {
+	public function expandViewScriptPaths($viewScriptName, $methodResult) {
 		return array(
-			sprintf('templates/%s', ($methodResult ?: $view->getTarget(View::TARGET_LEVEL_METHOD)))
+			sprintf('templates/%s', ($methodResult ?: $this->view()->getTarget(View::TARGET_LEVEL_METHOD)))
 		);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	protected function setupView(ViewInterface $view, Request $request, $viewName) {
+	protected function setupView($viewName) {
 		/** @var ModuleInterface $module */
-		parent::setupView($view, $request, $viewName);
-		$module = $request->attributes->get('_controller_module');
-		$module->applyViewDefaults($view, 'pages', $viewName);
+		parent::setupView($viewName);
+		$module = $this->request()->attributes->get('_module');
+		$view = $this->request()->attributes->get('_view');
+		$this->view()->getEngine()->getModule($module)->applyViewDefaults($this->view(), 'pages', $view);
 	}
 
 }

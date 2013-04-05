@@ -9,11 +9,8 @@
 namespace Sitegear\Core\View\Context;
 
 use Sitegear\Base\View\Context\AbstractFileViewContext;
-use Sitegear\Base\View\ViewInterface;
 use Sitegear\Base\View\Renderer\Registry\RendererRegistryInterface;
-
 use Sitegear\Core\View\View;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Provides an abstract view context implementation for file-based contexts in the context of a Sitegear Core
@@ -27,13 +24,13 @@ abstract class AbstractCoreFileViewContext extends AbstractFileViewContext {
 	/**
 	 * {@inheritDoc}
 	 */
-	protected function renderForLocation($location, RendererRegistryInterface $rendererRegistry, ViewInterface $view, Request $request, $methodResult) {
+	protected function renderForLocation($location, RendererRegistryInterface $rendererRegistry, $methodResult) {
 		$result = null;
-		$this->setupView($view, $request, $methodResult ?: $view->getTarget(View::TARGET_LEVEL_METHOD));
-		foreach ($this->expandViewScriptPaths(trim($request->attributes->get('_view'), '/'), $view, $request, $methodResult) as $path) {
+		$this->setupView($methodResult ?: $this->view()->getTarget(View::TARGET_LEVEL_METHOD));
+		foreach ($this->expandViewScriptPaths(trim($this->request()->attributes->get('_view'), '/'), $methodResult) as $path) {
 			if (is_null($result)) {
-				$sitePath = $view->getEngine()->getSiteInfo()->getSitePath($location, $view['module'], $path);
-				$result = $rendererRegistry->render($sitePath, $view);
+				$sitePath = $this->view()->getEngine()->getSiteInfo()->getSitePath($location, $this->view()['module'], $path);
+				$result = $rendererRegistry->render($sitePath, $this->view());
 			}
 		}
 		return $result;
@@ -47,23 +44,19 @@ abstract class AbstractCoreFileViewContext extends AbstractFileViewContext {
 	 * site-specific root.
 	 *
 	 * @param string $viewScriptName
-	 * @param \Sitegear\Base\View\ViewInterface $view
-	 * @param \Symfony\Component\HttpFoundation\Request $request
 	 * @param mixed $methodResult
 	 *
 	 * @return array One or more resolved locations.
 	 */
-	protected abstract function expandViewScriptPaths($viewScriptName, ViewInterface $view, Request $request, $methodResult);
+	protected abstract function expandViewScriptPaths($viewScriptName, $methodResult);
 
 	/**
 	 * Setup the view with a reference to the module and any other context-specific data.
 	 *
-	 * @param ViewInterface $view
-	 * @param Request $request
 	 * @param string $viewName
 	 */
-	protected function setupView(ViewInterface $view, Request $request, $viewName) {
-		$view['module'] = $view->getEngine()->getModule($this->getContextModule($view, $request));
+	protected function setupView($viewName) {
+		$this->view()['module'] = $this->view()->getEngine()->getModule($this->getContextModule($this->request()));
 	}
 
 }

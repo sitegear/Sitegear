@@ -9,11 +9,8 @@
 namespace Sitegear\Core\View\Context;
 
 use Sitegear\Base\Module\ModuleInterface;
-use Sitegear\Base\View\ViewInterface;
 use Sitegear\Core\View\View;
 use Sitegear\Util\NameUtilities;
-
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * View context for rendering components.
@@ -31,10 +28,10 @@ class ComponentViewContext extends AbstractCoreFileViewContext {
 	 *
 	 * This implementation returns the target name (in camelCase) plus 'Component'.
 	 */
-	public function getTargetController(ViewInterface $view, Request $request) {
+	public function getTargetController() {
 		return array(
-			$view->getEngine()->getModule($this->getContextModule($view, $request)),
-			sprintf(self::FORMAT_COMPONENT_CONTROLLER_METHOD_NAME, NameUtilities::convertToCamelCase($view->getTarget(View::TARGET_LEVEL_METHOD)))
+			$this->view()->getEngine()->getModule($this->getContextModule($this->request())),
+			sprintf(self::FORMAT_COMPONENT_CONTROLLER_METHOD_NAME, NameUtilities::convertToCamelCase($this->view()->getTarget(View::TARGET_LEVEL_METHOD)))
 		);
 	}
 
@@ -43,30 +40,30 @@ class ComponentViewContext extends AbstractCoreFileViewContext {
 	/**
 	 * {@inheritDoc}
 	 */
-	protected function getContextModule(ViewInterface $view, Request $request) {
-		$targetModule = $view->getTarget(View::TARGET_LEVEL_MODULE);
+	protected function getContextModule() {
+		$targetModule = $this->view()->getTarget(View::TARGET_LEVEL_MODULE);
 		return $targetModule === View::SPECIAL_TARGET_MODULE_COMPONENT ?
-				$view->getEngine()->getDefaultContentModule() :
+				$this->view()->getEngine()->getDefaultContentModule() :
 				$targetModule;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	protected function expandViewScriptPaths($viewScriptName, ViewInterface $view, Request $request, $methodResult) {
+	protected function expandViewScriptPaths($viewScriptName, $methodResult) {
 		return array(
-			sprintf('components/%s', $methodResult ?: $view->getTarget(View::TARGET_LEVEL_METHOD))
+			sprintf('components/%s', $methodResult ?: $this->view()->getTarget(View::TARGET_LEVEL_METHOD))
 		);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	protected function setupView(ViewInterface $view, Request $request, $viewName) {
+	protected function setupView($viewName) {
 		/** @var ModuleInterface $module */
-		parent::setupView($view, $request, $viewName);
-		$module = $view['module'];
-		$module->applyViewDefaults($view, 'components', $viewName);
+		parent::setupView($viewName);
+		$module = $this->view()['module'];
+		$module->applyViewDefaults($this->view(), 'components', $viewName);
 	}
 	
 }

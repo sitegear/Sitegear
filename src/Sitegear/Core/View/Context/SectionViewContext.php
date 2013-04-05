@@ -36,11 +36,12 @@ class SectionViewContext extends AbstractCoreFileViewContext {
 
 	/**
 	 * @param \Sitegear\Base\View\ViewInterface $view
+	 * @param Request $request
 	 * @param string $indexSection
 	 * @param string $fallbackSection
 	 */
-	public function __construct(ViewInterface $view, $indexSection, $fallbackSection) {
-		parent::__construct($view);
+	public function __construct(ViewInterface $view, Request $request, $indexSection, $fallbackSection) {
+		parent::__construct($view, $request);
 		$this->indexSection = $indexSection;
 		$this->fallbackSection = $fallbackSection;
 	}
@@ -53,13 +54,13 @@ class SectionViewContext extends AbstractCoreFileViewContext {
 	 * This implementation allows a global fallback, out-of-module, if no relevant content is found in the given
 	 * module.
 	 */
-	public function render(RendererRegistryInterface $rendererRegistry, ViewInterface $view, Request $request, $methodResult) {
-		$result = parent::render($rendererRegistry, $view, $request, $methodResult);
-		$finalFallbackModule = $view->getEngine()->getDefaultContentModule();
-		if (is_null($result) && $this->getContextModule($view, $request) !== $finalFallbackModule) {
-			$finalFallback = sprintf('sections/%s/fallback', $view->getTarget(View::TARGET_LEVEL_METHOD));
-			$finalFallback = $view->getEngine()->getSiteInfo()->getSitePath(ResourceLocations::RESOURCE_LOCATION_SITE, $finalFallbackModule, $finalFallback);
-			$result = $rendererRegistry->render($finalFallback, $view);
+	public function render(RendererRegistryInterface $rendererRegistry, $methodResult) {
+		$result = parent::render($rendererRegistry, $methodResult);
+		$finalFallbackModule = $this->view()->getEngine()->getDefaultContentModule();
+		if (is_null($result) && $this->getContextModule() !== $finalFallbackModule) {
+			$finalFallback = sprintf('sections/%s/fallback', $this->view()->getTarget(View::TARGET_LEVEL_METHOD));
+			$finalFallback = $this->view()->getEngine()->getSiteInfo()->getSitePath(ResourceLocations::RESOURCE_LOCATION_SITE, $finalFallbackModule, $finalFallback);
+			$result = $rendererRegistry->render($finalFallback, $this->view());
 		}
 		return $result;
 	}
@@ -69,8 +70,8 @@ class SectionViewContext extends AbstractCoreFileViewContext {
 	/**
 	 * {@inheritDoc}
 	 */
-	protected function getContextModule(ViewInterface $view, Request $request) {
-		return $request->attributes->get('_module');
+	protected function getContextModule() {
+		return $this->request()->attributes->get('_module');
 	}
 
 	/**
@@ -78,10 +79,10 @@ class SectionViewContext extends AbstractCoreFileViewContext {
 	 *
 	 * The $methodResult is intentionally ignored by this implementation.
 	 */
-	protected function expandViewScriptPaths($viewScriptName, ViewInterface $view, Request $request, $methodResult) {
+	protected function expandViewScriptPaths($viewScriptName, $methodResult) {
 		$result = array();
-		foreach ($this->getSectionPathOptions($viewScriptName, $view, $request) as $option) {
-			$result[] = sprintf('sections/%s/%s', $view->getTarget(View::TARGET_LEVEL_METHOD), $option);
+		foreach ($this->getSectionPathOptions($viewScriptName, $this->request()) as $option) {
+			$result[] = sprintf('sections/%s/%s', $this->view()->getTarget(View::TARGET_LEVEL_METHOD), $option);
 		}
 		return $result;
 	}
@@ -115,14 +116,13 @@ class SectionViewContext extends AbstractCoreFileViewContext {
 	 * "fallback" will actually be the value of $fallbackSection.
 	 *
 	 * @param string $original Original view path, of the form "foo/bar"; leading and trailing slashes are ignored.
-	 * @param ViewInterface $view
-	 * @param Request $request
 	 *
 	 * @return array Array of view paths that should be tried when rendering the specified original view path, in order
 	 *   from the favourite option to the least favourite option.
 	 */
-	private function getSectionPathOptions($original, ViewInterface $view, Request $request) {
-		$module = $view->getEngine()->getModule($this->getContextModule($view, $request)); /** @var \Sitegear\Base\Module\MountableModuleInterface $module */
+	private function getSectionPathOptions($original) {
+		/** @var \Sitegear\Base\Module\MountableModuleInterface $module */
+		$module = $this->view()->getEngine()->getModule($this->getContextModule($this->view(), $this->request()));
 		$rootUrl = $module->getMountedUrl();
 		$original = str_replace($rootUrl, '', $original);
 		$original = trim($original, '/');

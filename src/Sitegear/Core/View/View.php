@@ -208,7 +208,7 @@ class View extends AbstractView {
 			// A result of false means don't render anything.
 			if ($targetControllerResult !== false) {
 				// Use the context to render the result
-				$content = $context->render($this->getEngine()->getViewFactory()->getRendererRegistry(), $this, $this->request, $targetControllerResult) ?: '';
+				$content = $context->render($this->getEngine()->getViewFactory()->getRendererRegistry(), $targetControllerResult) ?: '';
 
 				// Decorate using active decorators
 				foreach ($this->activeDecorators as $active) {
@@ -287,29 +287,29 @@ class View extends AbstractView {
 		switch ($this->getTarget(self::TARGET_LEVEL_MODULE)) {
 			// $view->template()->{templateName}()
 			case self::SPECIAL_TARGET_MODULE_TEMPLATE:
-				$context = new TemplateViewContext($this);
+				$context = new TemplateViewContext($this, $this->request);
 				break;
 
 			// $view->section()->{sectionName}()
 			case self::SPECIAL_TARGET_MODULE_SECTION:
 				$index = $this->getEngine()->getViewFactory()->getIndexSectionName();
-				$section = $this->getEngine()->getViewFactory()->getFallbackSectionName();
-				$context = new SectionViewContext($this, $index, $section);
+				$fallback = $this->getEngine()->getViewFactory()->getFallbackSectionName();
+				$context = new SectionViewContext($this, $this->request, $index, $fallback);
 				break;
 
 			// $view->component()->{componentName}()
 			case self::SPECIAL_TARGET_MODULE_COMPONENT:
-				$context = new ComponentViewContext($this);
+				$context = new ComponentViewContext($this, $this->request);
 				break;
 
 			// $view->resources()->{resourceTypeName}()
 			case self::SPECIAL_TARGET_MODULE_RESOURCES:
-				$context = new ResourcesViewContext($this);
+				$context = new ResourcesViewContext($this, $this->request);
 				break;
 
 			// $view->strings()->{stringName}()
 			case self::SPECIAL_TARGET_MODULE_STRINGS:
-				$context = new StringsViewContext($this);
+				$context = new StringsViewContext($this, $this->request);
 				break;
 
 			// $view->{moduleName}()...
@@ -318,12 +318,12 @@ class View extends AbstractView {
 				switch ($this->getTarget(self::TARGET_LEVEL_METHOD)) {
 					// $view->{moduleName}()->item()
 					case self::SPECIAL_TARGET_METHOD_ITEM:
-						$context = new ModuleItemViewContext($this);
+						$context = new ModuleItemViewContext($this, $this->request);
 						break;
 
 					// $view->{moduleName}()->{componentName}()
 					default:
-						$context = new ComponentViewContext($this);
+						$context = new ComponentViewContext($this, $this->request);
 				}
 		}
 		return $context;

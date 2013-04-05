@@ -9,12 +9,9 @@
 namespace Sitegear\Core\View\Context;
 
 use Sitegear\Base\View\Context\AbstractViewContext;
-use Sitegear\Base\View\ViewInterface;
 use Sitegear\Base\View\Renderer\Registry\RendererRegistryInterface;
 use Sitegear\Core\View\Decorator\StringTokensDecorator;
 use Sitegear\Core\View\View;
-
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * View context for rendering strings, using placeholder tokens to allow the strings to be collected throughout the rendering
@@ -29,11 +26,11 @@ class StringsViewContext extends AbstractViewContext {
 	 *
 	 * See class documentation.
 	 */
-	public function render(RendererRegistryInterface $rendererRegistry, ViewInterface $view, Request $request, $methodResult) {
-		$key = $view->getTarget(View::TARGET_LEVEL_METHOD);
-		$arguments = $view->getTargetArguments(View::TARGET_LEVEL_METHOD);
+	public function render(RendererRegistryInterface $rendererRegistry, $methodResult) {
+		$key = $this->view()->getTarget(View::TARGET_LEVEL_METHOD);
+		$arguments = $this->view()->getTargetArguments(View::TARGET_LEVEL_METHOD);
 		if (!empty($arguments)) {
-			$view->getEngine()->getViewFactory()->getStringsManager()->setSeparator($key, $arguments[0]);
+			$this->view()->getEngine()->getViewFactory()->getStringsManager()->setSeparator($key, $arguments[0]);
 		}
 		return StringTokensDecorator::token($key);
 	}
