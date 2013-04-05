@@ -24,7 +24,8 @@ return array(
 	 * FormsModule, other namespaces may be registered programmatically.
 	 */
 	'constraint-namespaces' => array(
-		'\\Symfony\\Component\\Validator\\Constraints'
+		'\\Symfony\\Component\\Validator\\Constraints',
+		'\\Sitegear\\Module\\Forms\\Constraint'
 	),
 
 	/**
