@@ -42,14 +42,14 @@ abstract class AbstractModule implements ModuleInterface {
 	 * {@inheritDoc}
 	 */
 	public function start() {
-		// Default implementation does nothing; this method won't be used by most modules
+		// Default implementation does nothing
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public function stop() {
-		// Default implementation does nothing; this method won't be used by most modules
+		// Default implementation does nothing
 	}
 
 	/**
