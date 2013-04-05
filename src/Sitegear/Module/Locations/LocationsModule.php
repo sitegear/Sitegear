@@ -30,13 +30,6 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class LocationsModule extends AbstractCoreModule {
 
-	//-- Constants --------------------
-
-	/**
-	 * Alias to use for this module's entity namespace.
-	 */
-	const ENTITY_ALIAS = 'Locations';
-
 	//-- ModuleInterface Methods --------------------
 
 	/**
@@ -54,8 +47,6 @@ class LocationsModule extends AbstractCoreModule {
 		// Register "location-search" form.
 		$filename = $this->config('location-search-form.filename');
 		$this->getEngine()->forms()->registry()->registerFormDefinitionFilePath($this->config('location-search-form.key'), $this, $filename);
-		// Register the Doctrine entity namespace.
-		$this->getEngine()->doctrine()->registerEntityNamespace(self::ENTITY_ALIAS, '\\Sitegear\\Module\\Locations\\Model');
 	}
 
 	//-- AbstractUrlMountableModule Methods --------------------
@@ -209,15 +200,6 @@ class LocationsModule extends AbstractCoreModule {
 			$result[] = $regionResult;
 		}
 		return $result;
-	}
-
-	/**
-	 * @param string $entity
-	 *
-	 * @return \Doctrine\ORM\EntityRepository
-	 */
-	private function getRepository($entity) {
-		return $this->getEngine()->doctrine()->getEntityManager()->getRepository(sprintf('%s:%s', self::ENTITY_ALIAS, $entity));
 	}
 
 }

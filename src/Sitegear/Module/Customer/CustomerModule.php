@@ -28,13 +28,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
  */
 class CustomerModule extends AbstractCoreModule {
 
-	//-- Constants --------------------
-
-	/**
-	 * Alias to use for this module's entity namespace.
-	 */
-	const ENTITY_ALIAS = 'Customer';
-
 	//-- Attributes --------------------
 
 	/**
@@ -56,8 +49,6 @@ class CustomerModule extends AbstractCoreModule {
 	 */
 	public function start() {
 		parent::start();
-		// Register the Doctrine entity namespace.
-		$this->getEngine()->doctrine()->registerEntityNamespace(self::ENTITY_ALIAS, '\\Sitegear\\Module\\Customer\\Model');
 		// Register the checkout form generator.
 		$this->getEngine()->forms()->registry()->registerFormGeneratorCallback($this->config('checkout.form-key'), array( $this, 'buildCheckoutForm' ));
 		// Create the trolley object.
@@ -331,15 +322,6 @@ class CustomerModule extends AbstractCoreModule {
 	}
 
 	//-- Internal Methods --------------------
-
-	/**
-	 * @param string $entity
-	 *
-	 * @return \Doctrine\ORM\EntityRepository
-	 */
-	private function getRepository($entity) {
-		return $this->getEngine()->doctrine()->getEntityManager()->getRepository(sprintf('%s:%s', self::ENTITY_ALIAS, $entity));
-	}
 
 	/**
 	 * Get an array of key-value arrays specifying the label and value for each configured adjustment.

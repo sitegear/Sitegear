@@ -27,13 +27,6 @@ use Doctrine\ORM\NoResultException;
  */
 class ProductsModule extends AbstractCoreModule implements PurchaseItemProviderModuleInterface {
 
-	//-- Constants --------------------
-
-	/**
-	 * Alias to use for this module's entity namespace.
-	 */
-	const ENTITY_ALIAS = 'Products';
-
 	//-- ModuleInterface Methods --------------------
 
 	/**
@@ -41,15 +34,6 @@ class ProductsModule extends AbstractCoreModule implements PurchaseItemProviderM
 	 */
 	public function getDisplayName() {
 		return 'Products Catalogue';
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function start() {
-		parent::start();
-		// Register the Doctrine entity namespace.
-		$this->getEngine()->doctrine()->registerEntityNamespace(self::ENTITY_ALIAS, '\\Sitegear\\Module\\Products\\Model');
 	}
 
 	//-- PurchaseItemProviderModuleInterface Methods --------------------
@@ -223,15 +207,6 @@ class ProductsModule extends AbstractCoreModule implements PurchaseItemProviderM
 			$result[] = $categoryResult;
 		}
 		return $result;
-	}
-
-	/**
-	 * @param string $entity
-	 *
-	 * @return \Doctrine\ORM\EntityRepository
-	 */
-	private function getRepository($entity) {
-		return $this->getEngine()->doctrine()->getEntityManager()->getRepository(sprintf('%s:%s', self::ENTITY_ALIAS, $entity));
 	}
 
 }

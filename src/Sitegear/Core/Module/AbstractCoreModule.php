@@ -13,6 +13,7 @@ use Sitegear\Base\Config\Container\SimpleConfigContainer;
 use Sitegear\Base\Engine\EngineInterface;
 use Sitegear\Base\Resources\ResourceLocations;
 use Sitegear\Base\View\ViewInterface;
+use Sitegear\Module\Doctrine\DoctrineModule;
 use Sitegear\Util\LoggerRegistry;
 
 use Sitegear\Util\NameUtilities;
@@ -23,6 +24,8 @@ use Symfony\Component\Routing\RouteCollection;
 
 /**
  * Provides the baseline implementation for Core and Extension modules.
+ *
+ * @method \Sitegear\Core\Engine\Engine getEngine()
  */
 abstract class AbstractCoreModule extends AbstractUrlMountableModule {
 
@@ -50,12 +53,18 @@ abstract class AbstractCoreModule extends AbstractUrlMountableModule {
 	 */
 	private $urlGenerator;
 
+	/**
+	 * @var boolean
+	 */
+	private $entitiesConfigured;
+
 	//-- Constructor --------------------
 
 	public function __construct(EngineInterface $engine) {
 		parent::__construct($engine);
 		$this->baseUrl = null;
 		$this->urlGenerator = null;
+		$this->entitiesConfigured = false;
 	}
 
 	//-- ModuleInterface Methods --------------------
@@ -189,6 +198,44 @@ abstract class AbstractCoreModule extends AbstractUrlMountableModule {
 	 */
 	protected function buildNavigationData(/** @noinspection PhpUnusedParameterInspection */ $mode) {
 		return array();
+	}
+
+	//-- Internal Methods --------------------
+
+	/**
+	 * Get the alias used in DQL for entities provided by this module.  By default, the alias is the internal name of
+	 * the module.
+	 *
+	 * @return string
+	 */
+	protected function getEntityAlias() {
+		return $this->getEngine()->getModuleName($this);
+	}
+
+	/**
+	 * Get the namespace which contains the entities provided by this module.  By default, the namespace is the 'Model'
+	 * child namespace of the namespace containing the module implementation class.  If this namespace does not exist,
+	 * then the module will not auto-register.
+	 *
+	 * @return string
+	 */
+	protected function getEntityNamespace() {
+		$class = new \ReflectionClass($this);
+		return sprintf('%s\\Model', $class->getNamespaceName());
+	}
+
+	/**
+	 * @param string $entity
+	 *
+	 * @return \Doctrine\ORM\EntityRepository
+	 */
+	protected function getRepository($entity) {
+		// TODO Confirm that this does not need to go into start() instead, with a configuration or method override to determine which modules it applies to??
+		if (!$this->entitiesConfigured) {
+			$this->getEngine()->doctrine()->registerEntityNamespace($this->getEntityAlias(), $this->getEntityNamespace());
+			$this->entitiesConfigured = true;
+		}
+		return $this->getEngine()->doctrine()->getEntityManager()->getRepository(sprintf('%s:%s', $this->getEntityAlias(), $entity));
 	}
 
 }

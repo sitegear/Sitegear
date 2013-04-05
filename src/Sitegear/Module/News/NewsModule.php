@@ -25,13 +25,6 @@ use Doctrine\ORM\NoResultException;
  */
 class NewsModule extends AbstractCoreModule {
 
-	//-- Constants --------------------
-
-	/**
-	 * Alias to use for this module's entity namespace.
-	 */
-	const ENTITY_ALIAS = 'News';
-
 	//-- ModuleInterface Methods --------------------
 
 	/**
@@ -39,15 +32,6 @@ class NewsModule extends AbstractCoreModule {
 	 */
 	public function getDisplayName() {
 		return 'Company News';
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function start() {
-		parent::start();
-		// Register the Doctrine entity namespace.
-		$this->getEngine()->doctrine()->registerEntityNamespace(self::ENTITY_ALIAS, '\\Sitegear\\Module\\News\\Model');
 	}
 
 	//-- AbstractUrlMountableModule Methods --------------------
@@ -139,17 +123,6 @@ class NewsModule extends AbstractCoreModule {
 		if ($readMore) {
 			$view['read-more'] = $readMore;
 		}
-	}
-
-	//-- Internal Methods --------------------
-
-	/**
-	 * @param string $entity
-	 *
-	 * @return \Doctrine\ORM\EntityRepository
-	 */
-	private function getRepository($entity) {
-		return $this->getEngine()->doctrine()->getEntityManager()->getRepository(sprintf('%s:%s', self::ENTITY_ALIAS, $entity));
 	}
 
 }
