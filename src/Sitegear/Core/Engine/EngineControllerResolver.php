@@ -52,7 +52,6 @@ class EngineControllerResolver implements ControllerResolverInterface {
 			$module = $this->engine->getModule($this->engine->config('engine.module-resolution.default-controller'));
 			$method = sprintf(self::FORMAT_CONTROLLER_METHOD_NAME, $this->engine->config('engine.module-resolution.default-controller-method'));
 		}
-		$request->attributes->set('_controller_module', $module);
 		return array( $module, $method );
 	}
 
