@@ -39,7 +39,6 @@ class UserIntegrationModule extends AbstractCoreModule {
 	 * {@inheritDoc}
 	 */
 	public function start() {
-		LoggerRegistry::debug('UserIntegrationModule starting');
 		parent::start();
 		// Register login form.
 		$filename = $this->config('login.form.filename');

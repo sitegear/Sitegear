@@ -38,7 +38,6 @@ class PageMessagesModule extends AbstractCoreModule {
 	 * {@inheritDoc}
 	 */
 	public function start() {
-		LoggerRegistry::debug('LocationsModule starting');
 		parent::start();
 		$this->messages = $this->getEngine()->getSession()->get($this->config('session-key'));
 	}

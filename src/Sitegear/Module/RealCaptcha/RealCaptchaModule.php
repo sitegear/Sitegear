@@ -44,7 +44,6 @@ class RealCaptchaModule extends AbstractCoreModule {
 	 * {@inheritDoc}
 	 */
 	public function start() {
-		LoggerRegistry::debug('RealCaptchaModule starting');
 		parent::start();
 		// Create RealCaptcha object for use during this request.
 		$this->captcha = new RealCaptcha($this->config('real-captcha-options'));

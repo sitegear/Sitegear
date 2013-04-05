@@ -41,20 +41,6 @@ abstract class AbstractModule implements ModuleInterface {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function start() {
-		// Default implementation does nothing
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function stop() {
-		// Default implementation does nothing
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
 	public function getEngine() {
 		return $this->engine;
 	}

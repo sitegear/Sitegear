@@ -79,7 +79,6 @@ class FormsModule extends AbstractCoreModule {
 	 * {@inheritDoc}
 	 */
 	public function start() {
-		LoggerRegistry::debug('FormsModule starting');
 		parent::start();
 		$this->forms = array();
 		$this->fieldNamespaces = $this->config('field-namespaces', array());

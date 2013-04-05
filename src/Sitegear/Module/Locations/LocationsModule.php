@@ -50,7 +50,6 @@ class LocationsModule extends AbstractCoreModule {
 	 * {@inheritDoc}
 	 */
 	public function start() {
-		LoggerRegistry::debug('LocationsModule starting');
 		parent::start();
 		// Register "location-search" form.
 		$filename = $this->config('location-search-form.filename');

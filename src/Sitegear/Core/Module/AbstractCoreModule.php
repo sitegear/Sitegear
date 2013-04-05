@@ -62,6 +62,20 @@ abstract class AbstractCoreModule extends AbstractUrlMountableModule {
 	/**
 	 * {@inheritDoc}
 	 */
+	public function start() {
+		LoggerRegistry::debug(sprintf('%s::start()', get_class($this)));
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function stop() {
+		LoggerRegistry::debug(sprintf('%s::stop()', get_class($this)));
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public function getResourceMap() {
 		return $this->config('resources', array());
 	}

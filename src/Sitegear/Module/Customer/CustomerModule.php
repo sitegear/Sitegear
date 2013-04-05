@@ -56,7 +56,6 @@ class CustomerModule extends AbstractCoreModule {
 	 * {@inheritDoc}
 	 */
 	public function start() {
-		LoggerRegistry::debug('CustomerModule starting');
 		parent::start();
 		// Register the Doctrine entity namespace.
 		$this->getEngine()->doctrine()->registerEntityNamespace(self::ENTITY_ALIAS, '\\Sitegear\\Module\\Customer\\Model');

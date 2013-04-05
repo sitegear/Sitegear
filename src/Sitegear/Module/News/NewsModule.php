@@ -45,7 +45,6 @@ class NewsModule extends AbstractCoreModule {
 	 * {@inheritDoc}
 	 */
 	public function start() {
-		LoggerRegistry::debug('NewsModule starting');
 		parent::start();
 		// Register the Doctrine entity namespace.
 		$this->getEngine()->doctrine()->registerEntityNamespace(self::ENTITY_ALIAS, '\\Sitegear\\Module\\News\\Model');

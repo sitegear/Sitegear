@@ -81,7 +81,6 @@ class DoctrineModule extends AbstractCoreModule implements DiscreteDataModuleInt
 	 * {@inheritDoc}
 	 */
 	public function start() {
-		LoggerRegistry::debug('DoctrineModule starting' . ($this->getEngine()->getEnvironmentInfo()->isDevMode() ? ' in dev mode' : ''));
 		parent::start();
 		$connectionConfig = $this->config('connection');
 		if (!empty($connectionConfig) && is_array($connectionConfig)) {
@@ -166,6 +165,7 @@ class DoctrineModule extends AbstractCoreModule implements DiscreteDataModuleInt
 	 * {@inheritDoc}
 	 */
 	public function stop() {
+		parent::stop();
 		$this->entityManager->flush();
 		$this->entityManager->close();
 	}
