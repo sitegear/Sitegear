@@ -60,7 +60,7 @@ class CustomerModule extends AbstractCoreModule {
 		// Register the Doctrine entity namespace.
 		$this->getEngine()->doctrine()->registerEntityNamespace(self::ENTITY_ALIAS, '\\Sitegear\\Module\\Customer\\Model');
 		// Register the checkout form generator.
-		$this->getEngine()->forms()->registerFormGeneratorCallback($this->config('checkout.form-key'), array( $this, 'buildCheckoutForm' ));
+		$this->getEngine()->forms()->registry()->registerFormGeneratorCallback($this->config('checkout.form-key'), array( $this, 'buildCheckoutForm' ));
 	}
 
 	//-- Page Controller Methods --------------------

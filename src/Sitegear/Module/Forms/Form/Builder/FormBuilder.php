@@ -44,8 +44,8 @@ class FormBuilder extends AbstractFormsModuleFormBuilder {
 			isset($formDefinition['target-url']) ? $formDefinition['target-url'] : null,
 			isset($formDefinition['cancel-url']) ? $formDefinition['cancel-url'] : null,
 			isset($formDefinition['method']) ? $formDefinition['method'] : null,
-			$this->getFormsModule()->getValues($this->getFormKey()),
-			$this->getFormsModule()->getErrors($this->getFormKey()),
+			$this->getFormsModule()->registry()->getValues($this->getFormKey()),
+			$this->getFormsModule()->registry()->getErrors($this->getFormKey()),
 			isset($formDefinition['submit-button']) ? $formDefinition['submit-button'] : null,
 			isset($formDefinition['reset-button']) ? $formDefinition['reset-button'] : null,
 			isset($formDefinition['back-button']) ? $formDefinition['back-button'] : null
@@ -84,7 +84,7 @@ class FormBuilder extends AbstractFormsModuleFormBuilder {
 				$fieldTypeClass = new \ReflectionClass($fieldDefinition['class']);
 			}
 		} else {
-			$fieldTypeClass = TypeUtilities::firstExistingClass($this->getFormsModule()->getFieldNamespaces(), NameUtilities::convertToStudlyCaps($fieldDefinition['type']) . 'Field');
+			$fieldTypeClass = TypeUtilities::firstExistingClass($this->getFormsModule()->registry()->getFieldNamespaces(), NameUtilities::convertToStudlyCaps($fieldDefinition['type']) . 'Field');
 		}
 		if (is_null($fieldTypeClass)) {
 			throw new \InvalidArgumentException(sprintf('FormBuilder could not find a field class for the name "%s"', $fieldDefinition['type']));
@@ -169,7 +169,7 @@ class FormBuilder extends AbstractFormsModuleFormBuilder {
 			$constraint = new Callback($constraintDefinition['options']);
 		} else {
 			// Use the registered constraint class mappings.
-			$constraintClass = TypeUtilities::firstExistingClass($this->getFormsModule()->getConstraintNamespaces(), NameUtilities::convertToStudlyCaps($constraintDefinition['name']));
+			$constraintClass = TypeUtilities::firstExistingClass($this->getFormsModule()->registry()->getConstraintNamespaces(), NameUtilities::convertToStudlyCaps($constraintDefinition['name']));
 			if (is_null($constraintClass)) {
 				throw new \InvalidArgumentException(sprintf('FormBuilder could not find a constraint class for the name "%s"', $constraintDefinition['name']));
 			}
@@ -272,7 +272,7 @@ class FormBuilder extends AbstractFormsModuleFormBuilder {
 	 * @throws \InvalidArgumentException
 	 */
 	public function buildCondition(array $conditionDefinition) {
-		$conditionClass = TypeUtilities::firstExistingClass($this->getFormsModule()->getConditionNamespaces(), NameUtilities::convertToStudlyCaps($conditionDefinition['condition']) . 'Condition');
+		$conditionClass = TypeUtilities::firstExistingClass($this->getFormsModule()->registry()->getConditionNamespaces(), NameUtilities::convertToStudlyCaps($conditionDefinition['condition']) . 'Condition');
 		if (is_null($conditionClass)) {
 			throw new \InvalidArgumentException(sprintf('FormBuilder could not find a condition class for the name "%s"', $conditionDefinition['condition']));
 		}
