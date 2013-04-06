@@ -8,6 +8,7 @@
 
 namespace Sitegear\Module\Forms;
 
+use Sitegear\Base\Config\ConfigurableInterface;
 use Sitegear\Base\Config\Container\SimpleConfigContainer;
 use Sitegear\Base\Config\Processor\ArrayTokenProcessor;
 use Sitegear\Base\Config\Processor\ConfigTokenProcessor;
@@ -501,20 +502,20 @@ class FormRegistry {
 	/**
 	 * @param string $formKey
 	 * @param string $formUrl
-	 * @param ModuleInterface $module
+	 * @param ConfigurableInterface $module
 	 * @param string[] $paths
 	 *
 	 * @return FormInterface|null
 	 */
-	protected function loadFormFromDefinitions($formKey, $formUrl, ModuleInterface $module, array $paths) {
+	protected function loadFormFromDefinitions($formKey, $formUrl, ConfigurableInterface $module, array $paths) {
 		$path = FileUtilities::firstExistingPath($paths);
 		if (!empty($path)) {
 			// Setup the configuration container for the form definition.
 			$config = new SimpleConfigContainer($this->formsModule->getConfigLoader());
+			$config->addProcessor(new ArrayTokenProcessor($this->getValues($formKey), 'data'));
 			$config->addProcessor(new EngineTokenProcessor($this->formsModule->getEngine(), 'engine'));
 			$config->addProcessor(new ConfigTokenProcessor($this->formsModule->getEngine(), 'engine-config'));
 			$config->addProcessor(new ConfigTokenProcessor($module, 'config'));
-			$config->addProcessor(new ArrayTokenProcessor($this->getValues($formKey), 'data'));
 			// Merge the configuration defaults and form definition file contents.
 			$config->merge($this->baseConfig);
 			$config->merge(array( 'form-url' => $formUrl ));
