@@ -483,6 +483,11 @@ class FormRegistry {
 
 	//-- Internal Methods --------------------
 
+	/**
+	 * Shortcut method to retrieve the Session implementation from the engine where this registry is running.
+	 *
+	 * @return null|\Symfony\Component\HttpFoundation\Session\SessionInterface
+	 */
 	protected function getSession() {
 		return $this->formsModule->getEngine()->getSession();
 	}
