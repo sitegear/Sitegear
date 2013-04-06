@@ -8,6 +8,8 @@
 
 namespace Sitegear\Base\Info;
 
+use Sitegear\Base\Module\ModuleInterface;
+
 /**
  * Defines the behaviour of an object that can provide information about the website.
  */
@@ -57,24 +59,25 @@ interface SiteInfoProviderInterface {
 	 * module, at the given location.
 	 *
 	 * @param string $location One of the constants defined in ResourceLocations.
-	 * @param string|\Sitegear\Base\Module\ModuleInterface $module Module that contains the resource, or module short
-	 *   name.
 	 * @param string $resource Resource to find.
+	 * @param \Sitegear\Base\Module\ModuleInterface $module Module that contains the resource, or null if $location is
+	 *   anything other than ResourceLocations::RESOURCE_LOCATION_MODULE or ResourceLocations::RESOURCE_LOCATION_SITE.
 	 *
 	 * @return string
 	 */
-	public function getSitePath($location, $module, $resource);
+	public function getSitePath($location, $resource, ModuleInterface $module=null);
 
 	/**
 	 * Get the absolute file path to the given public resource (i.e. javascript, CSS, image, etc) within the given
 	 * module, at the given location.
 	 *
 	 * @param string $location One of the constants defined in ResourceLocations.
-	 * @param string|\Sitegear\Base\Module\ModuleInterface $module Module that contains the resource.
 	 * @param string $resource Resource to find.
+	 * @param \Sitegear\Base\Module\ModuleInterface $module Module that contains the resource, or null if $location is
+	 *   anything other than ResourceLocations::RESOURCE_LOCATION_MODULE.
 	 *
 	 * @return string
 	 */
-	public function getPublicPath($location, $module, $resource);
+	public function getPublicPath($location, $resource, ModuleInterface $module=null);
 
 }

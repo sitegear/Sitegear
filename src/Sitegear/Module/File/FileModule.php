@@ -48,7 +48,7 @@ class FileModule extends AbstractCoreModule implements BootstrapModuleInterface,
 		// Register the extension-based MIME type guesser which doesn't fail on CSS files.
 		MimeTypeGuesser::getInstance()->register(new ExtensionMimeTypeGuesser($this->getEngine()->config('system.mime-types')));
 		// TODO files in preview mode
-		$filename = $this->getEngine()->getSiteInfo()->getPublicPath(ResourceLocations::RESOURCE_LOCATION_SITE, $this, $request->getPathInfo());
+		$filename = $this->getEngine()->getSiteInfo()->getPublicPath(ResourceLocations::RESOURCE_LOCATION_SITE, $request->getPathInfo(), $this);
 		return $this->getEngine()->createFileResponse($request, $filename);
 	}
 

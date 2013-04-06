@@ -9,6 +9,7 @@
 namespace Sitegear\Core\Info;
 
 use Sitegear\Base\Info\SiteInfoProviderInterface;
+use Sitegear\Base\Module\ModuleInterface;
 use Sitegear\Base\Resources\ResourceLocations;
 use Sitegear\Core\Engine\Engine;
 use Sitegear\Util\NameUtilities;
@@ -91,24 +92,18 @@ class SiteInfoProvider implements SiteInfoProviderInterface {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function getSitePath($location, $module, $resource) {
+	public function getSitePath($location, $resource, ModuleInterface $module=null) {
 		// Ensure the passed-in resource has no leading slashes and no surrounding whitespace
 		$resource = ltrim(trim($resource), '/');
 		switch ($location) {
 			case ResourceLocations::RESOURCE_LOCATION_SITE:
-				$root = $this->getSiteRoot();
-				if (!is_string($module)) {
-					$module = NameUtilities::convertToDashedLower($this->engine->getModuleName($module));
-				}
 				// For the site level, the module name must be inserted
-				$resource = sprintf('%s/%s', $module, $resource);
+				$root = $this->getSiteRoot();
+				$resource = sprintf('%s/%s', NameUtilities::convertToDashedLower($this->engine->getModuleName($module)), $resource);
 				break;
 			case ResourceLocations::RESOURCE_LOCATION_VENDOR:
 				throw new \InvalidArgumentException('The "vendor" location identifier cannot be used for site paths');
 			case ResourceLocations::RESOURCE_LOCATION_MODULE:
-				if (is_string($module)) {
-					$module = $this->engine->getModule($module);
-				}
 				$root = sprintf('%s/%s', $module->getModuleRoot(), ResourceLocations::RESOURCES_DIRECTORY);
 				break;
 			case ResourceLocations::RESOURCE_LOCATION_ENGINE:
@@ -123,11 +118,7 @@ class SiteInfoProvider implements SiteInfoProviderInterface {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function getPublicPath($location, $module, $resource) {
-		// Get the name of the module
-		if (!is_string($module) || strpos('\\', $module) !== false) {
-			$module = NameUtilities::convertToDashedLower($this->engine->getModuleName($module));
-		}
+	public function getPublicPath($location, $resource, ModuleInterface $module=null) {
 		// Ensure the passed-in resource has no leading slashes and no surrounding whitespace
 		$resource = ltrim(trim($resource), '/');
 		switch ($location) {
@@ -138,7 +129,7 @@ class SiteInfoProvider implements SiteInfoProviderInterface {
 				$root = $this->engine->getSitegearInfo()->getSitegearVendorResourcesRoot();
 				break;
 			case ResourceLocations::RESOURCE_LOCATION_MODULE:
-				$root = sprintf('%s/%s', $this->engine->getModule($module)->getModuleRoot(), ResourceLocations::RESOURCES_DIRECTORY);
+				$root = sprintf('%s/%s', $module->getModuleRoot(), ResourceLocations::RESOURCES_DIRECTORY);
 				break;
 			case ResourceLocations::RESOURCE_LOCATION_ENGINE:
 				$root = sprintf('%s/%s', $this->engine->getEngineRoot(), ResourceLocations::RESOURCES_DIRECTORY);

@@ -29,7 +29,7 @@ abstract class AbstractCoreFileViewContext extends AbstractFileViewContext {
 		$this->setupView($methodResult ?: $this->view()->getTarget(View::TARGET_LEVEL_METHOD));
 		foreach ($this->expandViewScriptPaths(trim($this->request()->attributes->get('_view'), '/'), $methodResult) as $path) {
 			if (is_null($result)) {
-				$sitePath = $this->view()->getEngine()->getSiteInfo()->getSitePath($location, $this->view()['module'], $path);
+				$sitePath = $this->view()->getEngine()->getSiteInfo()->getSitePath($location, $path, $this->view()['module']);
 				$result = $rendererRegistry->render($sitePath, $this->view());
 			}
 		}

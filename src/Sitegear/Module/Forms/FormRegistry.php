@@ -163,16 +163,18 @@ class FormRegistry {
 		$formUrl = $request->getUri();
 		$siteInfo = $this->formsModule->getEngine()->getSiteInfo();
 		if (!isset($this->forms[$formKey])) {
-			$this->forms[$formKey] = array();
-			$this->forms[$formKey]['form'] = $this->loadFormFromDefinitions($formKey, $formUrl, array(
-				$siteInfo->getSitePath(ResourceLocations::RESOURCE_LOCATION_SITE, $this, sprintf('%s.json', $formKey))
-			));
+			$this->forms[$formKey] = array(
+				'form' => $this->loadFormFromDefinitions($formKey, $formUrl, $this->formsModule, array(
+					$siteInfo->getSitePath(ResourceLocations::RESOURCE_LOCATION_SITE, sprintf('%s.json', $formKey), $this->formsModule)
+				))
+			);
 		} elseif (is_array($this->forms[$formKey]) && !isset($this->forms[$formKey]['form'])) {
 			switch ($this->forms[$formKey]['type']) {
 				case 'definitions':
-					$this->forms[$formKey]['form'] = $this->loadFormFromDefinitions($formKey, $formUrl, array(
-						$siteInfo->getSitePath(ResourceLocations::RESOURCE_LOCATION_SITE, $this->forms[$formKey]['module'], $this->forms[$formKey]['path']),
-						$siteInfo->getSitePath(ResourceLocations::RESOURCE_LOCATION_MODULE, $this->forms[$formKey]['module'], $this->forms[$formKey]['path'])
+					$module = $this->forms[$formKey]['module'];
+					$this->forms[$formKey]['form'] = $this->loadFormFromDefinitions($formKey, $formUrl, $module, array(
+						$siteInfo->getSitePath(ResourceLocations::RESOURCE_LOCATION_SITE, $this->forms[$formKey]['path'], $module),
+						$siteInfo->getSitePath(ResourceLocations::RESOURCE_LOCATION_MODULE, $this->forms[$formKey]['path'], $module)
 					));
 					break;
 				case 'callback':
@@ -180,6 +182,8 @@ class FormRegistry {
 					break;
 				default: // No other values are ever assigned to 'type'
 			}
+		} else {
+			throw new \InvalidArgumentException(sprintf('FormRegistry cannot retrieve form with unknown key "%s"', $formKey));
 		}
 		return $this->forms[$formKey]['form'];
 	}
@@ -497,18 +501,19 @@ class FormRegistry {
 	/**
 	 * @param string $formKey
 	 * @param string $formUrl
+	 * @param ModuleInterface $module
 	 * @param string[] $paths
 	 *
 	 * @return FormInterface|null
 	 */
-	protected function loadFormFromDefinitions($formKey, $formUrl, array $paths) {
+	protected function loadFormFromDefinitions($formKey, $formUrl, ModuleInterface $module, array $paths) {
 		$path = FileUtilities::firstExistingPath($paths);
 		if (!empty($path)) {
 			// Setup the configuration container for the form definition.
 			$config = new SimpleConfigContainer($this->formsModule->getConfigLoader());
 			$config->addProcessor(new EngineTokenProcessor($this->formsModule->getEngine(), 'engine'));
-			$config->addProcessor(new ConfigTokenProcessor($this->forms[$formKey]['module'], 'config'));
 			$config->addProcessor(new ConfigTokenProcessor($this->formsModule->getEngine(), 'engine-config'));
+			$config->addProcessor(new ConfigTokenProcessor($module, 'config'));
 			$config->addProcessor(new ArrayTokenProcessor($this->getValues($formKey), 'data'));
 			// Merge the configuration defaults and form definition file contents.
 			$config->merge($this->baseConfig);

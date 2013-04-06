@@ -56,10 +56,10 @@ class SectionViewContext extends AbstractCoreFileViewContext {
 	 */
 	public function render(RendererRegistryInterface $rendererRegistry, $methodResult) {
 		$result = parent::render($rendererRegistry, $methodResult);
-		$finalFallbackModule = $this->view()->getEngine()->getDefaultContentModule();
+		$finalFallbackModule = $this->view()->getEngine()->getModule($this->view()->getEngine()->getDefaultContentModule());
 		if (is_null($result) && $this->getContextModule() !== $finalFallbackModule) {
 			$finalFallback = sprintf('sections/%s/fallback', $this->view()->getTarget(View::TARGET_LEVEL_METHOD));
-			$finalFallback = $this->view()->getEngine()->getSiteInfo()->getSitePath(ResourceLocations::RESOURCE_LOCATION_SITE, $finalFallbackModule, $finalFallback);
+			$finalFallback = $this->view()->getEngine()->getSiteInfo()->getSitePath(ResourceLocations::RESOURCE_LOCATION_SITE, $finalFallback, $finalFallbackModule);
 			$result = $rendererRegistry->render($finalFallback, $this->view());
 		}
 		return $result;

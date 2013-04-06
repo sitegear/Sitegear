@@ -52,21 +52,27 @@ class ResourcesIntegrationModule extends AbstractCoreModule {
 	 */
 	public function resourceController(Request $request) {
 		LoggerRegistry::debug('ResourcesIntegrationModule::resourceController');
-
-		LoggerRegistry::info('location = ' . $request->attributes->get('location') . ', path = ' . $request->attributes->get('path'));
-
 		$location = $request->attributes->get('location');
 		switch ($location) {
 			case self::LOCATION_ATTRIBUTE_ENGINE:
-				$locationPath = ResourceLocations::RESOURCE_LOCATION_ENGINE;
+				$path = $this->getEngine()->getSiteInfo()->getPublicPath(
+					ResourceLocations::RESOURCE_LOCATION_ENGINE,
+					$request->attributes->get('path')
+				);
 				break;
 			case self::LOCATION_ATTRIBUTE_VENDOR:
-				$locationPath = ResourceLocations::RESOURCE_LOCATION_VENDOR;
+				$path = $this->getEngine()->getSiteInfo()->getPublicPath(
+					ResourceLocations::RESOURCE_LOCATION_VENDOR,
+					$request->attributes->get('path')
+				);
 				break;
 			default:
-				$locationPath = ResourceLocations::RESOURCE_LOCATION_MODULE;
+				$path = $this->getEngine()->getSiteInfo()->getPublicPath(
+					ResourceLocations::RESOURCE_LOCATION_MODULE,
+					$request->attributes->get('path'),
+					$this->getEngine()->getModule($location)
+				);
 		}
-		$path = $this->getEngine()->getSiteInfo()->getPublicPath($locationPath, $location, $request->attributes->get('path'));
 		if (!file_exists($path)) {
 			throw new FileNotFoundException($path);
 		}

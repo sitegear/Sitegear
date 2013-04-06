@@ -108,7 +108,7 @@ class ContentModule extends AbstractCoreModule {
 	 */
 	protected function buildRoutes() {
 		$routes = new RouteCollection();
-		$root = $this->getEngine()->getSiteInfo()->getSitePath(ResourceLocations::RESOURCE_LOCATION_SITE, $this, 'sections/main/');
+		$root = $this->getEngine()->getSiteInfo()->getSitePath(ResourceLocations::RESOURCE_LOCATION_SITE, 'sections/main/', $this);
 		return $this->compileRoutesFromMainSectionViewScripts($routes, $root);
 	}
 
@@ -116,7 +116,7 @@ class ContentModule extends AbstractCoreModule {
 	 * {@inheritDoc}
 	 */
 	protected function buildNavigationData($mode) {
-		$path = $this->getEngine()->getSiteInfo()->getSitePath(ResourceLocations::RESOURCE_LOCATION_SITE, $this, 'navigation.json');
+		$path = $this->getEngine()->getSiteInfo()->getSitePath(ResourceLocations::RESOURCE_LOCATION_SITE, 'navigation.json', $this);
 		return file_exists($path) ? json_decode(file_get_contents($path), true) : array();
 	}
 
