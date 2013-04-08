@@ -23,9 +23,9 @@
 			toggleFields($fieldset, $toggle.is(':checked'), true);
 		}).is(':checked'), false);
 		$additionalToggles.change(function() {
-			$toggle.change();
+			toggleFields($fieldset, $toggle.is(':checked'), true);
 		});
-	};
+	},
 
 	/**
 	 * Show or hide the fields based on the value of `show`, with animation or instant toggling based on the value of
@@ -35,10 +35,14 @@
 	 * @param show boolean
 	 * @param animate boolean
 	 */
-	var toggleFields = function($fieldset, show, animate) {
+	toggleFields = function($fieldset, show, animate) {
 		var $fields = $fieldset.find('div.field');
 		if (animate) {
-			$fields.slideToggle(show);
+			if (show) {
+				$fields.slideDown(show);
+			} else {
+				$fields.slideUp(show);
+			}
 		} else {
 			$fields.toggle(show);
 		}
@@ -46,9 +50,8 @@
 	};
 
 	/**
-	 * Setup the "delivery address is different" checkbox to show/hide the delivery address fields.
-	 *
-	 * Also setup the "payment method" radio buttons to show/hide the credit card details fields.
+	 * The "delivery address is different" checkbox: show/hide the delivery address fields.
+	 * The "payment method" radio buttons: show/hide the credit card details fields.
 	 */
 	$(function() {
 		initFields($('fieldset#sitegear-fieldset-delivery-address'), $('input#delivery-address-different-value-yes'), $());
