@@ -375,7 +375,7 @@
 						"options": {
 							"field": "payment-method",
 							"values": [
-								"card"
+								[ "card" ]
 							]
 						}
 					}
@@ -392,7 +392,7 @@
 						"options": {
 							"field": "payment-method",
 							"values": [
-								"card"
+								[ "card" ]
 							]
 						}
 					}
@@ -400,7 +400,7 @@
 				"name": "regex",
 				"options": {
 					"pattern": "/^\\d{15}\\d?$/",
-					"message": "Sorry, I don't understand your credit card number; please double check that it is correct, it should have 15 or 16 digits and no spaces"
+					"message": "Your card number should be 15 or 16 digits with no spaces"
 				}
 			},
 			{
@@ -410,7 +410,7 @@
 						"options": {
 							"field": "payment-method",
 							"values": [
-								"card"
+								[ "card" ]
 							]
 						}
 					}
@@ -439,14 +439,14 @@
 						"options": {
 							"field": "payment-method",
 							"values": [
-								"card"
+								[ "card" ]
 							]
 						}
 					}
 				],
 				"name": "not-blank",
 				"options": {
-					"message": "Please provide your credit card verification code"
+					"message": "Please provide your verification code"
 				}
 			},
 			{
@@ -456,7 +456,7 @@
 						"options": {
 							"field": "payment-method",
 							"values": [
-								"card"
+								[ "card" ]
 							]
 						}
 					}
@@ -464,7 +464,7 @@
 				"name": "regex",
 				"options": {
 					"pattern": "/^\\d{3}\\d?$/",
-					"message": "Sorry, I don't understand your verification code; please double check that it is correct, it should have 3 or 4 digits only and no spaces"
+					"message": "Your verification code is 3 or 4 digits"
 				}
 			}
 		]
@@ -481,6 +481,25 @@
 			"year-min": 0,
 			"year-max": 30
 		},
+		"constraints": [
+			{
+				"conditions": [
+					{
+						"condition": "exact-match",
+						"options": {
+							"field": "payment-method",
+							"values": [
+								[ "card" ]
+							]
+						}
+					}
+				],
+				"name": "not-blank",
+				"options": {
+					"message": "Please provide your card expiry"
+				}
+			}
+		],
 		"validator": "validateMonthYearSelect"
 	},
 	"card-name": {
@@ -497,14 +516,14 @@
 						"options": {
 							"field": "payment-method",
 							"values": [
-								"card"
+								[ "card" ]
 							]
 						}
 					}
 				],
 				"name": "not-blank",
 				"options": {
-					"message": "Please provide your full name as printed on your credit card"
+					"message": "Please provide the name printed on your card"
 				}
 			}
 		]
