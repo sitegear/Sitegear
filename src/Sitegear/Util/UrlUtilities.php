@@ -18,6 +18,25 @@ final class UrlUtilities {
 	//-- Utility Methods --------------------
 
 	/**
+	 * Convert the given URL to an absolute URL, using the given $baseUrl if $url is not already absolute (including
+	 * network URLs).
+	 *
+	 * @param string $url A URL, either absolute or relative.
+	 * @param string $baseUrl An absolute URL, the site base URL.
+	 *
+	 * @return string Absolute URL.
+	 */
+	public static function absoluteUrl($url, $baseUrl) {
+		// Check for an absolute URL or a network URL, these get returned directly.
+		if (preg_match('/^https?:/', $url) || substr($url, 0, 2) === '//') {
+			return $url;
+		}
+		// Normalise path separators.
+		return rtrim($baseUrl, '/') . '/' . ltrim($url, '/');
+	}
+
+
+	/**
 	 * Generate a link to the given URL with the given return URL appended as a query parameter.
 	 *
 	 * @param string|\Symfony\Component\HttpFoundation\Request $linkUrl A URL, or a Request object representing the URL
