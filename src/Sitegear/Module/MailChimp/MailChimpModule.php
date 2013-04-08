@@ -19,7 +19,7 @@ class MailChimpModule extends AbstractCoreModule {
 	//-- ModuleInterface Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getDisplayName() {
 		return 'MailChimp Integration';

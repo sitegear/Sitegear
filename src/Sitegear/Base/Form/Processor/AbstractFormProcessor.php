@@ -54,42 +54,42 @@ abstract class AbstractFormProcessor implements FormProcessorInterface {
 	//-- FormProcessorInterface Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getArgumentDefaults() {
 		return $this->argumentDefaults;
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function setArgumentDefaults(array $argumentDefaults) {
 		$this->argumentDefaults = $argumentDefaults;
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getConditions() {
 		return $this->conditions;
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function addCondition(ConditionInterface $condition) {
 		$this->conditions[] = $condition;
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function clearConditions() {
 		$this->conditions = array();
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function shouldExecute(array $values) {
 		$result = true;
@@ -100,14 +100,14 @@ abstract class AbstractFormProcessor implements FormProcessorInterface {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getExceptionAction() {
 		return $this->exceptionAction;
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function setExceptionAction($exceptionAction) {
 		$this->exceptionAction = $exceptionAction;

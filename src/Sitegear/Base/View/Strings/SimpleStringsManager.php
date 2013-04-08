@@ -36,7 +36,7 @@ class SimpleStringsManager implements StringsManagerInterface {
 	//-- StringsManagerInterface Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function append($key, $item) {
 		$this->ensureKeyExists($key);
@@ -47,7 +47,7 @@ class SimpleStringsManager implements StringsManagerInterface {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function prepend($key, $item) {
 		$this->ensureKeyExists($key);
@@ -58,14 +58,14 @@ class SimpleStringsManager implements StringsManagerInterface {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getSeparator($key) {
 		return isset($this->map[$key]) ? ($this->map[$key]['separator'] ?: self::DEFAULT_SEPARATOR) : null;
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function setSeparator($key, $separator) {
 		$this->ensureKeyExists($key);
@@ -73,14 +73,14 @@ class SimpleStringsManager implements StringsManagerInterface {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getKeys() {
 		return array_keys($this->map);
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function render($key) {
 		return isset($this->map[$key]) ? implode($this->getSeparator($key), $this->map[$key]['items']) : null;

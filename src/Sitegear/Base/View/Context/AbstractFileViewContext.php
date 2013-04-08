@@ -19,7 +19,7 @@ abstract class AbstractFileViewContext extends AbstractViewContext {
 	//-- ViewContextInterface Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function render(RendererRegistryInterface $rendererRegistry, $methodResult) {
 		// If the preparation method returns false, don't output anything

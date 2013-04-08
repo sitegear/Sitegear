@@ -24,7 +24,7 @@ class ComponentViewContext extends AbstractCoreFileViewContext {
 	//-- ViewContextInterface Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 *
 	 * This implementation returns the target name (in camelCase) plus 'Component'.
 	 */
@@ -38,7 +38,7 @@ class ComponentViewContext extends AbstractCoreFileViewContext {
 	//-- AbstractFileViewContext Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	protected function getContextModule() {
 		$targetModule = $this->view()->getTarget(View::TARGET_LEVEL_MODULE);
@@ -48,7 +48,7 @@ class ComponentViewContext extends AbstractCoreFileViewContext {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	protected function expandViewScriptPaths($viewScriptName, $methodResult) {
 		return array(
@@ -57,7 +57,7 @@ class ComponentViewContext extends AbstractCoreFileViewContext {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	protected function setupView($viewName) {
 		/** @var ModuleInterface $module */

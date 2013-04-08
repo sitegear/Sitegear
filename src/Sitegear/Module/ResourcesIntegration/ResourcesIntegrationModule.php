@@ -39,7 +39,7 @@ class ResourcesIntegrationModule extends AbstractCoreModule {
 	//-- ModuleInterface Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getDisplayName() {
 		return 'Site Resources Integration';
@@ -48,7 +48,7 @@ class ResourcesIntegrationModule extends AbstractCoreModule {
 	//-- BootstrapModuleInterface Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function resourceController(Request $request) {
 		LoggerRegistry::debug('ResourcesIntegrationModule::resourceController');

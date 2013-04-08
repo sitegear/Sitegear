@@ -20,7 +20,7 @@ class DiscountCodesModule extends AbstractCoreModule implements PurchaseAdjustme
 	//-- ModuleInterface Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getDisplayName() {
 		return 'Discount Codes';
@@ -29,21 +29,21 @@ class DiscountCodesModule extends AbstractCoreModule implements PurchaseAdjustme
 	//-- PurchaseAdjustmentProviderModuleInterface Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function isVisibleUnset() {
 		return false;
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getAdjustmentLabel() {
 		return $this->config('label');
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getAdjustmentAmount(array $items, array $data) {
 		// TODO Implement me
@@ -51,7 +51,7 @@ class DiscountCodesModule extends AbstractCoreModule implements PurchaseAdjustme
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function isIncludedAmount() {
 		return false;

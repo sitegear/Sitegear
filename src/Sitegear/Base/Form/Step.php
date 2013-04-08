@@ -74,28 +74,28 @@ class Step implements StepInterface {
 	//-- StepInterface Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getForm() {
 		return $this->form;
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getStepIndex() {
 		return $this->stepIndex;
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function isOneWay() {
 		return $this->oneWay;
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function setOneWay($oneWay) {
 		$this->oneWay = $oneWay;
@@ -103,14 +103,14 @@ class Step implements StepInterface {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getHeading() {
 		return $this->heading;
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function setHeading($heading) {
 		$this->heading = $heading;
@@ -118,14 +118,14 @@ class Step implements StepInterface {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getErrorHeading() {
 		return $this->errorHeading;
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function setErrorHeading($errorHeading) {
 		$this->errorHeading = $errorHeading;
@@ -133,14 +133,14 @@ class Step implements StepInterface {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getFieldsets() {
 		return $this->fieldsets;
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function addFieldset(FieldsetInterface $fieldset) {
 		$this->fieldsets[] = $fieldset;
@@ -148,7 +148,7 @@ class Step implements StepInterface {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function removeFieldset(FieldsetInterface $fieldset) {
 		$this->fieldsets = array_filter($this->fieldsets, function($f) use ($fieldset) {
@@ -158,14 +158,14 @@ class Step implements StepInterface {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function clearFieldsets() {
 		$this->fieldsets = array();
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getReferencedFields() {
 		$fields = array();
@@ -180,14 +180,14 @@ class Step implements StepInterface {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getProcessors() {
 		return $this->processors;
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function addProcessor(FormProcessorInterface $processor, $index=null) {
 		if (is_null($index)) {
@@ -199,7 +199,7 @@ class Step implements StepInterface {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function removeProcessor($processor) {
 		$index = is_integer($processor) ? $processor : array_search($processor, $this->processors);

@@ -16,7 +16,7 @@ use Sitegear\Util\LoggerRegistry;
 class PasswordAuthenticator extends AbstractStorageBackedAuthenticator {
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function checkCredentials($email, array $credentials) {
 		LoggerRegistry::debug('PasswordAuthenticator checking credentials');

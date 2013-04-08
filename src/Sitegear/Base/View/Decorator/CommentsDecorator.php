@@ -35,7 +35,7 @@ class CommentsDecorator implements DecoratorInterface {
 	//-- DecoratorInterface Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function decorate($content, ViewInterface $view=null, $beginMarker=null, $endMarker=null) {
 		$beginMarker = $beginMarker ?: self::DEFAULT_BEGIN_MARKER;

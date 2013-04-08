@@ -43,21 +43,21 @@ class Fieldset implements FieldsetInterface {
 	//-- FieldsetInterface Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getStep() {
 		return $this->step;
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getHeading() {
 		return $this->heading;
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function setHeading($heading) {
 		$this->heading = $heading;
@@ -65,14 +65,14 @@ class Fieldset implements FieldsetInterface {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getFieldReferences() {
 		return $this->fieldReferences;
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function addFieldReference(FieldReference $fieldReference) {
 		$this->fieldReferences[] = $fieldReference;
@@ -80,7 +80,7 @@ class Fieldset implements FieldsetInterface {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function removeFieldReference(FieldReference $fieldReference) {
 		$this->fieldReferences = array_filter($this->fieldReferences, function($f) use ($fieldReference) {
@@ -90,7 +90,7 @@ class Fieldset implements FieldsetInterface {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function clearFieldReferences() {
 		$this->fieldReferences = array();

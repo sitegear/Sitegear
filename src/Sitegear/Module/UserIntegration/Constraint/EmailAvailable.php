@@ -33,7 +33,7 @@ class EmailAvailable extends Constraint {
 	//-- Constraint Methods --------------------
 
     /**
-     * {@inheritDoc}
+     * @inheritdoc
      */
     public function getRequiredOptions() {
         return array( 'userManager' );

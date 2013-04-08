@@ -39,7 +39,7 @@ class IncludeTokenProcessor extends AbstractPrefixedTokenProcessor {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	protected function getTokenResultReplacement($token) {
 		$matches = array();

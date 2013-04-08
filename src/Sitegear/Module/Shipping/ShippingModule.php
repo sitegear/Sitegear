@@ -19,7 +19,7 @@ class ShippingModule extends AbstractCoreModule implements PurchaseAdjustmentPro
 	//-- ModuleInterface Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getDisplayName() {
 		return 'Shipping';
@@ -28,21 +28,21 @@ class ShippingModule extends AbstractCoreModule implements PurchaseAdjustmentPro
 	//-- PurchaseAdjustmentProviderModuleInterface Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function isVisibleUnset() {
 		return true;
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getAdjustmentLabel() {
 		return $this->config('label');
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getAdjustmentAmount(array $items, array $data) {
 		// TODO Implement me
@@ -50,7 +50,7 @@ class ShippingModule extends AbstractCoreModule implements PurchaseAdjustmentPro
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function isIncludedAmount() {
 		return false;

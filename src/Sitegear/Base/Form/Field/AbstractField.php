@@ -88,28 +88,28 @@ abstract class AbstractField implements FieldInterface {
 	//-- FieldInterface Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getForm() {
 		return $this->form;
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getName() {
 		return $this->name;
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getDefaultValue() {
 		return $this->defaultValue;
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function setDefaultValue($defaultValue) {
 		$this->defaultValue = $defaultValue;
@@ -117,14 +117,14 @@ abstract class AbstractField implements FieldInterface {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getLabelText() {
 		return $this->labelText;
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function setLabelText($labelText) {
 		$this->labelText = $labelText;
@@ -132,7 +132,7 @@ abstract class AbstractField implements FieldInterface {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 *
 	 * This implementation uses a default separator of a single whitespace character.
 	 */
@@ -142,7 +142,7 @@ abstract class AbstractField implements FieldInterface {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function addLabelMarker($labelMarker, $index=null) {
 		if (is_null($index)) {
@@ -154,7 +154,7 @@ abstract class AbstractField implements FieldInterface {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function removeLabelMarker($labelMarker) {
 		$index = is_integer($labelMarker) ? $labelMarker : array_search($labelMarker, $this->labelMarkers);
@@ -163,14 +163,14 @@ abstract class AbstractField implements FieldInterface {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getConditionalConstraints() {
 		return $this->conditionalConstraints;
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function addConditionalConstraint(ConditionalConstraintInterface $conditionalConstraint) {
 		$this->conditionalConstraints[] = $conditionalConstraint;
@@ -178,7 +178,7 @@ abstract class AbstractField implements FieldInterface {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function removeConditionalConstraint(ConditionalConstraintInterface $conditionalConstraint) {
 		if (($index = array_search($conditionalConstraint, $this->conditionalConstraints)) !== false) {
@@ -188,14 +188,14 @@ abstract class AbstractField implements FieldInterface {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getIncludeConditions() {
 		return $this->includeConditions;
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function addIncludeCondition(ConditionInterface $includeCondition) {
 		$this->includeConditions[] = $includeCondition;
@@ -203,7 +203,7 @@ abstract class AbstractField implements FieldInterface {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function removeIncludeCondition(ConditionInterface $includeCondition) {
 		if (($index = array_search($includeCondition, $this->includeConditions)) !== false) {
@@ -213,7 +213,7 @@ abstract class AbstractField implements FieldInterface {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function shouldBeIncluded(array $values) {
 		$result = true;
@@ -224,14 +224,14 @@ abstract class AbstractField implements FieldInterface {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getSetting($key, $default=null) {
 		return isset($this->settings[$key]) ? $this->settings[$key] : $default;
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function setSetting($key, $value) {
 		$this->settings[$key] = $value;

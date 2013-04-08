@@ -22,7 +22,7 @@ class EngineRendererListener extends AbstractEngineKernelListener {
 	//-- EventSubscriberInterface Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public static function getSubscribedEvents() {
 		return array(

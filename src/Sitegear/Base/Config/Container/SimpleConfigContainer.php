@@ -52,14 +52,14 @@ class SimpleConfigContainer implements ConfigContainerInterface {
 	//-- ConfigInterface Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function addProcessor(ProcessorInterface $processor) {
 		$this->processors[] = $processor;
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function merge($config, $rootKey=null, $preferExisting=false) {
 		LoggerRegistry::debug(sprintf('SimpleConfigContainer merging data [%s]', TypeUtilities::describe($config)));
@@ -80,7 +80,7 @@ class SimpleConfigContainer implements ConfigContainerInterface {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function get($key, $default=null) {
 		$keys = $this->normaliseKey($key);
@@ -95,7 +95,7 @@ class SimpleConfigContainer implements ConfigContainerInterface {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function all() {
 		return $this->get('', array());

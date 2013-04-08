@@ -22,7 +22,7 @@ class VersionModule extends AbstractCoreModule {
 	//-- ModuleInterface Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getDisplayName() {
 		return 'Sitegear Version Information';

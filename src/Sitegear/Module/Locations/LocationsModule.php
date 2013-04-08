@@ -33,14 +33,14 @@ class LocationsModule extends AbstractCoreModule {
 	//-- ModuleInterface Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getDisplayName() {
 		return 'Locations Management';
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function start() {
 		parent::start();
@@ -52,7 +52,7 @@ class LocationsModule extends AbstractCoreModule {
 	//-- AbstractUrlMountableModule Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	protected function buildNavigationData($mode) {
 		$data = $this->buildNavigationDataImpl($mode, intval($this->config('navigation.max-depth')));

@@ -53,35 +53,35 @@ class UserManager extends AbstractUserManager {
 	//-- UserManagerInterface Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function setSession($session) {
 		$this->session = $session;
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function isLoggedIn() {
 		return !is_null($this->session->get(self::SESSION_KEY_USER_EMAIL)) || $this->session->get(self::SESSION_KEY_USER_IS_GUEST);
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function isLoggedInAsGuest() {
 		return $this->session->get(self::SESSION_KEY_USER_IS_GUEST);
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getLoggedInUserEmail() {
 		return $this->session->get(self::SESSION_KEY_USER_EMAIL);
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function login($email, array $credentials) {
 		LoggerRegistry::debug('UserManager::login');
@@ -96,7 +96,7 @@ class UserManager extends AbstractUserManager {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function guestLogin() {
 		LoggerRegistry::debug('UserManager::guestLogin');
@@ -105,7 +105,7 @@ class UserManager extends AbstractUserManager {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function logout() {
 		LoggerRegistry::debug('UserManager::logout');

@@ -180,7 +180,7 @@ class View extends AbstractView {
 	//-- ViewInterface Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function render() {
 		LoggerRegistry::debug('View rendering content');
@@ -233,7 +233,7 @@ class View extends AbstractView {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function applyDecorators() {
 		foreach (func_get_args() as $arg) {
@@ -332,7 +332,7 @@ class View extends AbstractView {
 	//-- Magic Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 *
 	 * This implementation allows the use of a simple syntax in view scripts to render nested view scripts.
 	 *

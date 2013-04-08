@@ -49,7 +49,7 @@ class SectionViewContext extends AbstractCoreFileViewContext {
 	//-- ViewContextInterface Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 *
 	 * This implementation allows a global fallback, out-of-module, if no relevant content is found in the given
 	 * module.
@@ -68,14 +68,14 @@ class SectionViewContext extends AbstractCoreFileViewContext {
 	//-- AbstractFileViewContext Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	protected function getContextModule() {
 		return $this->request()->attributes->get('_module');
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 *
 	 * The $methodResult is intentionally ignored by this implementation.
 	 */

@@ -70,35 +70,35 @@ abstract class AbstractCoreModule extends AbstractUrlMountableModule {
 	//-- ModuleInterface Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function start() {
 		LoggerRegistry::debug(sprintf('%s::start()', get_class($this)));
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function stop() {
 		LoggerRegistry::debug(sprintf('%s::stop()', get_class($this)));
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getResourceMap() {
 		return $this->config('resources', array());
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getContentPath($type, $slug) {
 		return sprintf('%s/%s', $this->config(sprintf('paths.%s', $type)), $slug);
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function applyViewDefaults(ViewInterface $view, $viewType, $viewName) {
 		LoggerRegistry::debug(sprintf('%s applying view defaults', (new \ReflectionClass($this))->getShortName()));
@@ -109,7 +109,7 @@ abstract class AbstractCoreModule extends AbstractUrlMountableModule {
 	//-- MountableModuleInterface Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function mount($mountedUrl=null, RequestContext $context) {
 		parent::mount($mountedUrl, $context);
@@ -118,7 +118,7 @@ abstract class AbstractCoreModule extends AbstractUrlMountableModule {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getRouteUrl($route, $parameters=null) {
 		// Convert non-array parameters to empty array or single-value array with default parameter name.
@@ -134,7 +134,7 @@ abstract class AbstractCoreModule extends AbstractUrlMountableModule {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 *
 	 * @return string "slug"; can be overridden.
 	 */
@@ -145,7 +145,7 @@ abstract class AbstractCoreModule extends AbstractUrlMountableModule {
 	//-- AbstractConfigurableModule Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	protected function defaults() {
 		return sprintf('%s/%s/%s', $this->getModuleRoot(), ResourceLocations::RESOURCES_DIRECTORY, self::FILENAME_DEFAULTS);
@@ -154,7 +154,7 @@ abstract class AbstractCoreModule extends AbstractUrlMountableModule {
 	//-- AbstractUrlMountableModule Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	protected function buildRoutes() {
 		LoggerRegistry::debug(sprintf('%s::buildRouteCollection(), mounted to "%s"', (new \ReflectionClass($this))->getShortName(), $this->getMountedUrl()));
@@ -194,7 +194,7 @@ abstract class AbstractCoreModule extends AbstractUrlMountableModule {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	protected function buildNavigationData(/** @noinspection PhpUnusedParameterInspection */ $mode) {
 		return array();

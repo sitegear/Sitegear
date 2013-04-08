@@ -43,21 +43,21 @@ abstract class AbstractViewContext implements ViewContextInterface {
 	//-- ViewContextInterface Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function view() {
 		return $this->view;
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function request() {
 		return $this->request;
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 *
 	 * Default implementation that returns null.
 	 */

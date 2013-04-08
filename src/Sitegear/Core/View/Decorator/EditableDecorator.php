@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\Request;
 class EditableDecorator extends ElementDecorator {
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function decorate($content, $element=null, $class=null) {
 		return parent::decorate($content, $element, array( 'class' => $class ?: 'sitegear-editable' ));

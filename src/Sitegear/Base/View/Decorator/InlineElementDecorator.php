@@ -14,14 +14,14 @@ namespace Sitegear\Base\View\Decorator;
 class InlineElementDecorator extends ElementDecorator {
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	protected function defaultElement() {
 		return 'span';
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	protected function textAfterOpenTag() {
 		return '';

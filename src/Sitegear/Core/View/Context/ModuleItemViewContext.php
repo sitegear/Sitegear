@@ -18,14 +18,14 @@ class ModuleItemViewContext extends AbstractCoreFileViewContext {
 	//-- AbstractCoreFileViewContext Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	protected function getContextModule() {
 		return $this->view()->getTarget(View::TARGET_LEVEL_MODULE);
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	protected function expandViewScriptPaths($viewScriptName, $methodResult) {
 		$args = $this->view()->getTargetArguments(View::TARGET_LEVEL_METHOD);

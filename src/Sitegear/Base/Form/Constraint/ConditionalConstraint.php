@@ -43,14 +43,14 @@ class ConditionalConstraint implements ConditionalConstraintInterface {
 	//-- ConditionalConstraintInterface Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getConstraint() {
 		return $this->constraint;
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function shouldApplyConstraint(array $values) {
 		$result = true;

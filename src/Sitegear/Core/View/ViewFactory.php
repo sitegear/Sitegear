@@ -57,7 +57,7 @@ class ViewFactory extends AbstractViewFactory {
 	//-- AbstractViewFactory Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	protected function buildViewImpl(Request $request, ViewInterface $parent=null) {
 		return new View($this->engine, $request, $parent);

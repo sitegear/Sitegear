@@ -37,7 +37,7 @@ abstract class AbstractTokenProcessor implements ProcessorInterface {
 	//-- ProcessorInterface Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function process($value) {
 		if (is_string($value)) {

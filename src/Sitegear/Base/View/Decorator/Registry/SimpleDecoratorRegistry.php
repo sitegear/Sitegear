@@ -28,7 +28,7 @@ class SimpleDecoratorRegistry implements DecoratorRegistryInterface {
 	//-- DecoratorRegistryInterface Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function register($key, $decorator) {
 		if ($this->isRegistered($key)) {
@@ -43,7 +43,7 @@ class SimpleDecoratorRegistry implements DecoratorRegistryInterface {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function registerMap(array $decorators) {
 		foreach ($decorators as $key => $decorator) {
@@ -52,7 +52,7 @@ class SimpleDecoratorRegistry implements DecoratorRegistryInterface {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function deregister($key) {
 		if (!$this->isRegistered($key)) {
@@ -62,14 +62,14 @@ class SimpleDecoratorRegistry implements DecoratorRegistryInterface {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function isRegistered($key) {
 		return array_key_exists($key, $this->decorators);
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getDecorator($key) {
 		return isset($this->decorators[$key]) ? $this->decorators[$key] : null;

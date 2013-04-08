@@ -33,7 +33,7 @@ abstract class AbstractPrefixedTokenProcessor extends AbstractTokenProcessor {
 	//-- AbstractTokenProcessor Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	protected function replaceToken($token) {
 		$result = null;

@@ -52,7 +52,7 @@ class ExtensionMimeTypeGuesser implements MimeTypeGuesserInterface {
 	//-- MimeTypeGuesserInterface --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function guess($path) {
 		LoggerRegistry::debug(sprintf('ExtensionMimeTypeGuesser guessing MIME type for file "%s"', $path));

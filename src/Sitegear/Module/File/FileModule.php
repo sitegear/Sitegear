@@ -32,7 +32,7 @@ class FileModule extends AbstractCoreModule implements BootstrapModuleInterface,
 	//-- ModuleInterface Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getDisplayName() {
 		return 'File Access';
@@ -41,7 +41,7 @@ class FileModule extends AbstractCoreModule implements BootstrapModuleInterface,
 	//-- BootstrapModuleInterface Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function bootstrap(Request $request) {
 		LoggerRegistry::debug('FileModule running bootstrap');
@@ -55,7 +55,7 @@ class FileModule extends AbstractCoreModule implements BootstrapModuleInterface,
 	//-- DiscreteDataModuleInterface Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function load($selector) {
 		LoggerRegistry::debug(sprintf('FileModule loading data from "%s"', $selector));
@@ -64,7 +64,7 @@ class FileModule extends AbstractCoreModule implements BootstrapModuleInterface,
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function save($selector, $value) {
 		LoggerRegistry::debug(sprintf('FileModule saving data to "%s"', $selector));
@@ -74,7 +74,7 @@ class FileModule extends AbstractCoreModule implements BootstrapModuleInterface,
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function upload($selector) {
 		LoggerRegistry::debug(sprintf('FileModule uploading data to "%s"', $selector));

@@ -20,7 +20,7 @@ abstract class AbstractContainerRenderer extends AbstractRenderer {
 	//-- RendererInterface Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function render(array & $output) {
 		$this->renderStartTag($output);

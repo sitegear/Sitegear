@@ -66,21 +66,21 @@ abstract class AbstractView implements ViewInterface {
 	//-- ViewInterface Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getEngine() {
 		return $this->engine;
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getParent() {
 		return $this->parent;
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function pushTarget($target, array $arguments=null) {
 		array_push($this->targets, array(
@@ -91,7 +91,7 @@ abstract class AbstractView implements ViewInterface {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function pushTargets(array $targets) {
 		foreach ($targets as $entry) {
@@ -108,7 +108,7 @@ abstract class AbstractView implements ViewInterface {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function clearTargets() {
 		$this->targets = array();
@@ -116,14 +116,14 @@ abstract class AbstractView implements ViewInterface {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getTargetCount() {
 		return sizeof($this->targets);
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getTarget($index=null) {
 		if (is_null($index)) {
@@ -135,7 +135,7 @@ abstract class AbstractView implements ViewInterface {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getTargetArguments($index=null) {
 		if (is_null($index)) {
@@ -149,28 +149,28 @@ abstract class AbstractView implements ViewInterface {
 	//-- ArrayAccess Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function offsetExists($offset) {
 		return $this->data->offsetExists($offset);
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function offsetGet($offset) {
 		return $this->data->offsetGet($offset);
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function offsetSet($offset, $value) {
 		$this->data->offsetSet($offset, $value);
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function offsetUnset($offset) {
 		$this->data->offsetUnset($offset);

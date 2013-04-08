@@ -18,7 +18,7 @@ class ExcerptDecorator implements DecoratorInterface {
 	//-- DecoratorInterface Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function decorate($content, $length=null, $default=null) {
 		if (is_numeric($length)) {

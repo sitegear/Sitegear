@@ -16,7 +16,7 @@ class SelectField extends AbstractSelectionField {
 	//-- FieldInterface Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function isArrayValue() {
 		return $this->isMultiple();

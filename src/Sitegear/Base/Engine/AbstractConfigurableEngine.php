@@ -50,7 +50,7 @@ abstract class AbstractConfigurableEngine extends AbstractEngine implements Conf
 	//-- ConfigurableInterface Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 *
 	 * The $config argument in this implementation may be either a string, which is an absolute file path to a valid
 	 * config file, or an array of such file paths, or null.  Each of these will be merged in order after the defaults.
@@ -86,14 +86,14 @@ abstract class AbstractConfigurableEngine extends AbstractEngine implements Conf
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function config($key, $default=null) {
 		return $this->config->get($key, $default);
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getConfigLoader() {
 		return $this->configLoader;
@@ -102,7 +102,7 @@ abstract class AbstractConfigurableEngine extends AbstractEngine implements Conf
 	//-- AbstractEngine Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	protected function createModule($name) {
 		LoggerRegistry::debug(sprintf('AbstractConfigurableEngine creating module "%s"', $name));

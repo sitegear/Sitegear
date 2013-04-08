@@ -26,7 +26,7 @@ class ResourceTokensDecorator implements DecoratorInterface {
 	//-- DecoratorInterface Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function decorate($content, ViewInterface $view=null) {
 		$registry = $view->getEngine()->getViewFactory()->getResourcesManager();

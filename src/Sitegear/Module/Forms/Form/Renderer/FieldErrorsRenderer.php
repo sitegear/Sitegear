@@ -32,7 +32,7 @@ class FieldErrorsRenderer extends AbstractFieldRenderer {
 	//-- RendererInterface Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function render(array & $output) {
 		$name = $this->getField()->getName();

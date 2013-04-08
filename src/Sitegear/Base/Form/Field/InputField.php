@@ -16,7 +16,7 @@ class InputField extends AbstractField {
 	//-- FieldInterface Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function isArrayValue() {
 		return false;

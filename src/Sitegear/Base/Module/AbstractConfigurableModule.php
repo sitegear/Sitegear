@@ -41,7 +41,7 @@ abstract class AbstractConfigurableModule extends AbstractModule implements Conf
 	//-- ConfigurableInterface Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 *
 	 * The argument in this implementation must be a ConfigContainerInterface implementation.
 	 *
@@ -75,7 +75,7 @@ abstract class AbstractConfigurableModule extends AbstractModule implements Conf
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 *
 	 * This implementation stores its configuration in the container object's configuration under the module's base
 	 * configuration key.
@@ -85,7 +85,7 @@ abstract class AbstractConfigurableModule extends AbstractModule implements Conf
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getConfigLoader() {
 		return $this->configLoader;

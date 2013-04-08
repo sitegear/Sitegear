@@ -28,7 +28,7 @@ class FieldLabelRenderer extends AbstractFieldRenderer {
 	//-- RendererInterface Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function render(array & $output) {
 		$output[] = sprintf(
@@ -42,7 +42,7 @@ class FieldLabelRenderer extends AbstractFieldRenderer {
 	//-- AbstractRenderer Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	protected function normaliseRenderOptions() {
 		return ArrayUtilities::combine(

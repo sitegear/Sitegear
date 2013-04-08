@@ -52,7 +52,7 @@ abstract class AbstractUrlMountableModule extends AbstractConfigurableModule imp
 	//-- MountableModuleInterface Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function mount($mountedUrl=null, RequestContext $context) {
 		LoggerRegistry::debug(sprintf('%s::mount(%s)', (new \ReflectionClass($this))->getShortName(), $mountedUrl));
@@ -61,7 +61,7 @@ abstract class AbstractUrlMountableModule extends AbstractConfigurableModule imp
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function unmount() {
 		LoggerRegistry::debug(sprintf('%s::unmount()', (new \ReflectionClass($this))->getShortName()));
@@ -69,21 +69,21 @@ abstract class AbstractUrlMountableModule extends AbstractConfigurableModule imp
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getMountedUrl() {
 		return $this->mountedUrl;
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getRoutes() {
 		return $this->routes;
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getNavigationData($mode) {
 		if (!isset($this->navigationData[$mode])) {

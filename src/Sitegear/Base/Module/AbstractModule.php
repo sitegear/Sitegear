@@ -39,14 +39,14 @@ abstract class AbstractModule implements ModuleInterface {
 	//-- ModuleInterface Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getEngine() {
 		return $this->engine;
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getModuleRoot() {
 		$obj = new \ReflectionClass($this);
@@ -54,7 +54,7 @@ abstract class AbstractModule implements ModuleInterface {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 *
 	 * Provides a default implementation which returns an empty array.
 	 */

@@ -18,7 +18,7 @@ class RegexMatchCondition extends AbstractCondition {
 	//-- ConditionInterface Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function matches(array $values) {
 		$result = false;

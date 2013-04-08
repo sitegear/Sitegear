@@ -20,14 +20,14 @@ use Sitegear\Util\LoggerRegistry;
 class PhpFileLoader implements FileLoaderInterface {
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function supports($args) {
 		return file_exists($args) && pathinfo($args, PATHINFO_EXTENSION) === 'php';
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function load($args) {
 		LoggerRegistry::debug(sprintf('PhpFileLoader loading from "%s"', $args));

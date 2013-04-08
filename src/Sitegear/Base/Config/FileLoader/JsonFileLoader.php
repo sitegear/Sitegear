@@ -18,14 +18,14 @@ use Sitegear\Util\LoggerRegistry;
 class JsonFileLoader implements FileLoaderInterface {
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function supports($args) {
 		return file_exists($args) && pathinfo($args, PATHINFO_EXTENSION) === 'json';
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function load($args) {
 		LoggerRegistry::debug(sprintf('JsonFileLoader loading from "%s"', $args));

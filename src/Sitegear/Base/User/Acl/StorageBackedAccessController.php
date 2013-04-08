@@ -28,7 +28,7 @@ class StorageBackedAccessController implements AccessControllerInterface {
 	//-- AccessControllerInterface Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function checkPrivilege($id, $privilege) {
 		return in_array($privilege, $this->storage->getPrivileges($id));

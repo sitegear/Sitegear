@@ -42,7 +42,7 @@ class EngineControllerResolver implements ControllerResolverInterface {
 	//-- ControllerResolverInterface Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getController(Request $request) {
 		$route = explode(':', $request->attributes->get('_route'));
@@ -56,7 +56,7 @@ class EngineControllerResolver implements ControllerResolverInterface {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getArguments(Request $request, $controller) {
 		return TypeUtilities::getArguments(

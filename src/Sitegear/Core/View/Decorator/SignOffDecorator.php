@@ -26,7 +26,7 @@ class SignOffDecorator implements DecoratorInterface {
 	//-- Decorator Interface Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function decorate($content, ViewInterface $view=null, Request $request=null) {
 		$renderTime = $this->formatTime($view->getEngine()->getTimestamp());

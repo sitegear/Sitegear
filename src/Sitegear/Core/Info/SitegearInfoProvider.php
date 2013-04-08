@@ -43,63 +43,63 @@ class SitegearInfoProvider implements SitegearInfoProviderInterface {
 	//-- SitegearInfoProviderInterface Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getSitegearDisplayName() {
 		return isset($this->data['display-name']) ? $this->data['display-name'] : '';
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getSitegearVersion() {
 		return isset($this->data['version']) ? $this->data['version'] : '';
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getSitegearDescription() {
 		return isset($this->data['description']) ? $this->data['description'] : '';
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getSitegearLicense() {
 		return isset($this->data['license']) ? $this->data['license'] : '';
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getSitegearHomepage() {
 		return isset($this->data['homepage']) ? $this->data['homepage'] : '';
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getSitegearAuthors() {
 		return isset($this->data['authors']) ? $this->data['authors'] : array();
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getSitegearVersionIdentifier() {
 		return sprintf('%s/%s', $this->getSitegearDisplayName(), $this->getSitegearVersion());
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getSitegearRoot() {
 		return dirname(dirname(dirname($this->engine->getEngineRoot())));
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getSitegearVendorResourcesRoot() {
 		// TODO Can this be done in a way that is not so dependant on Composer's standard directory structure??

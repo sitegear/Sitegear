@@ -46,7 +46,7 @@ class ModuleProcessor extends AbstractFormProcessor {
 	//-- FormProcessorInterface Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getProcessorMethod() {
 		return array($this->getModule(), $this->getMethodName());

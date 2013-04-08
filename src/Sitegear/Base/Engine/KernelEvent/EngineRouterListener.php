@@ -30,7 +30,7 @@ class EngineRouterListener extends AbstractEngineKernelListener {
 	//-- AbstractEngineKernelListener Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public static function getSubscribedEvents() {
 		return array(

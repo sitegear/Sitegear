@@ -26,7 +26,7 @@ class StringTokensDecorator implements DecoratorInterface {
 	//-- DecoratorInterface Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function decorate($content, ViewInterface $view=null) {
 		$manager = $view->getEngine()->getViewFactory()->getStringsManager();

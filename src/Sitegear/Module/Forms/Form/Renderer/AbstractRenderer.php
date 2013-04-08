@@ -49,14 +49,14 @@ abstract class AbstractRenderer implements RendererInterface {
 	//-- RendererInterface Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getRenderOption($key, $default=null) {
 		return isset($this->renderOptions[$key]) ? $this->renderOptions[$key] : $default;
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function setRenderOption($key, $value) {
 		$this->renderOptions[$key] = $value;

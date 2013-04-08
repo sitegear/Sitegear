@@ -32,7 +32,7 @@ class ContentModule extends AbstractCoreModule {
 	//-- ModuleInterface Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getDisplayName() {
 		return 'Main Site Content';
@@ -102,7 +102,7 @@ class ContentModule extends AbstractCoreModule {
 	//-- AbstractUrlMountableModule Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 *
 	 * Build the routes collection based on the main section view scripts.  Delegates the work to the
 	 * `compileRoutesFromMainSectionViewScripts()` method.
@@ -114,7 +114,7 @@ class ContentModule extends AbstractCoreModule {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	protected function buildNavigationData($mode) {
 		$path = $this->getEngine()->getSiteInfo()->getSitePath(ResourceLocations::RESOURCE_LOCATION_SITE, 'navigation.json', $this);

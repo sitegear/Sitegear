@@ -21,7 +21,7 @@ class ElementDecorator implements DecoratorInterface {
 	//-- DecoratorInterface Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function decorate($content, $element=null, $attributes=null) {
 		// Allow a default element if no arguments are passed (other than the content and view)

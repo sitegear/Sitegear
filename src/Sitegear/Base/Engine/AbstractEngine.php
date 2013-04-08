@@ -126,7 +126,7 @@ abstract class AbstractEngine implements EngineInterface {
 	//-- EngineInterface Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 *
 	 * This implementation registers the request in the view factory, and sets up the session.
 	 */
@@ -154,7 +154,7 @@ abstract class AbstractEngine implements EngineInterface {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function stop() {
 		foreach ($this->modules as $module) {
@@ -163,14 +163,14 @@ abstract class AbstractEngine implements EngineInterface {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getRouteMap() {
 		return $this->compiledRouteCollection;
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getModuleForUrl($url) {
 		$result = null;
@@ -184,7 +184,7 @@ abstract class AbstractEngine implements EngineInterface {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getModuleMountedUrl($module) {
 		$result = null;
@@ -197,7 +197,7 @@ abstract class AbstractEngine implements EngineInterface {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getTemplateMap() {
 		if (is_null($this->compiledTemplateMap)) {
@@ -214,7 +214,7 @@ abstract class AbstractEngine implements EngineInterface {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getTemplateForUrl($url) {
 		$result = null;
@@ -228,7 +228,7 @@ abstract class AbstractEngine implements EngineInterface {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getProtocolSchemeForUrl($url) {
 		// Set the default result.
@@ -254,7 +254,7 @@ abstract class AbstractEngine implements EngineInterface {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getEngineRoot() {
 		$obj = new \ReflectionClass($this);
@@ -262,56 +262,56 @@ abstract class AbstractEngine implements EngineInterface {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getTimestamp() {
 		return $this->timestamp;
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getSiteInfo() {
 		return $this->siteInfo;
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getEnvironmentInfo() {
 		return $this->environmentInfo;
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getSitegearInfo() {
 		return $this->sitegearInfo;
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getViewFactory() {
 		return $this->viewFactory;
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getSession() {
 		return $this->session;
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getMemcache() {
 		return $this->memcache;
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getUserManager() {
 		return $this->userManager;
@@ -320,14 +320,14 @@ abstract class AbstractEngine implements EngineInterface {
 	//-- ModuleContainerInterface Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function hasModule($name) {
 		return array_key_exists($name, $this->modules) || class_exists($this->getModuleClassName($name));
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getModule($name) {
 		$name = NameUtilities::convertToStudlyCaps($name);

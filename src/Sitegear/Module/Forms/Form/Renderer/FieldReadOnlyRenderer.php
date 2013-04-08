@@ -19,7 +19,7 @@ class FieldReadOnlyRenderer extends AbstractFieldRenderer {
 	//-- RendererInterface Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function render(array & $output) {
 		$value = $this->getFieldValue();

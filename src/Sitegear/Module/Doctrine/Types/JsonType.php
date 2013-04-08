@@ -19,28 +19,28 @@ class JsonType extends Type {
 	const JSON = 'json';
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform) {
 		return $platform->getClobTypeDeclarationSQL($fieldDeclaration);
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function convertToPHPValue($value, AbstractPlatform $platform) {
 		return json_decode($value, true);
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function convertToDatabaseValue($value, AbstractPlatform $platform) {
 		return json_encode($value);
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getName() {
 		return self::JSON;

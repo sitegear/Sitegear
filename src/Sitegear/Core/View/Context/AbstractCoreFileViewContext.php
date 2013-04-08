@@ -22,7 +22,7 @@ abstract class AbstractCoreFileViewContext extends AbstractFileViewContext {
 	//-- AbstractFileViewContext Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	protected function renderForLocation($location, RendererRegistryInterface $rendererRegistry, $methodResult) {
 		$result = null;

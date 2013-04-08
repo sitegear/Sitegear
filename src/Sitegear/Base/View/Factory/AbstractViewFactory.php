@@ -99,14 +99,14 @@ abstract class AbstractViewFactory implements ViewFactoryInterface {
 	//-- ViewFactoryInterface Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function setRequest(Request $request) {
 		return $this->page = $this->buildViewImpl($request);
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getPage() {
 		if (is_null($this->page)) {
@@ -116,49 +116,49 @@ abstract class AbstractViewFactory implements ViewFactoryInterface {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function buildView(Request $request, ViewInterface $parent=null) {
 		return $this->buildViewImpl($request, $parent);
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getRendererRegistry() {
 		return $this->rendererRegistry;
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getDecoratorRegistry() {
 		return $this->decoratorRegistry;
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getResourcesManager() {
 		return $this->resourcesManager;
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getStringsManager() {
 		return $this->stringsManager;
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getIndexSectionName() {
 		return $this->indexSectionName;
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getFallbackSectionName() {
 		return $this->fallbackSectionName;

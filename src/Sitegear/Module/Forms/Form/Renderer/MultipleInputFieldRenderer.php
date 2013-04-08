@@ -56,7 +56,7 @@ class MultipleInputFieldRenderer extends AbstractFieldRenderer {
 	//-- RendererInterface Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function render(array & $output) {
 		$innerIdPrefix = sprintf(
@@ -142,7 +142,7 @@ class MultipleInputFieldRenderer extends AbstractFieldRenderer {
 	//-- AbstractInterface Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	protected function normaliseRenderOptions() {
 		return ArrayUtilities::combine(

@@ -33,14 +33,14 @@ abstract class AbstractCondition implements ConditionInterface {
 	//-- ConditionInterface Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getOption($key, $default=null) {
 		return isset($this->options[$key]) ? $this->options[$key] : $default;
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function setOption($key, $value) {
 		$this->options[$key] = $value;

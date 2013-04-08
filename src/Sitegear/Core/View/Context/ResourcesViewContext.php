@@ -23,7 +23,7 @@ class ResourcesViewContext extends AbstractViewContext {
 	//-- ViewContextInterface Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 *
 	 * See class documentation.
 	 */

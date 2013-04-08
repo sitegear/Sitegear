@@ -139,7 +139,7 @@ final class LoggerRegistry {
 	private static $_proxyMethods = array( 'log', 'debug', 'info', 'notice', 'warn', 'error', 'critical', 'alert', 'emergency' );
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 *
 	 * This is a static shorthand call to invoke the proxy methods on the singleton instance.
 	 *
@@ -156,7 +156,7 @@ final class LoggerRegistry {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 *
 	 * Only methods specified in proxyMethods() are allowed.
 	 *

@@ -20,14 +20,14 @@ class TemplateViewContext extends AbstractCoreFileViewContext {
 	//-- AbstractFileViewContext Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	protected function getContextModule() {
 		return $this->view()->getEngine()->getDefaultContentModule();
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function expandViewScriptPaths($viewScriptName, $methodResult) {
 		return array(
@@ -36,7 +36,7 @@ class TemplateViewContext extends AbstractCoreFileViewContext {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	protected function setupView($viewName) {
 		/** @var ModuleInterface $module */

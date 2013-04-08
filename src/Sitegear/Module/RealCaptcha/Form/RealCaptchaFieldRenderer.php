@@ -30,7 +30,7 @@ class RealCaptchaFieldRenderer extends InputFieldRenderer {
 	//-- RendererInterface Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function render(array & $output) {
 		$output[] = sprintf('<%s%s />', 'img', HtmlUtilities::attributes(ArrayUtilities::combine(
@@ -47,7 +47,7 @@ class RealCaptchaFieldRenderer extends InputFieldRenderer {
 	//-- AbstractInterface Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	protected function normaliseRenderOptions() {
 		return ArrayUtilities::combine(

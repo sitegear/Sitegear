@@ -43,7 +43,7 @@ class EngineTokenProcessor extends AbstractPrefixedTokenProcessor {
 	//-- AbstractPrefixedTokenProcessor Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	protected function getTokenResultReplacement($token) {
 		$result = null;

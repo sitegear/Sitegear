@@ -22,7 +22,7 @@ class InputFieldRenderer extends AbstractFieldRenderer {
 	//-- RendererInterface Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function render(array & $output) {
 		$output[] = sprintf(
@@ -39,7 +39,7 @@ class InputFieldRenderer extends AbstractFieldRenderer {
 	//-- AbstractInterface Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	protected function normaliseRenderOptions() {
 		return ArrayUtilities::combine(

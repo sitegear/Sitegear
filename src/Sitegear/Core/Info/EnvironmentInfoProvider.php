@@ -36,14 +36,14 @@ class EnvironmentInfoProvider implements EnvironmentInfoProviderInterface {
 	//-- EnvironmentInfoProviderInterface Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getEnvironment() {
 		return $this->environment;
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function isDevMode() {
 		return empty($this->environment) || in_array($this->environment, array( 'development', 'dev' ));

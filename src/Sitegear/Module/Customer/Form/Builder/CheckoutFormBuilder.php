@@ -33,7 +33,7 @@ class CheckoutFormBuilder extends FormBuilder {
 	//-- FormBuilderInterface Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function buildForm($formDefinition) {
 		// Create the form object.

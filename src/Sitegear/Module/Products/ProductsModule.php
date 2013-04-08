@@ -30,7 +30,7 @@ class ProductsModule extends AbstractCoreModule implements PurchaseItemProviderM
 	//-- ModuleInterface Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getDisplayName() {
 		return 'Products Catalogue';
@@ -39,7 +39,7 @@ class ProductsModule extends AbstractCoreModule implements PurchaseItemProviderM
 	//-- PurchaseItemProviderModuleInterface Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getPurchaseItemLabel($type, $id) {
 		$result = null;
@@ -54,7 +54,7 @@ class ProductsModule extends AbstractCoreModule implements PurchaseItemProviderM
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getPurchaseItemAttributeDefinitions($type, $id) {
 		$result = array();
@@ -83,7 +83,7 @@ class ProductsModule extends AbstractCoreModule implements PurchaseItemProviderM
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getPurchaseItemUnitPrice($type, $id, array $attributeValues) {
 		$basePrice = null;
@@ -105,7 +105,7 @@ class ProductsModule extends AbstractCoreModule implements PurchaseItemProviderM
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getPurchaseItemDetailsUrl($type, $id, array $attributeValues) {
 		return $this->getRouteUrl('item', $this->getRepository('Item')->find($id)->getUrlPath());
@@ -114,7 +114,7 @@ class ProductsModule extends AbstractCoreModule implements PurchaseItemProviderM
 	//-- AbstractUrlMountableModule Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	protected function buildNavigationData($mode) {
 		$data = $this->buildNavigationDataImpl($mode, intval($this->config('navigation.max-depth')));

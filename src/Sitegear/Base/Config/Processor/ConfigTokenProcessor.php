@@ -36,7 +36,7 @@ class ConfigTokenProcessor extends AbstractPrefixedTokenProcessor {
 	//-- AbstractPrefixedTokenProcessor Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	protected function getTokenResultReplacement($token) {
 		return $this->object->config($token);

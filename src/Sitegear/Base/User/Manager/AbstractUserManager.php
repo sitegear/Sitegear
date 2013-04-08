@@ -33,21 +33,21 @@ abstract class AbstractUserManager implements UserManagerInterface {
 	//-- UserManagerInterface Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getAuthenticator() {
 		return $this->authenticator;
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getAccessController() {
 		return $this->accessController;
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getStorage() {
 		return $this->storage;

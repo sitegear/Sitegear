@@ -11,7 +11,7 @@ namespace Sitegear\Base\User\Acl;
 class AllowAllAccessController implements AccessControllerInterface {
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function checkPrivilege($id, $privilege) {
 		return true;

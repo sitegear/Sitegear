@@ -19,7 +19,7 @@ class FieldWrapperReadOnlyRenderer extends FieldWrapperRenderer {
 	//-- FieldWrapperRenderer Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	protected function getFieldRenderer() {
 		return $this->getFactory()->createFieldReadOnlyRenderer($this->getField(), array());

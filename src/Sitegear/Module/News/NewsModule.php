@@ -28,7 +28,7 @@ class NewsModule extends AbstractCoreModule {
 	//-- ModuleInterface Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getDisplayName() {
 		return 'Company News';
@@ -37,7 +37,7 @@ class NewsModule extends AbstractCoreModule {
 	//-- AbstractUrlMountableModule Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	protected function buildNavigationData($mode) {
 		$result = array();

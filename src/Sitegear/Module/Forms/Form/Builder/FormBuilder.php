@@ -35,7 +35,7 @@ class FormBuilder extends AbstractFormsModuleFormBuilder {
 	//-- FormBuilderInterface Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function buildForm($formDefinition) {
 		LoggerRegistry::debug('FormBuilder::buildForm()');

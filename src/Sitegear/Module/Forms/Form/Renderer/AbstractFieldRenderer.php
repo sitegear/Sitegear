@@ -41,7 +41,7 @@ abstract class AbstractFieldRenderer extends AbstractRenderer implements FieldRe
 	//-- FieldRendererInterface Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getField() {
 		return $this->field;
@@ -50,7 +50,7 @@ abstract class AbstractFieldRenderer extends AbstractRenderer implements FieldRe
 	//-- AbstractInterface Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	protected function normaliseRenderOptions() {
 		return ArrayUtilities::combine(

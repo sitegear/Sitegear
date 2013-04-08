@@ -27,7 +27,7 @@ class SimpleRendererRegistry implements RendererRegistryInterface {
 	//-- RendererRegistryInterface Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function register($renderers) {
 		LoggerRegistry::debug(sprintf('SimpleRendererRegistry registering [%s]', TypeUtilities::describe($renderers)));
@@ -47,7 +47,7 @@ class SimpleRendererRegistry implements RendererRegistryInterface {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function deregister($renderers) {
 		LoggerRegistry::debug(sprintf('SimpleRendererRegistry deregistering [%s]', TypeUtilities::describe($renderers)));
@@ -62,14 +62,14 @@ class SimpleRendererRegistry implements RendererRegistryInterface {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function isRegistered($renderer) {
 		return array_key_exists(TypeUtilities::getClassName($renderer), $this->registry);
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function canRender($path) {
 		$result = false;
@@ -83,7 +83,7 @@ class SimpleRendererRegistry implements RendererRegistryInterface {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function render($path, ViewInterface $view) {
 		LoggerRegistry::debug(sprintf('SimpleRendererRegistry rendering "%s" with view [%s]', $path, TypeUtilities::describe($view)));

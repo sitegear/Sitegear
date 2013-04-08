@@ -109,7 +109,7 @@ class Engine extends AbstractConfigurableEngine {
 	//-- EngineInterface Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getErrorRoute() {
 		$module = NameUtilities::convertToDashedLower($this->config('engine.module-resolution.error-content'));
@@ -117,14 +117,14 @@ class Engine extends AbstractConfigurableEngine {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getErrorTemplate() {
 		return $this->config('templates.error-template');
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function renderPage(Request $request) {
 		LoggerRegistry::debug('Engine rendering page');
@@ -139,7 +139,7 @@ class Engine extends AbstractConfigurableEngine {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 *
 	 * This implementation adds a Content-Type header based on configuration (only if the Content-Type is not already
 	 * set), and an X-Powered-By header for documentation purposes.
@@ -157,7 +157,7 @@ class Engine extends AbstractConfigurableEngine {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function createFileResponse(Request $request, $filename, $conditional=true) {
 		$response = null;
@@ -183,14 +183,14 @@ class Engine extends AbstractConfigurableEngine {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getResourceMap() {
 		return $this->config('resources', array());
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function normaliseResourceMap(array $resources) {
 		// Retrieve and normalise the preferences for CDN vs local delivery.
@@ -229,7 +229,7 @@ class Engine extends AbstractConfigurableEngine {
 	//-- ModuleResolverInterface Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getModuleClassName($name) {
 		$name = NameUtilities::convertToStudlyCaps($name);
@@ -250,7 +250,7 @@ class Engine extends AbstractConfigurableEngine {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getModuleName($module) {
 		$r = is_string($module) ? new \ReflectionClass($module) : new \ReflectionObject($module);
@@ -262,14 +262,14 @@ class Engine extends AbstractConfigurableEngine {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getDefaultContentModule() {
 		return $this->config('engine.module-resolution.default-content');
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getBootstrapModuleSequence() {
 		$result = array();
@@ -282,7 +282,7 @@ class Engine extends AbstractConfigurableEngine {
 	//-- AbstractEngine Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	protected function initMemcache() {
 		$memcache = null;
@@ -304,7 +304,7 @@ class Engine extends AbstractConfigurableEngine {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	protected function getRawRouteMap() {
 		return array_merge(
@@ -331,42 +331,42 @@ class Engine extends AbstractConfigurableEngine {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	protected function getRawTemplateMap() {
 		return $this->config('templates.map');
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	protected function getDefaultProtocolScheme() {
 		return $this->config('protocols.default');
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	protected function getRawProtocolSchemeMap() {
 		return $this->config('protocols.map', array());
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	protected function getRenderers() {
 		return $this->config('view.renderers', array());
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	protected function getDecoratorMap() {
 		return $this->config('view.decorators', array());
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	protected function getResourceTypeMap() {
 		return $this->config('view.resource-types', array());
@@ -375,7 +375,7 @@ class Engine extends AbstractConfigurableEngine {
 	//-- AbstractConfigurableEngine Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	protected function getRootModuleOverrideConfigKey() {
 		return self::CONFIG_KEY_MODULE_OVERRIDES;

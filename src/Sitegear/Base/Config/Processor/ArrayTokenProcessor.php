@@ -60,7 +60,7 @@ class ArrayTokenProcessor extends AbstractPrefixedTokenProcessor {
 	//-- AbstractPrefixedTokenProcessor Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	protected function getTokenResultReplacement($token) {
 		if ($token === self::TOKEN_ALL_DATA) {

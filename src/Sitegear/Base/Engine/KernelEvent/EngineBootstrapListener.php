@@ -20,7 +20,7 @@ use Symfony\Component\HttpKernel\KernelEvents;
 class EngineBootstrapListener extends AbstractEngineKernelListener {
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public static function getSubscribedEvents() {
 		return array(

@@ -38,7 +38,7 @@ class DoctrineTablePrefixSubscriber implements EventSubscriber {
 	//-- EventSubscriber Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	function getSubscribedEvents() {
 		return array( Events::loadClassMetadata );

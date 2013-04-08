@@ -32,14 +32,14 @@ class InArray extends Constraint {
 	//-- Constraint Methods --------------------
 
     /**
-     * {@inheritDoc}
+     * @inheritdoc
      */
     public function getDefaultOption() {
         return 'values';
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritdoc
      */
     public function getRequiredOptions() {
         return array( 'values' );

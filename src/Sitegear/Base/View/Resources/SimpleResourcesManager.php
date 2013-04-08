@@ -46,7 +46,7 @@ class SimpleResourcesManager implements ResourcesManagerInterface {
 	//-- ResourcesManagerInterface Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function registerType($type, $format) {
 		if ($this->isTypeRegistered($type)) {
@@ -60,7 +60,7 @@ class SimpleResourcesManager implements ResourcesManagerInterface {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function registerTypeMap(array $typeMap) {
 		foreach ($typeMap as $type => $format) {
@@ -69,28 +69,28 @@ class SimpleResourcesManager implements ResourcesManagerInterface {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function isTypeRegistered($type) {
 		return array_key_exists($type, $this->types);
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function types() {
 		return array_keys($this->types);
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getFormat($type) {
 		return array_key_exists($type, $this->types) ? $this->types[$type] : null;
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function register($key, $type, $url, $active=false, $requires=array()) {
 		if (!$this->isTypeRegistered($type)) {
@@ -112,7 +112,7 @@ class SimpleResourcesManager implements ResourcesManagerInterface {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function registerMap(array $map) {
 		LoggerRegistry::debug('SimpleResourcesManager registering resource map');
@@ -127,7 +127,7 @@ class SimpleResourcesManager implements ResourcesManagerInterface {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function isRegistered($key) {
 		$result = false;
@@ -138,7 +138,7 @@ class SimpleResourcesManager implements ResourcesManagerInterface {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function isActive($key) {
 		$result = false;
@@ -149,7 +149,7 @@ class SimpleResourcesManager implements ResourcesManagerInterface {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getType($key) {
 		$result = null;
@@ -162,7 +162,7 @@ class SimpleResourcesManager implements ResourcesManagerInterface {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getUrl($key) {
 		$result = null;
@@ -175,7 +175,7 @@ class SimpleResourcesManager implements ResourcesManagerInterface {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getAllUrls($type, $includeInactive=false) {
 		if (!is_null($type) && !$this->isTypeRegistered($type)) {
@@ -191,7 +191,7 @@ class SimpleResourcesManager implements ResourcesManagerInterface {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function activate($key) {
 		LoggerRegistry::debug(sprintf('SimpleResourcesManager activating resource "%s"', $key));
@@ -206,7 +206,7 @@ class SimpleResourcesManager implements ResourcesManagerInterface {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function render($type) {
 		LoggerRegistry::debug(sprintf('SimpleResourcesManager rendering resources of type "%s"', $type));
@@ -224,7 +224,7 @@ class SimpleResourcesManager implements ResourcesManagerInterface {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function isValidType($type) {
 		return preg_match('/^[a-zA-Z0-9\-]+$/', $type) > 0;
@@ -233,7 +233,7 @@ class SimpleResourcesManager implements ResourcesManagerInterface {
 	//-- Magic Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 *
 	 * This implementation allows resources to be rendered by calling a method named for the resource type. For example
 	 * "$view->resources()->css()" renders the resources of type 'css'.  The method name will be converted to

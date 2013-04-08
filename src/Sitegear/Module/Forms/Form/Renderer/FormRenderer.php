@@ -62,7 +62,7 @@ class FormRenderer extends AbstractContainerRenderer {
 	//-- AbstractRenderer Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	protected function renderChildren(array & $output) {
 		foreach ($this->getForm()->getStep($this->getStep())->getFieldsets() as $fieldset) {
@@ -74,7 +74,7 @@ class FormRenderer extends AbstractContainerRenderer {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	protected function normaliseRenderOptions() {
 		return ArrayUtilities::combine(

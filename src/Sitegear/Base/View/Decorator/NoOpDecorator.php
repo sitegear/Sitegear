@@ -15,7 +15,7 @@ namespace Sitegear\Base\View\Decorator;
 class NoOpDecorator implements DecoratorInterface {
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function decorate($content) {
 		return $content;

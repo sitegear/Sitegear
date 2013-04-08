@@ -17,7 +17,7 @@ class MultipleInputField extends AbstractSelectionField {
 	//-- FieldInterface Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function isArrayValue() {
 		return true;

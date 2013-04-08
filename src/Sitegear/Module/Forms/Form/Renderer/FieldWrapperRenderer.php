@@ -51,7 +51,7 @@ class FieldWrapperRenderer extends AbstractContainerRenderer {
 	//-- AbstractRenderer Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	protected function renderChildren(array & $output) {
 		$fieldLabelRenderer = $this->getFieldLabelRenderer();
@@ -63,7 +63,7 @@ class FieldWrapperRenderer extends AbstractContainerRenderer {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	protected function normaliseRenderOptions() {
 		$options = parent::normaliseRenderOptions();

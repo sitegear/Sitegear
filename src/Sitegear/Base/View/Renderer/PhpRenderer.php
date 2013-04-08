@@ -21,7 +21,7 @@ class PhpRenderer implements RendererInterface {
 	//-- RendererInterface Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function supports($path) {
 		$supported = false;
@@ -32,7 +32,7 @@ class PhpRenderer implements RendererInterface {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function render($path, ViewInterface $view) {
 		LoggerRegistry::debug(sprintf('PhpRenderer rendering "%s" with view [%s]', $path, TypeUtilities::describe($view)));

@@ -22,7 +22,7 @@ class StringsViewContext extends AbstractViewContext {
 	//-- ViewContextInterface Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 *
 	 * See class documentation.
 	 */

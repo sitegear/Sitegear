@@ -19,7 +19,7 @@ class EwayModule extends AbstractCoreModule implements PaymentGatewayModuleInter
 	//-- ModuleInterface Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getDisplayName() {
 		return 'eWAY Payment Gateway';
@@ -28,7 +28,7 @@ class EwayModule extends AbstractCoreModule implements PaymentGatewayModuleInter
 	//-- PaymentGatewayModuleInterface --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function createPaymentToken(array $data) {
 		// TODO: Implement createPaymentToken() method.
@@ -36,7 +36,7 @@ class EwayModule extends AbstractCoreModule implements PaymentGatewayModuleInter
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function completePayment($token) {
 		// TODO: Implement completePayment() method.

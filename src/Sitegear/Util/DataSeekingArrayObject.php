@@ -41,7 +41,7 @@ class DataSeekingArrayObject extends \ArrayObject {
 	//-- ArrayAccess Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 *
 	 * This implementation detects the specified offset in this context or any ancestor contexts.
 	 */
@@ -51,7 +51,7 @@ class DataSeekingArrayObject extends \ArrayObject {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 *
 	 * This implementation retrieves the specified offset in this context or any ancestor contexts.
 	 */

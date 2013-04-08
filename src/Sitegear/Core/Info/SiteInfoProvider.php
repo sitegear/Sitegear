@@ -41,56 +41,56 @@ class SiteInfoProvider implements SiteInfoProviderInterface {
 	//-- SiteInfoProviderInterface --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getIdentifier() {
 		return $this->engine->config('site.id');
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getDisplayName() {
 		return $this->engine->config('site.display-name');
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getLogoUrl() {
 		return $this->engine->config('site.logo-url');
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getAdministratorName() {
 		return $this->engine->config('site.administrator.name');
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getAdministratorEmail() {
 		return $this->engine->config('site.administrator.email');
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getSiteEmail($key) {
 		return $this->engine->config('site.email.' . $key);
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getSiteRoot() {
 		return $this->siteRoot;
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getSitePath($location, $resource, ModuleInterface $module=null) {
 		// Ensure the passed-in resource has no leading slashes and no surrounding whitespace
@@ -116,7 +116,7 @@ class SiteInfoProvider implements SiteInfoProviderInterface {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getPublicPath($location, $resource, ModuleInterface $module=null) {
 		// Ensure the passed-in resource has no leading slashes and no surrounding whitespace

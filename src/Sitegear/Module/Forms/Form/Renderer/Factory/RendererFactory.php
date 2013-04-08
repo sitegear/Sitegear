@@ -47,14 +47,14 @@ class RendererFactory implements RendererFactoryInterface {
 	//-- Accessor Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getRenderOptionDefaults($className) {
 		return isset($this->renderOptionDefaults[$className]) ? $this->renderOptionDefaults[$className] : array();
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function setRenderOptionDefaults($className, array $renderOptionDefaults) {
 		$this->renderOptionDefaults[$className] = $renderOptionDefaults;
@@ -64,56 +64,56 @@ class RendererFactory implements RendererFactoryInterface {
 	//-- Factory Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function createFormRenderer(FormInterface $form, $step) {
 		return new FormRenderer($this, $form, $step);
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function createFieldsetRenderer(FieldsetInterface $fieldset) {
 		return new FieldsetRenderer($this, $fieldset);
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function createFieldWrapperRenderer(FieldInterface $field) {
 		return new FieldWrapperRenderer($this, $field);
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function createFieldWrapperReadOnlyRenderer(FieldInterface $field) {
 		return new FieldWrapperReadOnlyRenderer($this, $field);
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function createFieldLabelRenderer(FieldInterface $field) {
 		return new FieldLabelRenderer($this, $field);
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function createFieldErrorsRenderer(FieldInterface $field) {
 		return new FieldErrorsRenderer($this, $field);
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function createButtonsRenderer(FormInterface $form) {
 		return new ButtonsRenderer($this, $form);
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 *
 	 * This implementation directly maps InputField, TextareaField, SelectField and MultipleInputField to their known
 	 * renderer implementations.  Otherwise, the field class name has 'Renderer' appended, which means the renderer
@@ -142,7 +142,7 @@ class RendererFactory implements RendererFactoryInterface {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function createFieldReadOnlyRenderer(FieldInterface $field) {
 		return new FieldReadOnlyRenderer($this, $field);

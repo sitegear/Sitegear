@@ -22,7 +22,7 @@ class SelectFieldRenderer extends AbstractFieldRenderer {
 	//-- RendererInterface Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function render(array & $output) {
 		$output[] = sprintf(
@@ -47,7 +47,7 @@ class SelectFieldRenderer extends AbstractFieldRenderer {
 	//-- AbstractInterface Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	protected function normaliseRenderOptions() {
 		$renderOptions = parent::normaliseRenderOptions();

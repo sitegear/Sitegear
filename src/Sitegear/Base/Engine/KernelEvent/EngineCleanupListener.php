@@ -16,7 +16,7 @@ use Symfony\Component\HttpKernel\KernelEvents;
 class EngineCleanupListener extends AbstractEngineKernelListener {
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public static function getSubscribedEvents() {
 		return array(

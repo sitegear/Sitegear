@@ -71,14 +71,14 @@ class DoctrineModule extends AbstractCoreModule implements DiscreteDataModuleInt
 	//-- ModuleInterface Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getDisplayName() {
 		return 'Doctrine Database Backend';
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function start() {
 		parent::start();
@@ -162,7 +162,7 @@ class DoctrineModule extends AbstractCoreModule implements DiscreteDataModuleInt
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function stop() {
 		parent::stop();
@@ -173,7 +173,7 @@ class DoctrineModule extends AbstractCoreModule implements DiscreteDataModuleInt
 	//-- DiscreteDataModuleInterface Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function load($selector) {
 		LoggerRegistry::debug(sprintf('DoctrineModule loading data from "%s"', $selector));
@@ -191,7 +191,7 @@ class DoctrineModule extends AbstractCoreModule implements DiscreteDataModuleInt
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function save($selector, $value) {
 		LoggerRegistry::debug(sprintf('DoctrineModule saving data to "%s"', $selector));
@@ -203,7 +203,7 @@ class DoctrineModule extends AbstractCoreModule implements DiscreteDataModuleInt
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function upload($selector) {
 		throw new \BadMethodCallException('Doctrine module does not support file upload.');

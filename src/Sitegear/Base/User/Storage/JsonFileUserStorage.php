@@ -49,14 +49,14 @@ class JsonFileUserStorage implements UserStorageInterface {
 	//-- UserStorageInterface Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function hasUser($email) {
 		return isset($this->users[$email]);
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function createUser($email, array $data) {
 		LoggerRegistry::debug('JsonFileUserStorage creating user');
@@ -72,7 +72,7 @@ class JsonFileUserStorage implements UserStorageInterface {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function deleteUser($email) {
 		LoggerRegistry::debug('JsonFileUserStorage deleting user');
@@ -84,14 +84,14 @@ class JsonFileUserStorage implements UserStorageInterface {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getData($email) {
 		return $this->users[$email]['data'];
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function setData($email, array $data) {
 		$this->users[$email]['data'] = $data;
@@ -99,14 +99,14 @@ class JsonFileUserStorage implements UserStorageInterface {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getPrivileges($email) {
 		return $this->users[$email]['privileges'];
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function setPrivileges($email, array $privileges) {
 		$this->users[$email]['privileges'] = $privileges;
@@ -114,7 +114,7 @@ class JsonFileUserStorage implements UserStorageInterface {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function grantPrivilege($email, $privilege) {
 		$this->users[$email]['privileges'][] = $privilege;
@@ -122,7 +122,7 @@ class JsonFileUserStorage implements UserStorageInterface {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function revokePrivilege($email, $privilege) {
 		$this->users[$email]['privileges'] = array_filter($this->getPrivileges($email), function($item) use ($privilege) {

@@ -20,7 +20,7 @@ class SalesTaxModule extends AbstractCoreModule implements PurchaseAdjustmentPro
 	//-- ModuleInterface Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getDisplayName() {
 		return 'Sales Tax';
@@ -29,14 +29,14 @@ class SalesTaxModule extends AbstractCoreModule implements PurchaseAdjustmentPro
 	//-- PurchaseAdjustmentProviderModuleInterface Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function isVisibleUnset() {
 		return true;
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getAdjustmentLabel() {
 		$rateLabel = sprintf('%s%%', $this->config('rate'));
@@ -44,7 +44,7 @@ class SalesTaxModule extends AbstractCoreModule implements PurchaseAdjustmentPro
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 *
 	 * @param \Sitegear\Module\Customer\Model\TransactionItem[] $items
 	 */
@@ -60,7 +60,7 @@ class SalesTaxModule extends AbstractCoreModule implements PurchaseAdjustmentPro
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function isIncludedAmount() {
 		return $this->config('included');

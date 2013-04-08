@@ -102,14 +102,14 @@ class Form implements FormInterface {
 	//-- FormInterface Methods --------------------
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getSubmitUrl() {
 		return $this->submitUrl;
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function setSubmitUrl($submitUrl) {
 		$this->submitUrl = $submitUrl;
@@ -117,14 +117,14 @@ class Form implements FormInterface {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getTargetUrl() {
 		return $this->targetUrl;
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function setTargetUrl($targetUrl) {
 		$this->targetUrl = $targetUrl;
@@ -132,14 +132,14 @@ class Form implements FormInterface {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getCancelUrl() {
 		return $this->cancelUrl;
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function setCancelUrl($cancelUrl) {
 		$this->cancelUrl = $cancelUrl;
@@ -147,14 +147,14 @@ class Form implements FormInterface {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getMethod() {
 		return $this->method;
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function setMethod($method, $force=false) {
 		$method = strtoupper($method);
@@ -166,14 +166,14 @@ class Form implements FormInterface {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getSubmitButtonAttributes() {
 		return $this->submitButtonAttributes;
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function setSubmitButtonAttributes(array $submitButtonAttributes) {
 		$this->submitButtonAttributes = $submitButtonAttributes;
@@ -181,14 +181,14 @@ class Form implements FormInterface {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getResetButtonAttributes() {
 		return $this->resetButtonAttributes;
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function setResetButtonAttributes(array $resetButtonAttributes) {
 		$this->resetButtonAttributes = $resetButtonAttributes;
@@ -196,14 +196,14 @@ class Form implements FormInterface {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getBackButtonAttributes() {
 		return $this->backButtonAttributes;
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function setBackButtonAttributes(array $backButtonAttributes) {
 		$this->backButtonAttributes = $backButtonAttributes;
@@ -211,14 +211,14 @@ class Form implements FormInterface {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getField($name) {
 		return isset($this->fields[$name]) ? $this->fields[$name] : null;
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function addField(FieldInterface $field) {
 		$this->fields[$field->getName()] = $field;
@@ -226,7 +226,7 @@ class Form implements FormInterface {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function removeField($field) {
 		$fieldName = is_string($field) ? $field : $field->getName();
@@ -235,49 +235,49 @@ class Form implements FormInterface {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getValues() {
 		return $this->values;
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getFieldValue($fieldName, $default=null) {
 		return isset($this->values[$fieldName]) ? $this->values[$fieldName] : $default;
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getErrors() {
 		return $this->errors;
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getFieldErrors($fieldName) {
 		return isset($this->errors[$fieldName]) ? $this->errors[$fieldName] : array();
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getStepsCount() {
 		return sizeof($this->steps);
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function getStep($index) {
 		return $this->steps[$index];
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function addStep(StepInterface $step, $index=null) {
 		if (is_null($index)) {
@@ -289,7 +289,7 @@ class Form implements FormInterface {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @inheritdoc
 	 */
 	public function removeStep($step) {
 		$index = is_int($step) ? $step : array_search($step, $this->steps);
