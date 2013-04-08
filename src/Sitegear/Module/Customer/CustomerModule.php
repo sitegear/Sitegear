@@ -84,7 +84,7 @@ class CustomerModule extends AbstractCoreModule {
 		$type = $request->request->get('type');
 		$id = $request->request->get('id');
 		// Get the form URL.
-		$formUrl = $request->query->get('form-url');
+		$formUrl = UrlUtilities::absoluteUrl($request->query->get('form-url'), $request);
 		// Setup the generated form.
 		$form = $this->buildAddTrolleyItemForm($moduleName, $type, $id, $formUrl);
 		$formKey = $this->config('add-trolley-item.form-key');
@@ -103,7 +103,7 @@ class CustomerModule extends AbstractCoreModule {
 			$this->getEngine()->forms()->registry()->resetForm($formKey);
 		}
 		// Go back to the page where the submission was made.
-		return new RedirectResponse($request->getUriForPath(sprintf('/%s', $formUrl)));
+		return new RedirectResponse(UrlUtilities::absoluteUrl($formUrl, $request));
 	}
 
 	/**
@@ -118,7 +118,7 @@ class CustomerModule extends AbstractCoreModule {
 		// Remove the item from the stored trolley data.
 		$this->trolley()->removeItem(intval($request->request->get('index')));
 		// Go back to the page where the submission was made.
-		return new RedirectResponse($request->getUriForPath($this->getRouteUrl('trolley')));
+		return new RedirectResponse(UrlUtilities::absoluteUrl($this->getRouteUrl('trolley'), $request));
 	}
 
 	/**
@@ -133,7 +133,7 @@ class CustomerModule extends AbstractCoreModule {
 		// Update the stored trolley data.
 		$this->trolley()->modifyItem(intval($request->request->get('index')), intval($request->request->get('quantity')));
 		// Go back to the page where the submission was made.
-		return new RedirectResponse($request->getUriForPath($this->getRouteUrl('trolley')));
+		return new RedirectResponse(UrlUtilities::absoluteUrl($this->getRouteUrl('trolley'), $request));
 	}
 
 	/**
@@ -221,7 +221,7 @@ class CustomerModule extends AbstractCoreModule {
 	public function addTrolleyItemFormComponent(ViewInterface $view, Request $request, $moduleName, $type, $id) {
 		LoggerRegistry::debug('CustomerModule::addTrolleyItemFormComponent');
 		$formKey = $view['form-key'] = $this->config('add-trolley-item.form-key');
-		$this->getEngine()->forms()->registry()->registerForm($formKey, $this->buildAddTrolleyItemForm($moduleName, $type, $id, $request->getPathInfo()));
+		$this->getEngine()->forms()->registry()->registerForm($formKey, $this->buildAddTrolleyItemForm($moduleName, $type, $id, $request->getUri()));
 	}
 
 	//-- Public Methods --------------------
@@ -262,7 +262,7 @@ class CustomerModule extends AbstractCoreModule {
 	public function buildAddTrolleyItemForm($moduleName, $type, $id, $formUrl) {
 		LoggerRegistry::debug('CustomerModule::buildAddTrolleyItemForm');
 		$submitUrl = $this->getRouteUrl('add-trolley-item');
-		$submitUrl = UrlUtilities::generateLinkWithReturnUrl($submitUrl, ltrim($formUrl, '/'), 'form-url');
+		$submitUrl = UrlUtilities::generateLinkWithReturnUrl($submitUrl, $formUrl, 'form-url');
 		$formBuilder = new AddTrolleyItemFormBuilder($this->getEngine()->forms(), $this->config('add-trolley-item.form-key'));
 		$form = $formBuilder->buildForm(array(
 			'module-name' => $moduleName,

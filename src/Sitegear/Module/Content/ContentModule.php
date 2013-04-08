@@ -13,6 +13,7 @@ use Sitegear\Base\View\ViewInterface;
 use Sitegear\Core\Module\AbstractCoreModule;
 use Sitegear\Util\LoggerRegistry;
 
+use Sitegear\Util\UrlUtilities;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
@@ -93,9 +94,9 @@ class ContentModule extends AbstractCoreModule {
 	 */
 	public function baseLinksComponent(ViewInterface $view, Request $request) {
 		LoggerRegistry::debug('ContentModule::baseLinksComponent');
-		$view['base-url'] = $request->getUriForPath('/');
+		$view['base-url'] = UrlUtilities::absoluteUrl('/', $request);
 		$view['canonical-url'] = $request->getUri(); /* TODO Canonicalise me */;
-		$view['favicon-url'] = $request->getUriForPath('/favicon.ico');
+		$view['favicon-url'] = UrlUtilities::absoluteUrl('/favicon.ico', $request);
 	}
 
 	//-- AbstractUrlMountableModule Methods --------------------

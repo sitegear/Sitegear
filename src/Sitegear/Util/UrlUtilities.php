@@ -18,21 +18,20 @@ final class UrlUtilities {
 	//-- Utility Methods --------------------
 
 	/**
-	 * Convert the given URL to an absolute URL, using the given $baseUrl if $url is not already absolute (including
-	 * network URLs).
+	 * Convert the given URL to an absolute URL, using base URL from the given Request if the URL is not already \
+	 * absolute (including network URLs).
 	 *
 	 * @param string $url A URL, either absolute or relative.
-	 * @param string $baseUrl An absolute URL, the site base URL.
+	 * @param Request $request An absolute URL, the site base URL.
 	 *
 	 * @return string Absolute URL.
 	 */
-	public static function absoluteUrl($url, $baseUrl) {
+	public static function absoluteUrl($url, Request $request) {
 		// Check for an absolute URL or a network URL, these get returned directly.
-		if (preg_match('/^https?:/', $url) || substr($url, 0, 2) === '//') {
+		if (preg_match('/^https?:/i', $url) || substr($url, 0, 2) === '//') {
 			return $url;
 		}
-		// Normalise path separators.
-		return rtrim($baseUrl, '/') . '/' . ltrim($url, '/');
+		return $request->getUriForPath('/' . ltrim($url, '/'));
 	}
 
 
@@ -53,7 +52,7 @@ final class UrlUtilities {
 		if ($linkUrl instanceof Request) {
 			$linkUrl = $linkUrl->getUri();
 		}
-		$existingReturnUrl = self::getReturnUrl($returnUrl, $returnUrlParam);
+		$existingReturnUrl = self::getReturnUrl($returnUrl, $returnUrlParam, null, false);
 		if (!is_null($existingReturnUrl)) {
 			$returnUrl = $existingReturnUrl;
 		} elseif ($returnUrl instanceof Request) {
@@ -72,10 +71,11 @@ final class UrlUtilities {
 	 *   used ('return').
 	 * @param string $default Default URL to return if no return parameter is found, null by default.  If no default is
 	 *   given, and the $request parameter is a Request object, then the home page URI is used as a default.
+	 * @param boolean $absolute Whether to return an absolute URL (true, the default) or the URL as given.
 	 *
 	 * @return string Return URL extracted from the given URL, or null if no such return URL parameter is set.
 	 */
-	public static function getReturnUrl($request, $returnUrlParam=null, $default=null) {
+	public static function getReturnUrl($request, $returnUrlParam=null, $default=null, $absolute=true) {
 		if ($request instanceof Request) {
 			if (is_null($default)) {
 				$default = $request->getSchemeAndHttpHost() . $request->getBaseUrl();
@@ -83,7 +83,8 @@ final class UrlUtilities {
 		} else {
 			$request = Request::create($request);
 		}
-		return $request->get($returnUrlParam ?: 'return', $default);
+		$result = $request->get($returnUrlParam ?: 'return', $default);
+		return $absolute ? self::absoluteUrl($result, $request) : $result;
 	}
 
 	/**
