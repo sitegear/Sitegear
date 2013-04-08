@@ -141,7 +141,7 @@ class FormsModule extends AbstractCoreModule {
 				// redirect to the final target URL.
 				$this->registry()->resetForm($formKey);
 				if (!is_null($form->getTargetUrl())) {
-					$targetUrl = $request->getUriForPath('/' . $form->getTargetUrl());
+					$targetUrl = UrlUtilities::absoluteUrl($form->getTargetUrl(), $request->getBaseUrl());
 				}
 			} else {
 				// The form is not yet complete, so update the session.

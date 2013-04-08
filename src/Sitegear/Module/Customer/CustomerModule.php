@@ -168,7 +168,7 @@ class CustomerModule extends AbstractCoreModule {
 				return new RedirectResponse($this->getEngine()->userIntegration()->getAuthenticationLinkUrl('login', $request));
 			}
 		} else {
-			return new RedirectResponse($request->getUriForPath($this->getRouteUrl('trolley')));
+			return new RedirectResponse($this->getRouteUrl('trolley'));
 		}
 	}
 
