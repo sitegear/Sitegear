@@ -127,6 +127,7 @@ class Engine extends AbstractConfigurableEngine {
 	 * {@inheritDoc}
 	 */
 	public function renderPage(Request $request) {
+		LoggerRegistry::debug('Engine rendering page');
 		return Response::create(
 			$this->getViewFactory()->getPage()
 					->applyDecorators($this->config('view.page.decorators', array()))
