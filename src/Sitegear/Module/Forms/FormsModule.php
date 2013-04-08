@@ -14,6 +14,7 @@ use Sitegear\Base\Form\Processor\FormProcessorInterface;
 use Sitegear\Base\Form\Renderer\Factory\RendererFactoryInterface;
 use Sitegear\Core\Module\AbstractCoreModule;
 use Sitegear\Module\Forms\Form\Renderer\FormRenderer;
+use Sitegear\Util\ArrayUtilities;
 use Sitegear\Util\UrlUtilities;
 use Sitegear\Util\NameUtilities;
 use Sitegear\Util\TypeUtilities;
@@ -217,6 +218,8 @@ class FormsModule extends AbstractCoreModule {
 		}
 		// Setup the view.
 		$view['form-renderer'] = $this->createRendererFactory()->createFormRenderer($form, $currentStep);
+		// TODO Something better here
+		$view['form-renderer']->setRenderOption('attributes', ArrayUtilities::mergeHtmlAttributes($view['form-renderer']->getRenderOption('attributes'), array( 'id' => $formKey . '-form' )));
 		$view['values'] = array_merge($this->registry()->getValues($formKey), $values ?: array());
 		$view['errors'] = array_merge($this->registry()->getErrors($formKey), $errors ?: array());
 		// Remove errors as they are about to be displayed (they are already set in the view), and we don't want to

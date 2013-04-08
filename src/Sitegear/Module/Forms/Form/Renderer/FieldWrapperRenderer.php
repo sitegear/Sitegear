@@ -11,6 +11,7 @@ namespace Sitegear\Module\Forms\Form\Renderer;
 use Sitegear\Base\Form\Field\FieldInterface;
 use Sitegear\Base\Form\Renderer\Factory\RendererFactoryInterface;
 use Sitegear\Module\Forms\Form\Renderer\AbstractContainerRenderer;
+use Sitegear\Util\ArrayUtilities;
 use Sitegear\Util\TypeUtilities;
 
 /**
@@ -59,6 +60,18 @@ class FieldWrapperRenderer extends AbstractContainerRenderer {
 		$fieldErrorsRenderer->render($output);
 		$fieldRenderer = $this->getFieldRenderer();
 		$fieldRenderer->render($output);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	protected function normaliseRenderOptions() {
+		$options = parent::normaliseRenderOptions();
+		$options['attributes'] = ArrayUtilities::mergeHtmlAttributes(
+			array( 'id' => $this->getField()->getName() . '-field' ),
+			$options['attributes']
+		);
+		return $options;
 	}
 
 	//-- Internal Methods --------------------
