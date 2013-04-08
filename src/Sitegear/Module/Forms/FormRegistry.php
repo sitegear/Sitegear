@@ -183,7 +183,8 @@ class FormRegistry {
 					break;
 				default: // No other values are ever assigned to 'type'
 			}
-		} else {
+		}
+		if (!isset($this->forms[$formKey]['form'])) {
 			throw new \InvalidArgumentException(sprintf('FormRegistry cannot retrieve form with unknown key "%s"', $formKey));
 		}
 		return $this->forms[$formKey]['form'];
