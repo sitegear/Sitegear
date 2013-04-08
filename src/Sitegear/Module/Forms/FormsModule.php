@@ -219,7 +219,10 @@ class FormsModule extends AbstractCoreModule {
 		// Setup the view.
 		$view['form-renderer'] = $this->createRendererFactory()->createFormRenderer($form, $currentStep);
 		// TODO Something better here
-		$view['form-renderer']->setRenderOption('attributes', ArrayUtilities::mergeHtmlAttributes($view['form-renderer']->getRenderOption('attributes'), array( 'id' => $formKey . '-form' )));
+		$view['form-renderer']->setRenderOption('attributes', ArrayUtilities::mergeHtmlAttributes(
+			array( 'id' => $formKey . '-form' ),
+			$view['form-renderer']->getRenderOption('attributes')
+		));
 		$view['values'] = array_merge($this->registry()->getValues($formKey), $values ?: array());
 		$view['errors'] = array_merge($this->registry()->getErrors($formKey), $errors ?: array());
 		// Remove errors as they are about to be displayed (they are already set in the view), and we don't want to
