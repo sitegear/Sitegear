@@ -71,7 +71,7 @@ abstract class AbstractFormsModuleFormBuilder implements FormBuilderInterface {
 	 * @return mixed|null
 	 */
 	public function getFieldValue($fieldName, $defaultValue=null) {
-		return $this->getFormsModule()->getFieldValue($this->getFormKey(), $fieldName) ?: $defaultValue;
+		return $this->getFormsModule()->registry()->getFieldValue($this->getFormKey(), $fieldName) ?: $defaultValue;
 	}
 
 	/**
@@ -82,7 +82,7 @@ abstract class AbstractFormsModuleFormBuilder implements FormBuilderInterface {
 	 * @return string[]|null
 	 */
 	public function getFieldErrors($fieldName) {
-		return $this->getFormsModule()->getFieldErrors($this->getFormKey(), $fieldName);
+		return $this->getFormsModule()->registry()->getFieldErrors($this->getFormKey(), $fieldName);
 	}
 
 	/**
