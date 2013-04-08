@@ -374,17 +374,17 @@ class View extends AbstractView {
 			return $this->render();
 		} catch (\Exception $exception) {
 			// Throwing any Exception from __toString() is a fatal error (bravo, php, bra-vo) so we have no other
-			// choice but to catch any exception here and do something with it.  In development environments, it is
-			// probably useful to see the error message, but in other environments we should hide it.
-			if ($this->getEngine()->getEnvironmentInfo()->isDevMode()) {
-				return HtmlUtilities::exception(
-					$exception,
-					$this->getEngine()->getSiteInfo()->getAdministratorName(),
-					$this->getEngine()->getSiteInfo()->getAdministratorEmail()
-				);
-			} else {
-				return '';
+			// choice but to catch any exception here and do something with it.  Delete any buffered content and
+			// display a plain error page.
+			// TODO Make this a proper error-500 page but prevent feedback loops
+			while (ob_get_level() > 1) {
+				ob_end_clean();
 			}
+			return HtmlUtilities::exception(
+				$exception,
+				$this->getEngine()->getSiteInfo()->getAdministratorName(),
+				$this->getEngine()->getSiteInfo()->getAdministratorEmail()
+			);
 		}
 	}
 

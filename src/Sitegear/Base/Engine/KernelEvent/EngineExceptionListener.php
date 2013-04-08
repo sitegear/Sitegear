@@ -49,6 +49,11 @@ class EngineExceptionListener extends AbstractEngineKernelListener {
 		LoggerRegistry::debug('EngineExceptionListener performing handleException() on EXCEPTION event');
 		$exception = $event->getException();
 		try {
+			// Delete any buffered page content.
+			while (ob_get_level() > 1) {
+				ob_end_clean();
+			}
+
 			// Determine the status code to use for the error page (and which error page is displayed).
 			$statusCode = ($exception instanceof HttpException) ? $exception->getStatusCode() :
 					(($exception instanceof FileNotFoundException) ? 404 : 500);
@@ -77,6 +82,11 @@ class EngineExceptionListener extends AbstractEngineKernelListener {
 			$event->setResponse($renderEvent->getResponse());
 		} catch (\Exception $e) {
 			try {
+				// Delete any buffered page content.
+				while (ob_get_level() > 1) {
+					ob_end_clean();
+				}
+
 				// If there is an error above, try to display the fallback error page, i.e. black-and-white error
 				// message.
 				$event->setResponse(Response::create(HtmlUtilities::exception(
