@@ -252,7 +252,7 @@ return array(
 		/**
 		 * Form key to use for the "add trolley item" form.
 		 */
-		'form-key' => 'customer.add-trolley-item',
+		'form-key' => 'add-trolley-item',
 
 		/**
 		 * Text to display on the no-value option.  Set to an empty string to display no text, or to null to omit the
@@ -285,7 +285,7 @@ return array(
 		/**
 		 * Form key to use for the checkout form.
 		 */
-		'form-key' => 'customer.checkout',
+		'form-key' => 'checkout',
 
 		/**
 		 * Whether or not to activate the script to show and hide the delivery address fields when the "delivery
