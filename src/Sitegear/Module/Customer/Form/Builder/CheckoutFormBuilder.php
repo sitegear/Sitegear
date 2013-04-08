@@ -39,8 +39,8 @@ class CheckoutFormBuilder extends FormBuilder {
 		// Create the form object.
 		$form = new Form(
 			$this->getSubmitUrl(isset($formDefinition['form-url']) ? $formDefinition['form-url'] : null),
-			$formDefinition['target-url'],
-			$formDefinition['cancel-url'],
+			isset($formDefinition['target-url']) ? $formDefinition['target-url'] : null,
+			isset($formDefinition['cancel-url']) ? $formDefinition['cancel-url'] : null,
 			null,
 			$this->getFormsModule()->registry()->getValues($this->getFormKey()),
 			$this->getFormsModule()->registry()->getErrors($this->getFormKey()),
