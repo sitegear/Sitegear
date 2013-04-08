@@ -340,6 +340,24 @@
 			}
 		]
 	},
+	"payment-method": {
+		"type": "multiple-input",
+		"multiple": false,
+		"label": "Please select your payment method",
+		"settings": {
+			"values": [
+				{
+					"value": "card",
+					"label": "Credit Card"
+				},
+				{
+					"value": "offline",
+					"label": "Cheque or Direct Deposit"
+				}
+			],
+			"value": "card"
+		}
+	},
 	"card-number": {
 		"type": "input",
 		"label": "Credit Card Number",
@@ -351,12 +369,34 @@
 		},
 		"constraints": [
 			{
+				"conditions": [
+					{
+						"condition": "exact-match",
+						"options": {
+							"field": "payment-method",
+							"values": [
+								"card"
+							]
+						}
+					}
+				],
 				"name": "not-blank",
 				"options": {
 					"message": "Please provide your credit card number"
 				}
 			},
 			{
+				"conditions": [
+					{
+						"condition": "exact-match",
+						"options": {
+							"field": "payment-method",
+							"values": [
+								"card"
+							]
+						}
+					}
+				],
 				"name": "regex",
 				"options": {
 					"pattern": "/^\\d{15}\\d?$/",
@@ -364,6 +404,17 @@
 				}
 			},
 			{
+				"conditions": [
+					{
+						"condition": "exact-match",
+						"options": {
+							"field": "payment-method",
+							"values": [
+								"card"
+							]
+						}
+					}
+				],
 				"name": "luhn",
 				"options": {
 					"message": "Please provide a valid credit card number"
@@ -382,12 +433,34 @@
 		},
 		"constraints": [
 			{
+				"conditions": [
+					{
+						"condition": "exact-match",
+						"options": {
+							"field": "payment-method",
+							"values": [
+								"card"
+							]
+						}
+					}
+				],
 				"name": "not-blank",
 				"options": {
 					"message": "Please provide your credit card verification code"
 				}
 			},
 			{
+				"conditions": [
+					{
+						"condition": "exact-match",
+						"options": {
+							"field": "payment-method",
+							"values": [
+								"card"
+							]
+						}
+					}
+				],
 				"name": "regex",
 				"options": {
 					"pattern": "/^\\d{3}\\d?$/",
@@ -418,6 +491,17 @@
 		},
 		"constraints": [
 			{
+				"conditions": [
+					{
+						"condition": "exact-match",
+						"options": {
+							"field": "payment-method",
+							"values": [
+								"card"
+							]
+						}
+					}
+				],
 				"name": "not-blank",
 				"options": {
 					"message": "Please provide your full name as printed on your credit card"

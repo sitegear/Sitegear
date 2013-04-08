@@ -325,6 +325,12 @@ return array(
 			'delivery' => '{{ include:$module/config/checkout-form/delivery.json }}',
 
 			/**
+			 * Contains a single selection field which indicates the payment type.  Can be omitted if the only method
+			 * available is only with credit card.
+			 */
+			'payment-method' => '{{ include:$module/config/checkout-form/payment-method.json }}',
+
+			/**
 			 * Contains fields that are required for payment, i.e. credit card name and numbers.
 			 */
 			'payment' => '{{ include:$module/config/checkout-form/payment.json }}',
