@@ -9,15 +9,34 @@
  * Checkout form script.
  */
 (function($) {
+
+	/**
+	 * Toggle fields immediately without animation, and setup a change event to toggle with animation when any of the
+	 * toggles are changed.
+	 *
+	 * @param $fieldset object
+	 * @param $toggle object
+	 * @param $additionalToggles object
+	 */
+	var initFields = function($fieldset, $toggle, $additionalToggles) {
+		toggleFields($fieldset, $toggle.change(function() {
+			toggleFields($fieldset, $toggle.is(':checked'), true);
+		}).is(':checked'), false);
+		$additionalToggles.change(function() {
+			$toggle.change();
+		});
+	};
+
 	/**
 	 * Show or hide the fields based on the value of `show`, with animation or instant toggling based on the value of
 	 * `animate`.
 	 *
+	 * @param $fieldset object
 	 * @param show boolean
 	 * @param animate boolean
 	 */
-	var toggleFields = function(show, animate) {
-		var $fields = $('fieldset#sitegear-fieldset-delivery-address div.field');
+	var toggleFields = function($fieldset, show, animate) {
+		var $fields = $fieldset.find('div.field');
 		if (animate) {
 			$fields.slideToggle(show);
 		} else {
@@ -27,12 +46,13 @@
 	};
 
 	/**
-	 * Setup the "delivery address is different" checkbox to show/hide the delivery address fields.  Toggle fields
-	 * immediately without animation, and setup a change event to toggle with animation when the checkbox is changed.
+	 * Setup the "delivery address is different" checkbox to show/hide the delivery address fields.
+	 *
+	 * Also setup the "payment method" radio buttons to show/hide the credit card details fields.
 	 */
 	$(function() {
-		toggleFields($('input#delivery-address-different-value-yes').change(function() {
-			toggleFields($(this).is(':checked'), true);
-		}).is(':checked'), false);
+		initFields($('fieldset#sitegear-fieldset-delivery-address'), $('input#delivery-address-different-value-yes'), $());
+		initFields($('fieldset#sitegear-fieldset-card-details'), $('input#payment-method-value-card'), $('input#payment-method-value-offline'));
 	});
+
 }(jQuery));
