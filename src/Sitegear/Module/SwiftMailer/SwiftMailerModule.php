@@ -124,11 +124,13 @@ class SwiftMailerModule extends AbstractCoreModule {
 	 */
 	public function sendTemplate(Request $request, $subject, $addresses, $template, $data, $contentType=null, $charset=null) {
 		LoggerRegistry::debug(sprintf('SwiftMailerModule sending email from template %s', $template));
+		$request->attributes->set('_module', $this->getEngine()->getDefaultContentModule());
+		$request->attributes->set('_view', $template);
 		$view = $this->getEngine()->getViewFactory()->buildView($request);
 		foreach ($data as $key => $value) {
 			$view[$key] = $value;
 		}
-		$body = $view->pushTarget('template')->pushTarget($template);
+		$body = $view->pushTarget('template')->pushTarget($template)->render();
 		return $this->send($subject, $addresses, $body, $contentType, $charset);
 	}
 
