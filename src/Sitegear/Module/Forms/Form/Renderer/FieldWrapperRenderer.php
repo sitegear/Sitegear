@@ -10,6 +10,7 @@ namespace Sitegear\Module\Forms\Form\Renderer;
 
 use Sitegear\Base\Form\Field\FieldInterface;
 use Sitegear\Base\Form\Renderer\Factory\RendererFactoryInterface;
+use Sitegear\Base\Form\Renderer\FieldRendererInterface;
 use Sitegear\Module\Forms\Form\Renderer\AbstractContainerRenderer;
 use Sitegear\Util\ArrayUtilities;
 use Sitegear\Util\TypeUtilities;
@@ -19,7 +20,7 @@ use Sitegear\Util\TypeUtilities;
  * the field's label, error messages, and the field itself.  The field renderer is determined dynamically based on the
  * class name of the field implementation.
  */
-class FieldWrapperRenderer extends AbstractContainerRenderer {
+class FieldWrapperRenderer extends AbstractContainerRenderer implements FieldRendererInterface {
 
 	//-- Attributes --------------------
 
@@ -39,7 +40,7 @@ class FieldWrapperRenderer extends AbstractContainerRenderer {
 		parent::__construct($factory);
 	}
 
-	//-- Public Methods --------------------
+	//-- FieldRendererInterface Methods --------------------
 
 	/**
 	 * @return \Sitegear\Base\Form\Field\FieldInterface
