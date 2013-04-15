@@ -8,7 +8,7 @@
 
 namespace Sitegear\View\Context;
 
-use Sitegear\Resources\ResourceLocations;
+use Sitegear\Info\ResourceLocations;
 use Sitegear\View\ViewInterface;
 use Sitegear\View\Renderer\Registry\RendererRegistryInterface;
 

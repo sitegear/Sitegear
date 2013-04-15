@@ -10,7 +10,7 @@ namespace Sitegear\Module\File;
 
 use Sitegear\Module\BootstrapModuleInterface;
 use Sitegear\Module\DiscreteDataModuleInterface;
-use Sitegear\Resources\ResourceLocations;
+use Sitegear\Info\ResourceLocations;
 use Sitegear\Engine\SitegearEngine;
 use Sitegear\Module\AbstractSitegearModule;
 use Sitegear\Util\ExtensionMimeTypeGuesser;

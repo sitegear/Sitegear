@@ -8,7 +8,7 @@
 
 namespace Sitegear\Module\ResourcesIntegration;
 
-use Sitegear\Resources\ResourceLocations;
+use Sitegear\Info\ResourceLocations;
 use Sitegear\Engine\SitegearEngine;
 use Sitegear\Module\AbstractSitegearModule;
 use Sitegear\Util\LoggerRegistry;

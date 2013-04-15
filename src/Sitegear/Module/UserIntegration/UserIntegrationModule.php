@@ -8,7 +8,7 @@
 
 namespace Sitegear\Module\UserIntegration;
 
-use Sitegear\Resources\ResourceLocations;
+use Sitegear\Info\ResourceLocations;
 use Sitegear\View\ViewInterface;
 use Sitegear\Module\AbstractSitegearModule;
 use Sitegear\Util\TokenUtilities;

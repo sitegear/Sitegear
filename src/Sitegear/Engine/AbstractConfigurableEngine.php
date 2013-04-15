@@ -14,7 +14,7 @@ use Sitegear\Config\Processor\EngineTokenProcessor;
 use Sitegear\Config\Processor\ConfigTokenProcessor;
 use Sitegear\Config\ConfigLoader;
 use Sitegear\Config\Container\SimpleConfigContainer;
-use Sitegear\Resources\ResourceLocations;
+use Sitegear\Info\ResourceLocations;
 use Sitegear\Util\ExtensionMimeTypeGuesser;
 use Sitegear\Util\TypeUtilities;
 use Sitegear\Util\NameUtilities;

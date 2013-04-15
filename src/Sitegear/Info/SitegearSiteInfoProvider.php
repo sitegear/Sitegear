@@ -10,7 +10,7 @@ namespace Sitegear\Info;
 
 use Sitegear\Info\SiteInfoProviderInterface;
 use Sitegear\Module\ModuleInterface;
-use Sitegear\Resources\ResourceLocations;
+use Sitegear\Info\ResourceLocations;
 use Sitegear\Engine\SitegearEngine;
 use Sitegear\Util\NameUtilities;
 

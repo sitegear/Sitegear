@@ -8,7 +8,7 @@
 
 namespace Sitegear\Module\Locations;
 
-use Sitegear\Resources\ResourceLocations;
+use Sitegear\Info\ResourceLocations;
 use Sitegear\View\ViewInterface;
 use Sitegear\Module\AbstractSitegearModule;
 use Sitegear\Module\Locations\Repository\ItemRepository;

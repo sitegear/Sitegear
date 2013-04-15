@@ -9,7 +9,7 @@
 namespace Sitegear\Config\Processor;
 
 use Sitegear\Config\ConfigLoader;
-use Sitegear\Resources\ResourceLocations;
+use Sitegear\Info\ResourceLocations;
 
 /**
  * Token processor that allows decomposition of configuration files into smaller files.  The file is loaded and merged

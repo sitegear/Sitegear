@@ -6,7 +6,7 @@
  * http://sitegear.org/
  */
 
-namespace Sitegear\Resources;
+namespace Sitegear\Info;
 
 /**
  * Defines the locations that a resource may exist in.  These locations can be searched one at a time for a given

@@ -16,7 +16,7 @@ use Sitegear\Config\Processor\EngineTokenProcessor;
 use Sitegear\Form\Field\FieldInterface;
 use Sitegear\Form\FormInterface;
 use Sitegear\Module\ModuleInterface;
-use Sitegear\Resources\ResourceLocations;
+use Sitegear\Info\ResourceLocations;
 use Sitegear\Module\Forms\Form\Builder\FormBuilder;
 use Sitegear\Util\FileUtilities;
 use Sitegear\Util\LoggerRegistry;

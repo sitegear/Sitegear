@@ -11,7 +11,7 @@ namespace Sitegear\Module;
 use Sitegear\Module\AbstractUrlMountableModule;
 use Sitegear\Config\Container\SimpleConfigContainer;
 use Sitegear\Engine\EngineInterface;
-use Sitegear\Resources\ResourceLocations;
+use Sitegear\Info\ResourceLocations;
 use Sitegear\View\ViewInterface;
 use Sitegear\Module\Doctrine\DoctrineModule;
 use Sitegear\Util\LoggerRegistry;
