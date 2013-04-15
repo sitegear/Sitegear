@@ -30,7 +30,7 @@ class SignOffDecorator implements DecoratorInterface {
 	 */
 	public function decorate($content, ViewInterface $view=null, Request $request=null) {
 		$renderTime = $this->formatTime($view->getEngine()->getTimestamp());
-		$version = $view->getEngine()->getSitegearInfo()->getSitegearVersionIdentifier();
+		$version = $view->getEngine()->getApplicationInfo()->getSitegearVersionIdentifier();
 		$userManager = $view->getEngine()->getUserManager();
 		$comment = sprintf(
 			'<!-- %s%s :: %s :: %s -->%s<!-- %s :: %s :: %s -->',
@@ -39,7 +39,7 @@ class SignOffDecorator implements DecoratorInterface {
 			$userManager->isLoggedIn() ? 'logged in as ' . ($userManager->getLoggedInUserEmail() ?: 'guest') : 'not logged in',
 			$renderTime,
 			PHP_EOL,
-			$view->getEngine()->getSitegearInfo()->getSitegearHomepage(),
+			$view->getEngine()->getApplicationInfo()->getSitegearHomepage(),
 			$version,
 			$this->formatNow()
 		);

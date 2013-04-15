@@ -9,12 +9,12 @@
 // This namespace intentionally does not match the file path
 namespace Sitegear;
 
-use Sitegear\Core\Engine\Engine;
+use Sitegear\Engine\SitegearEngine;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 
-class TestEngine extends Engine {
+class TestEngine extends SitegearEngine {
 
 	protected function createSession(Request $request) {
 		$session = new Session();

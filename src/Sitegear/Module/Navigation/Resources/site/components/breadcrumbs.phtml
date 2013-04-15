@@ -1,0 +1,44 @@
+<?php
+/**
+ * @var \Sitegear\View\View $view
+ */
+$trail = array();
+foreach (array_slice($view['trail'], 0, -1) as $crumb) {
+	$trail[] = \Sitegear\Util\TokenUtilities::replaceTokens(
+		$view['formats']['link'],
+		array(
+			'url' => $crumb['url'],
+			'class' => $view['classes']['link'],
+			'label' => $crumb['label']
+		)
+	);
+}
+$currentPageCrumb = $view['trail'][max(0, sizeof($view['trail']) - 1)];
+switch ($view['current-page-style']) {
+	case 'link':
+		$trail[] = \Sitegear\Util\TokenUtilities::replaceTokens(
+			$view['formats']['link'],
+			array(
+				'url' => $currentPageCrumb['url'],
+				'class' => $view['classes']['link'] . ' ' . $view['classes']['current-page'],
+				'label' => $currentPageCrumb['label']
+			)
+		);
+		break;
+	case 'label':
+		$trail[] = \Sitegear\Util\TokenUtilities::replaceTokens(
+			$view['formats']['label'],
+			array(
+				'class' => $view['classes']['link'],
+				'label' => $currentPageCrumb['label']
+			)
+		);
+		break;
+	case false:
+		// Don't display the trailing separator.
+		break;
+	default:
+		// Display the trailing separator, but no text after it (normally as a "lead-in" to the H1).
+		$trail[] = '';
+}
+echo implode($view['separator'], $trail), PHP_EOL;

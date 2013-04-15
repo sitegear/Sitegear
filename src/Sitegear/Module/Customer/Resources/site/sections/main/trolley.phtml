@@ -1,0 +1,23 @@
+<?php
+/**
+ * @var \Sitegear\View\View $view
+ */
+$view->getStringsManager()->prepend('title', $view['title'])
+?>
+<h1><?php echo $view['heading']; ?></h1>
+<p>
+<?php
+if (!isset($view['trolley-data']) || empty($view['trolley-data'])) {
+	echo $view['text']['no-items'];
+} else {
+	echo \Sitegear\Util\TokenUtilities::replaceTokens(
+		$view['text']['items-count'][sizeof($view['trolley-data']) === 1 ? 0 : 1],
+		array(
+			'count' => sizeof($view['trolley-data'])
+		)
+	);
+?>
+</p>
+<?php echo $view->customer()->trolleyDetails(); ?>
+<?php
+}

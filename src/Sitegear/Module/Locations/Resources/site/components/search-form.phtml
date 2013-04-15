@@ -1,0 +1,12 @@
+<?php
+/**
+ * @var \Sitegear\View\View $view
+ */
+$values = array();
+if (isset($view['query']) && !empty($view['query'])) {
+	$values['query'] = $view['query'];
+}
+if (isset($view['radius'])) {
+	$values['radius'] = $view['radius'];
+}
+echo $view->forms()->form('location-search', $values);

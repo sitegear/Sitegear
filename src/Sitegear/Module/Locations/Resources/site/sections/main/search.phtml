@@ -1,0 +1,9 @@
+<?php
+/**
+ * @var \Sitegear\View\View $view
+ * @var \Sitegear\Module\Locations\Model\Item $item
+ */
+$view->getStringsManager()->prepend('title', $view['title'])->prepend('title', $view['search-title']);
+echo sprintf('<h1>%s: %s</h1>', $view['heading'], $view['search-heading']), PHP_EOL;
+echo $view['results-description'], PHP_EOL;
+echo $view->locations()->item('partials/items');

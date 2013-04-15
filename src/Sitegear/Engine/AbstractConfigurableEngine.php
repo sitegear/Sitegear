@@ -66,7 +66,7 @@ abstract class AbstractConfigurableEngine extends AbstractEngine implements Conf
 		$this->config->addProcessor(new ConfigTokenProcessor($this, 'config'));
 		$roots = array(
 			'site' => $this->getSiteInfo()->getSiteRoot(),
-			'sitegear' => $this->getSitegearInfo()->getSitegearRoot(),
+			'sitegear' => $this->getApplicationInfo()->getSitegearRoot(),
 			'engine' => $this->getEngineRoot()
 		);
 		$this->config->addProcessor(new IncludeTokenProcessor($roots, $this->configLoader, 'include'));

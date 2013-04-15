@@ -6,10 +6,10 @@
  * http://sitegear.org/
  */
 
-namespace Sitegear\Core\Module\Google;
+namespace Sitegear\Module\Google;
 
 use Sitegear\AbstractSitegearTestCase;
-use Sitegear\Core\Module\Google\GoogleModule;
+use Sitegear\Module\Google\GoogleModule;
 use Sitegear\TestEngine;
 
 use Symfony\Component\HttpFoundation\Request;

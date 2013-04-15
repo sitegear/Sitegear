@@ -1,0 +1,88 @@
+<?php
+// TODO Editable product name and specifications
+/**
+ * @var \Sitegear\View\View $view
+ * @var \Sitegear\Module\Products\ProductsModule $module
+ * @var \Sitegear\Module\Products\Model\Item $item
+ * @var \Sitegear\Module\Products\Model\Specification $specification
+ * @var \Sitegear\Module\Products\Model\Relationship $relationship
+ * @var \Sitegear\Module\Products\Model\CategoryAssignment $categoryAssignment
+ */
+$module = $view['module'];
+$item = $view['item'];
+$view->getStringsManager()->prepend('title', $view['title'])->prepend('title', $item->getName());
+?>
+<h1><?php echo $item->getName(); ?></h1>
+<?php
+// ITEM DESCRIPTION
+echo $view->products('editable')->item($module->getContentPath('item', $item->getUrlPath()));
+
+// PURCHASE FORM
+if ($view['display-add-trolley-item-form']) {
+	echo $view->customer()->addTrolleyItemForm('products', 'item', $item->getId());
+}
+
+// ITEM SPECIFICATIONS
+if (sizeof($item->getSpecifications()) > 0) {
+?>
+<div class="product-specifications">
+	<h2>Specifications</h2>
+	<table>
+<?php
+	$odd = true;
+	foreach ($item->getSpecifications() as $specification) {
+?>
+		<tr class="<?php echo $odd ? 'odd' : 'even'; ?>">
+			<td class="label">
+				<?php echo $specification->getLabel(); ?>
+			</td>
+			<td class="value">
+				<?php echo $specification->getValue(); ?>
+			</td>
+		</tr>
+<?php
+		$odd = !$odd;
+	}
+?>
+	</table>
+</div>
+<?php
+}
+
+// RELATED ITEMS
+if (sizeof($item->getRelationships()) > 0) {
+?>
+<div class="product-relationships">
+	<h2>Related Items</h2>
+	<ul>
+<?php
+	foreach ($item->getRelationships() as $relationship) {
+		$linkUrl = $module->getRouteUrl('item', $relationship->getRelatedItem()->getUrlPath());
+?>
+		<li><a href="<?php echo $linkUrl; ?>"><?php echo $relationship->getRelatedItem()->getName(); ?></a></li>
+<?php
+	}
+?>
+	</ul>
+</div>
+<?php
+}
+
+// CATEGORY ASSIGNMENTS
+if (sizeof($item->getCategoryAssignments()) > 0) {
+?>
+<div class="product-category-assignments">
+	<h2>Related Categories</h2>
+	<ul>
+<?php
+	foreach ($item->getCategoryAssignments() as $categoryAssignment) {
+		$linkUrl = $module->getRouteUrl('category', $categoryAssignment->getCategory()->getUrlPath());
+?>
+		<li><a href="<?php echo $linkUrl; ?>"><?php echo $categoryAssignment->getCategory()->getName(); ?></a></li>
+<?php
+	}
+?>
+	</ul>
+</div>
+<?php
+}

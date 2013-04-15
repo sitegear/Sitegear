@@ -206,9 +206,9 @@ interface EngineInterface extends ModuleResolverInterface, ModuleContainerInterf
 	/**
 	 * Get the Sitegear information provider.
 	 *
-	 * @return \Sitegear\Info\SitegearInfoProviderInterface
+	 * @return \Sitegear\Info\ApplicationInfoProviderInterface
 	 */
-	public function getSitegearInfo();
+	public function getApplicationInfo();
 
 	/**
 	 * Get a map of resource names to resource descriptor maps.

@@ -59,7 +59,7 @@ abstract class AbstractConfigurableModule extends AbstractModule implements Conf
 		}
 		$roots = array(
 			'site' => $this->getEngine()->getSiteInfo()->getSiteRoot(),
-			'sitegear' => $this->getEngine()->getSitegearInfo()->getSitegearRoot(),
+			'sitegear' => $this->getEngine()->getApplicationInfo()->getSitegearRoot(),
 			'engine' => $this->getEngine()->getEngineRoot(),
 			'module' => $this->getModuleRoot()
 		);

@@ -1,0 +1,29 @@
+<?php
+/**
+ * @var \Sitegear\View\View $view
+ * @var \Sitegear\Module\Locations\Model\Item $item
+ */
+$item = $view['item'];
+echo $view->google()->map(
+	'#map',
+	array_merge(
+		$item->getMapOptions(),
+		array(
+			'latitude' => $item->getLatitude(),
+			'longitude' => $item->getLongitude()
+		)
+	),
+	// TODO This is forcing the API key to be set in GoogleModule config, do we want this? Maybe it shouldn't even be a parameter here?
+	null,
+	array(
+		array_merge(
+			$item->getMapOptions(),
+			array(
+				'latitude' => $item->getLatitude(),
+				'longitude' => $item->getLongitude(),
+				'name' => $item->getName()
+			)
+		)
+	),
+	true
+);

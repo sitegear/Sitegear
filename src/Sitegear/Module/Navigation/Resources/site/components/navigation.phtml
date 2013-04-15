@@ -1,0 +1,43 @@
+<?php
+/**
+ * @var \Sitegear\View\View $view
+ */
+$data = $view['data'];
+$path = $view['path'];
+$maxDepth = $view['max-depth'];
+$pathDepthSuffix = sizeof($path);
+$listAttributes = $view['list-attributes'];
+$listAdditionalClass = isset($listAttributes['class']) ? $listAttributes['class'] : '';
+$listAttributes = \Sitegear\Util\HtmlUtilities::attributes($listAttributes, array( 'id', 'class' ));
+$itemAttributes = $view['item-attributes'];
+$itemAdditionalClass = isset($itemAttributes['class']) ? $itemAttributes['class'] : '';
+$itemAttributes = \Sitegear\Util\HtmlUtilities::attributes($itemAttributes, array( 'id', 'class' ));
+$linkFormat = $view['link-format'];
+echo sprintf('%s<ul class="%s %s-%s %s"%s>', str_repeat("\t", $view['indent']), $view['classes']['list'], $view['classes']['list'], $pathDepthSuffix, $listAdditionalClass, $listAttributes), PHP_EOL;
+foreach ($data as $index => $navigationItem) {
+	$itemUrl = isset($navigationItem['url']) ? $navigationItem['url'] : null;
+	$currentPagePrefix = ($itemUrl === $view['url']) ? $view['classes']['current-page'] : '';
+	$currentPrefix = $view->getEngine()->navigation()->isCurrentOrAncestorUrl($itemUrl, $view['url']) ? $view['classes']['current'] : '';
+	$urlClassSuffix = isset($navigationItem['url-class-suffix']) ?
+			$navigationItem['url-class-suffix'] :
+			(($itemUrl === '.' || $itemUrl === '') ? $view['classes']['index'] : preg_replace('/\//', '-', trim($itemUrl, '/')));
+	$tooltip = $view['display-tooltips'] && isset($navigationItem['tooltip']) ? sprintf(' title="%s"', htmlentities($navigationItem['tooltip'])) : '';
+	$label = \Sitegear\Util\TokenUtilities::replaceTokens(
+		$linkFormat,
+		array(
+			'label' => isset($navigationItem['label']) ? $navigationItem['label'] : $navigationItem['url']
+		)
+	);
+	echo sprintf('%s<li class="%s %s %s %s-%s %s-%s %s %s"%s>', str_repeat("\t", $view['indent'] + 1), $view['classes']['item'], $currentPrefix, $currentPagePrefix, $view['classes']['item'], $urlClassSuffix, $view['classes']['item'], $pathDepthSuffix, (is_null($itemUrl) ? $view['classes']['heading'] : ''), $itemAdditionalClass, $itemAttributes), PHP_EOL;
+	if (!is_null($itemUrl)) {
+		echo sprintf('%s<a href="%s" class="%s %s-%s %s-%s"%s>%s</a>', str_repeat("\t", $view['indent'] + 2), $itemUrl, $view['classes']['link'], $view['classes']['link'], $urlClassSuffix, $view['classes']['link'], $pathDepthSuffix, $tooltip, $label), PHP_EOL;
+	} elseif (!empty($label)) {
+		echo sprintf('%s<span>%s</span>', str_repeat("\t", $view['indent'] + 2), $label), PHP_EOL;
+	}
+	if (isset($navigationItem['children'])) {
+		// Render the sub-menu, without any decorators.
+		echo $view->navigation()->navigation(array_merge($path, array( $index )), $maxDepth, $view['indent'] + 2);
+	}
+	echo sprintf('%s</li>', str_repeat("\t", $view['indent'] + 1)), PHP_EOL;
+}
+echo sprintf('%s</ul>', str_repeat("\t", $view['indent'])), PHP_EOL;

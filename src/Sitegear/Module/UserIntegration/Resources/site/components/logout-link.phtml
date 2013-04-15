@@ -1,0 +1,21 @@
+<?php
+/**
+ * @var \Sitegear\View\View $view
+ */
+if (is_null($view['user-email'])) {
+	echo \Sitegear\Util\TokenUtilities::replaceTokens(
+		$view['link-format-guest'],
+		array(
+			'logoutUrl' => $view['logout-url']
+		)
+	);
+} else {
+	echo \Sitegear\Util\TokenUtilities::replaceTokens(
+		$view['link-format'],
+		array(
+			'customerProfileUrl' => $view['customer-profile-url'],
+			'userEmail' => $view['user-email'],
+			'logoutUrl' => $view['logout-url']
+		)
+	);
+}

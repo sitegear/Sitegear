@@ -8,7 +8,7 @@
 
 namespace Sitegear\Engine;
 
-use Sitegear\Info\SitegearInfoProviderInterface;
+use Sitegear\Info\ApplicationInfoProviderInterface;
 use Sitegear\Info\EnvironmentInfoProviderInterface;
 use Sitegear\Info\SiteInfoProviderInterface;
 use Sitegear\User\Manager\UserManagerInterface;
@@ -58,7 +58,7 @@ abstract class AbstractEngine implements EngineInterface {
 	private $environmentInfo;
 
 	/**
-	 * @var \Sitegear\Info\SitegearInfoProviderInterface
+	 * @var \Sitegear\Info\ApplicationInfoProviderInterface
 	 */
 	private $sitegearInfo;
 
@@ -102,11 +102,11 @@ abstract class AbstractEngine implements EngineInterface {
 	/**
 	 * @param \Sitegear\Info\SiteInfoProviderInterface $siteInfo
 	 * @param \Sitegear\Info\EnvironmentInfoProviderInterface|string|null $environmentInfo
-	 * @param \Sitegear\Info\SitegearInfoProviderInterface $sitegearInfo
+	 * @param \Sitegear\Info\ApplicationInfoProviderInterface $sitegearInfo
 	 * @param \Sitegear\View\Factory\ViewFactoryInterface $viewFactory
 	 * @param \Sitegear\User\Manager\UserManagerInterface $userManager
 	 */
-	public function __construct(SiteInfoProviderInterface $siteInfo, EnvironmentInfoProviderInterface $environmentInfo, SitegearInfoProviderInterface $sitegearInfo, ViewFactoryInterface $viewFactory, UserManagerInterface $userManager) {
+	public function __construct(SiteInfoProviderInterface $siteInfo, EnvironmentInfoProviderInterface $environmentInfo, ApplicationInfoProviderInterface $sitegearInfo, ViewFactoryInterface $viewFactory, UserManagerInterface $userManager) {
 		LoggerRegistry::debug('Instantiating AbstractEngine');
 		$this->timestamp = microtime(true);
 		$this->siteInfo = $siteInfo;
@@ -285,7 +285,7 @@ abstract class AbstractEngine implements EngineInterface {
 	/**
 	 * @inheritdoc
 	 */
-	public function getSitegearInfo() {
+	public function getApplicationInfo() {
 		return $this->sitegearInfo;
 	}
 

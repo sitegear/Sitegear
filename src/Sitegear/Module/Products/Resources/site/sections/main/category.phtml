@@ -1,0 +1,81 @@
+<?php
+/**
+ * @var \Sitegear\View\View $view
+ * @var \Sitegear\Module\Products\ProductsModule $module
+ * @var \Sitegear\Module\Products\Model\Category $category
+ * @var \Sitegear\Module\Products\Model\Item $item
+ * @var \Sitegear\Module\Products\Model\Category $subcategory
+ */
+$module = $view['module'];
+$view->getStringsManager()->prepend('title', $view['title']);
+$category = $view['category'];
+$view->getStringsManager()->prepend('title', $category->getName());
+$excerptDecorator = sprintf('excerpt(%d, "%s")', $view['excerpt-length'], 'Category description not found.');
+?>
+<h1><?php echo $category->getName(); ?></h1>
+
+<?php echo $view->products('editable')->item($module->getContentPath('category', $category->getUrlPath())); ?>
+
+<?php
+if (empty($view['items'])) {
+	echo $view->products()->emptyCategory();
+} else {
+?>
+<section class="products-items-container">
+	<h2>Products</h2>
+<?php
+	foreach ($view['items'] as $item) {
+		$linkUrl = $module->getRouteUrl('item', $item->getUrlPath());
+		$viewScript = $module->getContentPath('item', $item->getUrlPath());
+?>
+	<section>
+		<h3><?php echo $item->getName(); ?></h3>
+		<p>
+<?php echo $view->products($excerptDecorator)->item($viewScript); ?>
+		</p>
+<?php
+		if (isset($view['read-more'])) {
+?>
+		<p class="read-more"><a href="<?php echo $linkUrl ?>"><?php echo $view['read-more']; ?></a></p>
+<?php
+		}
+?>
+	</section>
+<?php
+	}
+?>
+</section>
+<?php
+}
+
+if (!empty($view['categories'])) {
+?>
+<section class="products-categories-container">
+	<h2>Subcategories</h2>
+	<p>
+	The <?php echo $category->getName(); ?> category contains <?php echo number_format(sizeof($view['categories'])); ?> subcategories.
+	</p>
+<?php
+	foreach ($view['categories'] as $subcategory) {
+		$linkUrl = $module->getRouteUrl('category', $subcategory->getUrlPath());
+		$viewScript = $module->getContentPath('category', $subcategory->getUrlPath());
+?>
+	<section>
+		<h3><?php echo $subcategory->getName(); ?></h3>
+		<p>
+<?php echo $view->products($excerptDecorator)->item($viewScript); ?>
+		</p>
+<?php
+		if (isset($view['read-more'])) {
+?>
+		<p class="read-more"><a href="<?php echo $linkUrl ?>"><?php echo $view['read-more']; ?></a></p>
+<?php
+		}
+?>
+	</section>
+<?php
+	}
+?>
+</section>
+<?php
+}

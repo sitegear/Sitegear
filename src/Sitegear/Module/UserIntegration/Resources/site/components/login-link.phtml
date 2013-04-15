@@ -1,0 +1,11 @@
+<?php
+/**
+ * @var \Sitegear\View\View $view
+ */
+echo \Sitegear\Util\TokenUtilities::replaceTokens(
+	$view['link-format'],
+	array(
+		'loginUrl' => $view['login-url'],
+		'signUpUrl' => $view['sign-up-url']
+	)
+);
