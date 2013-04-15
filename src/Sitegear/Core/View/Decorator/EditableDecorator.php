@@ -10,6 +10,7 @@ namespace Sitegear\Core\View\Decorator;
 
 use Sitegear\Base\View\Decorator\ElementDecorator;
 
+use Sitegear\Base\View\ViewInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -21,7 +22,12 @@ class EditableDecorator extends ElementDecorator {
 	/**
 	 * @inheritdoc
 	 */
-	public function decorate($content, $element=null, $class=null) {
+	public function decorate($content, ViewInterface $view=null, $element=null, $class=null) {
+		$userManager = $view->getEngine()->getUserManager();
+		// TODO This 'manager' should be defined somewhere or perhaps passed in as an argument??
+		if (!$userManager->isLoggedIn() || !$userManager->getStorage()->hasPrivilege($userManager->getLoggedInUserEmail(), 'manager')) {
+			return $content;
+		}
 		return parent::decorate($content, $element, array( 'class' => $class ?: 'sitegear-editable' ));
 	}
 
