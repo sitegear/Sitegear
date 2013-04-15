@@ -6,7 +6,7 @@
  * http://sitegear.org/
  */
 
-namespace Sitegear\Core\Info;
+namespace Sitegear\Core;
 
 use Sitegear\Info\SitegearInfoProviderInterface;
 use Sitegear\Core\Engine\Engine;

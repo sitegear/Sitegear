@@ -6,7 +6,7 @@
  * http://sitegear.org/
  */
 
-namespace Sitegear\Core\User;
+namespace Sitegear\Core;
 
 use Sitegear\User\Acl\AccessControllerInterface;
 use Sitegear\User\Acl\StorageBackedAccessController;

@@ -10,7 +10,7 @@ namespace Sitegear\Config;
 
 use Sitegear\Config\Container\ConfigContainerInterface;
 use Sitegear\Config\FileLoader\FileLoaderInterface;
-use Sitegear\Core\Info\EnvironmentInfoProvider;
+use Sitegear\Core\EnvironmentInfoProvider;
 use Sitegear\Util\ArrayUtilities;
 use Sitegear\Util\TypeUtilities;
 use Sitegear\Util\LoggerRegistry;
