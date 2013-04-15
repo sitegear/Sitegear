@@ -8,12 +8,12 @@
 
 namespace Sitegear\Core\User;
 
-use Sitegear\Base\User\Acl\AccessControllerInterface;
-use Sitegear\Base\User\Acl\StorageBackedAccessController;
-use Sitegear\Base\User\Auth\AuthenticatorInterface;
-use Sitegear\Base\User\Auth\PasswordAuthenticator;
-use Sitegear\Base\User\Manager\AbstractUserManager;
-use Sitegear\Base\User\Storage\UserStorageInterface;
+use Sitegear\User\Acl\AccessControllerInterface;
+use Sitegear\User\Acl\StorageBackedAccessController;
+use Sitegear\User\Auth\AuthenticatorInterface;
+use Sitegear\User\Auth\PasswordAuthenticator;
+use Sitegear\User\Manager\AbstractUserManager;
+use Sitegear\User\Storage\UserStorageInterface;
 use Sitegear\Util\LoggerRegistry;
 
 /**

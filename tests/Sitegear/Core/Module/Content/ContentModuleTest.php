@@ -6,10 +6,10 @@
  * http://sitegear.org/
  */
 
-namespace Sitegear\Module\Content;
+namespace Sitegear\Core\Module\Content;
 
 use Sitegear\AbstractSitegearTestCase;
-use Sitegear\Module\Content\ContentModule;
+use Sitegear\Core\Module\Content\ContentModule;
 use Sitegear\TestEngine;
 
 use Symfony\Component\HttpFoundation\Request;

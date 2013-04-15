@@ -8,16 +8,16 @@
 
 namespace Sitegear\Core\View;
 
-use Sitegear\Base\View\Factory\AbstractViewFactory;
-use Sitegear\Base\View\Strings\SimpleStringsManager;
-use Sitegear\Base\View\Resources\SimpleResourcesManager;
-use Sitegear\Base\View\Decorator\Registry\SimpleDecoratorRegistry;
-use Sitegear\Base\View\Renderer\Registry\SimpleRendererRegistry;
-use Sitegear\Base\View\Strings\StringsManagerInterface;
-use Sitegear\Base\View\Resources\ResourcesManagerInterface;
-use Sitegear\Base\View\Decorator\Registry\DecoratorRegistryInterface;
-use Sitegear\Base\View\Renderer\Registry\RendererRegistryInterface;
-use Sitegear\Base\View\ViewInterface;
+use Sitegear\View\Factory\AbstractViewFactory;
+use Sitegear\View\Strings\SimpleStringsManager;
+use Sitegear\View\Resources\SimpleResourcesManager;
+use Sitegear\View\Decorator\Registry\SimpleDecoratorRegistry;
+use Sitegear\View\Renderer\Registry\SimpleRendererRegistry;
+use Sitegear\View\Strings\StringsManagerInterface;
+use Sitegear\View\Resources\ResourcesManagerInterface;
+use Sitegear\View\Decorator\Registry\DecoratorRegistryInterface;
+use Sitegear\View\Renderer\Registry\RendererRegistryInterface;
+use Sitegear\View\ViewInterface;
 use Sitegear\Core\Engine\Engine;
 
 use Symfony\Component\HttpFoundation\Request;

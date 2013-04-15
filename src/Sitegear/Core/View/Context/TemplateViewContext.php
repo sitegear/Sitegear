@@ -8,7 +8,7 @@
 
 namespace Sitegear\Core\View\Context;
 
-use Sitegear\Base\Module\ModuleInterface;
+use Sitegear\Module\ModuleInterface;
 use Sitegear\Core\View\View;
 use Sitegear\Util\TypeUtilities;
 

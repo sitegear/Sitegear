@@ -8,9 +8,9 @@
 
 namespace Sitegear\Core\View\Context;
 
-use Sitegear\Base\View\Context\AbstractViewContext;
-use Sitegear\Base\View\Renderer\Registry\RendererRegistryInterface;
-use Sitegear\Base\View\Decorator\StringTokensDecorator;
+use Sitegear\View\Context\AbstractViewContext;
+use Sitegear\View\Renderer\Registry\RendererRegistryInterface;
+use Sitegear\View\Decorator\StringTokensDecorator;
 use Sitegear\Core\View\View;
 
 /**

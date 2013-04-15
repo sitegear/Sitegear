@@ -8,12 +8,12 @@
 
 namespace Sitegear\Core\Engine;
 
-use Sitegear\Base\Engine\AbstractConfigurableEngine;
-use Sitegear\Base\Info\SitegearInfoProviderInterface;
-use Sitegear\Base\User\Storage\UserStorageInterface;
-use Sitegear\Base\User\Storage\JsonFileUserStorage;
-use Sitegear\Base\View\Factory\ViewFactoryInterface;
-use Sitegear\Base\View\Strings\SimpleStringsManager;
+use Sitegear\Engine\AbstractConfigurableEngine;
+use Sitegear\Info\SitegearInfoProviderInterface;
+use Sitegear\User\Storage\UserStorageInterface;
+use Sitegear\User\Storage\JsonFileUserStorage;
+use Sitegear\View\Factory\ViewFactoryInterface;
+use Sitegear\View\Strings\SimpleStringsManager;
 use Sitegear\Core\Info\SitegearInfoProvider;
 use Sitegear\Core\Info\EnvironmentInfoProvider;
 use Sitegear\Core\Info\SiteInfoProvider;
@@ -36,30 +36,30 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
  *
  * The following magic methods are defined for known core modules:
  *
- * @method \Sitegear\Module\Content\ContentModule content()
- * @method \Sitegear\Module\Doctrine\DoctrineModule doctrine()
- * @method \Sitegear\Module\File\FileModule file()
- * @method \Sitegear\Module\Forms\FormsModule forms()
- * @method \Sitegear\Module\Navigation\NavigationModule navigation()
- * @method \Sitegear\Module\PageMessages\PageMessagesModule pageMessages()
- * @method \Sitegear\Module\ResourcesIntegration\ResourcesIntegrationModule resourcesIntegration()
- * @method \Sitegear\Module\UserIntegration\UserIntegrationModule userIntegration()
- * @method \Sitegear\Module\Version\VersionModule version()
+ * @method \Sitegear\Core\Module\Content\ContentModule content()
+ * @method \Sitegear\Core\Module\Doctrine\DoctrineModule doctrine()
+ * @method \Sitegear\Core\Module\File\FileModule file()
+ * @method \Sitegear\Core\Module\Forms\FormsModule forms()
+ * @method \Sitegear\Core\Module\Navigation\NavigationModule navigation()
+ * @method \Sitegear\Core\Module\PageMessages\PageMessagesModule pageMessages()
+ * @method \Sitegear\Core\Module\ResourcesIntegration\ResourcesIntegrationModule resourcesIntegration()
+ * @method \Sitegear\Core\Module\UserIntegration\UserIntegrationModule userIntegration()
+ * @method \Sitegear\Core\Module\Version\VersionModule version()
  *
  * The following magic methods are defined for known extension modules:
  *
- * @method \Sitegear\Module\Customer\CustomerModule customer()
- * @method \Sitegear\Module\DiscountCodes\DiscountCodesModule discountCodes()
- * @method \Sitegear\Module\Eway\EwayModule eway()
- * @method \Sitegear\Module\Google\GoogleModule google()
- * @method \Sitegear\Module\Locations\LocationsModule locations()
- * @method \Sitegear\Module\MailChimp\MailChimpModule mailChimp()
- * @method \Sitegear\Module\News\NewsModule news()
- * @method \Sitegear\Module\Products\ProductsModule products()
- * @method \Sitegear\Module\RealCaptcha\RealCaptchaModule realCaptcha()
- * @method \Sitegear\Module\SalesTax\SalesTaxModule salesTax()
- * @method \Sitegear\Module\Shipping\ShippingModule shipping()
- * @method \Sitegear\Module\SwiftMailer\SwiftMailerModule swiftMailer()
+ * @method \Sitegear\Core\Module\Customer\CustomerModule customer()
+ * @method \Sitegear\Core\Module\DiscountCodes\DiscountCodesModule discountCodes()
+ * @method \Sitegear\Core\Module\Eway\EwayModule eway()
+ * @method \Sitegear\Core\Module\Google\GoogleModule google()
+ * @method \Sitegear\Core\Module\Locations\LocationsModule locations()
+ * @method \Sitegear\Core\Module\MailChimp\MailChimpModule mailChimp()
+ * @method \Sitegear\Core\Module\News\NewsModule news()
+ * @method \Sitegear\Core\Module\Products\ProductsModule products()
+ * @method \Sitegear\Core\Module\RealCaptcha\RealCaptchaModule realCaptcha()
+ * @method \Sitegear\Core\Module\SalesTax\SalesTaxModule salesTax()
+ * @method \Sitegear\Core\Module\Shipping\ShippingModule shipping()
+ * @method \Sitegear\Core\Module\SwiftMailer\SwiftMailerModule swiftMailer()
  */
 class Engine extends AbstractConfigurableEngine {
 
@@ -84,17 +84,17 @@ class Engine extends AbstractConfigurableEngine {
 	//-- Constructor --------------------
 
 	/**
-	 * @param string|\Sitegear\Base\Info\SiteInfoProviderInterface $siteInfo If a string, is the site
+	 * @param string|\Sitegear\Info\SiteInfoProviderInterface $siteInfo If a string, is the site
 	 *   root directory, which is used to construct a default implementation of SiteInfoProviderInterface.  Otherwise
 	 *   must be an implementation of SiteInfoProviderInterface.
-	 * @param string|\Sitegear\Base\Info\EnvironmentInfoProviderInterface|null $environment If a string,
+	 * @param string|\Sitegear\Info\EnvironmentInfoProviderInterface|null $environment If a string,
 	 *   is the environment setting value, which is used to construct a default implementation of
 	 *   EnvironmentInfoProviderInterface.  Otherwise must be an implementation of EnvironmentInfoProviderInterface.
-	 * @param \Sitegear\Base\Info\SitegearInfoProviderInterface|null $sitegearInfo Either an
+	 * @param \Sitegear\Info\SitegearInfoProviderInterface|null $sitegearInfo Either an
 	 *   implementation of SitegearInfoProviderInterface, or null to use the default implementation.
-	 * @param \Sitegear\Base\View\Factory\ViewFactoryInterface|null Either an implementation of ViewFactoryInterface, or
+	 * @param \Sitegear\View\Factory\ViewFactoryInterface|null Either an implementation of ViewFactoryInterface, or
 	 *   null to use the default implementation.
-	 * @param \Sitegear\Base\User\Storage\UserStorageInterface|null $userStorage
+	 * @param \Sitegear\User\Storage\UserStorageInterface|null $userStorage
 	 */
 	public function __construct($siteInfo, $environment, SitegearInfoProviderInterface $sitegearInfo=null, ViewFactoryInterface $viewFactory=null, UserStorageInterface $userStorage=null) {
 		LoggerRegistry::debug('Instantiating Engine');
@@ -254,7 +254,7 @@ class Engine extends AbstractConfigurableEngine {
 	 */
 	public function getModuleName($module) {
 		$r = is_string($module) ? new \ReflectionClass($module) : new \ReflectionObject($module);
-		if (!$r->implementsInterface('\\Sitegear\\Base\\Module\\ModuleInterface')) {
+		if (!$r->implementsInterface('\\Sitegear\\Module\\ModuleInterface')) {
 			throw new \InvalidArgumentException('Invalid module specified to determine module name: ' . TypeUtilities::describe($module));
 		}
 		$suffix = $this->config('engine.modules.class-name-suffix');
@@ -399,7 +399,7 @@ class Engine extends AbstractConfigurableEngine {
 	 * @param string $name
 	 * @param array $arguments
 	 *
-	 * @return \Sitegear\Base\Module\ModuleInterface
+	 * @return \Sitegear\Module\ModuleInterface
 	 *
 	 * @throw \InvalidArgumentException If the module does not exist.
 	 * @throw \DomainException If the module cannot be created.

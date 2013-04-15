@@ -8,9 +8,9 @@
 
 namespace Sitegear\Core\View;
 
-use Sitegear\Base\View\AbstractView;
-use Sitegear\Base\View\ViewInterface;
-use Sitegear\Base\Engine\EngineInterface;
+use Sitegear\View\AbstractView;
+use Sitegear\View\ViewInterface;
+use Sitegear\Engine\EngineInterface;
 use Sitegear\Core\View\Context\ComponentViewContext;
 use Sitegear\Core\View\Context\SectionViewContext;
 use Sitegear\Core\View\Context\TemplateViewContext;
@@ -165,9 +165,9 @@ class View extends AbstractView {
 	//-- Constructor --------------------
 
 	/**
-	 * @param \Sitegear\Base\Engine\EngineInterface $engine
+	 * @param \Sitegear\Engine\EngineInterface $engine
 	 * @param \Symfony\Component\HttpFoundation\Request $request
-	 * @param \Sitegear\Base\View\ViewInterface|null $parent
+	 * @param \Sitegear\View\ViewInterface|null $parent
 	 */
 	public function __construct(EngineInterface $engine, Request $request, ViewInterface $parent=null) {
 		LoggerRegistry::debug('Constructing View');
@@ -259,7 +259,7 @@ class View extends AbstractView {
 	/**
 	 * Shortcut to retrieve the resources manager from the view factory.  This is useful in view scripts.
 	 *
-	 * @return \Sitegear\Base\View\Resources\ResourcesManagerInterface
+	 * @return \Sitegear\View\Resources\ResourcesManagerInterface
 	 */
 	public function getResourcesManager() {
 		return $this->getEngine()->getViewFactory()->getResourcesManager();
@@ -268,7 +268,7 @@ class View extends AbstractView {
 	/**
 	 * Shortcut to retrieve the strings manager from the view factory.  This is useful in view scripts.
 	 *
-	 * @return \Sitegear\Base\View\Strings\StringsManagerInterface
+	 * @return \Sitegear\View\Strings\StringsManagerInterface
 	 */
 	public function getStringsManager() {
 		return $this->getEngine()->getViewFactory()->getStringsManager();
@@ -279,7 +279,7 @@ class View extends AbstractView {
 	/**
 	 * Create a relevant context for this view.
 	 *
-	 * @return \Sitegear\Base\View\Context\ViewContextInterface
+	 * @return \Sitegear\View\Context\ViewContextInterface
 	 */
 	protected function createContext() {
 		LoggerRegistry::debug(sprintf('View creating context for "%s"', $this->getTarget(self::TARGET_LEVEL_MODULE)));

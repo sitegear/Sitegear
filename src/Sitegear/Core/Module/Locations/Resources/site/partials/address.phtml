@@ -1,0 +1,29 @@
+<?php
+/**
+ * @var \Sitegear\Core\View\View $view
+ * @var \Sitegear\Core\Module\Locations\Model\Item $item
+ */
+$item = $view['item'];
+$address = array();
+foreach (array('getSuburb', 'getStateOrProvince', 'getPostcode', 'getCountry') as $getter) {
+	$value = $item->$getter();
+	if (strlen($value) > 0) {
+		$address[] = $value;
+	}
+}
+?>
+<section id="locations-address-container">
+	<h2>Address</h2>
+<?php
+if (strlen($item->getStreetAddress()) > 0) {
+?>
+	<p><?php echo $item->getStreetAddress(); ?></p>
+<?php
+}
+if (!empty($address)) {
+?>
+	<p><?php echo implode(', ', $address); ?></p>
+<?php
+}
+?>
+</section>

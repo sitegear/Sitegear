@@ -8,7 +8,7 @@
 
 namespace Sitegear\Core\Info;
 
-use Sitegear\Base\Info\SitegearInfoProviderInterface;
+use Sitegear\Info\SitegearInfoProviderInterface;
 use Sitegear\Core\Engine\Engine;
 
 /**

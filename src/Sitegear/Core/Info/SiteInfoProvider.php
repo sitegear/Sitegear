@@ -8,9 +8,9 @@
 
 namespace Sitegear\Core\Info;
 
-use Sitegear\Base\Info\SiteInfoProviderInterface;
-use Sitegear\Base\Module\ModuleInterface;
-use Sitegear\Base\Resources\ResourceLocations;
+use Sitegear\Info\SiteInfoProviderInterface;
+use Sitegear\Module\ModuleInterface;
+use Sitegear\Resources\ResourceLocations;
 use Sitegear\Core\Engine\Engine;
 use Sitegear\Util\NameUtilities;
 

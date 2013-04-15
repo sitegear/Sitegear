@@ -8,8 +8,8 @@
 
 namespace Sitegear\Mock;
 
-use Sitegear\Base\View\Renderer\RendererInterface;
-use Sitegear\Base\View\ViewInterface;
+use Sitegear\View\Renderer\RendererInterface;
+use Sitegear\View\ViewInterface;
 
 /**
  * Mock RendererInterface implementation, used only to test registerRenderer().

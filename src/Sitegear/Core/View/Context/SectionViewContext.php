@@ -8,9 +8,9 @@
 
 namespace Sitegear\Core\View\Context;
 
-use Sitegear\Base\Resources\ResourceLocations;
-use Sitegear\Base\View\ViewInterface;
-use Sitegear\Base\View\Renderer\Registry\RendererRegistryInterface;
+use Sitegear\Resources\ResourceLocations;
+use Sitegear\View\ViewInterface;
+use Sitegear\View\Renderer\Registry\RendererRegistryInterface;
 use Sitegear\Core\View\View;
 
 use Symfony\Component\HttpFoundation\Request;
@@ -35,7 +35,7 @@ class SectionViewContext extends AbstractCoreFileViewContext {
 	//-- Constructor --------------------
 
 	/**
-	 * @param \Sitegear\Base\View\ViewInterface $view
+	 * @param \Sitegear\View\ViewInterface $view
 	 * @param Request $request
 	 * @param string $indexSection
 	 * @param string $fallbackSection
@@ -121,7 +121,7 @@ class SectionViewContext extends AbstractCoreFileViewContext {
 	 *   from the favourite option to the least favourite option.
 	 */
 	private function getSectionPathOptions($original) {
-		/** @var \Sitegear\Base\Module\MountableModuleInterface $module */
+		/** @var \Sitegear\Module\MountableModuleInterface $module */
 		$module = $this->view()->getEngine()->getModule($this->getContextModule($this->view(), $this->request()));
 		$rootUrl = $module->getMountedUrl();
 		$original = str_replace($rootUrl, '', $original);

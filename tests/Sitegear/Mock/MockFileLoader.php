@@ -8,7 +8,7 @@
 
 namespace Sitegear\Mock;
 
-use Sitegear\Base\Config\FileLoader\FileLoaderInterface;
+use Sitegear\Config\FileLoader\FileLoaderInterface;
 
 /**
  * Mock FileLoader interface implementation, used only for testing registerFileLoader() / unregisterFileLoader().

@@ -7,7 +7,7 @@
  */
 
 // This namespace intentionally does not match the file path
-namespace Sitegear\Module\Invalid;
+namespace Sitegear\Core\Module\Invalid;
 
 /**
  * This module exists for testing, to act as a module that is not actually a valid implementation of ModuleInterface.

@@ -8,7 +8,7 @@
 
 namespace Sitegear\Core\Info;
 
-use Sitegear\Base\Info\EnvironmentInfoProviderInterface;
+use Sitegear\Info\EnvironmentInfoProviderInterface;
 
 /**
  * Default implementation of EnvironmentInfoProviderInterface, which sets "dev mode" if the environment is "dev",

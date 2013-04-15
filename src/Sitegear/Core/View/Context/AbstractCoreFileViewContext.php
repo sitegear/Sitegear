@@ -8,8 +8,8 @@
 
 namespace Sitegear\Core\View\Context;
 
-use Sitegear\Base\View\Context\AbstractFileViewContext;
-use Sitegear\Base\View\Renderer\Registry\RendererRegistryInterface;
+use Sitegear\View\Context\AbstractFileViewContext;
+use Sitegear\View\Renderer\Registry\RendererRegistryInterface;
 use Sitegear\Core\View\View;
 
 /**

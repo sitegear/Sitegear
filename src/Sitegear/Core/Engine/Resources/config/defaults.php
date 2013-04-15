@@ -242,7 +242,7 @@ return array(
 
 			/**
 			 * Key-value array of module name to fully qualified class name.  Each class must implement
-			 * \Sitegear\Base\Module\ModuleInterface
+			 * \Sitegear\Module\ModuleInterface
 			 */
 			'class-map' => array(),
 
@@ -253,7 +253,7 @@ return array(
 			 * absolute, beginning with a leading backslash "\" character.
 			 */
 			'namespaces' => array(
-				'\\Sitegear\\Module'
+				'\\Sitegear\\Core\\Module'
 			),
 
 			/**
@@ -271,7 +271,7 @@ return array(
 		),
 
 		/**
-		 * Module resolution of specific modules (see \Sitegear\Base\Module\ModuleResolverInterface).
+		 * Module resolution of specific modules (see \Sitegear\Module\ModuleResolverInterface).
 		 */
 		'module-resolution' => array(
 
@@ -298,7 +298,7 @@ return array(
 			'error-content' => 'content',
 
 			/**
-			 * Sequence of bootstrap module names.  Each must implement \Sitegear\Base\Module\BootstrapModuleInterface
+			 * Sequence of bootstrap module names.  Each must implement \Sitegear\Module\BootstrapModuleInterface
 			 */
 			'bootstrap-sequence' => array(
 				'file'
@@ -338,8 +338,8 @@ return array(
 		 * Page rendering formats to register.
 		 */
 		'renderers' => array(
-			'php' => '\\Sitegear\\Base\\View\\Renderer\\PhpRenderer'
-			//'twig' => '\\Sitegear\Base\\View\\Renderer\\Twig\\TwigRenderer'
+			'php' => '\\Sitegear\\View\\Renderer\\PhpRenderer'
+			//'twig' => '\\Sitegear\\View\\Renderer\\Twig\\TwigRenderer'
 		),
 
 		/**
@@ -348,14 +348,14 @@ return array(
 		 * new keys (not listed below) to your own decorator implementations.
 		 */
 		'decorators' => array(
-			'element' => '\\Sitegear\\Base\\View\\Decorator\\ElementDecorator',
-			'inline-element' => '\\Sitegear\\Base\\View\\Decorator\\InlineElementDecorator',
-			'editable' => '\\Sitegear\\Base\\View\\Decorator\\EditableDecorator',
-			'excerpt' => '\\Sitegear\\Base\\View\\Decorator\\ExcerptDecorator',
-			'resource-tokens' => '\\Sitegear\\Base\\View\\Decorator\\ResourceTokensDecorator',
-			'string-tokens' => '\\Sitegear\\Base\\View\\Decorator\\StringTokensDecorator',
-			'comments' => '\\Sitegear\\Base\\View\\Decorator\\CommentsDecorator',
-			'sign-off' => '\\Sitegear\\Base\\View\\Decorator\\SignOffDecorator'
+			'element' => '\\Sitegear\\View\\Decorator\\ElementDecorator',
+			'inline-element' => '\\Sitegear\\View\\Decorator\\InlineElementDecorator',
+			'editable' => '\\Sitegear\\View\\Decorator\\EditableDecorator',
+			'excerpt' => '\\Sitegear\\View\\Decorator\\ExcerptDecorator',
+			'resource-tokens' => '\\Sitegear\\View\\Decorator\\ResourceTokensDecorator',
+			'string-tokens' => '\\Sitegear\\View\\Decorator\\StringTokensDecorator',
+			'comments' => '\\Sitegear\\View\\Decorator\\CommentsDecorator',
+			'sign-off' => '\\Sitegear\\View\\Decorator\\SignOffDecorator'
 		),
 
 		/**
