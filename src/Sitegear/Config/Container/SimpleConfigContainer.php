@@ -40,11 +40,11 @@ class SimpleConfigContainer implements ConfigContainerInterface {
 	//-- Constructor --------------------
 
 	/**
-	 * @param \Sitegear\Config\ConfigLoader|null $loader
+	 * @param \Sitegear\Config\ConfigLoader $loader
 	 */
-	public function __construct(ConfigLoader $loader=null) {
+	public function __construct(ConfigLoader $loader) {
 		LoggerRegistry::debug('Instantiating SimpleConfigContainer');
-		$this->loader = $loader ?: new ConfigLoader();
+		$this->loader = $loader;
 		$this->processors = array();
 		$this->data = array();
 	}

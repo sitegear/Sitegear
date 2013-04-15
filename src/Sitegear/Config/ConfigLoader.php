@@ -10,7 +10,7 @@ namespace Sitegear\Config;
 
 use Sitegear\Config\Container\ConfigContainerInterface;
 use Sitegear\Config\FileLoader\FileLoaderInterface;
-use Sitegear\Core\EnvironmentInfoProvider;
+use Sitegear\Info\EnvironmentInfoProviderInterface;
 use Sitegear\Util\ArrayUtilities;
 use Sitegear\Util\TypeUtilities;
 use Sitegear\Util\LoggerRegistry;
@@ -35,13 +35,12 @@ class ConfigLoader {
 	//-- Constructor --------------------
 
 	/**
-	 * @param \Sitegear\Info\EnvironmentInfoProviderInterface|string|null $environmentInfo Environment info or
-	 *   environment setting name.
+	 * @param \Sitegear\Info\EnvironmentInfoProviderInterface $environmentInfo Environment info object.
 	 * @param boolean $registerDefaultFileLoaders Whether or not to register the default file loaders, true by default.
 	 */
-	public function __construct($environmentInfo=null, $registerDefaultFileLoaders=true) {
+	public function __construct(EnvironmentInfoProviderInterface $environmentInfo, $registerDefaultFileLoaders=true) {
 		LoggerRegistry::debug('Instantiating ConfigLoader');
-		$this->environmentInfo = is_string($environmentInfo) ? new EnvironmentInfoProvider($environmentInfo) : $environmentInfo;
+		$this->environmentInfo = $environmentInfo;
 		$this->fileLoaders = array();
 		if ($registerDefaultFileLoaders) {
 			foreach ($this->defaultFileLoaders() as $fileLoader) {

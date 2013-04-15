@@ -9,6 +9,7 @@
 namespace Sitegear\Config;
 
 use Sitegear\AbstractSitegearTestCase;
+use Sitegear\Info\SitegearEnvironmentInfoProvider;
 
 class ConfigLoaderTest extends AbstractSitegearTestCase {
 
@@ -117,7 +118,7 @@ class ConfigLoaderTest extends AbstractSitegearTestCase {
 	}
 
 	public function testNoDefaultLoadersConfig() {
-		$loaderNoDefaults = new ConfigLoader('testing', false);
+		$loaderNoDefaults = new ConfigLoader(new SitegearEnvironmentInfoProvider('testing'), false);
 		$this->assertEmpty($loaderNoDefaults->load($this->fixtures() . 'test-no-env-specific.json'));
 		$this->assertEmpty($loaderNoDefaults->load($this->fixtures() . 'test-with-env-specific.json'));
 	}
