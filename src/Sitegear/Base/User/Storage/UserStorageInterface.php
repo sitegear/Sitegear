@@ -88,4 +88,14 @@ interface UserStorageInterface {
 	 */
 	public function revokePrivilege($email, $privilege);
 
+	/**
+	 * Test whether the specified user has been granted the given privilege.
+	 *
+	 * @param string $email
+	 * @param string $privilege
+	 *
+	 * @return boolean
+	 */
+	public function hasPrivilege($email, $privilege);
+
 }

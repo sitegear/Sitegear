@@ -131,6 +131,13 @@ class JsonFileUserStorage implements UserStorageInterface {
 		$this->store();
 	}
 
+	/**
+	 * @inheritdoc
+	 */
+	public function hasPrivilege($email, $privilege) {
+		return $this->hasUser($email) && in_array($privilege, $this->users[$email]['privileges']);
+	}
+
 	//-- Internal Methods --------------------
 
 	/**
