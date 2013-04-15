@@ -6,7 +6,7 @@
  * http://sitegear.org/
  */
 
-namespace Sitegear\Mock;
+namespace Mock;
 
 use Sitegear\View\Renderer\RendererInterface;
 use Sitegear\View\ViewInterface;
