@@ -9,7 +9,7 @@
 namespace Sitegear\Module\Eway;
 
 use Sitegear\Base\Module\PaymentGatewayModuleInterface;
-use Sitegear\Core\Module\AbstractCoreModule;
+use Sitegear\Module\AbstractCoreModule;
 
 /**
  * Eway integration module.

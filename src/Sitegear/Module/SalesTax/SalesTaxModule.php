@@ -9,7 +9,7 @@
 namespace Sitegear\Module\SalesTax;
 
 use Sitegear\Base\Module\PurchaseAdjustmentProviderModuleInterface;
-use Sitegear\Core\Module\AbstractCoreModule;
+use Sitegear\Module\AbstractCoreModule;
 use Sitegear\Util\TokenUtilities;
 
 /**

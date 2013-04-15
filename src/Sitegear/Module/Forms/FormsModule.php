@@ -12,7 +12,7 @@ use Sitegear\Base\View\ViewInterface;
 use Sitegear\Base\Form\StepInterface;
 use Sitegear\Base\Form\Processor\FormProcessorInterface;
 use Sitegear\Base\Form\Renderer\Factory\RendererFactoryInterface;
-use Sitegear\Core\Module\AbstractCoreModule;
+use Sitegear\Module\AbstractCoreModule;
 use Sitegear\Module\Forms\Form\Renderer\FormRenderer;
 use Sitegear\Util\ArrayUtilities;
 use Sitegear\Util\UrlUtilities;

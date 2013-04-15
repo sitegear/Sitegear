@@ -9,7 +9,7 @@
 namespace Sitegear\Module\Shipping;
 
 use Sitegear\Base\Module\PurchaseAdjustmentProviderModuleInterface;
-use Sitegear\Core\Module\AbstractCoreModule;
+use Sitegear\Module\AbstractCoreModule;
 
 /**
  * Provides shipping rate calculation and management.

@@ -10,7 +10,7 @@ namespace Sitegear\Module\Locations;
 
 use Sitegear\Base\Resources\ResourceLocations;
 use Sitegear\Base\View\ViewInterface;
-use Sitegear\Core\Module\AbstractCoreModule;
+use Sitegear\Module\AbstractCoreModule;
 use Sitegear\Module\Locations\Repository\ItemRepository;
 use Sitegear\Util\TokenUtilities;
 use Sitegear\Util\LoggerRegistry;

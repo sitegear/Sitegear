@@ -8,7 +8,7 @@
 
 namespace Sitegear\Module\SwiftMailer;
 
-use Sitegear\Core\Module\AbstractCoreModule;
+use Sitegear\Module\AbstractCoreModule;
 use Sitegear\Util\ArrayUtilities;
 use Sitegear\Util\TypeUtilities;
 use Sitegear\Util\NameUtilities;

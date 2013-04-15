@@ -10,7 +10,7 @@ namespace Sitegear\Module\UserIntegration;
 
 use Sitegear\Base\Resources\ResourceLocations;
 use Sitegear\Base\View\ViewInterface;
-use Sitegear\Core\Module\AbstractCoreModule;
+use Sitegear\Module\AbstractCoreModule;
 use Sitegear\Util\TokenUtilities;
 use Sitegear\Util\UrlUtilities;
 use Sitegear\Util\LoggerRegistry;

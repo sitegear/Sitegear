@@ -9,7 +9,7 @@
 namespace Sitegear\Module\DiscountCodes;
 
 use Sitegear\Base\Module\PurchaseAdjustmentProviderModuleInterface;
-use Sitegear\Core\Module\AbstractCoreModule;
+use Sitegear\Module\AbstractCoreModule;
 
 /**
  * Provides a method for accepting discount codes during the checkout process.  Also provides management tools for

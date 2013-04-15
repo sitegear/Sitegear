@@ -8,7 +8,7 @@
 
 namespace Sitegear\Module\RealCaptcha;
 
-use Sitegear\Core\Module\AbstractCoreModule;
+use Sitegear\Module\AbstractCoreModule;
 
 use Sitegear\Util\LoggerRegistry;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;

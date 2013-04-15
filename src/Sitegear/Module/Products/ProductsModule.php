@@ -10,7 +10,7 @@ namespace Sitegear\Module\Products;
 
 use Sitegear\Base\Module\PurchaseItemProviderModuleInterface;
 use Sitegear\Base\View\ViewInterface;
-use Sitegear\Core\Module\AbstractCoreModule;
+use Sitegear\Module\AbstractCoreModule;
 use Sitegear\Module\Products\Model\Attribute;
 use Sitegear\Module\Products\Model\Item;
 use Sitegear\Util\LoggerRegistry;

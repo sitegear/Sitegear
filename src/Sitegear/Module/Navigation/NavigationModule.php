@@ -11,7 +11,7 @@ namespace Sitegear\Module\Navigation;
 use Sitegear\Base\Module\MountableModuleInterface;
 use Sitegear\Base\Engine\EngineInterface;
 use Sitegear\Base\View\ViewInterface;
-use Sitegear\Core\Module\AbstractCoreModule;
+use Sitegear\Module\AbstractCoreModule;
 use Sitegear\Util\LoggerRegistry;
 
 use Symfony\Component\HttpFoundation\Request;

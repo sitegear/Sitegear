@@ -8,7 +8,7 @@
 
 namespace Sitegear\Module\Iso;
 
-use Sitegear\Core\Module\AbstractCoreModule;
+use Sitegear\Module\AbstractCoreModule;
 
 /**
  * Modular implementation of relevant ISO standards.

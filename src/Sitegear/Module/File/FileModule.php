@@ -12,7 +12,7 @@ use Sitegear\Base\Module\BootstrapModuleInterface;
 use Sitegear\Base\Module\DiscreteDataModuleInterface;
 use Sitegear\Base\Resources\ResourceLocations;
 use Sitegear\Core\Engine\Engine;
-use Sitegear\Core\Module\AbstractCoreModule;
+use Sitegear\Module\AbstractCoreModule;
 use Sitegear\Util\ExtensionMimeTypeGuesser;
 use Sitegear\Util\LoggerRegistry;
 

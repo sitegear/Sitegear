@@ -9,7 +9,7 @@
 namespace Sitegear\Module\Doctrine;
 
 use Sitegear\Base\Module\DiscreteDataModuleInterface;
-use Sitegear\Core\Module\AbstractCoreModule;
+use Sitegear\Module\AbstractCoreModule;
 use Sitegear\Util\TypeUtilities;
 use Sitegear\Util\NameUtilities;
 use Sitegear\Util\LoggerRegistry;

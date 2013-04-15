@@ -9,7 +9,7 @@
 namespace Sitegear\Module\MailChimp;
 
 use Rezzza\MailChimp\MCAPI;
-use Sitegear\Core\Module\AbstractCoreModule;
+use Sitegear\Module\AbstractCoreModule;
 
 /**
  * MailChimp integration module.

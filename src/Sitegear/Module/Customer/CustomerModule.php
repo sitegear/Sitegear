@@ -11,7 +11,7 @@ namespace Sitegear\Module\Customer;
 use Sitegear\Base\Form\FormInterface;
 use Sitegear\Base\Module\PurchaseAdjustmentProviderModuleInterface;
 use Sitegear\Base\View\ViewInterface;
-use Sitegear\Core\Module\AbstractCoreModule;
+use Sitegear\Module\AbstractCoreModule;
 use Sitegear\Module\Customer\Form\Builder\AddTrolleyItemFormBuilder;
 use Sitegear\Module\Customer\Form\Builder\CheckoutFormBuilder;
 use Sitegear\Module\Customer\Model\Account;

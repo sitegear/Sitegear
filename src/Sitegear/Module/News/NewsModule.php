@@ -9,7 +9,7 @@
 namespace Sitegear\Module\News;
 
 use Sitegear\Base\View\ViewInterface;
-use Sitegear\Core\Module\AbstractCoreModule;
+use Sitegear\Module\AbstractCoreModule;
 use Sitegear\Util\TokenUtilities;
 use Sitegear\Util\LoggerRegistry;
 

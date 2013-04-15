@@ -9,7 +9,7 @@
 namespace Sitegear\Module\Google;
 
 use Sitegear\Base\View\ViewInterface;
-use Sitegear\Core\Module\AbstractCoreModule;
+use Sitegear\Module\AbstractCoreModule;
 use Sitegear\Util\LoggerRegistry;
 
 /**

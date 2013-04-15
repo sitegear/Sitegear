@@ -10,7 +10,7 @@ namespace Sitegear\Module\ResourcesIntegration;
 
 use Sitegear\Base\Resources\ResourceLocations;
 use Sitegear\Core\Engine\Engine;
-use Sitegear\Core\Module\AbstractCoreModule;
+use Sitegear\Module\AbstractCoreModule;
 use Sitegear\Util\LoggerRegistry;
 use Sitegear\Util\NameUtilities;
 

@@ -6,7 +6,7 @@
  * http://sitegear.org/
  */
 
-namespace Sitegear\Core\Module;
+namespace Sitegear\Module;
 
 use Sitegear\Base\Module\AbstractUrlMountableModule;
 use Sitegear\Base\Config\Container\SimpleConfigContainer;

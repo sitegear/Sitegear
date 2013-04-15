@@ -9,7 +9,7 @@
 namespace Sitegear\Module\Version;
 
 use Sitegear\Base\View\ViewInterface;
-use Sitegear\Core\Module\AbstractCoreModule;
+use Sitegear\Module\AbstractCoreModule;
 use Sitegear\Util\LoggerRegistry;
 
 /**
