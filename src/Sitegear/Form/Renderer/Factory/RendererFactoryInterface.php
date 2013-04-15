@@ -14,6 +14,9 @@ use Sitegear\Form\Field\FieldInterface;
 use Sitegear\Form\Renderer\RendererInterface;
 use Sitegear\Form\Renderer\FieldRendererInterface;
 
+/**
+ * Describes the behaviour of a factory that generates RendererInterface implementations.
+ */
 interface RendererFactoryInterface {
 
 	//-- Accessor Methods --------------------
