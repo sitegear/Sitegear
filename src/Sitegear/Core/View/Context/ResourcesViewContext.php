@@ -10,7 +10,7 @@ namespace Sitegear\Core\View\Context;
 
 use Sitegear\Base\View\Context\AbstractViewContext;
 use Sitegear\Base\View\Renderer\Registry\RendererRegistryInterface;
-use Sitegear\Core\View\Decorator\ResourceTokensDecorator;
+use Sitegear\Base\View\Decorator\ResourceTokensDecorator;
 use Sitegear\Core\View\View;
 
 /**

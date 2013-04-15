@@ -6,7 +6,7 @@
  * http://sitegear.org/
  */
 
-namespace Sitegear\Core\View\Decorator;
+namespace Sitegear\Base\View\Decorator;
 
 use Sitegear\Base\View\ViewInterface;
 use Sitegear\Base\View\Decorator\DecoratorInterface;

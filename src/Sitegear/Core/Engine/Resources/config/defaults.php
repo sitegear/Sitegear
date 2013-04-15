@@ -350,12 +350,12 @@ return array(
 		'decorators' => array(
 			'element' => '\\Sitegear\\Base\\View\\Decorator\\ElementDecorator',
 			'inline-element' => '\\Sitegear\\Base\\View\\Decorator\\InlineElementDecorator',
-			'editable' => '\\Sitegear\\Core\\View\\Decorator\\EditableDecorator',
+			'editable' => '\\Sitegear\\Base\\View\\Decorator\\EditableDecorator',
 			'excerpt' => '\\Sitegear\\Base\\View\\Decorator\\ExcerptDecorator',
-			'resource-tokens' => '\\Sitegear\\Core\\View\\Decorator\\ResourceTokensDecorator',
-			'string-tokens' => '\\Sitegear\\Core\\View\\Decorator\\StringTokensDecorator',
+			'resource-tokens' => '\\Sitegear\\Base\\View\\Decorator\\ResourceTokensDecorator',
+			'string-tokens' => '\\Sitegear\\Base\\View\\Decorator\\StringTokensDecorator',
 			'comments' => '\\Sitegear\\Base\\View\\Decorator\\CommentsDecorator',
-			'sign-off' => '\\Sitegear\\Core\\View\\Decorator\\SignOffDecorator'
+			'sign-off' => '\\Sitegear\\Base\\View\\Decorator\\SignOffDecorator'
 		),
 
 		/**
