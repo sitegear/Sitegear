@@ -65,7 +65,12 @@ return array(
 			 * default (boolean) value, and 'overrides' which gives a map where the keys are resource keys (like
 			 * 'script:vendor:jquery') and the values are booleans (typically the opposite of the 'default' value).
 			 */
-			'prefer-cdn' => true
+			'prefer-cdn' => true,
+
+			/**
+			 * Path, relative to the site root, to the vendor resources package.
+			 */
+			'vendor-resources' => 'vendor/sitegear/vendor-resources'
 
 		),
 
