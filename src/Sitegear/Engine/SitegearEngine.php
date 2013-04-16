@@ -315,7 +315,7 @@ class SitegearEngine extends AbstractConfigurableEngine {
 					'module' => 'content'
 				)
 			),
-			$this->config('routes.map'),
+			$this->config('routes.map', array()),
 			array(
 				array(
 					'root' => sprintf('/%s/%s', $this->config('system.command-url.root'), $this->config('system.command-url.user')),
