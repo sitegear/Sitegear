@@ -13,7 +13,7 @@ use Sitegear\Config\Configuration;
 use Sitegear\Config\ConfigLoader;
 use Sitegear\Info\SitegearEnvironmentInfoProvider;
 
-class ConfigContainerTest extends AbstractSitegearTestCase {
+class ConfigurationTest extends AbstractSitegearTestCase {
 
 	/**
 	 * @var Configuration
