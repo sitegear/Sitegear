@@ -9,7 +9,6 @@
 namespace Sitegear\Module\Navigation;
 
 use Sitegear\Module\MountableModuleInterface;
-use Sitegear\Engine\EngineInterface;
 use Sitegear\View\ViewInterface;
 use Sitegear\Module\AbstractSitegearModule;
 use Sitegear\Util\LoggerRegistry;
@@ -27,13 +26,6 @@ class NavigationModule extends AbstractSitegearModule {
 	//-- Attributes --------------------
 
 	private $data;
-
-	//-- Constructor --------------------
-
-	public function __construct(EngineInterface $engine) {
-		parent::__construct($engine);
-		$this->data = array();
-	}
 
 	//-- ModuleInterface Methods --------------------
 
@@ -176,6 +168,9 @@ class NavigationModule extends AbstractSitegearModule {
 	 * @throws \DomainException If the default content module does not provide navigation data.
 	 */
 	private function getData($mode) {
+		if (!is_array($this->data)) {
+			$this->data = array();
+		}
 		if (!isset($this->data[$mode])) {
 			$cacheKey = $this->getCacheKey($mode);
 			$cacheValue = $this->getEngine()->getMemcache()->get($cacheKey);
