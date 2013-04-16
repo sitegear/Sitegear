@@ -259,7 +259,7 @@ class View extends AbstractView {
 	/**
 	 * Shortcut to retrieve the resources manager from the view factory.  This is useful in view scripts.
 	 *
-	 * @return \Sitegear\View\Resources\ResourcesManagerInterface
+	 * @return \Sitegear\View\ResourcesManager\ResourcesManagerInterface
 	 */
 	public function getResourcesManager() {
 		return $this->getEngine()->getViewFactory()->getResourcesManager();
@@ -268,7 +268,7 @@ class View extends AbstractView {
 	/**
 	 * Shortcut to retrieve the strings manager from the view factory.  This is useful in view scripts.
 	 *
-	 * @return \Sitegear\View\Strings\StringsManagerInterface
+	 * @return \Sitegear\View\StringsManager\StringsManagerInterface
 	 */
 	public function getStringsManager() {
 		return $this->getEngine()->getViewFactory()->getStringsManager();

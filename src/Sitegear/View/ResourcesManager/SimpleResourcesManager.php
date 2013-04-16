@@ -6,7 +6,7 @@
  * http://sitegear.org/
  */
 
-namespace Sitegear\View\Resources;
+namespace Sitegear\View\ResourcesManager;
 
 use Sitegear\Util\LoggerRegistry;
 use Sitegear\Util\NameUtilities;

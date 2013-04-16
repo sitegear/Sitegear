@@ -9,12 +9,12 @@
 namespace Sitegear\View\Factory;
 
 use Sitegear\View\Factory\AbstractViewFactory;
-use Sitegear\View\Strings\SimpleStringsManager;
-use Sitegear\View\Resources\SimpleResourcesManager;
+use Sitegear\View\StringsManager\SimpleStringsManager;
+use Sitegear\View\ResourcesManager\SimpleResourcesManager;
 use Sitegear\View\Decorator\Registry\SimpleDecoratorRegistry;
 use Sitegear\View\Renderer\Registry\SimpleRendererRegistry;
-use Sitegear\View\Strings\StringsManagerInterface;
-use Sitegear\View\Resources\ResourcesManagerInterface;
+use Sitegear\View\StringsManager\StringsManagerInterface;
+use Sitegear\View\ResourcesManager\ResourcesManagerInterface;
 use Sitegear\View\Decorator\Registry\DecoratorRegistryInterface;
 use Sitegear\View\Renderer\Registry\RendererRegistryInterface;
 use Sitegear\View\View;

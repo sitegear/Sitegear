@@ -13,10 +13,10 @@ use Sitegear\View\Decorator\Registry\DecoratorRegistryInterface;
 use Sitegear\View\Decorator\Registry\SimpleDecoratorRegistry;
 use Sitegear\View\Renderer\Registry\RendererRegistryInterface;
 use Sitegear\View\Renderer\Registry\SimpleRendererRegistry;
-use Sitegear\View\Resources\ResourcesManagerInterface;
-use Sitegear\View\Resources\SimpleResourcesManager;
-use Sitegear\View\Strings\StringsManagerInterface;
-use Sitegear\View\Strings\SimpleStringsManager;
+use Sitegear\View\ResourcesManager\ResourcesManagerInterface;
+use Sitegear\View\ResourcesManager\SimpleResourcesManager;
+use Sitegear\View\StringsManager\StringsManagerInterface;
+use Sitegear\View\StringsManager\SimpleStringsManager;
 use Sitegear\Util\LoggerRegistry;
 
 use Symfony\Component\HttpFoundation\Request;
@@ -52,12 +52,12 @@ abstract class AbstractViewFactory implements ViewFactoryInterface {
 	private $decoratorRegistry;
 
 	/**
-	 * @var \Sitegear\View\Resources\ResourcesManagerInterface
+	 * @var \Sitegear\View\ResourcesManager\ResourcesManagerInterface
 	 */
 	private $resourcesManager;
 
 	/**
-	 * @var \Sitegear\View\Strings\StringsManagerInterface
+	 * @var \Sitegear\View\StringsManager\StringsManagerInterface
 	 */
 	private $stringsManager;
 
@@ -81,8 +81,8 @@ abstract class AbstractViewFactory implements ViewFactoryInterface {
 	/**
 	 * @param RendererRegistryInterface $rendererRegistry
 	 * @param DecoratorRegistryInterface $decoratorRegistry
-	 * @param ResourcesManagerInterface $resourcesManager
-	 * @param StringsManagerInterface $stringsManager
+	 * @param \Sitegear\View\ResourcesManager\ResourcesManagerInterface $resourcesManager
+	 * @param \Sitegear\View\StringsManager\StringsManagerInterface $stringsManager
 	 * @param string $indexSectionName
 	 * @param string $fallbackSectionName
 	 */

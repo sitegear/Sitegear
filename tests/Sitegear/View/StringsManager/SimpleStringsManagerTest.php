@@ -6,7 +6,7 @@
  * http://sitegear.org/
  */
 
-namespace Sitegear\View\Strings;
+namespace Sitegear\View\StringsManager;
 
 use Sitegear\AbstractSitegearTestCase;
 

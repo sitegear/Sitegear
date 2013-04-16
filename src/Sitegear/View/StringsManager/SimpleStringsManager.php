@@ -6,7 +6,7 @@
  * http://sitegear.org/
  */
 
-namespace Sitegear\View\Strings;
+namespace Sitegear\View\StringsManager;
 
 /**
  * Simple implementation of the StringsManagerInterface.

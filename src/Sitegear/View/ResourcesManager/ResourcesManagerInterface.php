@@ -6,7 +6,7 @@
  * http://sitegear.org/
  */
 
-namespace Sitegear\View\Resources;
+namespace Sitegear\View\ResourcesManager;
 
 /**
  * Defines the behaviour of a registry for page resources, such as CSS and JavaScript, categorised by type.  Page

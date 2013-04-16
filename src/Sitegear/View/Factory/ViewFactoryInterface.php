@@ -10,8 +10,8 @@ namespace Sitegear\View\Factory;
 
 use Sitegear\View\ViewInterface;
 use Sitegear\View\Renderer\Registry\RendererRegistryInterface;
-use Sitegear\View\Resources\ResourcesManagerInterface;
-use Sitegear\View\Strings\StringsManagerInterface;
+use Sitegear\View\ResourcesManager\ResourcesManagerInterface;
+use Sitegear\View\StringsManager\StringsManagerInterface;
 use Sitegear\View\Decorator\Registry\DecoratorRegistryInterface;
 
 use Symfony\Component\HttpFoundation\Request;
@@ -77,14 +77,14 @@ interface ViewFactoryInterface {
 	/**
 	 * Retrieve the resources manager associated with this view factory.
 	 *
-	 * @return \Sitegear\View\Resources\ResourcesManagerInterface
+	 * @return \Sitegear\View\ResourcesManager\ResourcesManagerInterface
 	 */
 	public function getResourcesManager();
 
 	/**
 	 * Retrieve the strings manager associated with this view factory.
 	 *
-	 * @return \Sitegear\View\Strings\StringsManagerInterface
+	 * @return \Sitegear\View\StringsManager\StringsManagerInterface
 	 */
 	public function getStringsManager();
 

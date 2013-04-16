@@ -6,7 +6,7 @@
  * http://sitegear.org/
  */
 
-namespace Sitegear\View\Strings;
+namespace Sitegear\View\StringsManager;
 
 /**
  * Defines the behaviour of an object that manages "strings", that is, collections of short pieces of text that are
