@@ -15,6 +15,10 @@ use Symfony\Component\HttpFoundation\Request;
  */
 final class UrlUtilities {
 
+	//-- Constants --------------------
+
+	const DEFAULT_RETURN_PARAM = 'return';
+
 	//-- Utility Methods --------------------
 
 	/**
@@ -48,7 +52,7 @@ final class UrlUtilities {
 	 *
 	 * @return string Generated link.
 	 */
-	public static function generateLinkWithReturnUrl($linkUrl, $returnUrl, $returnUrlParam='return') {
+	public static function generateLinkWithReturnUrl($linkUrl, $returnUrl, $returnUrlParam=null) {
 		if ($linkUrl instanceof Request) {
 			$linkUrl = $linkUrl->getUri();
 		}
@@ -59,32 +63,28 @@ final class UrlUtilities {
 			$returnUrl = $returnUrl->getUri();
 		}
 		$query = preg_match('/\?/', $linkUrl) ? '&' : '?';
-		return sprintf('%s%s%s=%s', $linkUrl, $query, $returnUrlParam, urlencode($returnUrl));
+		return sprintf('%s%s%s=%s', $linkUrl, $query, $returnUrlParam ?: self::DEFAULT_RETURN_PARAM, urlencode($returnUrl));
 	}
 
 	/**
 	 * Extract the return URL parameter from the given URL.
 	 *
-	 * @param string|\Symfony\Component\HttpFoundation\Request $request A Request object representing the URL to
-	 *   extract the return URL from, or the URL as a string.
+	 * @param string|\Symfony\Component\HttpFoundation\Request $url A Request object representing the URL to extract
+	 *   the return URL from, or the URL as a string.
 	 * @param string $returnUrlParam HTTP GET parameter name to look for the return URL in; if omitted, the default is
-	 *   used ('return').
+	 *   used.
 	 * @param string $default Default URL to return if no return parameter is found, null by default.  If no default is
 	 *   given, and the $request parameter is a Request object, then the home page URI is used as a default.
 	 * @param boolean $absolute Whether to return an absolute URL (true, the default) or the URL as given.
 	 *
 	 * @return string Return URL extracted from the given URL, or null if no such return URL parameter is set.
 	 */
-	public static function getReturnUrl($request, $returnUrlParam=null, $default=null, $absolute=true) {
-		if ($request instanceof Request) {
-			if (is_null($default)) {
-				$default = $request->getSchemeAndHttpHost() . $request->getBaseUrl();
-			}
-		} else {
-			$request = Request::create($request);
+	public static function getReturnUrl($url, $returnUrlParam=null, $default=null, $absolute=true) {
+		if (!$url instanceof Request) {
+			$url = Request::create('/' . ltrim($url, '/'));
 		}
-		$result = $request->get($returnUrlParam ?: 'return', $default);
-		return $absolute ? self::absoluteUrl($result, $request) : $result;
+		$result = $url->get($returnUrlParam ?: self::DEFAULT_RETURN_PARAM, $default);
+		return $absolute && !empty($result) ? self::absoluteUrl($result, $url) : $result;
 	}
 
 	/**
