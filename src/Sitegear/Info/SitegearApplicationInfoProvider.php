@@ -109,4 +109,10 @@ class SitegearApplicationInfoProvider implements ApplicationInfoProviderInterfac
 		return $this->engine->getSiteInfo()->getSiteRoot() . '/vendor/sitegear/vendor-resources';
 	}
 
+	//-- Magic Methods --------------------
+
+	public function __toString() {
+		return $this->getSitegearVersionIdentifier();
+	}
+
 }

@@ -144,4 +144,13 @@ class SitegearSiteInfoProvider implements SiteInfoProviderInterface {
 		return sprintf('%s/public/%s', $root, $resource);
 	}
 
+	//-- Magic Methods --------------------
+
+	/**
+	 * @return string
+	 */
+	public function __toString() {
+		return $this->getDisplayName();
+	}
+
 }

@@ -51,4 +51,13 @@ class SitegearEnvironmentInfoProvider implements EnvironmentInfoProviderInterfac
 		return empty($this->environment) || in_array($this->environment, array( 'development', 'dev' ));
 	}
 
+	//-- Magic Methods --------------------
+
+	/**
+	 * @return string
+	 */
+	public function __toString() {
+		return $this->getEnvironment();
+	}
+
 }
