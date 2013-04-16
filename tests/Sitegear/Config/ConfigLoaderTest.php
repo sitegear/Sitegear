@@ -24,7 +24,7 @@ class ConfigLoaderTest extends AbstractSitegearTestCase {
 	}
 
 	public function testFileLoaderRegistration() {
-		$dummyLoaderClassName = '\\Sitegear\\Mock\\MockFileLoader';
+		$dummyLoaderClassName = '\\Mock\\MockFileLoader';
 		$this->assertFalse($this->loader->hasFileLoader($dummyLoaderClassName));
 		$this->loader->registerFileLoader($dummyLoaderClassName);
 		$this->assertTrue($this->loader->hasFileLoader($dummyLoaderClassName));

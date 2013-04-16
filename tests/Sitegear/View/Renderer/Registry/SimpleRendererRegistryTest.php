@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class SimpleRendererRegistryTest extends AbstractSitegearTestCase {
 
-	const MOCK_CONTENT_RENDERER = '\\Sitegear\\Mock\\MockRenderer';
+	const MOCK_CONTENT_RENDERER = '\\Mock\\MockRenderer';
 
 	/**
 	 * @var \Sitegear\View\Renderer\Registry\RendererRegistry
