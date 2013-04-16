@@ -101,7 +101,7 @@ abstract class AbstractViewFactory implements ViewFactoryInterface {
 	 * @inheritdoc
 	 */
 	public function setRequest(Request $request) {
-		return $this->page = $this->buildViewImpl($request);
+		return $this->page = $this->buildView($request);
 	}
 
 	/**
@@ -112,13 +112,6 @@ abstract class AbstractViewFactory implements ViewFactoryInterface {
 			throw new \LogicException('AbstractViewFactory cannot provide page view object before a request is set.');
 		}
 		return $this->page;
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	public function buildView(Request $request, ViewInterface $parent=null) {
-		return $this->buildViewImpl($request, $parent);
 	}
 
 	/**
@@ -162,18 +155,5 @@ abstract class AbstractViewFactory implements ViewFactoryInterface {
 	public function getFallbackSectionName() {
 		return $this->fallbackSectionName;
 	}
-
-	//-- Internal Methods --------------------
-
-	/**
-	 * Do the actual work of building a view, of the type required by this factory implementation.  Omit the second
-	 * argument to construct the page view.
-	 *
-	 * @param \Symfony\Component\HttpFoundation\Request $request
-	 * @param \Sitegear\View\ViewInterface $parent
-	 *
-	 * @return \Sitegear\View\ViewInterface Created view instance.
-	 */
-	protected abstract function buildViewImpl(Request $request, ViewInterface $parent=null);
 
 }

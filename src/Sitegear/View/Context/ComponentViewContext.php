@@ -10,8 +10,11 @@ namespace Sitegear\View\Context;
 
 use Sitegear\Module\ModuleInterface;
 use Sitegear\View\Context\AbstractSitegearFileViewContext;
+use Sitegear\View\Factory\SitegearViewFactory;
 use Sitegear\View\View;
 use Sitegear\Util\NameUtilities;
+use Sitegear\View\ViewInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * View context for rendering components.
@@ -21,6 +24,17 @@ class ComponentViewContext extends AbstractSitegearFileViewContext {
 	//-- Constants --------------------
 
 	const FORMAT_COMPONENT_CONTROLLER_METHOD_NAME = '%sComponent';
+
+	//-- Attributes --------------------
+
+	private $useDefaultContentModule;
+
+	//-- Constructor --------------------
+
+	public function __construct(ViewInterface $view, Request $request, $useDefaultContentModule) {
+		parent::__construct($view, $request);
+		$this->useDefaultContentModule = $useDefaultContentModule;
+	}
 
 	//-- ViewContextInterface Methods --------------------
 
@@ -42,10 +56,9 @@ class ComponentViewContext extends AbstractSitegearFileViewContext {
 	 * @inheritdoc
 	 */
 	protected function getContextModule() {
-		$targetModule = $this->view()->getTarget(\Sitegear\View\View::TARGET_LEVEL_MODULE);
-		return $targetModule === \Sitegear\View\View::SPECIAL_TARGET_MODULE_COMPONENT ?
+		return $this->useDefaultContentModule ?
 				$this->view()->getEngine()->getDefaultContentModule() :
-				$targetModule;
+				$this->view()->getTarget(View::TARGET_LEVEL_MODULE);
 	}
 
 	/**

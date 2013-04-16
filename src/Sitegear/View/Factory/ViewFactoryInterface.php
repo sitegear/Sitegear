@@ -48,7 +48,7 @@ interface ViewFactoryInterface {
 	public function getPage();
 
 	/**
-	 * Create a new context, with the given parent.  It is illegal to pass a parent that does not belong to this
+	 * Create a new View object, with the given parent.  It is illegal to pass a parent that does not belong to this
 	 * factory.
 	 *
 	 * @param \Symfony\Component\HttpFoundation\Request $request
@@ -57,6 +57,16 @@ interface ViewFactoryInterface {
 	 * @return \Sitegear\View\ViewInterface New instance.
 	 */
 	public function buildView(Request $request, ViewInterface $parent=null);
+
+	/**
+	 * Create a new ViewContext.
+	 *
+	 * @param \Symfony\Component\HttpFoundation\Request $request
+	 * @param \Sitegear\View\ViewInterface $view
+	 *
+	 * @return mixed
+	 */
+	public function buildViewContext(ViewInterface $view, Request $request);
 
 	//-- Accessor Methods --------------------
 

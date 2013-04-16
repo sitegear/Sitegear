@@ -22,14 +22,14 @@ class ModuleItemViewContext extends AbstractSitegearFileViewContext {
 	 * @inheritdoc
 	 */
 	protected function getContextModule() {
-		return $this->view()->getTarget(\Sitegear\View\View::TARGET_LEVEL_MODULE);
+		return $this->view()->getTarget(View::TARGET_LEVEL_MODULE);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	protected function expandViewScriptPaths($viewScriptName, $methodResult) {
-		$args = $this->view()->getTargetArguments(\Sitegear\View\View::TARGET_LEVEL_METHOD);
+		$args = $this->view()->getTargetArguments(View::TARGET_LEVEL_METHOD);
 		return array(
 			$methodResult ?: (!empty($args) ? $args[0] : null)
 		);

@@ -8,6 +8,13 @@
 
 namespace Sitegear\View\Factory;
 
+use Sitegear\Util\LoggerRegistry;
+use Sitegear\View\Context\ComponentViewContext;
+use Sitegear\View\Context\ModuleItemViewContext;
+use Sitegear\View\Context\ResourcesViewContext;
+use Sitegear\View\Context\SectionViewContext;
+use Sitegear\View\Context\StringsViewContext;
+use Sitegear\View\Context\TemplateViewContext;
 use Sitegear\View\Factory\AbstractViewFactory;
 use Sitegear\View\StringsManager\StringsManager;
 use Sitegear\View\ResourcesManager\ResourcesManager;
@@ -24,6 +31,38 @@ use Sitegear\Engine\SitegearEngine;
 use Symfony\Component\HttpFoundation\Request;
 
 class SitegearViewFactory extends AbstractViewFactory {
+
+	//-- Special Target Constants --------------------
+
+	/**
+	 * Special target name at the module level for rendering templates from the default module.
+	 */
+	const SPECIAL_TARGET_MODULE_TEMPLATE = 'template';
+
+	/**
+	 * Special target name at the module level for rendering sections from the controller module for the current URL.
+	 */
+	const SPECIAL_TARGET_MODULE_SECTION = 'section';
+
+	/**
+	 * Special target name at the module level for rendering components from the default module.
+	 */
+	const SPECIAL_TARGET_MODULE_COMPONENT = 'component';
+
+	/**
+	 * Special target name at the module level for rendering resources.
+	 */
+	const SPECIAL_TARGET_MODULE_RESOURCES = 'resources';
+
+	/**
+	 * Special target name at the module level for rendering strings.
+	 */
+	const SPECIAL_TARGET_MODULE_STRINGS = 'strings';
+
+	/**
+	 * Special target name at the method level to represent that a module-specific item should be rendered.
+	 */
+	const SPECIAL_TARGET_METHOD_ITEM = 'item';
 
 	//-- Attributes --------------------
 
@@ -55,13 +94,66 @@ class SitegearViewFactory extends AbstractViewFactory {
 		$this->engine = $engine;
 	}
 
-	//-- AbstractViewFactory Methods --------------------
+	//-- ViewFactoryInterface Methods --------------------
 
 	/**
 	 * @inheritdoc
 	 */
-	protected function buildViewImpl(Request $request, ViewInterface $parent=null) {
+	public function buildView(Request $request, ViewInterface $parent=null) {
+		LoggerRegistry::debug('SitegearViewFactory::buildView()');
 		return new View($this->engine, $request, $parent);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function buildViewContext(ViewInterface $view, Request $request) {
+		LoggerRegistry::debug('SitegearViewFactory::buildViewContext()');
+		// Check for special targets at the module level
+		switch ($view->getTarget(View::TARGET_LEVEL_MODULE)) {
+			// $view->template()->{templateName}()
+			case self::SPECIAL_TARGET_MODULE_TEMPLATE:
+				$context = new TemplateViewContext($view, $request);
+				break;
+
+			// $view->section()->{sectionName}()
+			case self::SPECIAL_TARGET_MODULE_SECTION:
+				$index = $this->getIndexSectionName();
+				$fallback = $this->getFallbackSectionName();
+				$context = new SectionViewContext($view, $request, $index, $fallback);
+				break;
+
+			// $view->component()->{componentName}()
+			case self::SPECIAL_TARGET_MODULE_COMPONENT:
+				$context = new ComponentViewContext($view, $request, true);
+				break;
+
+			// $view->resources()->{resourceTypeName}()
+			case self::SPECIAL_TARGET_MODULE_RESOURCES:
+				$context = new ResourcesViewContext($view, $request);
+				break;
+
+			// $view->strings()->{stringName}()
+			case self::SPECIAL_TARGET_MODULE_STRINGS:
+				$context = new StringsViewContext($view, $request);
+				break;
+
+			// $view->{moduleName}()...
+			default:
+				// No special target at the module level, check at the method level
+				switch ($view->getTarget(View::TARGET_LEVEL_METHOD)) {
+					// $view->{moduleName}()->item()
+					case self::SPECIAL_TARGET_METHOD_ITEM:
+						$context = new ModuleItemViewContext($view, $request);
+						break;
+
+					// $view->{moduleName}()->{componentName}()
+					default:
+						$context = new ComponentViewContext($view, $request, false);
+				}
+		}
+		return $context;
+
 	}
 
 }

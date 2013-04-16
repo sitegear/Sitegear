@@ -88,7 +88,7 @@ interface ViewInterface extends \ArrayAccess {
 	public function getTargetArguments($index=null);
 
 	/**
-	 * Enable one or more decorators.
+	 * Activate one or more decorators.
 	 *
 	 * @varargs Decorators to enable.  Any indexed arrays should be expanded recursively.  Each string may simply
 	 *   specify the decorator name, or may use the form accepted by PhpSourceUtilities::parseFunctionCall().
@@ -99,7 +99,14 @@ interface ViewInterface extends \ArrayAccess {
 	 *
 	 * @throws \InvalidArgumentException If any specification is invalid.
 	 */
-	public function applyDecorators();
+	public function activateDecorators();
+
+	/**
+	 * Get the names of all active decorators.
+	 *
+	 * @return string[]
+	 */
+	public function getActiveDecorators();
 
 	/**
 	 * Does the main part of rendering the view.

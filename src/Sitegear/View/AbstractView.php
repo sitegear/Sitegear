@@ -12,6 +12,7 @@ use Sitegear\Engine\EngineInterface;
 use Sitegear\Util\ArrayUtilities;
 
 use Sitegear\Util\LoggerRegistry;
+use Sitegear\Util\PhpSourceUtilities;
 use Sitegear\Util\TypeUtilities;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -55,6 +56,11 @@ abstract class AbstractView implements ViewInterface {
 	 * @var \ArrayAccess
 	 */
 	private $data;
+
+	/**
+	 * @var array[] Array of associative arrays, each of which has a 'name' key and an 'arguments' key.
+	 */
+	private $activeDecorators = array();
 
 	//-- Constructor --------------------
 
@@ -155,6 +161,35 @@ abstract class AbstractView implements ViewInterface {
 			throw new \OutOfBoundsException(sprintf('View does not contain a target at index %d', $index));
 		}
 		return $this->targets[$index]['arguments'] ?: array();
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function activateDecorators() {
+		foreach (func_get_args() as $arg) {
+			if (is_array($arg) && ArrayUtilities::isIndexed($arg)) {
+				// An indexed array, recurse with each element of the array as a separate argument.
+				call_user_func_array(array( $this, 'activateDecorators'), $arg);
+			} elseif (is_array($arg)) {
+				// An associative array, ensure it has an 'arguments' key.
+				$this->activeDecorators[] = array_merge(array( 'arguments' => array() ), $arg);
+			} elseif (is_string($arg)) {
+				// A string, use the parseFunctionCall() utility method.
+				$this->activeDecorators[] = PhpSourceUtilities::parseFunctionCall($arg);
+			} else {
+				// Unhandled type.
+				throw new \InvalidArgumentException(sprintf('Cannot use [%s] as decorator specification', TypeUtilities::describe($arg)));
+			}
+		}
+		return $this;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function getActiveDecorators() {
+		return $this->activeDecorators;
 	}
 
 	//-- ArrayAccess Methods --------------------

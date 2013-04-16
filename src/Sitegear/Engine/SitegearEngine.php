@@ -129,7 +129,7 @@ class SitegearEngine extends AbstractConfigurableEngine {
 		LoggerRegistry::debug('SitegearEngine::renderPage()');
 		return Response::create(
 			$this->getViewFactory()->getPage()
-					->applyDecorators($this->config('view.page.decorators', array()))
+					->activateDecorators($this->config('view.page.decorators', array()))
 					->pushTarget($this->config('view.page.template-module', array()))
 					->pushTarget($request->attributes->get('_template'))
 					->render(),

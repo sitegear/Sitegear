@@ -8,18 +8,6 @@
 
 namespace Sitegear\View;
 
-use Sitegear\View\AbstractView;
-use Sitegear\View\ViewInterface;
-use Sitegear\Engine\EngineInterface;
-use Sitegear\View\Context\ComponentViewContext;
-use Sitegear\View\Context\SectionViewContext;
-use Sitegear\View\Context\TemplateViewContext;
-use Sitegear\View\Context\ResourcesViewContext;
-use Sitegear\View\Context\StringsViewContext;
-use Sitegear\View\Context\ModuleItemViewContext;
-use Sitegear\Util\DataSeekingArrayObject;
-use Sitegear\Util\PhpSourceUtilities;
-use Sitegear\Util\ArrayUtilities;
 use Sitegear\Util\HtmlUtilities;
 use Sitegear\Util\TypeUtilities;
 use Sitegear\Util\NameUtilities;
@@ -113,44 +101,7 @@ class View extends AbstractView {
 	 */
 	const TARGET_LEVEL_METHOD = 1;
 
-	//-- Special Target Constants --------------------
-
-	/**
-	 * Special target name at the module level for rendering templates from the default module.
-	 */
-	const SPECIAL_TARGET_MODULE_TEMPLATE = 'template';
-
-	/**
-	 * Special target name at the module level for rendering sections from the controller module for the current URL.
-	 */
-	const SPECIAL_TARGET_MODULE_SECTION = 'section';
-
-	/**
-	 * Special target name at the module level for rendering components from the default module.
-	 */
-	const SPECIAL_TARGET_MODULE_COMPONENT = 'component';
-
-	/**
-	 * Special target name at the module level for rendering resources.
-	 */
-	const SPECIAL_TARGET_MODULE_RESOURCES = 'resources';
-
-	/**
-	 * Special target name at the module level for rendering strings.
-	 */
-	const SPECIAL_TARGET_MODULE_STRINGS = 'strings';
-
-	/**
-	 * Special target name at the method level to represent that a module-specific item should be rendered.
-	 */
-	const SPECIAL_TARGET_METHOD_ITEM = 'item';
-
 	//-- Attributes --------------------
-
-	/**
-	 * @var array[] Array of associative arrays, each of which has a 'name' key and an 'arguments' key.
-	 */
-	private $activeDecorators = array();
 
 	/**
 	 * @var boolean Whether rendering is currently in progress.
@@ -170,10 +121,10 @@ class View extends AbstractView {
 			$request = $this->getRequest();
 
 			// The arguments to the module definition are decorators, set them now
-			call_user_func_array(array( $this, 'applyDecorators'), $this->getTargetArguments(self::TARGET_LEVEL_MODULE));
+			call_user_func_array(array( $this, 'activateDecorators'), $this->getTargetArguments(self::TARGET_LEVEL_MODULE));
 
 			// Create a relevant context
-			$context = $this->createContext();
+			$context = $this->getEngine()->getViewFactory()->buildViewContext($this, $this->getRequest());
 
 			// Check for and execute a target controller
 			$targetController = $context->getTargetController($this, $request);
@@ -193,7 +144,7 @@ class View extends AbstractView {
 				$content = $context->render($this->getEngine()->getViewFactory()->getRendererRegistry(), $targetControllerResult) ?: '';
 
 				// Decorate using active decorators
-				foreach ($this->activeDecorators as $active) {
+				foreach ($this->getActiveDecorators() as $active) {
 					$decorator = $this->getEngine()->getViewFactory()->getDecoratorRegistry()->getDecorator($active['name']);
 					$content = TypeUtilities::invokeCallable(
 						array( $decorator, 'decorate' ),
@@ -214,28 +165,6 @@ class View extends AbstractView {
 		return $content ?: '';
 	}
 
-	/**
-	 * @inheritdoc
-	 */
-	public function applyDecorators() {
-		foreach (func_get_args() as $arg) {
-			if (is_array($arg) && ArrayUtilities::isIndexed($arg)) {
-				// An indexed array, recurse with each element of the array as a separate argument.
-				call_user_func_array(array( $this, 'applyDecorators'), $arg);
-			} elseif (is_array($arg)) {
-				// An associative array, ensure it has an 'arguments' key.
-				$this->activeDecorators[] = array_merge(array( 'arguments' => array() ), $arg);
-			} elseif (is_string($arg)) {
-				// A string, use the parseFunctionCall() utility method.
-				$this->activeDecorators[] = PhpSourceUtilities::parseFunctionCall($arg);
-			} else {
-				// Unhandled type.
-				throw new \InvalidArgumentException(sprintf('Cannot use [%s] as decorator specification', TypeUtilities::describe($arg)));
-			}
-		}
-		return $this;
-	}
-
 	//-- Shortcut Methods --------------------
 
 	/**
@@ -254,63 +183,6 @@ class View extends AbstractView {
 	 */
 	public function getStringsManager() {
 		return $this->getEngine()->getViewFactory()->getStringsManager();
-	}
-
-	//-- Internal Methods --------------------
-
-	/**
-	 * Create a relevant context for this view.
-	 *
-	 * @return \Sitegear\View\Context\ViewContextInterface
-	 *
-	 * TODO Move this to the SitegearViewFactory class
-	 */
-	protected function createContext() {
-		LoggerRegistry::debug('View::createContext()');
-		// Check for special targets at the module level
-		switch ($this->getTarget(self::TARGET_LEVEL_MODULE)) {
-			// $view->template()->{templateName}()
-			case self::SPECIAL_TARGET_MODULE_TEMPLATE:
-				$context = new TemplateViewContext($this, $this->getRequest());
-				break;
-
-			// $view->section()->{sectionName}()
-			case self::SPECIAL_TARGET_MODULE_SECTION:
-				$index = $this->getEngine()->getViewFactory()->getIndexSectionName();
-				$fallback = $this->getEngine()->getViewFactory()->getFallbackSectionName();
-				$context = new SectionViewContext($this, $this->getRequest(), $index, $fallback);
-				break;
-
-			// $view->component()->{componentName}()
-			case self::SPECIAL_TARGET_MODULE_COMPONENT:
-				$context = new ComponentViewContext($this, $this->getRequest());
-				break;
-
-			// $view->resources()->{resourceTypeName}()
-			case self::SPECIAL_TARGET_MODULE_RESOURCES:
-				$context = new ResourcesViewContext($this, $this->getRequest());
-				break;
-
-			// $view->strings()->{stringName}()
-			case self::SPECIAL_TARGET_MODULE_STRINGS:
-				$context = new StringsViewContext($this, $this->getRequest());
-				break;
-
-			// $view->{moduleName}()...
-			default:
-				// No special target at the module level, check at the method level
-				switch ($this->getTarget(self::TARGET_LEVEL_METHOD)) {
-					// $view->{moduleName}()->item()
-					case self::SPECIAL_TARGET_METHOD_ITEM:
-						$context = new ModuleItemViewContext($this, $this->getRequest());
-						break;
-
-					// $view->{moduleName}()->{componentName}()
-					default:
-						$context = new ComponentViewContext($this, $this->getRequest());
-				}
-		}
-		return $context;
 	}
 
 	//-- Magic Methods --------------------
