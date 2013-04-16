@@ -11,7 +11,7 @@ namespace Sitegear\User\Acl;
 use Sitegear\User\Storage\UserStorageInterface;
 
 /**
- * Simple default implementation of AuthenticatorInterface tied to a UserStorageInterface implementation.
+ * Default implementation of AuthenticatorInterface tied to a UserStorageInterface implementation.
  */
 class StorageBackedAccessController implements AccessControllerInterface {
 
