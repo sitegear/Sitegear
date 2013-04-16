@@ -8,7 +8,6 @@
 
 namespace Sitegear\View\Factory;
 
-use Sitegear\Util\LoggerRegistry;
 use Sitegear\View\Context\ComponentViewContext;
 use Sitegear\View\Context\ModuleItemViewContext;
 use Sitegear\View\Context\ResourcesViewContext;
@@ -27,6 +26,7 @@ use Sitegear\View\Renderer\Registry\RendererRegistryInterface;
 use Sitegear\View\View;
 use Sitegear\View\ViewInterface;
 use Sitegear\Engine\SitegearEngine;
+use Sitegear\Util\LoggerRegistry;
 
 use Symfony\Component\HttpFoundation\Request;
 
