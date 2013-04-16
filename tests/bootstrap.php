@@ -34,7 +34,8 @@ return call_user_func(function() {
 		exit;
 	}
 
-	// Add the Sitegear prefix for test classes.
+	// Add the Sitegear prefix for test classes and mock classes.
 	$loader->add('Sitegear\\', __DIR__);
+	$loader->add('Mock\\', __DIR__);
 
 });
