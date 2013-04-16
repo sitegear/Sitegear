@@ -6,7 +6,6 @@
  * http://sitegear.org/
  */
 
-// This namespace intentionally does not match the file path
 namespace Sitegear;
 
 use Sitegear\Engine\SitegearEngine;
