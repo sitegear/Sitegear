@@ -35,7 +35,7 @@ class PhpRenderer implements RendererInterface {
 	 * @inheritdoc
 	 */
 	public function render($path, ViewInterface $view) {
-		LoggerRegistry::debug(sprintf('PhpRenderer::render(%s, %s)', $path, TypeUtilities::describe($view)));
+		LoggerRegistry::debug(sprintf('PhpRenderer::render(%s, [view])', $path));
 		$renderPath = null;
 		foreach ($this->getExtensions() as $extension) {
 			if (is_null($renderPath) && file_exists($path . $extension)) {

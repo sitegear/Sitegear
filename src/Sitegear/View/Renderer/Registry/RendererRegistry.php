@@ -86,7 +86,7 @@ class RendererRegistry implements RendererRegistryInterface {
 	 * @inheritdoc
 	 */
 	public function render($path, ViewInterface $view) {
-		LoggerRegistry::debug(sprintf('RendererRegistry::render(%s, %s)', $path, TypeUtilities::describe($view)));
+		LoggerRegistry::debug(sprintf('RendererRegistry::render(%s, [view])', $path));
 		$result = null;
 		foreach ($this->registry as $renderer) { /** @var \Sitegear\View\Renderer\RendererInterface $renderer */
 			if (is_null($result) && $renderer->supports($path)) {
