@@ -96,7 +96,8 @@ class ContentModule extends AbstractSitegearModule {
 	public function baseLinksComponent(ViewInterface $view, Request $request) {
 		LoggerRegistry::debug('ContentModule::baseLinksComponent()');
 		$view['base-url'] = UrlUtilities::absoluteUrl('/', $request);
-		$view['canonical-url'] = $request->getUri(); /* TODO Canonicalise me */;
+		// TODO Canonicalise me
+		$view['canonical-url'] = $request->getUri();
 		$view['favicon-url'] = UrlUtilities::absoluteUrl('/favicon.ico', $request);
 	}
 
