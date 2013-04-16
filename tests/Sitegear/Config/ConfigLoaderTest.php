@@ -20,7 +20,7 @@ class ConfigLoaderTest extends AbstractSitegearTestCase {
 
 	public function setUp() {
 		parent::setUp();
-		$this->loader = new ConfigLoader('testing');
+		$this->loader = new ConfigLoader(new SitegearEnvironmentInfoProvider('testing'));
 	}
 
 	public function testFileLoaderRegistration() {
@@ -97,7 +97,7 @@ class ConfigLoaderTest extends AbstractSitegearTestCase {
 		$this->assertEquals(self::$testData, $this->loader->load(new \ArrayObject(self::$testData)));
 	}
 
-	public function testLoadConfigContainerObject() {
+	public function testLoadConfigurationObject() {
 		$config = new \Sitegear\Config\Configuration($this->loader);
 		$config->merge(self::$testData);
 		$this->assertEquals(self::$testData, $this->loader->load($config));
