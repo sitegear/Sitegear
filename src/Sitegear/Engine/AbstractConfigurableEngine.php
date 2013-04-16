@@ -13,7 +13,7 @@ use Sitegear\Config\Processor\IncludeTokenProcessor;
 use Sitegear\Config\Processor\EngineTokenProcessor;
 use Sitegear\Config\Processor\ConfigTokenProcessor;
 use Sitegear\Config\ConfigLoader;
-use Sitegear\Config\Container\ConfigContainer;
+use Sitegear\Config\ConfigContainer;
 use Sitegear\Info\ResourceLocations;
 use Sitegear\Util\ExtensionMimeTypeGuesser;
 use Sitegear\Util\TypeUtilities;
@@ -43,7 +43,7 @@ abstract class AbstractConfigurableEngine extends AbstractEngine implements Conf
 	private $configLoader;
 
 	/**
-	 * @var \Sitegear\Config\Container\ConfigContainerInterface Configuration object.
+	 * @var \Sitegear\Config\ConfigContainerInterface Configuration object.
 	 */
 	private $config;
 

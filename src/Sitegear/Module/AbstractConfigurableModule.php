@@ -10,7 +10,7 @@ namespace Sitegear\Module;
 
 use Sitegear\Config\ConfigurableInterface;
 use Sitegear\Config\ConfigLoader;
-use Sitegear\Config\Container\ConfigContainer;
+use Sitegear\Config\ConfigContainer;
 use Sitegear\Config\Processor\IncludeTokenProcessor;
 use Sitegear\Config\Processor\EngineTokenProcessor;
 use Sitegear\Config\Processor\ConfigTokenProcessor;
@@ -34,7 +34,7 @@ abstract class AbstractConfigurableModule extends AbstractModule implements Conf
 	private $configLoader;
 
 	/**
-	 * @var \Sitegear\Config\Container\ConfigContainerInterface
+	 * @var \Sitegear\Config\ConfigContainerInterface
 	 */
 	private $config;
 

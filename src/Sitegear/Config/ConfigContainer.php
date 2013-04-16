@@ -6,9 +6,8 @@
  * http://sitegear.org/
  */
 
-namespace Sitegear\Config\Container;
+namespace Sitegear\Config;
 
-use Sitegear\Config\ConfigLoader;
 use Sitegear\Config\Processor\ProcessorInterface;
 use Sitegear\Util\ArrayUtilities;
 use Sitegear\Util\TypeUtilities;

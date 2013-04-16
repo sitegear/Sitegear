@@ -6,9 +6,10 @@
  * http://sitegear.org/
  */
 
-namespace Sitegear\Config\Container;
+namespace Sitegear\Config;
 
 use Sitegear\AbstractSitegearTestCase;
+use Sitegear\Config\ConfigContainer;
 use Sitegear\Config\ConfigLoader;
 use Sitegear\Info\SitegearEnvironmentInfoProvider;
 

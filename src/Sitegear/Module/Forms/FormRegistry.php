@@ -9,7 +9,7 @@
 namespace Sitegear\Module\Forms;
 
 use Sitegear\Config\ConfigurableInterface;
-use Sitegear\Config\Container\ConfigContainer;
+use Sitegear\Config\ConfigContainer;
 use Sitegear\Config\Processor\ArrayTokenProcessor;
 use Sitegear\Config\Processor\ConfigTokenProcessor;
 use Sitegear\Config\Processor\EngineTokenProcessor;

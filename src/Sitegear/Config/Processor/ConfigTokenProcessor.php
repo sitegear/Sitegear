@@ -18,7 +18,7 @@ class ConfigTokenProcessor extends AbstractPrefixedTokenProcessor {
 	//-- Attributes --------------------
 
 	/**
-	 * @var \Sitegear\Config\Container\ConfigContainerInterface
+	 * @var \Sitegear\Config\ConfigurableInterface
 	 */
 	private $object;
 

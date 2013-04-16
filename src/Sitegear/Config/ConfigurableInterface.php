@@ -18,7 +18,7 @@ interface ConfigurableInterface {
 	 * data completely replaces, or is merged with, the existing configuration data (if any).  This should also setup
 	 * any configuration processors on the container, including any passed in via $additionalProcessors.
 	 *
-	 * @param null|array|string|\ArrayObject|\Sitegear\Config\Container\ConfigContainerInterface $config
+	 * @param null|array|string|\ArrayObject|\Sitegear\Config\ConfigContainerInterface $config
 	 *   Configuration data, object or filename to configure this object with.  Null means to use only defaults.
 	 * @param \Sitegear\Config\ConfigLoader $loader Configuration loader.
 	 * @param null|array $additionalProcessors Array of ProcessorInterface implementations.

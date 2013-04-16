@@ -8,7 +8,6 @@
 
 namespace Sitegear\Config;
 
-use Sitegear\Config\Container\ConfigContainerInterface;
 use Sitegear\Config\FileLoader\FileLoaderInterface;
 use Sitegear\Info\EnvironmentInfoProviderInterface;
 use Sitegear\Util\ArrayUtilities;
@@ -99,8 +98,8 @@ class ConfigLoader {
 	 *
 	 * If the given argument is a filename, also load the relevant environment-specific override file.
 	 *
-	 * @param array|string|\ArrayObject|\Sitegear\Config\Container\ConfigContainerInterface $config Configuration
-	 *   data, filename or container object.
+	 * @param array|string|\ArrayObject|\Sitegear\Config\ConfigContainerInterface $config Configuration data, filename
+	 *   or container object.
 	 *
 	 * @return array Loaded data.
 	 *
@@ -138,7 +137,7 @@ class ConfigLoader {
 	/**
 	 * Normalise the given configuration into an array, or throw an exception if it cannot be normalised.
 	 *
-	 * @param array|string|\ArrayObject|\Sitegear\Config\Container\ConfigContainerInterface $config Data to
+	 * @param array|string|\ArrayObject|\Sitegear\Config\ConfigContainerInterface $config Data to
 	 *   normalise.
 	 *
 	 * @return array Normalised data.

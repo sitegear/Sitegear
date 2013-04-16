@@ -6,7 +6,7 @@
  * http://sitegear.org/
  */
 
-namespace Sitegear\Config\Container;
+namespace Sitegear\Config;
 
 use Sitegear\Config\Processor\ProcessorInterface;
 
@@ -42,7 +42,7 @@ interface ConfigContainerInterface {
 	 * @param boolean $preferExisting Whether to prefer values from the passed-in config over the existing values (the
 	 *   default) or to prefer existing values over passed-in values (if this argument is true).
 	 *
-	 * @return \Sitegear\Config\Container\ConfigContainerInterface Current object, fluent pattern.
+	 * @return self
 	 *
 	 * @throws \InvalidArgumentException
 	 */

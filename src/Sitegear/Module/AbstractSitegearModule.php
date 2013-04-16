@@ -9,7 +9,7 @@
 namespace Sitegear\Module;
 
 use Sitegear\Module\AbstractUrlMountableModule;
-use Sitegear\Config\Container\ConfigContainer;
+use Sitegear\Config\ConfigContainer;
 use Sitegear\Engine\EngineInterface;
 use Sitegear\Info\ResourceLocations;
 use Sitegear\View\ViewInterface;
