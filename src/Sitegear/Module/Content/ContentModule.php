@@ -44,7 +44,7 @@ class ContentModule extends AbstractSitegearModule {
 	 * Default page controller, it just renders the page with no custom view data.
 	 */
 	public function defaultController() {
-		LoggerRegistry::debug('ContentModule::defaultController');
+		LoggerRegistry::debug('ContentModule::defaultController()');
 		// Do nothing
 	}
 
@@ -58,7 +58,7 @@ class ContentModule extends AbstractSitegearModule {
 	 * @param boolean $xml
 	 */
 	public function doctypeComponent(ViewInterface $view, $html, $xml=false) {
-		LoggerRegistry::debug('ContentModule::doctypeComponent');
+		LoggerRegistry::debug(sprintf('ContentModule::doctypeComponent([view], %s, %s)', $html, $xml ? 'true' : 'false'));
 		$view['doctype-spec'] = $this->doctypeSpec($html);
 		$view['xml-spec'] = $this->xmlSpec($xml);
 	}
@@ -75,7 +75,7 @@ class ContentModule extends AbstractSitegearModule {
 	 *   "foo foo-bar foo-bar-baz", but if $maxDepth is 2, then it will return "foo foo-bar".
 	 */
 	public function bodyClassesComponent(ViewInterface $view, Request $request, $maxElements=null) {
-		LoggerRegistry::debug('ContentModule::bodyClassesComponent');
+		LoggerRegistry::debug(sprintf('ContentModule::bodyClassesComponent([view], [request], %s)', $maxElements));
 		$url = ltrim($request->getPathInfo(), '/');
 		$path = !empty($url) ? explode('/', $url) : array( $this->config('body-classes.index') );
 		$maxElements = $maxElements ?: sizeof($path);
@@ -93,7 +93,7 @@ class ContentModule extends AbstractSitegearModule {
 	 * @param \Symfony\Component\HttpFoundation\Request $request
 	 */
 	public function baseLinksComponent(ViewInterface $view, Request $request) {
-		LoggerRegistry::debug('ContentModule::baseLinksComponent');
+		LoggerRegistry::debug('ContentModule::baseLinksComponent()');
 		$view['base-url'] = UrlUtilities::absoluteUrl('/', $request);
 		$view['canonical-url'] = $request->getUri(); /* TODO Canonicalise me */;
 		$view['favicon-url'] = UrlUtilities::absoluteUrl('/favicon.ico', $request);

@@ -96,7 +96,7 @@ class SitegearEngine extends AbstractConfigurableEngine {
 	 * @param \Sitegear\User\Storage\UserStorageInterface|null $userStorage
 	 */
 	public function __construct($siteInfo, $environment, ApplicationInfoProviderInterface $sitegearInfo=null, ViewFactoryInterface $viewFactory=null, UserStorageInterface $userStorage=null) {
-		LoggerRegistry::debug('Instantiating Engine');
+		LoggerRegistry::debug('new SitegearEngine()');
 		$siteInfo = !is_null($sitegearInfo) && !is_string($siteInfo) ? $siteInfo : new SitegearSiteInfoProvider($this, $siteInfo);
 		$environment = !is_null($environment) && !is_string($environment) ? $environment : new SitegearEnvironmentInfoProvider($environment);
 		$sitegearInfo = $sitegearInfo ?: new SitegearApplicationInfoProvider($this);
@@ -126,7 +126,7 @@ class SitegearEngine extends AbstractConfigurableEngine {
 	 * @inheritdoc
 	 */
 	public function renderPage(Request $request) {
-		LoggerRegistry::debug('Engine rendering page');
+		LoggerRegistry::debug('SitegearEngine::renderPage()');
 		return Response::create(
 			$this->getViewFactory()->getPage()
 					->applyDecorators($this->config('view.page.decorators', array()))
@@ -144,7 +144,7 @@ class SitegearEngine extends AbstractConfigurableEngine {
 	 * set), and an X-Powered-By header for documentation purposes.
 	 */
 	public function instrumentResponse(Response $response) {
-		LoggerRegistry::debug('Engine instrumenting response');
+		LoggerRegistry::debug('SitegearEngine::instrumentResponse()');
 		if (!$response->headers->has('Content-Type')) {
 			$contentType = $this->config('view.page.content-type');
 			if (is_string($contentType) && strlen($contentType) > 0) {
@@ -159,6 +159,7 @@ class SitegearEngine extends AbstractConfigurableEngine {
 	 * @inheritdoc
 	 */
 	public function createFileResponse(Request $request, $filename, $conditional=true) {
+		LoggerRegistry::debug(sprintf('SitegearEngine::createFileResponse([request], %s, %s)', $filename, $conditional ? 'true' : 'false'));
 		$response = null;
 		if (!$conditional || is_file($filename)) {
 			// Determine whether to use the header method.
@@ -192,6 +193,7 @@ class SitegearEngine extends AbstractConfigurableEngine {
 	 * @inheritdoc
 	 */
 	public function normaliseResourceMap(array $resources) {
+		LoggerRegistry::debug('SitegearEngine::normaliseResourceMap()');
 		// Retrieve and normalise the preferences for CDN vs local delivery.
 		$preferCdn = $this->config('system.resources.prefer-cdn');
 		if ($preferCdn === true) {

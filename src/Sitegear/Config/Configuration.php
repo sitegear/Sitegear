@@ -50,7 +50,7 @@ class Configuration {
 	 * @param \Sitegear\Config\ConfigLoader $loader
 	 */
 	public function __construct(ConfigLoader $loader) {
-		LoggerRegistry::debug('Instantiating Configuration');
+		LoggerRegistry::debug('new Configuration()');
 		$this->loader = $loader;
 		$this->processors = array();
 		$this->data = array();
@@ -73,6 +73,7 @@ class Configuration {
 	 * @return self
 	 */
 	public function addProcessor(ProcessorInterface $processor) {
+		LoggerRegistry::debug(sprintf('Configuration::addProcessor(%s)', TypeUtilities::describe($processor)));
 		$this->processors[] = $processor;
 	}
 
@@ -91,17 +92,16 @@ class Configuration {
 	 * @throws \InvalidArgumentException
 	 */
 	public function merge($config, $rootKey=null, $preferExisting=false) {
-		LoggerRegistry::debug(sprintf('Configuration merging data [%s]', TypeUtilities::describe($config)));
-
-		// Load using the container's ConfigLoader
+		LoggerRegistry::debug(sprintf('Configuration::merge(%s, %s, %s)', TypeUtilities::describe($config), $rootKey, $preferExisting ? 'true' : 'false'));
+		// Load using the container's ConfigLoader.
 		$data = $this->loader->load($config);
-
-		// Push the data down the hierarchy to the specified root key
+		// Push the data down the hierarchy to the specified root key.
 		$rootKey = $this->normaliseKey($rootKey);
 		while (!empty($rootKey)) {
 			$k = array_pop($rootKey);
 			$data = array( $k => $data );
 		}
+		// Combine the arrays depending on the $preferExisting flag.
 		$this->data = $preferExisting ?
 				ArrayUtilities::combine($data, $this->data) :
 				ArrayUtilities::combine($this->data, $data);

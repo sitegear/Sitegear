@@ -32,7 +32,7 @@ abstract class AbstractModule implements ModuleInterface {
 	 * @param \Sitegear\Engine\EngineInterface $engine Container.
 	 */
 	public function __construct(EngineInterface $engine) {
-		LoggerRegistry::debug(sprintf('Instantiating AbstractModule of actual class "%s"', get_class($this)));
+		LoggerRegistry::debug('new AbstractModule()');
 		$this->engine = $engine;
 	}
 

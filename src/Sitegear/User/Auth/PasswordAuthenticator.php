@@ -19,7 +19,7 @@ class PasswordAuthenticator extends AbstractStorageBackedAuthenticator {
 	 * @inheritdoc
 	 */
 	public function checkCredentials($email, array $credentials) {
-		LoggerRegistry::debug('PasswordAuthenticator checking credentials');
+		LoggerRegistry::debug(sprintf('PasswordAuthenticator::checkCredentials(%s, [credentials])', $email));
 		if (!isset($credentials['password'])) {
 			throw new \InvalidArgumentException('PasswordAuthenticator expects "password" credential key, insufficient credentials supplied.');
 		}

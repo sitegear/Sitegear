@@ -36,7 +36,7 @@ class VersionModule extends AbstractSitegearModule {
 	 * @param \Sitegear\View\ViewInterface $view
 	 */
 	public function sitegearLinkComponent(ViewInterface $view) {
-		LoggerRegistry::debug('VersionModule::sitegearLinkComponent');
+		LoggerRegistry::debug('VersionModule::sitegearLinkComponent()');
 		$view['link-url'] = $this->getEngine()->getApplicationInfo()->getSitegearHomepage();
 		$view['link-tooltip'] = sprintf('Running version: %s', $this->getEngine()->getApplicationInfo()->getSitegearVersionIdentifier());
 		$view['display-name'] = $this->getEngine()->getApplicationInfo()->getSitegearDisplayName();

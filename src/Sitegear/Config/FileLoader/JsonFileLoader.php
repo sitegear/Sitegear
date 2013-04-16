@@ -28,7 +28,7 @@ class JsonFileLoader implements FileLoaderInterface {
 	 * @inheritdoc
 	 */
 	public function load($args) {
-		LoggerRegistry::debug(sprintf('JsonFileLoader loading from "%s"', $args));
+		LoggerRegistry::debug(sprintf('JsonFileLoader::load(%s)', $args));
 		if (!$this->supports($args)) {
 			throw new \InvalidArgumentException(sprintf('JsonFileLoader attempting to load unsupported config file "%s".', $args));
 		}

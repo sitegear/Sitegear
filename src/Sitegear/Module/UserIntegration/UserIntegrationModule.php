@@ -67,7 +67,7 @@ class UserIntegrationModule extends AbstractSitegearModule {
 	 * @return RedirectResponse|null
 	 */
 	public function loginController(ViewInterface $view, Request $request) {
-		LoggerRegistry::debug('UserIntegrationModule::loginController');
+		LoggerRegistry::debug('UserIntegrationModule::loginController()');
 		if ($this->getEngine()->getUserManager()->isLoggedIn()) {
 			return new RedirectResponse(UrlUtilities::getReturnUrl($request));
 		}
@@ -83,7 +83,7 @@ class UserIntegrationModule extends AbstractSitegearModule {
 	 * @return RedirectResponse
 	 */
 	public function logoutController(Request $request) {
-		LoggerRegistry::debug('UserIntegrationModule::logoutController');
+		LoggerRegistry::debug('UserIntegrationModule::logoutController()');
 		$this->logout();
 		return new RedirectResponse(UrlUtilities::getReturnUrl($request));
 	}
@@ -97,7 +97,7 @@ class UserIntegrationModule extends AbstractSitegearModule {
 	 * @return RedirectResponse|null
 	 */
 	public function signUpController(ViewInterface $view, Request $request) {
-		LoggerRegistry::debug('UserIntegrationModule::signUpController');
+		LoggerRegistry::debug('UserIntegrationModule::signUpController()');
 		if ($this->getEngine()->getUserManager()->isLoggedIn()) {
 			return new RedirectResponse(UrlUtilities::getReturnUrl($request));
 		}
@@ -114,7 +114,7 @@ class UserIntegrationModule extends AbstractSitegearModule {
 	 * @return RedirectResponse|null
 	 */
 	public function guestLoginController(ViewInterface $view, Request $request) {
-		LoggerRegistry::debug('UserIntegrationModule::guestLoginController');
+		LoggerRegistry::debug('UserIntegrationModule::guestLoginController()');
 		if ($this->getEngine()->getUserManager()->isLoggedIn()) {
 			return new RedirectResponse(UrlUtilities::getReturnUrl($request));
 		}
@@ -131,7 +131,7 @@ class UserIntegrationModule extends AbstractSitegearModule {
 	 * @return RedirectResponse|null
 	 */
 	public function recoverLoginController(ViewInterface $view, Request $request) {
-		LoggerRegistry::debug('UserIntegrationModule::recoverLoginController');
+		LoggerRegistry::debug('UserIntegrationModule::recoverLoginController()');
 		if ($this->getEngine()->getUserManager()->isLoggedIn()) {
 			return new RedirectResponse(UrlUtilities::getReturnUrl($request));
 		}
@@ -148,7 +148,7 @@ class UserIntegrationModule extends AbstractSitegearModule {
 	 * @param Request $request
 	 */
 	public function selectorComponent(ViewInterface $view, Request $request) {
-		LoggerRegistry::debug('UserIntegrationModule::selectorComponent');
+		LoggerRegistry::debug('UserIntegrationModule::selectorComponent()');
 		$routeLabels = $this->config('components.selector.route-labels');
 		$currentUrl = $request->getSchemeAndHttpHost() . $request->getBaseUrl() . $request->getPathInfo();
 		$links = array();
@@ -171,7 +171,7 @@ class UserIntegrationModule extends AbstractSitegearModule {
 	 * @return string Name of component to render.
 	 */
 	public function authenticationLinkComponent(ViewInterface $view, Request $request) {
-		LoggerRegistry::debug('UserIntegrationModule::authenticationLinkComponent');
+		LoggerRegistry::debug('UserIntegrationModule::authenticationLinkComponent()');
 		if ($this->getEngine()->getUserManager()->isLoggedIn()) {
 			// User is logged in, so we want a logout link (not a link if guest user)
 			$view['customer-profile-url'] = $this->getEngine()->getModuleMountedUrl('customer');
@@ -209,7 +209,7 @@ class UserIntegrationModule extends AbstractSitegearModule {
 	 * @throws \RuntimeException
 	 */
 	public function login($email, array $credentials) {
-		LoggerRegistry::debug('UserIntegrationModule::login()');
+		LoggerRegistry::debug(sprintf('UserIntegrationModule::login(%s, [credentials])', $email));
 		if ($this->getEngine()->getUserManager()->login($email, $credentials)) {
 			$this->getEngine()->pageMessages()->add($this->config('login.messages.success'), 'success');
 		} else {
@@ -238,7 +238,7 @@ class UserIntegrationModule extends AbstractSitegearModule {
 	 * @param array $credentials
 	 */
 	public function signUp($email, $credentials) {
-		LoggerRegistry::debug('UserIntegrationModule::signUp()');
+		LoggerRegistry::debug(sprintf('UserIntegrationModule::signUp(%s, [credentials])', $email));
 		// Remove confirmation credentials and captcha.
 		unset($credentials['captcha']);
 		foreach ($credentials as $key => $value) {
@@ -266,7 +266,7 @@ class UserIntegrationModule extends AbstractSitegearModule {
 	 * @throws \InvalidArgumentException
 	 */
 	public function recoverLogin($email) {
-		LoggerRegistry::debug('UserIntegrationModule::recoverLogin()');
+		LoggerRegistry::debug(sprintf('UserIntegrationModule::recoverLogin(%s)', $email));
 		$url = 'http://URL-TODO/'; // TODO
 		$siteInfo = $this->getEngine()->getSiteInfo();
 		$subject = sprintf('Login Recovery from %s', $siteInfo->getDisplayName());

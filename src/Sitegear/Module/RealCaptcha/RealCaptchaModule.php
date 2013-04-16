@@ -60,7 +60,7 @@ class RealCaptchaModule extends AbstractSitegearModule {
 	 * @return Response
 	 */
 	public function imageController() {
-		LoggerRegistry::debug('LocationsModule::imageController');
+		LoggerRegistry::debug('LocationsModule::imageController()');
 		ob_start();
 		$this->getCaptcha()->writeImage();
 		return new Response(ob_get_clean(), 200);

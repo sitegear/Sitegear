@@ -8,6 +8,7 @@
 
 namespace Sitegear\Module\News;
 
+use Sitegear\Util\TypeUtilities;
 use Sitegear\View\ViewInterface;
 use Sitegear\Module\AbstractSitegearModule;
 use Sitegear\Util\TokenUtilities;
@@ -76,7 +77,7 @@ class NewsModule extends AbstractSitegearModule {
 	 * @param \Symfony\Component\HttpFoundation\Request $request
 	 */
 	public function indexController(ViewInterface $view, Request $request) {
-		LoggerRegistry::debug('NewsModule::indexController');
+		LoggerRegistry::debug('NewsModule::indexController()');
 		$itemCount = $this->getRepository('Item')->getItemCount();
 		$view['items'] = $this->getRepository('Item')->findLatestItems($request->query->has('more') ? 0 : intval($this->config('page.index.item-limit')));
 		$view['item-count'] = $itemCount;
@@ -95,7 +96,7 @@ class NewsModule extends AbstractSitegearModule {
 	 * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
 	 */
 	public function itemController(ViewInterface $view, Request $request) {
-		LoggerRegistry::debug('NewsModule::itemController');
+		LoggerRegistry::debug('NewsModule::itemController()');
 		try {
 			$view['item'] = $this->getRepository('Item')->findOneByUrlPath($request->attributes->get('slug'));
 		} catch (NoResultException $e) {
@@ -115,7 +116,7 @@ class NewsModule extends AbstractSitegearModule {
 	 * @param string|null $readMore Text to use for "read more" links
 	 */
 	public function latestHeadlinesComponent(ViewInterface $view, $itemLimit=null, $excerptLength=null, $readMore=null) {
-		LoggerRegistry::debug('NewsModule::latestHeadlinesComponent');
+		LoggerRegistry::debug(sprintf('NewsModule::latestHeadlinesComponent([view], %d, %d, %s)', $itemLimit, $excerptLength, $readMore ? 'true' : 'false'));
 		$itemLimit = intval(!is_null($itemLimit) ? $itemLimit : $this->config('component.latest-headlines.item-limit'));
 		$view['items'] = $this->getRepository('Item')->findLatestItems($itemLimit);
 		$view['date-format'] = $this->config('component.latest-headlines.date-format');

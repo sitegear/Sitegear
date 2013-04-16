@@ -84,10 +84,10 @@ class SitegearUserManager extends AbstractUserManager {
 	 * @inheritdoc
 	 */
 	public function login($email, array $credentials) {
-		LoggerRegistry::debug('UserManager::login');
+		LoggerRegistry::debug(sprintf('SitegearUserManager::login(%s, [credentials])', $email));
 		$result = false;
 		if (!is_null($this->getAuthenticator()->checkCredentials($email, $credentials))) {
-			LoggerRegistry::debug('UserManager login successful');
+			LoggerRegistry::debug(sprintf('SitegearUserManager login successful for %s', $email));
 			$this->session->set(self::SESSION_KEY_USER_EMAIL, $email);
 			$this->session->remove(self::SESSION_KEY_USER_IS_GUEST);
 			$result = true;
@@ -99,7 +99,7 @@ class SitegearUserManager extends AbstractUserManager {
 	 * @inheritdoc
 	 */
 	public function guestLogin() {
-		LoggerRegistry::debug('UserManager::guestLogin');
+		LoggerRegistry::debug('SitegearUserManager::guestLogin()');
 		$this->session->set(self::SESSION_KEY_USER_IS_GUEST, true);
 		$this->session->remove(self::SESSION_KEY_USER_EMAIL);
 	}
@@ -108,7 +108,7 @@ class SitegearUserManager extends AbstractUserManager {
 	 * @inheritdoc
 	 */
 	public function logout() {
-		LoggerRegistry::debug('UserManager::logout');
+		LoggerRegistry::debug('SitegearUserManager::logout()');
 		$this->session->remove(self::SESSION_KEY_USER_EMAIL);
 		$this->session->remove(self::SESSION_KEY_USER_IS_GUEST);
 		return true;

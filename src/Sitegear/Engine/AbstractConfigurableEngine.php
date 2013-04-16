@@ -59,7 +59,7 @@ abstract class AbstractConfigurableEngine extends AbstractEngine implements Conf
 	 * This implementation automatically adds a ConfigTokenProcessor and an EngineTokenProcessor.
 	 */
 	public function configure($overrides=null) {
-		LoggerRegistry::debug('AbstractConfigurableEngine::configure');
+		LoggerRegistry::debug(sprintf('AbstractConfigurableEngine::configure(%s)', TypeUtilities::describe($overrides)));
 		$this->configLoader = new ConfigLoader($this->getEnvironmentInfo());
 		$this->config = new Configuration($this->configLoader);
 		$this->config->addProcessor(new EngineTokenProcessor($this, 'engine'));
@@ -97,7 +97,7 @@ abstract class AbstractConfigurableEngine extends AbstractEngine implements Conf
 	 * @inheritdoc
 	 */
 	protected function createModule($name) {
-		LoggerRegistry::debug(sprintf('AbstractConfigurableEngine creating module "%s"', $name));
+		LoggerRegistry::debug(sprintf('AbstractConfigurableEngine::createModule(%s)', $name));
 		$module = parent::createModule($name);
 		if ($module instanceof ConfigurableInterface) {
 			$moduleConfigKey = sprintf('%s.%s', $this->getRootModuleOverrideConfigKey(), NameUtilities::convertToDashedLower($name));

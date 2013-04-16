@@ -16,6 +16,7 @@ use Sitegear\Module\AbstractSitegearModule;
 use Sitegear\Util\ExtensionMimeTypeGuesser;
 use Sitegear\Util\LoggerRegistry;
 
+use Sitegear\Util\TypeUtilities;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesser;
 
@@ -44,7 +45,7 @@ class FileModule extends AbstractSitegearModule implements BootstrapModuleInterf
 	 * @inheritdoc
 	 */
 	public function bootstrap(Request $request) {
-		LoggerRegistry::debug('FileModule running bootstrap');
+		LoggerRegistry::debug('FileModule::bootstrap()');
 		// Register the extension-based MIME type guesser which doesn't fail on CSS files.
 		MimeTypeGuesser::getInstance()->register(new ExtensionMimeTypeGuesser($this->getEngine()->config('system.mime-types')));
 		// TODO files in preview mode
@@ -58,7 +59,7 @@ class FileModule extends AbstractSitegearModule implements BootstrapModuleInterf
 	 * @inheritdoc
 	 */
 	public function load($selector) {
-		LoggerRegistry::debug(sprintf('FileModule loading data from "%s"', $selector));
+		LoggerRegistry::debug(sprintf('FileModule::load(%s)', $selector));
 		$filename = sprintf('%s/%s', $this->getEngine()->getSiteInfo()->getSiteRoot(), ltrim($selector, '/'));
 		return file_exists($filename) ? file_get_contents($filename) : null;
 	}
@@ -67,7 +68,7 @@ class FileModule extends AbstractSitegearModule implements BootstrapModuleInterf
 	 * @inheritdoc
 	 */
 	public function save($selector, $value) {
-		LoggerRegistry::debug(sprintf('FileModule saving data to "%s"', $selector));
+		LoggerRegistry::debug(sprintf('FileModule::save(%s, %s)', $selector, TypeUtilities::describe($value)));
 		$filename = sprintf('%s/%s', $this->getEngine()->getSiteInfo()->getSiteRoot(), ltrim($selector, '/'));
 		mkdir(dirname($filename), 0777, true);
 		return file_put_contents($filename, $value) !== false;
@@ -77,7 +78,7 @@ class FileModule extends AbstractSitegearModule implements BootstrapModuleInterf
 	 * @inheritdoc
 	 */
 	public function upload($selector) {
-		LoggerRegistry::debug(sprintf('FileModule uploading data to "%s"', $selector));
+		LoggerRegistry::debug(sprintf('FileModule::upload(%s)', $selector));
 		$filename = sprintf('%s/%s', $this->getEngine()->getSiteInfo()->getSiteRoot(), ltrim($selector, '/'));
 		mkdir(dirname($filename), 0777, true);
 		// TODO Implement me

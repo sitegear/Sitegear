@@ -170,7 +170,7 @@ class View extends AbstractView {
 	 * @param \Sitegear\View\ViewInterface|null $parent
 	 */
 	public function __construct(EngineInterface $engine, Request $request, ViewInterface $parent=null) {
-		LoggerRegistry::debug('Constructing View');
+		LoggerRegistry::debug('new View()');
 		parent::__construct($engine, $parent, new DataSeekingArrayObject($parent));
 		$this->activeDecorators = array();
 		$this->rendering = false;
@@ -183,7 +183,7 @@ class View extends AbstractView {
 	 * @inheritdoc
 	 */
 	public function render() {
-		LoggerRegistry::debug('View rendering content');
+		LoggerRegistry::debug('View::render()');
 		$content = null;
 		$this->rendering = true;
 		if ($this->getTargetCount() === 2) {
@@ -284,7 +284,7 @@ class View extends AbstractView {
 	 * TODO Move this to the SitegearViewFactory class
 	 */
 	protected function createContext() {
-		LoggerRegistry::debug(sprintf('View creating context for "%s"', $this->getTarget(self::TARGET_LEVEL_MODULE)));
+		LoggerRegistry::debug(sprintf('View::createContext()'));
 		// Check for special targets at the module level
 		switch ($this->getTarget(self::TARGET_LEVEL_MODULE)) {
 			// $view->template()->{templateName}()

@@ -61,7 +61,7 @@ class CustomerModule extends AbstractSitegearModule {
 	 * Show the customer profile page.
 	 */
 	public function indexController(ViewInterface $view, Request $request) {
-		LoggerRegistry::debug('CustomerModule::indexController');
+		LoggerRegistry::debug('CustomerModule::indexController()');
 		if (!$this->getEngine()->getUserManager()->isLoggedIn()) {
 			return new RedirectResponse($this->getEngine()->userIntegration()->getAuthenticationLinkUrl('login', $request));
 		}
@@ -78,7 +78,7 @@ class CustomerModule extends AbstractSitegearModule {
 	 * @return \Symfony\Component\HttpFoundation\RedirectResponse
 	 */
 	public function addTrolleyItemController(Request $request) {
-		LoggerRegistry::debug('CustomerModule::addTrolleyItemController');
+		LoggerRegistry::debug('CustomerModule::addTrolleyItemController()');
 		// Extract request details.
 		$moduleName = $request->request->get('module');
 		$type = $request->request->get('type');
@@ -114,7 +114,7 @@ class CustomerModule extends AbstractSitegearModule {
 	 * @return \Symfony\Component\HttpFoundation\RedirectResponse
 	 */
 	public function removeTrolleyItemController(Request $request) {
-		LoggerRegistry::debug('CustomerModule::removeTrolleyItemController');
+		LoggerRegistry::debug('CustomerModule::removeTrolleyItemController()');
 		// Remove the item from the stored trolley data.
 		$this->trolley()->removeItem(intval($request->request->get('index')));
 		// Go back to the page where the submission was made.
@@ -129,7 +129,7 @@ class CustomerModule extends AbstractSitegearModule {
 	 * @return \Symfony\Component\HttpFoundation\RedirectResponse
 	 */
 	public function modifyTrolleyItemController(Request $request) {
-		LoggerRegistry::debug('CustomerModule::modifyTrolleyItemController');
+		LoggerRegistry::debug('CustomerModule::modifyTrolleyItemController()');
 		// Update the stored trolley data.
 		$this->trolley()->modifyItem(intval($request->request->get('index')), intval($request->request->get('quantity')));
 		// Go back to the page where the submission was made.
@@ -144,7 +144,7 @@ class CustomerModule extends AbstractSitegearModule {
 	 * @throws \RuntimeException
 	 */
 	public function trolleyController(ViewInterface $view) {
-		LoggerRegistry::debug('CustomerModule::trolleyController');
+		LoggerRegistry::debug('CustomerModule::trolleyController()');
 		$view['trolley-data'] = $this->trolley()->getData();
 	}
 
@@ -157,7 +157,7 @@ class CustomerModule extends AbstractSitegearModule {
 	 * @return RedirectResponse|null
 	 */
 	public function checkoutController(ViewInterface $view, Request $request) {
-		LoggerRegistry::debug('CustomerModule::checkoutController');
+		LoggerRegistry::debug('CustomerModule::checkoutController()');
 		$trolleyData = $this->trolley()->getData();
 		if (!empty($trolleyData)) {
 			if ($this->getEngine()->getUserManager()->isLoggedIn()) {
@@ -180,7 +180,7 @@ class CustomerModule extends AbstractSitegearModule {
 	 * @param \Sitegear\View\ViewInterface $view
 	 */
 	public function trolleyPreviewComponent(ViewInterface $view) {
-		LoggerRegistry::debug('CustomerModule::trolleyPreviewComponent');
+		LoggerRegistry::debug('CustomerModule::trolleyPreviewComponent()');
 		$view['trolley-data'] = $this->trolley()->getData();
 		$view['details-url'] = $this->getRouteUrl('trolley');
 		$view['checkout-url'] = UrlUtilities::generateLinkWithReturnUrl(
@@ -196,7 +196,7 @@ class CustomerModule extends AbstractSitegearModule {
 	 * @param ViewInterface $view
 	 */
 	public function trolleyDetailsComponent(ViewInterface $view) {
-		LoggerRegistry::debug('CustomerModule::trolleyDetailsComponent');
+		LoggerRegistry::debug('CustomerModule::trolleyDetailsComponent()');
 		$view['modify-item-url'] = $this->getRouteUrl('modify-trolley-item');
 		$view['remove-item-url'] = $this->getRouteUrl('remove-trolley-item');
 		$view['form-url'] = $this->getRouteUrl('trolley');
@@ -219,7 +219,7 @@ class CustomerModule extends AbstractSitegearModule {
 	 * @param $id
 	 */
 	public function addTrolleyItemFormComponent(ViewInterface $view, Request $request, $moduleName, $type, $id) {
-		LoggerRegistry::debug('CustomerModule::addTrolleyItemFormComponent');
+		LoggerRegistry::debug(sprintf('CustomerModule::addTrolleyItemFormComponent([view], [request], %s, %s, %s)', $moduleName, $type, $id));
 		$formKey = $view['form-key'] = $this->config('add-trolley-item.form-key');
 		$this->getEngine()->forms()->registry()->registerForm($formKey, $this->buildAddTrolleyItemForm($moduleName, $type, $id, $request->getUri()));
 	}
@@ -237,7 +237,7 @@ class CustomerModule extends AbstractSitegearModule {
 	 * Prepare the payment.
 	 */
 	public function preparePayment() {
-		LoggerRegistry::debug('Trolley::preparePayment');
+		LoggerRegistry::debug('CustomerModule::preparePayment()');
 		// TODO Payment gateway integration
 	}
 
@@ -245,7 +245,7 @@ class CustomerModule extends AbstractSitegearModule {
 	 * Make the payment.  This requires payment details.
 	 */
 	public function makePayment() {
-		LoggerRegistry::debug('Trolley::makePayment');
+		LoggerRegistry::debug('CustomerModule::makePayment()');
 		// TODO Payment gateway integration
 	}
 
@@ -260,7 +260,7 @@ class CustomerModule extends AbstractSitegearModule {
 	 * @return \Sitegear\Form\FormInterface
 	 */
 	public function buildAddTrolleyItemForm($moduleName, $type, $id, $formUrl) {
-		LoggerRegistry::debug('CustomerModule::buildAddTrolleyItemForm');
+		LoggerRegistry::debug(sprintf('CustomerModule::buildAddTrolleyItemForm(%s, %s, %s, %s)', $moduleName, $type, $id, $formUrl));
 		$submitUrl = $this->getRouteUrl('add-trolley-item');
 		$submitUrl = UrlUtilities::generateLinkWithReturnUrl($submitUrl, $formUrl, 'form-url');
 		$formBuilder = new AddTrolleyItemFormBuilder($this->getEngine()->forms(), $this->config('add-trolley-item.form-key'));
@@ -284,7 +284,7 @@ class CustomerModule extends AbstractSitegearModule {
 	 * @return FormInterface
 	 */
 	public function buildCheckoutForm() {
-		LoggerRegistry::debug('CustomerModule::buildCheckoutForm');
+		LoggerRegistry::debug('CustomerModule::buildCheckoutForm()');
 		$steps = $this->config('checkout.steps.current');
 		if (is_string($steps)) {
 			$steps = $this->config(sprintf('checkout.steps.built-in.%s', $steps));
@@ -307,7 +307,7 @@ class CustomerModule extends AbstractSitegearModule {
 	 * @return Account|null
 	 */
 	public function getLoggedInUserAccount() {
-		LoggerRegistry::debug('CustomerModule::getLoggedInUserAccount');
+		LoggerRegistry::debug('CustomerModule::getLoggedInUserAccount()');
 		$account = null;
 		$email = $this->getEngine()->getUserManager()->getLoggedInUserEmail();
 		if (!is_null($email)) {

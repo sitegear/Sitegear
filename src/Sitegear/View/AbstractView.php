@@ -11,6 +11,8 @@ namespace Sitegear\View;
 use Sitegear\Engine\EngineInterface;
 use Sitegear\Util\ArrayUtilities;
 
+use Sitegear\Util\LoggerRegistry;
+use Sitegear\Util\TypeUtilities;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -57,6 +59,7 @@ abstract class AbstractView implements ViewInterface {
 	 * @param \ArrayAccess|null $data Data object, or null to use an empty \ArrayObject.
 	 */
 	public function __construct(EngineInterface $engine, ViewInterface $parent=null, $data=null) {
+		LoggerRegistry::debug('new AbstractView()');
 		$this->engine = $engine;
 		$this->parent = $parent;
 		$this->clearTargets();
@@ -83,6 +86,7 @@ abstract class AbstractView implements ViewInterface {
 	 * @inheritdoc
 	 */
 	public function pushTarget($target, array $arguments=null) {
+		LoggerRegistry::debug(sprintf('AbstractView::pushTarget(%s, %s)', $target, TypeUtilities::describe($arguments)));
 		array_push($this->targets, array(
 			'target' => $target,
 			'arguments' => $arguments ?: array()
@@ -111,6 +115,7 @@ abstract class AbstractView implements ViewInterface {
 	 * @inheritdoc
 	 */
 	public function clearTargets() {
+		LoggerRegistry::debug('AbstractView::clearTargets()');
 		$this->targets = array();
 		return $this;
 	}

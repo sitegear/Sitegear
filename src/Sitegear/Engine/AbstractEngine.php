@@ -107,7 +107,7 @@ abstract class AbstractEngine implements EngineInterface {
 	 * @param \Sitegear\User\Manager\UserManagerInterface $userManager
 	 */
 	public function __construct(SiteInfoProviderInterface $siteInfo, EnvironmentInfoProviderInterface $environmentInfo, ApplicationInfoProviderInterface $sitegearInfo, ViewFactoryInterface $viewFactory, UserManagerInterface $userManager) {
-		LoggerRegistry::debug('Instantiating AbstractEngine');
+		LoggerRegistry::debug('new AbstractEngine()');
 		$this->timestamp = microtime(true);
 		$this->siteInfo = $siteInfo;
 		$this->environmentInfo = $environmentInfo;
@@ -377,7 +377,7 @@ abstract class AbstractEngine implements EngineInterface {
 	 * @throws \DomainException If the named module does not implement ModuleInterface.
 	 */
 	protected function createModule($name) {
-		LoggerRegistry::debug(sprintf('AbstractEngine creating module "%s"', $name));
+		LoggerRegistry::debug(sprintf('AbstractEngine::createModule(%s)', $name));
 		try {
 			return TypeUtilities::buildTypeCheckedObject(
 				$this->getModuleClassName($name) ?: '',

@@ -8,6 +8,7 @@
 
 namespace Sitegear\Module\Google;
 
+use Sitegear\Util\TypeUtilities;
 use Sitegear\View\ViewInterface;
 use Sitegear\Module\AbstractSitegearModule;
 use Sitegear\Util\LoggerRegistry;
@@ -41,7 +42,7 @@ class GoogleModule extends AbstractSitegearModule {
 	 * @return boolean False to prevent output in analytics=disabled environments.
 	 */
 	public function analyticsComponent(ViewInterface $view, $apiKey=null, $additionalCalls=null) {
-		LoggerRegistry::debug('GoogleModule::analyticsComponent');
+		LoggerRegistry::debug(sprintf('GoogleModule::analyticsComponent([view], %s, %s)', $apiKey, TypeUtilities::describe($additionalCalls)));
 		if ($this->config('analytics.enabled')) {
 			$view['api-key'] = is_null($apiKey) ? $this->config('analytics.api.key') : $apiKey;
 			$view['additional-calls'] = is_null($additionalCalls) ? $this->config('analytics.additional-calls') : $additionalCalls;
@@ -65,7 +66,7 @@ class GoogleModule extends AbstractSitegearModule {
 	 * @return void
 	 */
 	public function mapComponent(ViewInterface $view, $selector, array $initialView, $apiKey=null, array $markers=null, $autoShowInfoWindow=false, $options=null) {
-		LoggerRegistry::debug('GoogleModule::mapComponent');
+		LoggerRegistry::debug(sprintf('GoogleModule::mapComponent([view], %s, %s, %s, %s, %s, %s)', $selector, $initialView, $apiKey, TypeUtilities::describe($markers), $autoShowInfoWindow ? 'true' : 'false', TypeUtilities::describe($options)));
 		$view['selector'] = $selector;
 		if (empty($apiKey)) {
 			$apiKey = $this->config('maps.api.key');
@@ -96,7 +97,7 @@ class GoogleModule extends AbstractSitegearModule {
 	 * @throws \RuntimeException If the address cannot be geo-coding due to missing response data.
 	 */
 	public function geocodeLocation($address) {
-		LoggerRegistry::debug('GoogleModule geocoding location');
+		LoggerRegistry::debug(sprintf('GoogleModule::geocodeLocation(%s)', implode('|', $address)));
 		$url = sprintf('http://%s/maps/api/geocode/json?address=%s&sensor=false', $this->config('maps.api.host'), urlencode($address));
 		$data = json_decode(file_get_contents($url), true);
 		if (!isset($data['status'])) {

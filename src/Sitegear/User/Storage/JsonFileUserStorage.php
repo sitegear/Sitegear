@@ -59,7 +59,7 @@ class JsonFileUserStorage implements UserStorageInterface {
 	 * @inheritdoc
 	 */
 	public function createUser($email, array $data) {
-		LoggerRegistry::debug('JsonFileUserStorage creating user');
+		LoggerRegistry::debug(sprintf('JsonFileUserStorage::createUser(%s, %s)', $email, $data));
 		if (array_key_exists($email, $this->users)) {
 			throw new \InvalidArgumentException(sprintf('JsonFileUserStorage cannot create user with email address "%s", that email address is already registered.', $email));
 		}
@@ -75,7 +75,7 @@ class JsonFileUserStorage implements UserStorageInterface {
 	 * @inheritdoc
 	 */
 	public function deleteUser($email) {
-		LoggerRegistry::debug('JsonFileUserStorage deleting user');
+		LoggerRegistry::debug(sprintf('JsonFileUserStorage::deleteUser(%s)', $email));
 		if (!array_key_exists($email, $this->users)) {
 			throw new \InvalidArgumentException(sprintf('JsonFileUserStorage cannot delete user with email address "%s", that email address is not registered.', $email));
 		}
@@ -144,7 +144,7 @@ class JsonFileUserStorage implements UserStorageInterface {
 	 * Do the internal work of storing the modified data.
 	 */
 	private function store() {
-		LoggerRegistry::debug('JsonFileUserStorage saving modified user database');
+		LoggerRegistry::debug('JsonFileUserStorage::store()');
 		if ($this->format) {
 			$formatter = new JsonFormatter();
 			$result = $formatter->formatJson($this->users);

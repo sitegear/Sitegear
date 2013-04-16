@@ -176,7 +176,7 @@ class DoctrineModule extends AbstractSitegearModule implements DiscreteDataModul
 	 * @inheritdoc
 	 */
 	public function load($selector) {
-		LoggerRegistry::debug(sprintf('DoctrineModule loading data from "%s"', $selector));
+		LoggerRegistry::debug(sprintf('DoctrineModule::load(%s)', $selector));
 		$selector = $this->parseSelector($selector);
 		$query = $this->getEntityManager()->createQuery(sprintf('select item from %s%s item where item.%s = :match', $selector['entity-alias'], $selector['entity-name'], $selector['match-field-name']));
 		$query->setParameter('match', $selector['match-field-value']);
@@ -194,7 +194,7 @@ class DoctrineModule extends AbstractSitegearModule implements DiscreteDataModul
 	 * @inheritdoc
 	 */
 	public function save($selector, $value) {
-		LoggerRegistry::debug(sprintf('DoctrineModule saving data to "%s"', $selector));
+		LoggerRegistry::debug(sprintf('DoctrineModule::save(%s, %s)', $selector, TypeUtilities::describe($value)));
 		$selector = $this->parseSelector($selector);
 		$query = $this->getEntityManager()->createQuery(sprintf('update %s%s item set item.%s = :value where item.%s = :match', $selector['entity-alias'], $selector['entity-name'], $selector['value-field-name'], $selector['match-field-name']));
 		$query->setParameter('value', $value);

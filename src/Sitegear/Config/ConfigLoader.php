@@ -38,7 +38,7 @@ class ConfigLoader {
 	 * @param boolean $registerDefaultFileLoaders Whether or not to register the default file loaders, true by default.
 	 */
 	public function __construct(EnvironmentInfoProviderInterface $environmentInfo, $registerDefaultFileLoaders=true) {
-		LoggerRegistry::debug('Instantiating ConfigLoader');
+		LoggerRegistry::debug(sprintf('new ConfigLoader(%s, %s)', TypeUtilities::describe($environmentInfo), $registerDefaultFileLoaders ? 'true' : 'false'));
 		$this->environmentInfo = $environmentInfo;
 		$this->fileLoaders = array();
 		if ($registerDefaultFileLoaders) {
@@ -59,7 +59,7 @@ class ConfigLoader {
 	 * @throws \InvalidArgumentException If the class does not exist or is not a FileLoaderInterface implementation.
 	 */
 	public function registerFileLoader($fileLoader) {
-		LoggerRegistry::debug(sprintf('ConfigLoader registering config file loader [%s]', TypeUtilities::describe($fileLoader)));
+		LoggerRegistry::debug(sprintf('ConfigLoader::registerFileLoader(%s)', TypeUtilities::describe($fileLoader)));
 		$this->fileLoaders[TypeUtilities::getClassName($fileLoader)] = TypeUtilities::buildTypeCheckedObject(
 			$fileLoader,
 			'config file loader',
@@ -75,7 +75,7 @@ class ConfigLoader {
 	 *   deregister, or a class implementing FileLoaderInterface.
 	 */
 	public function deregisterFileLoader($fileLoader) {
-		LoggerRegistry::debug(sprintf('ConfigLoader deregistering config file loader [%s]', TypeUtilities::describe($fileLoader)));
+		LoggerRegistry::debug(sprintf('ConfigLoader::deregisterFileLoader(%s)', TypeUtilities::describe($fileLoader)));
 		unset($this->fileLoaders[TypeUtilities::getClassName($fileLoader)]);
 	}
 
@@ -106,7 +106,7 @@ class ConfigLoader {
 	 * @throws \InvalidArgumentException If the given argument is not a string or an array.
 	 */
 	public function load($config) {
-		LoggerRegistry::debug(sprintf('ConfigLoader loading configuration [%s]', TypeUtilities::describe($config)));
+		LoggerRegistry::debug(sprintf('ConfigLoader::load(%s)', TypeUtilities::describe($config)));
 		$result = $this->normalise($config);
 		if (is_string($config) && !is_null($this->environmentInfo) && !is_null($this->environmentInfo->getEnvironment())) {
 			$pathinfo = pathinfo($config);

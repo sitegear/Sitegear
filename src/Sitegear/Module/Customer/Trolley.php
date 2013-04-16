@@ -12,6 +12,7 @@ use Sitegear\Module\PurchaseItemProviderModuleInterface;
 use Sitegear\Module\Customer\Model\TransactionItem;
 use Sitegear\Util\LoggerRegistry;
 use Sitegear\Util\TokenUtilities;
+use Sitegear\Util\TypeUtilities;
 
 /**
  * Represents the customer's selected items.
@@ -64,7 +65,7 @@ class Trolley {
 	 * @throws \DomainException
 	 */
 	public function addItem($moduleName, $type, $itemId, array $attributeValues=null, $quantity=null) {
-		LoggerRegistry::debug('Trolley::addItem');
+		LoggerRegistry::debug(sprintf('Trolley::addItem(%s, %s, %s, %s, %d)', $moduleName, $type, $itemId, TypeUtilities::describe($attributeValues), $quantity));
 		if ($quantity < 1) {
 			throw new \DomainException('Trolley cannot modify trolley item to a zero or negative quantity; use removeTrolleyItem instead.');
 		}
@@ -129,7 +130,7 @@ class Trolley {
 	 * @throws \OutOfBoundsException
 	 */
 	public function removeItem($index) {
-		LoggerRegistry::debug('Trolley::removeItem');
+		LoggerRegistry::debug(sprintf('Trolley::removeItem(%d)', $index));
 		$data = $this->getData();
 		if ($index < 0 || $index >= sizeof($data)) {
 			throw new \OutOfBoundsException(sprintf('Trolley cannot remove trolley item with index (%d) out-of-bounds', $index));
@@ -154,7 +155,7 @@ class Trolley {
 	 * @throws \OutOfBoundsException
 	 */
 	public function modifyItem($index, $quantity) {
-		LoggerRegistry::debug('Trolley::modifyItem');
+		LoggerRegistry::debug(sprintf('Trolley::modifyItem(%d, %d)', $index, $quantity));
 		if ($quantity < 1) {
 			throw new \DomainException('Trolley cannot modify trolley item to a zero or negative quantity; use removeTrolleyItem instead.');
 		}

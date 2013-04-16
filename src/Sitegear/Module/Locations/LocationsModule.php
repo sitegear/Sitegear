@@ -9,6 +9,7 @@
 namespace Sitegear\Module\Locations;
 
 use Sitegear\Info\ResourceLocations;
+use Sitegear\Util\TypeUtilities;
 use Sitegear\View\ViewInterface;
 use Sitegear\Module\AbstractSitegearModule;
 use Sitegear\Module\Locations\Repository\ItemRepository;
@@ -155,7 +156,7 @@ class LocationsModule extends AbstractSitegearModule {
 	 * @param string|null $radius Previous radius selection, to populate the selected option.
 	 */
 	public function searchFormComponent(ViewInterface $view, $query=null, $radius=null) {
-		LoggerRegistry::debug('LocationsModule::searchFormComponent()');
+		LoggerRegistry::debug(sprintf('LocationsModule::searchFormComponent([view], %s, %s)', $query, $radius));
 		$view['action-url'] = $this->getRouteUrl('search');
 		if (!is_null($query)) {
 			$view['query'] = $query;

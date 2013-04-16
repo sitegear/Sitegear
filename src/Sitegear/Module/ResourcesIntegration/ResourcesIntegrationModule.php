@@ -51,7 +51,7 @@ class ResourcesIntegrationModule extends AbstractSitegearModule {
 	 * @inheritdoc
 	 */
 	public function resourceController(Request $request) {
-		LoggerRegistry::debug('ResourcesIntegrationModule::resourceController');
+		LoggerRegistry::debug('ResourcesIntegrationModule::resourceController()');
 		$location = $request->attributes->get('location');
 		switch ($location) {
 			case self::LOCATION_ATTRIBUTE_ENGINE:

@@ -30,7 +30,7 @@ class PhpFileLoader implements FileLoaderInterface {
 	 * @inheritdoc
 	 */
 	public function load($args) {
-		LoggerRegistry::debug(sprintf('PhpFileLoader loading from "%s"', $args));
+		LoggerRegistry::debug(sprintf('PhpFileLoader::load(%s)', $args));
 		if (!$this->supports($args)) {
 			throw new \InvalidArgumentException(sprintf('PhpFileLoader attempting to load unsupported config file "%s".', $args));
 		}

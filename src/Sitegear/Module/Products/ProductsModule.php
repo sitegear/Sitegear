@@ -138,7 +138,7 @@ class ProductsModule extends AbstractSitegearModule implements PurchaseItemProvi
 	 * @param \Sitegear\View\ViewInterface $view
 	 */
 	public function indexController(ViewInterface $view) {
-		LoggerRegistry::debug('ProductsModule::indexController');
+		LoggerRegistry::debug('ProductsModule::indexController()');
 		$view['categories'] = $this->getRepository('Category')->findByParent(null);
 	}
 
@@ -149,7 +149,7 @@ class ProductsModule extends AbstractSitegearModule implements PurchaseItemProvi
 	 * @param \Symfony\Component\HttpFoundation\Request $request
 	 */
 	public function categoryController(ViewInterface $view, Request $request) {
-		LoggerRegistry::debug('ProductsModule::categoryController');
+		LoggerRegistry::debug('ProductsModule::categoryController()');
 		$view['category'] = $this->getRepository('Category')->findOneByUrlPath($request->attributes->get('slug'));
 		$view['categories'] = $this->getRepository('Category')->findByParent($view['category']);
 		$view['items'] = $this->getRepository('Item')->getActiveItemsInCategory($view['category']);
@@ -164,7 +164,7 @@ class ProductsModule extends AbstractSitegearModule implements PurchaseItemProvi
 	 * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
 	 */
 	public function itemController(ViewInterface $view, Request $request) {
-		LoggerRegistry::debug('ProductsModule::itemController');
+		LoggerRegistry::debug('ProductsModule::itemController()');
 		try {
 			$view['item'] = $this->getRepository('Item')->findOneBy(array( 'urlPath' => $request->attributes->get('slug'), 'active' => true ));
 		} catch (NoResultException $e) {

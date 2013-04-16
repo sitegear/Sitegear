@@ -49,13 +49,13 @@ class ResourcesManager implements ResourcesManagerInterface {
 	 * @inheritdoc
 	 */
 	public function registerType($type, $format) {
+		LoggerRegistry::debug(sprintf('ResourcesManager::registerType(%s, %s)', $type, $format));
 		if ($this->isTypeRegistered($type)) {
 			throw new \LogicException(sprintf('Could not register resource type "%s" because the type has already been registered.', $type));
 		}
 		if (!$this->isValidType($type)) {
 			throw new \InvalidArgumentException(sprintf('Could not register resource type "%s" because it is not a valid type specifier (alphanumeric characters and hyphens only)', $type));
 		}
-		LoggerRegistry::debug(sprintf('ResourcesManager registering type "%s" with format "%s"', $type, $format));
 		$this->types[$type] = $format;
 	}
 
@@ -115,7 +115,7 @@ class ResourcesManager implements ResourcesManagerInterface {
 	 * @inheritdoc
 	 */
 	public function registerMap(array $map) {
-		LoggerRegistry::debug('ResourcesManager registering resource map');
+		LoggerRegistry::debug('ResourcesManager::registerMap()');
 		foreach ($map as $key => $resource) {
 			$this->register($key,
 				$resource['type'],
@@ -194,7 +194,7 @@ class ResourcesManager implements ResourcesManagerInterface {
 	 * @inheritdoc
 	 */
 	public function activate($key) {
-		LoggerRegistry::debug(sprintf('ResourcesManager activating resource "%s"', $key));
+		LoggerRegistry::debug(sprintf('ResourcesManager::activate(%s)', $key));
 		foreach ($this->resources as $index => $resource) {
 			if ($key === $resource['key']) {
 				foreach ($resource['requires'] as $require) {
@@ -209,7 +209,7 @@ class ResourcesManager implements ResourcesManagerInterface {
 	 * @inheritdoc
 	 */
 	public function render($type) {
-		LoggerRegistry::debug(sprintf('ResourcesManager rendering resources of type "%s"', $type));
+		LoggerRegistry::debug(sprintf('ResourcesManager::render(%s)', $type));
 		// Check for unknown type
 		if (!$this->isTypeRegistered($type)) {
 			throw new \DomainException(sprintf('Could not render resources of type "%s" because the type has not been registered.', $type));
