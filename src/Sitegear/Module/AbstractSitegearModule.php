@@ -60,6 +60,9 @@ abstract class AbstractSitegearModule extends AbstractUrlMountableModule {
 
 	//-- Constructor --------------------
 
+	/**
+	 * @param EngineInterface $engine
+	 */
 	public function __construct(EngineInterface $engine) {
 		parent::__construct($engine);
 		$this->baseUrl = null;
