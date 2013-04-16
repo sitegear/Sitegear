@@ -21,7 +21,7 @@ use Sitegear\Config\Processor\ProcessorInterface;
  *
  * Retrieving the key 'baz.daughter' will yield the result 'value'.
  */
-interface ConfigContainerInterface {
+interface ConfigurationInterface {
 
 	/**
 	 * Add the given processor to the stack.

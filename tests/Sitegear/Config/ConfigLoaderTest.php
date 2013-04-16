@@ -98,7 +98,7 @@ class ConfigLoaderTest extends AbstractSitegearTestCase {
 	}
 
 	public function testLoadConfigContainerObject() {
-		$config = new \Sitegear\Config\ConfigContainer($this->loader);
+		$config = new \Sitegear\Config\Configuration($this->loader);
 		$config->merge(self::$testData);
 		$this->assertEquals(self::$testData, $this->loader->load($config));
 	}

@@ -98,7 +98,7 @@ class ConfigLoader {
 	 *
 	 * If the given argument is a filename, also load the relevant environment-specific override file.
 	 *
-	 * @param array|string|\ArrayObject|\Sitegear\Config\ConfigContainerInterface $config Configuration data, filename
+	 * @param array|string|\ArrayObject|\Sitegear\Config\ConfigurationInterface $config Configuration data, filename
 	 *   or container object.
 	 *
 	 * @return array Loaded data.
@@ -137,7 +137,7 @@ class ConfigLoader {
 	/**
 	 * Normalise the given configuration into an array, or throw an exception if it cannot be normalised.
 	 *
-	 * @param array|string|\ArrayObject|\Sitegear\Config\ConfigContainerInterface $config Data to
+	 * @param array|string|\ArrayObject|\Sitegear\Config\ConfigurationInterface $config Data to
 	 *   normalise.
 	 *
 	 * @return array Normalised data.
@@ -149,7 +149,7 @@ class ConfigLoader {
 			$config = $this->loadFile($config);
 		} elseif ($config instanceof \ArrayObject) {
 			$config = $config->getArrayCopy();
-		} elseif ($config instanceof ConfigContainerInterface) {
+		} elseif ($config instanceof ConfigurationInterface) {
 			$config = $config->all();
 		} elseif (!is_array($config)) {
 			throw new \InvalidArgumentException(sprintf('Unhandled configuration type cannot be normalised [%s]', TypeUtilities::describe($config)));

@@ -9,20 +9,20 @@
 namespace Sitegear\Config;
 
 use Sitegear\AbstractSitegearTestCase;
-use Sitegear\Config\ConfigContainer;
+use Sitegear\Config\Configuration;
 use Sitegear\Config\ConfigLoader;
 use Sitegear\Info\SitegearEnvironmentInfoProvider;
 
 class ConfigContainerTest extends AbstractSitegearTestCase {
 
 	/**
-	 * @var ConfigContainer
+	 * @var Configuration
 	 */
 	private $config;
 
 	public function setUp() {
 		parent::setUp();
-		$this->config = new ConfigContainer(new ConfigLoader(new SitegearEnvironmentInfoProvider('testing')));
+		$this->config = new Configuration(new ConfigLoader(new SitegearEnvironmentInfoProvider('testing')));
 	}
 
 	public function testEmptyConfig() {

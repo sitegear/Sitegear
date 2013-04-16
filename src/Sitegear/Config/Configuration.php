@@ -17,7 +17,7 @@ use Sitegear\Util\LoggerRegistry;
  * Simple implementation of the ConfigInterface, which simply stores and retrieves the values, but provides a hook for
  * further post-processing by sub-classes.  Actually loading the data is handled by the ConfigLoader singleton.
  */
-class ConfigContainer implements ConfigContainerInterface {
+class Configuration implements ConfigurationInterface {
 
 	//-- Attributes --------------------
 
