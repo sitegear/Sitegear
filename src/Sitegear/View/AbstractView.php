@@ -10,10 +10,11 @@ namespace Sitegear\View;
 
 use Sitegear\Engine\EngineInterface;
 use Sitegear\Util\ArrayUtilities;
-
+use Sitegear\Util\DataSeekingArrayObject;
 use Sitegear\Util\LoggerRegistry;
 use Sitegear\Util\PhpSourceUtilities;
 use Sitegear\Util\TypeUtilities;
+
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -75,7 +76,7 @@ abstract class AbstractView implements ViewInterface {
 		$this->engine = $engine;
 		$this->request = $request;
 		$this->parent = $parent;
-		$this->data = $data ?: new \ArrayObject();
+		$this->data = $data ?: new DataSeekingArrayObject($parent);
 	}
 
 	//-- ViewInterface Methods --------------------
