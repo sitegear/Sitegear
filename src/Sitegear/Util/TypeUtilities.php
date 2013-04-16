@@ -21,8 +21,19 @@ class TypeUtilities {
 	 * @return string Description including the object's type and primitive value if possible.
 	 */
 	public static function describe($object) {
-		$value = (is_string($object) || is_numeric($object)) ? sprintf('; Value: "%s"', $object) : '';
-		return sprintf('Type: "%s"%s', (is_object($object) ? get_class($object) : gettype($object)), $value);
+		$result = '';
+		if (is_null($object)) {
+			$result = 'null';
+		} elseif (is_string($object) || is_numeric($object)) {
+			$result = sprintf('%s(%s)', gettype($object), strval($object));
+		} elseif (is_array($object)) {
+			$result = sprintf('array[%d]', sizeof($object));
+		} elseif (is_object($object) && method_exists($object, '__toString')) {
+			$result = sprintf('%s{%s}', get_class($object), strval($object));
+		} else {
+			$result = sprintf('%s{}', get_class($object));
+		}
+		return $result;
 	}
 
 	/**
