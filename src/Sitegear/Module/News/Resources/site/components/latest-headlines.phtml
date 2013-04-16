@@ -8,26 +8,27 @@ $module = $view['module'];
 if (empty($view['items'])) {
 	echo $view->news()->noHeadlines();
 } else {
+	$excerpt = sprintf('excerpt(%d, "%s")', $view['excerpt-length'], 'Article content not found.');
 	foreach ($view['items'] as $item) {
 		$linkUrl = $module->getRouteUrl('item', $item->getUrlPath());
 ?>
 <section class="news-item-preview">
 <?php
-if ($view['date-format']) {
-	$published = \Sitegear\Util\TokenUtilities::replaceTokens(
-		$view['published'],
-		array(
-			'publishedDate' => $item->getDatePublished()->format($view['date-format'])
-		)
-	);
+		if ($view['date-format']) {
+			$published = \Sitegear\Util\TokenUtilities::replaceTokens(
+				$view['published'],
+				array(
+					'publishedDate' => $item->getDatePublished()->format($view['date-format'])
+				)
+			);
 ?>
 	<div class="date-published"><?php echo $published; ?></div>
 <?php
-}
+		}
 ?>
 	<div class="headline"><a href="<?php echo $linkUrl ?>"><?php echo $item->getHeadline(); ?></a></div>
 	<div class="text">
-<?php echo $view->news()->item('items/' . $item->getUrlPath())->applyDecorators(sprintf('excerpt(%d, "%s")', $view['excerpt-length'], 'Article content not found.')); ?>
+<?php echo $view->news($excerpt)->item('items/' . $item->getUrlPath()); ?>
 	</div>
 <?php
 		if (isset($view['read-more'])) {
