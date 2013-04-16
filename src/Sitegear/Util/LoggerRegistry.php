@@ -17,22 +17,21 @@ use Psr\Log\LoggerInterface;
  *
  * The __call() and __callStatic() magic methods provide shortcuts to the proxy methods:
  *
- * @method static void log($level, $message, $loggers=null)
- * @method static void debug($message, $loggers=null)
- * @method static void info($message, $loggers=null)
- * @method static void notice($message, $loggers=null)
- * @method static void warn($message, $loggers=null)
- * @method static void error($message, $loggers=null)
- * @method static void critical($message, $loggers=null)
- * @method static void alert($message, $loggers=null)
- * @method static void emergency($message, $loggers=null)
+ * @method static void log($level, $message)
+ * @method static void debug($message)
+ * @method static void info($message)
+ * @method static void notice($message)
+ * @method static void warn($message)
+ * @method static void error($message)
+ * @method static void critical($message)
+ * @method static void alert($message)
+ * @method static void emergency($message)
  *
  * These methods are all available as both static and instance methods.
  *
- * The last argument in each case, $loggers, optionally specifies the name(s) of loggers to which the message should be
- * sent.  By default, the message will be sent to all registered loggers.
- *
  * Registered instances can also be retrieved using the get() method on the singleton instance.
+ *
+ * TODO Implement placeholders as described at \Psr\Log\LoggerInterface
  */
 final class LoggerRegistry {
 
@@ -184,25 +183,20 @@ final class LoggerRegistry {
 	 */
 	public function __call($name, $arguments) {
 		if (in_array($name, self::$_proxyMethods)) {
-			// Determine the number of arguments to pass through.  The log() method takes two or three arguments
-			// (level, message, loggers).  Other (dynamic) forms take one or two arguments (message, loggers).  In each
-			// case the final (loggers) argument is optional.
+			// Determine the number of arguments to pass through.  The log() method takes two arguments (level,
+			// message).  Other (dynamic) forms take one arguments (message).
 			$loggerMethodArgumentsCount = ($name === 'log') ? 2 : 1;
 			if (sizeof($arguments) >= $loggerMethodArgumentsCount) {
-				// Determine the loggers to use,
-				$loggers = (sizeof($arguments) > $loggerMethodArgumentsCount) ? $arguments[$loggerMethodArgumentsCount] : array_keys($this->loggers);
-				if (!is_array($loggers)) {
-					$loggers = array( $loggers );
-				}
 				// Determine the arguments for the method call.
 				$loggerMethodArguments = array_slice($arguments, 0, $loggerMethodArgumentsCount);
+				// TODO Move this (context) to something that can be externally configured, and provide this as the fallback behaviour
 				$loggerMethodArguments[] = array( getmypid() );
 				// Call the method on each of the relevant loggers.
-				foreach ($loggers as $logger) {
-					call_user_func_array(array( $this->get($logger), $name ), $loggerMethodArguments);
+				foreach ($this->loggers as $logger) {
+					call_user_func_array(array( $logger, $name ), $loggerMethodArguments);
 				}
 			} else {
-				throw new \BadMethodCallException(sprintf('Cannot call method "%s" on LoggerRegistry with less than %d parameters, only %d supplied.', $name, $loggerMethodArgumentsCount, sizeof($arguments)));
+				throw new \BadMethodCallException(sprintf('Cannot call method "%s" on LoggerRegistry with less than %d parameters, %d supplied.', $name, $loggerMethodArgumentsCount, sizeof($arguments)));
 			}
 		} else {
 			throw new \BadMethodCallException(sprintf('Unhandled direct method call "%s" on LoggerRegistry singleton instance, only proxy logging methods are supported.', $name));
