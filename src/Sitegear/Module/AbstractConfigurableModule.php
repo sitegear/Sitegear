@@ -8,12 +8,13 @@
 
 namespace Sitegear\Module;
 
-use Sitegear\Config\ConfigurableInterface;
 use Sitegear\Config\ConfigLoader;
+use Sitegear\Config\ConfigurableInterface;
 use Sitegear\Config\Configuration;
 use Sitegear\Config\Processor\IncludeTokenProcessor;
 use Sitegear\Config\Processor\EngineTokenProcessor;
 use Sitegear\Config\Processor\ConfigTokenProcessor;
+use Sitegear\Engine\AbstractConfigurableEngine;
 use Sitegear\View\ViewInterface;
 use Sitegear\Util\LoggerRegistry;
 use Sitegear\Util\TypeUtilities;
@@ -34,7 +35,7 @@ abstract class AbstractConfigurableModule extends AbstractModule implements Conf
 	private $configLoader;
 
 	/**
-	 * @var \Sitegear\Config\ConfigurationInterface
+	 * @var \Sitegear\Config\Configuration
 	 */
 	private $config;
 
@@ -43,14 +44,13 @@ abstract class AbstractConfigurableModule extends AbstractModule implements Conf
 	/**
 	 * @inheritdoc
 	 *
-	 * The argument in this implementation must be a ConfigContainerInterface implementation.
+	 * The argument in this implementation must be a Configuration object.
 	 *
 	 * This implementation automatically adds a ConfigTokenProcessor and an EngineTokenProcessor.
 	 */
-	public function configure($config=null, ConfigLoader $loader=null, array $additionalProcessors=null) {
+	public function configure($overrides=null) {
 		LoggerRegistry::debug(sprintf('Configuring %s...', (new \ReflectionClass($this))->getShortName()));
-		$this->configLoader = $loader ?: new ConfigLoader($this->getEngine()->getEnvironmentInfo());
-		$this->config = new Configuration($this->configLoader);
+		$this->config = new Configuration($this->getConfigLoader());
 		$this->config->addProcessor(new EngineTokenProcessor($this->getEngine(), 'engine'));
 		$this->config->addProcessor(new ConfigTokenProcessor($this, 'config'));
 		$engine = $this->getEngine();
@@ -63,13 +63,10 @@ abstract class AbstractConfigurableModule extends AbstractModule implements Conf
 			'engine' => $this->getEngine()->getEngineRoot(),
 			'module' => $this->getModuleRoot()
 		);
-		$this->config->addProcessor(new IncludeTokenProcessor($roots, $this->configLoader, 'include'));
-		foreach ($additionalProcessors ?: array() as $processor) {
-			$this->config->addProcessor($processor);
-		}
+		$this->config->addProcessor(new IncludeTokenProcessor($roots, $this->getConfigLoader(), 'include'));
 		$this->config->merge($this->defaults());
-		if (!is_null($config)) {
-			$this->config->merge($config);
+		if (!is_null($overrides)) {
+			$this->config->merge($overrides);
 		}
 		return $this;
 	}
@@ -88,6 +85,12 @@ abstract class AbstractConfigurableModule extends AbstractModule implements Conf
 	 * @inheritdoc
 	 */
 	public function getConfigLoader() {
+		if (is_null($this->configLoader)) {
+			$engine = $this->getEngine();
+			$this->configLoader = $engine instanceof ConfigurableInterface ?
+					$engine->getConfigLoader() :
+					new ConfigLoader($engine->getEnvironmentInfo());
+		}
 		return $this->configLoader;
 	}
 

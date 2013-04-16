@@ -43,7 +43,7 @@ abstract class AbstractConfigurableEngine extends AbstractEngine implements Conf
 	private $configLoader;
 
 	/**
-	 * @var \Sitegear\Config\ConfigurationInterface Configuration object.
+	 * @var \Sitegear\Config\Configuration Configuration object.
 	 */
 	private $config;
 
@@ -58,9 +58,9 @@ abstract class AbstractConfigurableEngine extends AbstractEngine implements Conf
 	 *
 	 * This implementation automatically adds a ConfigTokenProcessor and an EngineTokenProcessor.
 	 */
-	public function configure($config=null, ConfigLoader $loader=null, array $additionalProcessors=null) {
-		LoggerRegistry::debug('AbstractConfigurableEngine receiving configuration');
-		$this->configLoader = $loader ?: new ConfigLoader($this->getEnvironmentInfo());
+	public function configure($overrides=null) {
+		LoggerRegistry::debug('AbstractConfigurableEngine::configure');
+		$this->configLoader = new ConfigLoader($this->getEnvironmentInfo());
 		$this->config = new Configuration($this->configLoader);
 		$this->config->addProcessor(new EngineTokenProcessor($this, 'engine'));
 		$this->config->addProcessor(new ConfigTokenProcessor($this, 'config'));
@@ -70,17 +70,9 @@ abstract class AbstractConfigurableEngine extends AbstractEngine implements Conf
 			'engine' => $this->getEngineRoot()
 		);
 		$this->config->addProcessor(new IncludeTokenProcessor($roots, $this->configLoader, 'include'));
-		foreach ($additionalProcessors ?: array() as $processor) {
-			$this->config->addProcessor($processor);
-		}
 		$this->config->merge($this->defaults());
-		if (!is_null($config)) {
-			if (!is_array($config)) {
-				$config = array( $config );
-			}
-			foreach ($config as $configFile) {
-				$this->config->merge($configFile);
-			}
+		if (!is_null($overrides)) {
+			$this->config->merge($overrides);
 		}
 		return $this;
 	}
@@ -109,7 +101,8 @@ abstract class AbstractConfigurableEngine extends AbstractEngine implements Conf
 		$module = parent::createModule($name);
 		if ($module instanceof ConfigurableInterface) {
 			$moduleConfigKey = sprintf('%s.%s', $this->getRootModuleOverrideConfigKey(), NameUtilities::convertToDashedLower($name));
-			$module->configure($this->config($moduleConfigKey, array()), $this->getConfigLoader());
+			$moduleConfig = $this->config($moduleConfigKey, array());
+			$module->configure($moduleConfig);
 		}
 		return $module;
 	}

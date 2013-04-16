@@ -16,12 +16,10 @@ interface ConfigurableInterface {
 	/**
 	 * Configure the object.  It is up to the implementation how this happens, i.e. whether the incoming configuration
 	 * data completely replaces, or is merged with, the existing configuration data (if any).  This should also setup
-	 * any configuration processors on the container, including any passed in via $additionalProcessors.
+	 * any configuration processors on the container.
 	 *
-	 * @param null|array|string|\ArrayObject|\Sitegear\Config\ConfigurationInterface $config
-	 *   Configuration data, object or filename to configure this object with.  Null means to use only defaults.
-	 * @param \Sitegear\Config\ConfigLoader $loader Configuration loader.
-	 * @param null|array $additionalProcessors Array of ProcessorInterface implementations.
+	 * @param null|array|string|\ArrayObject|\Sitegear\Config\Configuration $overrides Configuration data, object or
+	 *   filename to configure this object with.  Null means to use only defaults.
 	 *
 	 * @return self Fluent pattern.
 	 *
@@ -29,7 +27,7 @@ interface ConfigurableInterface {
 	 *   implementations but does not have to be.
 	 * @throws \InvalidArgumentException If the given argument is not accepted by the implementation.
 	 */
-	public function configure($config=null, ConfigLoader $loader=null, array $additionalProcessors=null);
+	public function configure($overrides=null);
 
 	/**
 	 * Retrieve the given configuration item.
