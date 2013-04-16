@@ -38,25 +38,38 @@ class UrlUtilitiesTest extends AbstractSitegearTestCase {
 	}
 
 	public function testGetReturnUrl() {
-		$this->assertEquals('return/page', UrlUtilities::getReturnUrl('some/page?return=return%2Fpage'));
+		$this->assertEquals('http://localhost/return/page', UrlUtilities::getReturnUrl('some/page?return=return%2Fpage'));
 		$this->assertEquals('http://website.com/external/page', UrlUtilities::getReturnUrl('some/page?return=http%3A%2F%2Fwebsite.com%2Fexternal%2Fpage'));
 		$this->assertEquals('http://backhere.com/return/page', UrlUtilities::getReturnUrl('http://website.com/external/page?return=http%3A%2F%2Fbackhere.com%2Freturn%2Fpage'));
 		$this->assertEmpty(UrlUtilities::getReturnUrl('some/page?return='));
 		$this->assertEmpty(UrlUtilities::getReturnUrl('some/page'));
-		$this->assertEquals('return/page', UrlUtilities::getReturnUrl('some/page?custom-return=return%2Fpage', 'custom-return'));
+		$this->assertEquals('http://localhost/return/page', UrlUtilities::getReturnUrl('some/page?custom-return=return%2Fpage', 'custom-return'));
 	}
 
-	public function testGetReturnUrlUsingRequestObjects() {
-		$this->assertEquals('return/page', UrlUtilities::getReturnUrl(Request::create('some/page?return=return%2Fpage')));
+	public function testGetReturnUrlUsingRequestObjectsAbsolute() {
+		$this->assertEquals('http://localhost/return/page', UrlUtilities::getReturnUrl(Request::create('some/page?return=return%2Fpage')));
 	}
 
-	public function testGetReturnUrlWithQueryParameters() {
-		$this->assertEquals('return/page', UrlUtilities::getReturnUrl('some/page?q=something&return=return%2Fpage'));
-		$this->assertEquals('return/page', UrlUtilities::getReturnUrl('some/page?q=something&foo=bar&return=return%2Fpage'));
-		$this->assertEquals('return/page?q=query', UrlUtilities::getReturnUrl('some/page?return=return%2Fpage%3Fq%3Dquery'));
-		$this->assertEquals('return/page?q=query&x=y', UrlUtilities::getReturnUrl('some/page?return=return%2Fpage%3Fq%3Dquery%26x%3Dy'));
-		$this->assertEquals('return/page?q=query', UrlUtilities::getReturnUrl('some/page?q=something&return=return%2Fpage%3Fq%3Dquery'));
-		$this->assertEquals('return/page?q=query&x=y', UrlUtilities::getReturnUrl('some/page?q=something&foo=bar&return=return%2Fpage%3Fq%3Dquery%26x%3Dy'));
+	public function testGetReturnUrlUsingRequestObjectsNotAbsolute() {
+		$this->assertEquals('return/page', UrlUtilities::getReturnUrl(Request::create('some/page?return=return%2Fpage'), null, null, false));
+	}
+
+	public function testGetReturnUrlWithQueryParametersAbsolute() {
+		$this->assertEquals('http://localhost/return/page', UrlUtilities::getReturnUrl('some/page?q=something&return=return%2Fpage'));
+		$this->assertEquals('http://localhost/return/page', UrlUtilities::getReturnUrl('some/page?q=something&foo=bar&return=return%2Fpage'));
+		$this->assertEquals('http://localhost/return/page?q=query', UrlUtilities::getReturnUrl('some/page?return=return%2Fpage%3Fq%3Dquery'));
+		$this->assertEquals('http://localhost/return/page?q=query&x=y', UrlUtilities::getReturnUrl('some/page?return=return%2Fpage%3Fq%3Dquery%26x%3Dy'));
+		$this->assertEquals('http://localhost/return/page?q=query', UrlUtilities::getReturnUrl('some/page?q=something&return=return%2Fpage%3Fq%3Dquery'));
+		$this->assertEquals('http://localhost/return/page?q=query&x=y', UrlUtilities::getReturnUrl('some/page?q=something&foo=bar&return=return%2Fpage%3Fq%3Dquery%26x%3Dy'));
+	}
+
+	public function testGetReturnUrlWithQueryParametersNotAbsolute() {
+		$this->assertEquals('return/page', UrlUtilities::getReturnUrl('some/page?q=something&return=return%2Fpage', null, null, false));
+		$this->assertEquals('return/page', UrlUtilities::getReturnUrl('some/page?q=something&foo=bar&return=return%2Fpage', null, null, false));
+		$this->assertEquals('return/page?q=query', UrlUtilities::getReturnUrl('some/page?return=return%2Fpage%3Fq%3Dquery', null, null, false));
+		$this->assertEquals('return/page?q=query&x=y', UrlUtilities::getReturnUrl('some/page?return=return%2Fpage%3Fq%3Dquery%26x%3Dy', null, null, false));
+		$this->assertEquals('return/page?q=query', UrlUtilities::getReturnUrl('some/page?q=something&return=return%2Fpage%3Fq%3Dquery', null, null, false));
+		$this->assertEquals('return/page?q=query&x=y', UrlUtilities::getReturnUrl('some/page?q=something&foo=bar&return=return%2Fpage%3Fq%3Dquery%26x%3Dy', null, null, false));
 	}
 
 	public function testWildcardUrlToRegex() {
