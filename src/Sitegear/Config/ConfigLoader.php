@@ -29,7 +29,7 @@ class ConfigLoader {
 	/**
 	 * @var \Sitegear\Config\FileLoader\FileLoaderInterface[]
 	 */
-	private $fileLoaders;
+	private $fileLoaders = array();
 
 	//-- Constructor --------------------
 
@@ -40,7 +40,6 @@ class ConfigLoader {
 	public function __construct(EnvironmentInfoProviderInterface $environmentInfo, $registerDefaultFileLoaders=true) {
 		LoggerRegistry::debug(sprintf('new ConfigLoader(%s, %s)', TypeUtilities::describe($environmentInfo), $registerDefaultFileLoaders ? 'true' : 'false'));
 		$this->environmentInfo = $environmentInfo;
-		$this->fileLoaders = array();
 		if ($registerDefaultFileLoaders) {
 			foreach ($this->defaultFileLoaders() as $fileLoader) {
 				$this->registerFileLoader($fileLoader);

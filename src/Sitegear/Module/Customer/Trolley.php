@@ -45,6 +45,7 @@ class Trolley {
 	 * @param string[] $messages
 	 */
 	public function __construct(CustomerModule $customerModule, array $messages) {
+		LoggerRegistry::debug('new Trolley()');
 		$this->customerModule = $customerModule;
 		$this->messages = $messages;
 	}

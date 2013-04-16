@@ -10,6 +10,8 @@ namespace Sitegear\Info;
 
 use Sitegear\Info\ApplicationInfoProviderInterface;
 use Sitegear\Engine\SitegearEngine;
+use Sitegear\Util\LoggerRegistry;
+use Sitegear\Util\TypeUtilities;
 
 /**
  * Implementation of ApplicationInfoProviderInterface.
@@ -35,6 +37,7 @@ class SitegearApplicationInfoProvider implements ApplicationInfoProviderInterfac
 	 * @param string|null $filename
 	 */
 	public function __construct(SitegearEngine $engine, $filename=null) {
+		LoggerRegistry::debug(sprintf('new SitegearApplicationInfoProvider(%s, %s)', TypeUtilities::describe($engine), $filename));
 		$this->engine = $engine;
 		$filename = $filename ?: sprintf('%s/%s', dirname($this->getSitegearRoot()), $filename ?: 'composer.json');
 		$this->data = file_exists($filename) ? json_decode(file_get_contents($filename), true) : array();

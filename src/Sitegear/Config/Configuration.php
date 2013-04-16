@@ -37,12 +37,12 @@ class Configuration {
 	/**
 	 * @var ProcessorInterface[]
 	 */
-	private $processors;
+	private $processors = array();
 
 	/**
 	 * @var mixed[]
 	 */
-	private $data;
+	private $data = array();
 
 	//-- Constructor --------------------
 
@@ -52,8 +52,6 @@ class Configuration {
 	public function __construct(ConfigLoader $loader) {
 		LoggerRegistry::debug('new Configuration()');
 		$this->loader = $loader;
-		$this->processors = array();
-		$this->data = array();
 	}
 
 	//-- Public Methods --------------------

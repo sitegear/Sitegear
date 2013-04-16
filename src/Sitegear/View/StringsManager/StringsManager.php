@@ -25,13 +25,7 @@ class StringsManager implements StringsManagerInterface {
 	/**
 	 * @var array[]
 	 */
-	private $map;
-
-	//-- Constructor --------------------
-
-	public function __construct() {
-		$this->map = array();
-	}
+	private $map = array();
 
 	//-- StringsManagerInterface Methods --------------------
 

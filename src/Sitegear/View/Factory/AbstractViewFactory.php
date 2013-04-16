@@ -74,7 +74,7 @@ abstract class AbstractViewFactory implements ViewFactoryInterface {
 	/**
 	 * @var \Sitegear\View\ViewInterface
 	 */
-	private $page;
+	private $page = null;
 
 	//-- Constructor --------------------
 
@@ -93,7 +93,6 @@ abstract class AbstractViewFactory implements ViewFactoryInterface {
 		$this->stringsManager = $stringsManager ?: new StringsManager();
 		$this->indexSectionName = $indexSectionName ?: self::DEFAULT_INDEX_SECTION_NAME;
 		$this->fallbackSectionName = $fallbackSectionName ?: self::DEFAULT_FALLBACK_SECTION_NAME;
-		$this->page = null;
 	}
 
 	//-- ViewFactoryInterface Methods --------------------

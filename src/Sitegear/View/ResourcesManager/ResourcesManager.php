@@ -29,19 +29,12 @@ class ResourcesManager implements ResourcesManagerInterface {
 	/**
 	 * @var string[]
 	 */
-	private $types;
+	private $types = array();
 
 	/**
 	 * @var string[]
 	 */
-	private $resources;
-
-	//-- Constructor --------------------
-
-	public function __construct() {
-		$this->types = array();
-		$this->resources = array();
-	}
+	private $resources = array();
 
 	//-- ResourcesManagerInterface Methods --------------------
 

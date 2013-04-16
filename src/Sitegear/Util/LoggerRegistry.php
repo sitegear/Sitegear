@@ -42,15 +42,19 @@ final class LoggerRegistry {
 	/**
 	 * @var \Psr\Log\LoggerInterface[]
 	 */
-	private $loggers;
+	private $loggers = array();
 
 	//-- Singleton --------------------
 
+	/**
+	 * @var LoggerRegistry Singleton instance.
+	 */
 	private static $__instance = null;
 
-	private function __construct() {
-		$this->loggers = array();
-	}
+	/**
+	 * Prevent external instantiation.
+	 */
+	private function __construct() {}
 
 	/**
 	 * Get the singleton instance.

@@ -148,34 +148,14 @@ class View extends AbstractView {
 	//-- Attributes --------------------
 
 	/**
-	 * @var \Symfony\Component\HttpFoundation\Request
-	 */
-	private $request;
-
-	/**
 	 * @var array[] Array of associative arrays, each of which has a 'name' key and an 'arguments' key.
 	 */
-	private $activeDecorators;
+	private $activeDecorators = array();
 
 	/**
 	 * @var boolean Whether rendering is currently in progress.
 	 */
-	private $rendering;
-
-	//-- Constructor --------------------
-
-	/**
-	 * @param \Sitegear\Engine\EngineInterface $engine
-	 * @param \Symfony\Component\HttpFoundation\Request $request
-	 * @param \Sitegear\View\ViewInterface|null $parent
-	 */
-	public function __construct(EngineInterface $engine, Request $request, ViewInterface $parent=null) {
-		LoggerRegistry::debug('new View()');
-		parent::__construct($engine, $parent, new DataSeekingArrayObject($parent));
-		$this->activeDecorators = array();
-		$this->rendering = false;
-		$this->request = $request;
-	}
+	private $rendering = false;
 
 	//-- ViewInterface Methods --------------------
 
@@ -187,6 +167,8 @@ class View extends AbstractView {
 		$content = null;
 		$this->rendering = true;
 		if ($this->getTargetCount() === 2) {
+			$request = $this->getRequest();
+
 			// The arguments to the module definition are decorators, set them now
 			call_user_func_array(array( $this, 'applyDecorators'), $this->getTargetArguments(self::TARGET_LEVEL_MODULE));
 
@@ -194,13 +176,13 @@ class View extends AbstractView {
 			$context = $this->createContext();
 
 			// Check for and execute a target controller
-			$targetController = $context->getTargetController($this, $this->request);
+			$targetController = $context->getTargetController($this, $request);
 			$targetControllerResult = null;
 			if (!is_null($targetController) && is_callable($targetController)) {
 				$targetControllerResult = TypeUtilities::invokeCallable(
 					$targetController,
 					null,
-					array( $this, $this->request ),
+					array( $this, $request ),
 					$this->getTargetArguments(self::TARGET_LEVEL_METHOD) ?: array()
 				);
 			}
@@ -216,7 +198,7 @@ class View extends AbstractView {
 					$content = TypeUtilities::invokeCallable(
 						array( $decorator, 'decorate' ),
 						array( $content ),
-						array( $this, $this->request ),
+						array( $this, $request ),
 						$active['arguments']
 					);
 				}
@@ -289,29 +271,29 @@ class View extends AbstractView {
 		switch ($this->getTarget(self::TARGET_LEVEL_MODULE)) {
 			// $view->template()->{templateName}()
 			case self::SPECIAL_TARGET_MODULE_TEMPLATE:
-				$context = new TemplateViewContext($this, $this->request);
+				$context = new TemplateViewContext($this, $this->getRequest());
 				break;
 
 			// $view->section()->{sectionName}()
 			case self::SPECIAL_TARGET_MODULE_SECTION:
 				$index = $this->getEngine()->getViewFactory()->getIndexSectionName();
 				$fallback = $this->getEngine()->getViewFactory()->getFallbackSectionName();
-				$context = new SectionViewContext($this, $this->request, $index, $fallback);
+				$context = new SectionViewContext($this, $this->getRequest(), $index, $fallback);
 				break;
 
 			// $view->component()->{componentName}()
 			case self::SPECIAL_TARGET_MODULE_COMPONENT:
-				$context = new ComponentViewContext($this, $this->request);
+				$context = new ComponentViewContext($this, $this->getRequest());
 				break;
 
 			// $view->resources()->{resourceTypeName}()
 			case self::SPECIAL_TARGET_MODULE_RESOURCES:
-				$context = new ResourcesViewContext($this, $this->request);
+				$context = new ResourcesViewContext($this, $this->getRequest());
 				break;
 
 			// $view->strings()->{stringName}()
 			case self::SPECIAL_TARGET_MODULE_STRINGS:
-				$context = new StringsViewContext($this, $this->request);
+				$context = new StringsViewContext($this, $this->getRequest());
 				break;
 
 			// $view->{moduleName}()...
@@ -320,12 +302,12 @@ class View extends AbstractView {
 				switch ($this->getTarget(self::TARGET_LEVEL_METHOD)) {
 					// $view->{moduleName}()->item()
 					case self::SPECIAL_TARGET_METHOD_ITEM:
-						$context = new ModuleItemViewContext($this, $this->request);
+						$context = new ModuleItemViewContext($this, $this->getRequest());
 						break;
 
 					// $view->{moduleName}()->{componentName}()
 					default:
-						$context = new ComponentViewContext($this, $this->request);
+						$context = new ComponentViewContext($this, $this->getRequest());
 				}
 		}
 		return $context;
@@ -359,7 +341,7 @@ class View extends AbstractView {
 			// We are already rendering this view, and the view script is requesting a child view; create it and call
 			// the requested method on it (which will set the new view's first target, because the child view is not
 			// rendering).
-			$childView = $this->getEngine()->getViewFactory()->buildView($this->request, $this);
+			$childView = $this->getEngine()->getViewFactory()->buildView($this->getRequest(), $this);
 			return call_user_func_array(array( $childView, $name ), $arguments);
 		}
 		return $this;

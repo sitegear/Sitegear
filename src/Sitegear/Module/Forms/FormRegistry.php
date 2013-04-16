@@ -36,7 +36,7 @@ class FormRegistry {
 	 *   either 'definitions' or 'callback'.  Depending on the value of the 'type' key an additional key will store the
 	 *   path(s) to the definition file(s) or a callback.
 	 */
-	private $forms;
+	private $forms = array();
 
 	/**
 	 * @var FormsModule
@@ -74,7 +74,6 @@ class FormRegistry {
 	 * @param string[] $conditionNamespaces
 	 */
 	public function __construct(FormsModule $formsModule, array $baseConfig, array $fieldNamespaces=null, array $constraintNamespaces=null, array $conditionNamespaces=null) {
-		$this->forms = array();
 		$this->formsModule = $formsModule;
 		$this->baseConfig = $baseConfig;
 		$this->fieldNamespaces = $fieldNamespaces ?: array();

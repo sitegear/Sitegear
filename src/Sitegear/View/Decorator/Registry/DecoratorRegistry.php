@@ -17,13 +17,7 @@ class DecoratorRegistry implements DecoratorRegistryInterface {
 
 	//-- Attributes --------------------
 
-	private $decorators;
-
-	//-- Constructor --------------------
-
-	public function __construct() {
-		$this->decorators = array();
-	}
+	private $decorators = array();
 
 	//-- DecoratorRegistryInterface Methods --------------------
 

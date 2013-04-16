@@ -10,7 +10,6 @@ namespace Sitegear\Module;
 
 use Sitegear\Module\AbstractConfigurableModule;
 use Sitegear\Module\MountableModuleInterface;
-use Sitegear\Engine\EngineInterface;
 use Sitegear\Util\LoggerRegistry;
 
 use Symfony\Component\Routing\RouteCollection;
@@ -38,19 +37,7 @@ abstract class AbstractUrlMountableModule extends AbstractConfigurableModule imp
 	/**
 	 * @var array[]
 	 */
-	private $navigationData;
-
-	//-- Constructor --------------------
-
-	/**
-	 * @param EngineInterface $engine
-	 */
-	public function __construct(EngineInterface $engine) {
-		parent::__construct($engine);
-		$this->mountedUrl = null;
-		$this->routes = null;
-		$this->navigationData = array();
-	}
+	private $navigationData = array();
 
 	//-- MountableModuleInterface Methods --------------------
 

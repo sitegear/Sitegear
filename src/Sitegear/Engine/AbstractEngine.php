@@ -40,7 +40,7 @@ abstract class AbstractEngine implements EngineInterface {
 	/**
 	 * @var \Sitegear\Module\ModuleInterface[] Array mapping names to ModuleInterface implementations.
 	 */
-	private $modules;
+	private $modules = array();
 
 	/**
 	 * @var \Sitegear\View\Factory\ViewFactoryInterface
@@ -114,13 +114,6 @@ abstract class AbstractEngine implements EngineInterface {
 		$this->sitegearInfo = $sitegearInfo;
 		$this->viewFactory = $viewFactory;
 		$this->userManager = $userManager;
-		$this->session = null;
-		$this->memcache = null;
-		$this->modules = array();
-		$this->compiledRouteCollection = null;
-		$this->compiledTemplateMap = null;
-		$this->currentProtocolScheme = null;
-		$this->compiledProtocolSchemeMap = null;
 	}
 
 	//-- EngineInterface Methods --------------------

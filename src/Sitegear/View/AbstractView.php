@@ -37,6 +37,11 @@ abstract class AbstractView implements ViewInterface {
 	private $engine;
 
 	/**
+	 * @var \Symfony\Component\HttpFoundation\Request
+	 */
+	private $request;
+
+	/**
 	 * @var \Sitegear\View\ViewInterface
 	 */
 	private $parent;
@@ -44,7 +49,7 @@ abstract class AbstractView implements ViewInterface {
 	/**
 	 * @var array[] Stack of targets, each being an associative array of 'target' and 'arguments' keys.
 	 */
-	private $targets;
+	private $targets = array();
 
 	/**
 	 * @var \ArrayAccess
@@ -55,14 +60,15 @@ abstract class AbstractView implements ViewInterface {
 
 	/**
 	 * @param \Sitegear\Engine\EngineInterface $engine
+	 * @param \Symfony\Component\HttpFoundation\Request $request
 	 * @param \Sitegear\View\ViewInterface|null $parent
 	 * @param \ArrayAccess|null $data Data object, or null to use an empty \ArrayObject.
 	 */
-	public function __construct(EngineInterface $engine, ViewInterface $parent=null, $data=null) {
+	public function __construct(EngineInterface $engine, Request $request, ViewInterface $parent=null, $data=null) {
 		LoggerRegistry::debug('new AbstractView()');
 		$this->engine = $engine;
+		$this->request = $request;
 		$this->parent = $parent;
-		$this->clearTargets();
 		$this->data = $data ?: new \ArrayObject();
 	}
 
@@ -179,6 +185,12 @@ abstract class AbstractView implements ViewInterface {
 	 */
 	public function offsetUnset($offset) {
 		$this->data->offsetUnset($offset);
+	}
+
+	//-- Internal Methods --------------------
+
+	protected function getRequest() {
+		return $this->request;
 	}
 
 }

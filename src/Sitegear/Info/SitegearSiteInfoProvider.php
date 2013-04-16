@@ -12,7 +12,9 @@ use Sitegear\Info\SiteInfoProviderInterface;
 use Sitegear\Module\ModuleInterface;
 use Sitegear\Info\ResourceLocations;
 use Sitegear\Engine\SitegearEngine;
+use Sitegear\Util\LoggerRegistry;
 use Sitegear\Util\NameUtilities;
+use Sitegear\Util\TypeUtilities;
 
 /**
  * Implementation of SiteInfoProviderInterface.
@@ -34,6 +36,7 @@ class SitegearSiteInfoProvider implements SiteInfoProviderInterface {
 	//-- Constructor --------------------
 
 	public function __construct(SitegearEngine $engine, $siteRoot) {
+		LoggerRegistry::debug(sprintf('new SitegearSiteInfoProvider(%s, %s)', TypeUtilities::describe($engine), $siteRoot));
 		$this->engine = $engine;
 		$this->siteRoot = trim(rtrim($siteRoot, '/'));
 	}

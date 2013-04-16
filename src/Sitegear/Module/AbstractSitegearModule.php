@@ -10,7 +10,6 @@ namespace Sitegear\Module;
 
 use Sitegear\Module\AbstractUrlMountableModule;
 use Sitegear\Config\Configuration;
-use Sitegear\Engine\EngineInterface;
 use Sitegear\Info\ResourceLocations;
 use Sitegear\View\ViewInterface;
 use Sitegear\Module\Doctrine\DoctrineModule;
@@ -56,19 +55,7 @@ abstract class AbstractSitegearModule extends AbstractUrlMountableModule {
 	/**
 	 * @var boolean
 	 */
-	private $entitiesConfigured;
-
-	//-- Constructor --------------------
-
-	/**
-	 * @param EngineInterface $engine
-	 */
-	public function __construct(EngineInterface $engine) {
-		parent::__construct($engine);
-		$this->baseUrl = null;
-		$this->urlGenerator = null;
-		$this->entitiesConfigured = false;
-	}
+	private $entitiesConfigured = false;
 
 	//-- ModuleInterface Methods --------------------
 

@@ -61,7 +61,7 @@ class SitegearViewFactory extends AbstractViewFactory {
 	 * @inheritdoc
 	 */
 	protected function buildViewImpl(Request $request, ViewInterface $parent=null) {
-		return new \Sitegear\View\View($this->engine, $request, $parent);
+		return new View($this->engine, $request, $parent);
 	}
 
 }
