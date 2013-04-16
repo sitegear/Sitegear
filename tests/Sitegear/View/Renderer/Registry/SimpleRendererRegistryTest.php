@@ -17,13 +17,13 @@ class SimpleRendererRegistryTest extends AbstractSitegearTestCase {
 	const MOCK_CONTENT_RENDERER = '\\Sitegear\\Mock\\MockRenderer';
 
 	/**
-	 * @var \Sitegear\View\Renderer\Registry\SimpleRendererRegistry
+	 * @var \Sitegear\View\Renderer\Registry\RendererRegistry
 	 */
 	private $registry;
 
 	public function setUp() {
 		parent::setUp();
-		$this->registry = new SimpleRendererRegistry();
+		$this->registry = new RendererRegistry();
 	}
 
 	public function testGetInstanceInvariance() {

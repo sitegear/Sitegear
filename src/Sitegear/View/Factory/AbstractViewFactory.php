@@ -12,7 +12,7 @@ use Sitegear\View\ViewInterface;
 use Sitegear\View\Decorator\Registry\DecoratorRegistryInterface;
 use Sitegear\View\Decorator\Registry\DecoratorRegistry;
 use Sitegear\View\Renderer\Registry\RendererRegistryInterface;
-use Sitegear\View\Renderer\Registry\SimpleRendererRegistry;
+use Sitegear\View\Renderer\Registry\RendererRegistry;
 use Sitegear\View\ResourcesManager\ResourcesManagerInterface;
 use Sitegear\View\ResourcesManager\ResourcesManager;
 use Sitegear\View\StringsManager\StringsManagerInterface;
@@ -87,7 +87,7 @@ abstract class AbstractViewFactory implements ViewFactoryInterface {
 	 * @param string $fallbackSectionName
 	 */
 	public function __construct(RendererRegistryInterface $rendererRegistry=null, DecoratorRegistryInterface $decoratorRegistry=null, ResourcesManagerInterface $resourcesManager=null, StringsManagerInterface $stringsManager=null, $indexSectionName=null, $fallbackSectionName=null) {
-		$this->rendererRegistry = $rendererRegistry ?: new SimpleRendererRegistry();
+		$this->rendererRegistry = $rendererRegistry ?: new RendererRegistry();
 		$this->decoratorRegistry = $decoratorRegistry ?: new DecoratorRegistry();
 		$this->resourcesManager = $resourcesManager ?: new ResourcesManager();
 		$this->stringsManager = $stringsManager ?: new StringsManager();

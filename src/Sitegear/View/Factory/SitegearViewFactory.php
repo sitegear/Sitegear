@@ -12,7 +12,7 @@ use Sitegear\View\Factory\AbstractViewFactory;
 use Sitegear\View\StringsManager\StringsManager;
 use Sitegear\View\ResourcesManager\ResourcesManager;
 use Sitegear\View\Decorator\Registry\DecoratorRegistry;
-use Sitegear\View\Renderer\Registry\SimpleRendererRegistry;
+use Sitegear\View\Renderer\Registry\RendererRegistry;
 use Sitegear\View\StringsManager\StringsManagerInterface;
 use Sitegear\View\ResourcesManager\ResourcesManagerInterface;
 use Sitegear\View\Decorator\Registry\DecoratorRegistryInterface;
@@ -45,7 +45,7 @@ class SitegearViewFactory extends AbstractViewFactory {
 	 */
 	public function  __construct(SitegearEngine $engine, RendererRegistryInterface $rendererRegistry=null, DecoratorRegistryInterface $decoratorRegistry=null, ResourcesManagerInterface $resourcesManager=null, StringsManagerInterface $stringsManager=null, $indexSectionName=null, $fallbackSectionName=null) {
 		parent::__construct(
-			$rendererRegistry ?: new SimpleRendererRegistry(),
+			$rendererRegistry ?: new RendererRegistry(),
 			$decoratorRegistry ?: new DecoratorRegistry(),
 			$resourcesManager ?: new ResourcesManager(),
 			$stringsManager ?: new StringsManager(),

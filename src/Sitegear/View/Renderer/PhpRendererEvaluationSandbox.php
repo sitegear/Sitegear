@@ -11,7 +11,7 @@ namespace Sitegear\View\Renderer;
 use Sitegear\View\ViewInterface;
 
 /**
- * Simple static class to provide a sandbox environment for rendering PHP view scripts.
+ * Provides a sandbox environment for rendering PHP view scripts.
  */
 class PhpRendererEvaluationSandbox {
 

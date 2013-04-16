@@ -11,10 +11,9 @@ namespace Sitegear\Util;
 use Psr\Log\LoggerInterface;
 
 /**
- * Simple global registry for PSR-3 Loggers.  There is a default logger, which is registered by default with a null
- * handler, and is accessible by default through the methods by not passing a $name argument.  Application code should
- * add handlers to this logger by using the register() method, or the get() method and calling pushHandler() on the
- * result.
+ * Global registry for PSR-3 Loggers.  There is a default logger, which is registered by default with a null handler,
+ * and is accessible by default through the methods by not passing a $name argument.  Application code should add
+ * handlers to this logger by using the register() method, or the get() method and calling pushHandler() on the result.
  *
  * The __call() and __callStatic() magic methods provide shortcuts to the proxy methods:
  *

@@ -9,7 +9,7 @@
 namespace Sitegear\View\StringsManager;
 
 /**
- * Simple implementation of the StringsManagerInterface.
+ * Default implementation of the StringsManagerInterface.
  */
 class StringsManager implements StringsManagerInterface {
 
