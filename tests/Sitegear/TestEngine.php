@@ -22,4 +22,8 @@ class TestEngine extends SitegearEngine {
 		return $session;
 	}
 
+	protected function getRawRouteMap() {
+		return array();
+	}
+
 }
