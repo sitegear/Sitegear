@@ -97,7 +97,7 @@ class GoogleModule extends AbstractSitegearModule {
 	 * @throws \RuntimeException If the address cannot be geo-coding due to missing response data.
 	 */
 	public function geocodeLocation($address) {
-		LoggerRegistry::debug(sprintf('GoogleModule::geocodeLocation(%s)', implode('|', $address)));
+		LoggerRegistry::debug(sprintf('GoogleModule::geocodeLocation(%s)', $address));
 		$url = sprintf('http://%s/maps/api/geocode/json?address=%s&sensor=false', $this->config('maps.api.host'), urlencode($address));
 		$data = json_decode(file_get_contents($url), true);
 		if (!isset($data['status'])) {
