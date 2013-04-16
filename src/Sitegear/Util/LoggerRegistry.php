@@ -30,8 +30,6 @@ use Psr\Log\LoggerInterface;
  * These methods are all available as both static and instance methods.
  *
  * Registered instances can also be retrieved using the get() method on the singleton instance.
- *
- * TODO Implement placeholders as described at \Psr\Log\LoggerInterface
  */
 final class LoggerRegistry {
 
@@ -164,42 +162,26 @@ final class LoggerRegistry {
 	 *
 	 * $name gives the method to call on the Logger.
 	 *
-	 * In most cases, $arguments specifies the message and optionally the list of loggers (names) to which it should be
-	 * sent.  This allows calls like:
+	 * In most cases, $arguments specifies the message and optionally the context values.  This allows calls like:
 	 *
-	 * LoggerRegistry::getInstance()->warn('message goes here'); // default logger
-	 * LoggerRegistry::getInstance()->notice('message goes here', 'some-logger'); // specified logger
+	 * LoggerRegistry::getInstance()->warn('message goes here'); // logs "message goes here"
+	 * LoggerRegistry::getInstance()->notice('message {foo} goes here', array( 'foo' => 'bar' )); // logs "message bar goes here"
 	 *
 	 * In the special case of the log() method, $arguments should be the log level, message and optional list of logger
 	 * names.  This allows:
 	 *
-	 * LoggerRegistry::getInstance()->log(Logger::INFO, 'info message'); // default logger with log()
-	 * LoggerRegistry::getInstance()->log(Logger::INFO, 'info message', 'some-logger'); // specified logger with log()
-	 *
-	 * The $context for these calls is automatically generated, using the PID and the current URL (retrieved crudely
-	 * using the $_SERVER super-global, note this might not play well with unit testing etc).
+	 * LoggerRegistry::getInstance()->log(Logger::INFO, 'info message'); // logs "info message"
+	 * LoggerRegistry::getInstance()->log(Logger::DEBUG, 'debug message {foo}', array( 'foo' => 'bar' )); // logs "info message bar"
 	 *
 	 * See also __callStatic() for a shorthand version of this.
 	 */
 	public function __call($name, $arguments) {
 		if (in_array($name, self::$_proxyMethods)) {
-			// Determine the number of arguments to pass through.  The log() method takes two arguments (level,
-			// message).  Other (dynamic) forms take one arguments (message).
-			$loggerMethodArgumentsCount = ($name === 'log') ? 2 : 1;
-			if (sizeof($arguments) >= $loggerMethodArgumentsCount) {
-				// Determine the arguments for the method call.
-				$loggerMethodArguments = array_slice($arguments, 0, $loggerMethodArgumentsCount);
-				// TODO Move this (context) to something that can be externally configured, and provide this as the fallback behaviour
-				$loggerMethodArguments[] = array( getmypid() );
-				// Call the method on each of the relevant loggers.
-				foreach ($this->loggers as $logger) {
-					call_user_func_array(array( $logger, $name ), $loggerMethodArguments);
-				}
-			} else {
-				throw new \BadMethodCallException(sprintf('Cannot call method "%s" on LoggerRegistry with less than %d parameters, %d supplied.', $name, $loggerMethodArgumentsCount, sizeof($arguments)));
+			foreach ($this->loggers as $logger) {
+				call_user_func_array(array( $logger, $name ), $arguments);
 			}
 		} else {
-			throw new \BadMethodCallException(sprintf('Unhandled direct method call "%s" on LoggerRegistry singleton instance, only proxy logging methods are supported.', $name));
+			throw new \BadMethodCallException(sprintf('Unhandled method call "%s" on LoggerRegistry singleton instance, only proxy logging methods are supported.', $name));
 		}
 	}
 
