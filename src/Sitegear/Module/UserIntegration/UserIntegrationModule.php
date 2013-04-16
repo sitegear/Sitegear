@@ -8,17 +8,15 @@
 
 namespace Sitegear\Module\UserIntegration;
 
-use Sitegear\Info\ResourceLocations;
-use Sitegear\Util\TypeUtilities;
-use Sitegear\View\ViewInterface;
 use Sitegear\Module\AbstractSitegearModule;
+use Sitegear\View\ViewInterface;
 use Sitegear\Util\TokenUtilities;
 use Sitegear\Util\UrlUtilities;
+use Sitegear\Util\TypeUtilities;
 use Sitegear\Util\LoggerRegistry;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\Validator\ExecutionContextInterface;
 
 /**
  * This module handles requests for all authentication-related commands.
@@ -247,11 +245,13 @@ class UserIntegrationModule extends AbstractSitegearModule {
 				unset($credentials[$key]);
 			}
 		}
+		// Let the authenticator modify the credentials array.
+		$userManager = $this->getEngine()->getUserManager();
+		$credentials = $userManager->getAuthenticator()->modifyCredentials($credentials);
 		// Create user and grant privileges.
-		$storage = $this->getEngine()->getUserManager()->getStorage();
-		$storage->createUser($email, $credentials);
+		$userManager->getStorage()->createUser($email, $credentials);
 		foreach ($this->config('sign-up.privileges') as $privilege) {
-			$storage->grantPrivilege($email, $privilege);
+			$userManager->getStorage()->grantPrivilege($email, $privilege);
 		}
 		// TODO Send email confirmation / activation request (based on config)
 		// Log the user in automatically and set a message for the next page.
@@ -268,7 +268,8 @@ class UserIntegrationModule extends AbstractSitegearModule {
 	 */
 	public function recoverLogin($email) {
 		LoggerRegistry::debug('UserIntegrationModule::recoverLogin({email})', array( 'email' => TypeUtilities::describe($email) ));
-		$url = 'http://URL-TODO/'; // TODO
+		// TODO Implement me
+		$url = 'http://URL-TODO/';
 		$siteInfo = $this->getEngine()->getSiteInfo();
 		$subject = sprintf('Login Recovery from %s', $siteInfo->getDisplayName());
 		$addresses = array(
