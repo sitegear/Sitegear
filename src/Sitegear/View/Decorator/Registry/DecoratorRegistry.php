@@ -13,7 +13,7 @@ use Sitegear\Util\TypeUtilities;
 /**
  * Default implementation of the DecoratorRegistryInterface.
  */
-class SimpleDecoratorRegistry implements DecoratorRegistryInterface {
+class DecoratorRegistry implements DecoratorRegistryInterface {
 
 	//-- Attributes --------------------
 

@@ -9,9 +9,9 @@
 namespace Sitegear\View\Factory;
 
 use Sitegear\View\Factory\AbstractViewFactory;
-use Sitegear\View\StringsManager\SimpleStringsManager;
-use Sitegear\View\ResourcesManager\SimpleResourcesManager;
-use Sitegear\View\Decorator\Registry\SimpleDecoratorRegistry;
+use Sitegear\View\StringsManager\StringsManager;
+use Sitegear\View\ResourcesManager\ResourcesManager;
+use Sitegear\View\Decorator\Registry\DecoratorRegistry;
 use Sitegear\View\Renderer\Registry\SimpleRendererRegistry;
 use Sitegear\View\StringsManager\StringsManagerInterface;
 use Sitegear\View\ResourcesManager\ResourcesManagerInterface;
@@ -46,9 +46,9 @@ class SitegearViewFactory extends AbstractViewFactory {
 	public function  __construct(SitegearEngine $engine, RendererRegistryInterface $rendererRegistry=null, DecoratorRegistryInterface $decoratorRegistry=null, ResourcesManagerInterface $resourcesManager=null, StringsManagerInterface $stringsManager=null, $indexSectionName=null, $fallbackSectionName=null) {
 		parent::__construct(
 			$rendererRegistry ?: new SimpleRendererRegistry(),
-			$decoratorRegistry ?: new SimpleDecoratorRegistry(),
-			$resourcesManager ?: new SimpleResourcesManager(),
-			$stringsManager ?: new SimpleStringsManager(),
+			$decoratorRegistry ?: new DecoratorRegistry(),
+			$resourcesManager ?: new ResourcesManager(),
+			$stringsManager ?: new StringsManager(),
 			$indexSectionName,
 			$fallbackSectionName
 		);

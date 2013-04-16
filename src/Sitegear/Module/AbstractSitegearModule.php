@@ -9,7 +9,7 @@
 namespace Sitegear\Module;
 
 use Sitegear\Module\AbstractUrlMountableModule;
-use Sitegear\Config\Container\SimpleConfigContainer;
+use Sitegear\Config\Container\ConfigContainer;
 use Sitegear\Engine\EngineInterface;
 use Sitegear\Info\ResourceLocations;
 use Sitegear\View\ViewInterface;
@@ -166,7 +166,7 @@ abstract class AbstractSitegearModule extends AbstractUrlMountableModule {
 		}
 		// Load routes from file.
 		$filename = sprintf('%s/%s/%s', $this->getModuleRoot(), ResourceLocations::RESOURCES_DIRECTORY, self::FILENAME_ROUTES);
-		$container = new SimpleConfigContainer($this->getConfigLoader());
+		$container = new ConfigContainer($this->getConfigLoader());
 		$container->merge($filename);
 		// Add a route for each record in the routes file.
 		foreach ($container->all() as $name => $parameters) {

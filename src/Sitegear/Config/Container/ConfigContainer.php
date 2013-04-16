@@ -18,7 +18,7 @@ use Sitegear\Util\LoggerRegistry;
  * Simple implementation of the ConfigInterface, which simply stores and retrieves the values, but provides a hook for
  * further post-processing by sub-classes.  Actually loading the data is handled by the ConfigLoader singleton.
  */
-class SimpleConfigContainer implements ConfigContainerInterface {
+class ConfigContainer implements ConfigContainerInterface {
 
 	//-- Attributes --------------------
 
@@ -43,7 +43,7 @@ class SimpleConfigContainer implements ConfigContainerInterface {
 	 * @param \Sitegear\Config\ConfigLoader $loader
 	 */
 	public function __construct(ConfigLoader $loader) {
-		LoggerRegistry::debug('Instantiating SimpleConfigContainer');
+		LoggerRegistry::debug('Instantiating ConfigContainer');
 		$this->loader = $loader;
 		$this->processors = array();
 		$this->data = array();
@@ -62,7 +62,7 @@ class SimpleConfigContainer implements ConfigContainerInterface {
 	 * @inheritdoc
 	 */
 	public function merge($config, $rootKey=null, $preferExisting=false) {
-		LoggerRegistry::debug(sprintf('SimpleConfigContainer merging data [%s]', TypeUtilities::describe($config)));
+		LoggerRegistry::debug(sprintf('ConfigContainer merging data [%s]', TypeUtilities::describe($config)));
 
 		// Load using the container's ConfigLoader
 		$data = $this->loader->load($config);

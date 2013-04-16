@@ -15,7 +15,7 @@ use Sitegear\Util\NameUtilities;
  * Provides a simple implementation of ResourcesManagerInterface, which activates all passed-in requirements
  * (dependencies) of a resource before activating the resource itself.
  */
-class SimpleResourcesManager implements ResourcesManagerInterface {
+class ResourcesManager implements ResourcesManagerInterface {
 
 	//-- Attributes --------------------
 
@@ -55,7 +55,7 @@ class SimpleResourcesManager implements ResourcesManagerInterface {
 		if (!$this->isValidType($type)) {
 			throw new \InvalidArgumentException(sprintf('Could not register resource type "%s" because it is not a valid type specifier (alphanumeric characters and hyphens only)', $type));
 		}
-		LoggerRegistry::debug(sprintf('SimpleResourcesManager registering type "%s" with format "%s"', $type, $format));
+		LoggerRegistry::debug(sprintf('ResourcesManager registering type "%s" with format "%s"', $type, $format));
 		$this->types[$type] = $format;
 	}
 
@@ -97,7 +97,7 @@ class SimpleResourcesManager implements ResourcesManagerInterface {
 			throw new \DomainException(sprintf('Could not add resource "%s" of type "%s" because the type has not been registered.', $key, $type));
 		}
 		if (!$this->isRegistered($key)) {
-			LoggerRegistry::debug(sprintf('SimpleResourcesManager registering resource "%s" with type "%s" and "%s"', $key, $type, $url));
+			LoggerRegistry::debug(sprintf('ResourcesManager registering resource "%s" with type "%s" and "%s"', $key, $type, $url));
 			$this->resources[] = array(
 				'key' => $key,
 				'type' => $type,
@@ -115,7 +115,7 @@ class SimpleResourcesManager implements ResourcesManagerInterface {
 	 * @inheritdoc
 	 */
 	public function registerMap(array $map) {
-		LoggerRegistry::debug('SimpleResourcesManager registering resource map');
+		LoggerRegistry::debug('ResourcesManager registering resource map');
 		foreach ($map as $key => $resource) {
 			$this->register($key,
 				$resource['type'],
@@ -194,7 +194,7 @@ class SimpleResourcesManager implements ResourcesManagerInterface {
 	 * @inheritdoc
 	 */
 	public function activate($key) {
-		LoggerRegistry::debug(sprintf('SimpleResourcesManager activating resource "%s"', $key));
+		LoggerRegistry::debug(sprintf('ResourcesManager activating resource "%s"', $key));
 		foreach ($this->resources as $index => $resource) {
 			if ($key === $resource['key']) {
 				foreach ($resource['requires'] as $require) {
@@ -209,7 +209,7 @@ class SimpleResourcesManager implements ResourcesManagerInterface {
 	 * @inheritdoc
 	 */
 	public function render($type) {
-		LoggerRegistry::debug(sprintf('SimpleResourcesManager rendering resources of type "%s"', $type));
+		LoggerRegistry::debug(sprintf('ResourcesManager rendering resources of type "%s"', $type));
 		// Check for unknown type
 		if (!$this->isTypeRegistered($type)) {
 			throw new \DomainException(sprintf('Could not render resources of type "%s" because the type has not been registered.', $type));

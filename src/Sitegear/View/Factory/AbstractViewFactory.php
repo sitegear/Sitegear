@@ -10,13 +10,13 @@ namespace Sitegear\View\Factory;
 
 use Sitegear\View\ViewInterface;
 use Sitegear\View\Decorator\Registry\DecoratorRegistryInterface;
-use Sitegear\View\Decorator\Registry\SimpleDecoratorRegistry;
+use Sitegear\View\Decorator\Registry\DecoratorRegistry;
 use Sitegear\View\Renderer\Registry\RendererRegistryInterface;
 use Sitegear\View\Renderer\Registry\SimpleRendererRegistry;
 use Sitegear\View\ResourcesManager\ResourcesManagerInterface;
-use Sitegear\View\ResourcesManager\SimpleResourcesManager;
+use Sitegear\View\ResourcesManager\ResourcesManager;
 use Sitegear\View\StringsManager\StringsManagerInterface;
-use Sitegear\View\StringsManager\SimpleStringsManager;
+use Sitegear\View\StringsManager\StringsManager;
 use Sitegear\Util\LoggerRegistry;
 
 use Symfony\Component\HttpFoundation\Request;
@@ -88,9 +88,9 @@ abstract class AbstractViewFactory implements ViewFactoryInterface {
 	 */
 	public function __construct(RendererRegistryInterface $rendererRegistry=null, DecoratorRegistryInterface $decoratorRegistry=null, ResourcesManagerInterface $resourcesManager=null, StringsManagerInterface $stringsManager=null, $indexSectionName=null, $fallbackSectionName=null) {
 		$this->rendererRegistry = $rendererRegistry ?: new SimpleRendererRegistry();
-		$this->decoratorRegistry = $decoratorRegistry ?: new SimpleDecoratorRegistry();
-		$this->resourcesManager = $resourcesManager ?: new SimpleResourcesManager();
-		$this->stringsManager = $stringsManager ?: new SimpleStringsManager();
+		$this->decoratorRegistry = $decoratorRegistry ?: new DecoratorRegistry();
+		$this->resourcesManager = $resourcesManager ?: new ResourcesManager();
+		$this->stringsManager = $stringsManager ?: new StringsManager();
 		$this->indexSectionName = $indexSectionName ?: self::DEFAULT_INDEX_SECTION_NAME;
 		$this->fallbackSectionName = $fallbackSectionName ?: self::DEFAULT_FALLBACK_SECTION_NAME;
 		$this->page = null;

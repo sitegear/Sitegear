@@ -13,7 +13,7 @@ use Sitegear\Config\Processor\IncludeTokenProcessor;
 use Sitegear\Config\Processor\EngineTokenProcessor;
 use Sitegear\Config\Processor\ConfigTokenProcessor;
 use Sitegear\Config\ConfigLoader;
-use Sitegear\Config\Container\SimpleConfigContainer;
+use Sitegear\Config\Container\ConfigContainer;
 use Sitegear\Info\ResourceLocations;
 use Sitegear\Util\ExtensionMimeTypeGuesser;
 use Sitegear\Util\TypeUtilities;
@@ -61,7 +61,7 @@ abstract class AbstractConfigurableEngine extends AbstractEngine implements Conf
 	public function configure($config=null, ConfigLoader $loader=null, array $additionalProcessors=null) {
 		LoggerRegistry::debug('AbstractConfigurableEngine receiving configuration');
 		$this->configLoader = $loader ?: new ConfigLoader($this->getEnvironmentInfo());
-		$this->config = new SimpleConfigContainer($this->configLoader);
+		$this->config = new ConfigContainer($this->configLoader);
 		$this->config->addProcessor(new EngineTokenProcessor($this, 'engine'));
 		$this->config->addProcessor(new ConfigTokenProcessor($this, 'config'));
 		$roots = array(

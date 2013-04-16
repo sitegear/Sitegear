@@ -10,7 +10,7 @@ namespace Sitegear\Module;
 
 use Sitegear\Config\ConfigurableInterface;
 use Sitegear\Config\ConfigLoader;
-use Sitegear\Config\Container\SimpleConfigContainer;
+use Sitegear\Config\Container\ConfigContainer;
 use Sitegear\Config\Processor\IncludeTokenProcessor;
 use Sitegear\Config\Processor\EngineTokenProcessor;
 use Sitegear\Config\Processor\ConfigTokenProcessor;
@@ -50,7 +50,7 @@ abstract class AbstractConfigurableModule extends AbstractModule implements Conf
 	public function configure($config=null, ConfigLoader $loader=null, array $additionalProcessors=null) {
 		LoggerRegistry::debug(sprintf('Configuring %s...', (new \ReflectionClass($this))->getShortName()));
 		$this->configLoader = $loader ?: new ConfigLoader($this->getEngine()->getEnvironmentInfo());
-		$this->config = new SimpleConfigContainer($this->configLoader);
+		$this->config = new ConfigContainer($this->configLoader);
 		$this->config->addProcessor(new EngineTokenProcessor($this->getEngine(), 'engine'));
 		$this->config->addProcessor(new ConfigTokenProcessor($this, 'config'));
 		$engine = $this->getEngine();

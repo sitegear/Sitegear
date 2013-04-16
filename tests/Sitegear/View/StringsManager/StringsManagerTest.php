@@ -10,15 +10,15 @@ namespace Sitegear\View\StringsManager;
 
 use Sitegear\AbstractSitegearTestCase;
 
-class SimpleStringsManagerTest extends AbstractSitegearTestCase {
+class StringsManagerTest extends AbstractSitegearTestCase {
 
 	/**
-	 * @var SimpleStringsManager
+	 * @var StringsManager
 	 */
 	private $manager;
 
 	public function setUp() {
-		$this->manager = new SimpleStringsManager();
+		$this->manager = new StringsManager();
 	}
 
 	public function testRenderEmpty() {

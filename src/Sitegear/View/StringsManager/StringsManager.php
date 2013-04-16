@@ -11,7 +11,7 @@ namespace Sitegear\View\StringsManager;
 /**
  * Simple implementation of the StringsManagerInterface.
  */
-class SimpleStringsManager implements StringsManagerInterface {
+class StringsManager implements StringsManagerInterface {
 
 	//-- Constants --------------------
 

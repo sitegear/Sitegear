@@ -12,16 +12,16 @@ use Sitegear\AbstractSitegearTestCase;
 use Sitegear\Config\ConfigLoader;
 use Sitegear\Info\SitegearEnvironmentInfoProvider;
 
-class SimpleConfigContainerTest extends AbstractSitegearTestCase {
+class ConfigContainerTest extends AbstractSitegearTestCase {
 
 	/**
-	 * @var SimpleConfigContainer
+	 * @var ConfigContainer
 	 */
 	private $config;
 
 	public function setUp() {
 		parent::setUp();
-		$this->config = new SimpleConfigContainer(new ConfigLoader(new SitegearEnvironmentInfoProvider('testing')));
+		$this->config = new ConfigContainer(new ConfigLoader(new SitegearEnvironmentInfoProvider('testing')));
 	}
 
 	public function testEmptyConfig() {

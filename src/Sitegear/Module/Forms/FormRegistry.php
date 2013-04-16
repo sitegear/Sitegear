@@ -9,7 +9,7 @@
 namespace Sitegear\Module\Forms;
 
 use Sitegear\Config\ConfigurableInterface;
-use Sitegear\Config\Container\SimpleConfigContainer;
+use Sitegear\Config\Container\ConfigContainer;
 use Sitegear\Config\Processor\ArrayTokenProcessor;
 use Sitegear\Config\Processor\ConfigTokenProcessor;
 use Sitegear\Config\Processor\EngineTokenProcessor;
@@ -517,7 +517,7 @@ class FormRegistry {
 		$path = FileUtilities::firstExistingPath($paths);
 		if (!empty($path)) {
 			// Setup the configuration container for the form definition.
-			$config = new SimpleConfigContainer($this->formsModule->getConfigLoader());
+			$config = new ConfigContainer($this->formsModule->getConfigLoader());
 			$config->addProcessor(new ArrayTokenProcessor($this->getValues($formKey), 'data'));
 			$config->addProcessor(new EngineTokenProcessor($this->formsModule->getEngine(), 'engine'));
 			$config->addProcessor(new ConfigTokenProcessor($this->formsModule->getEngine(), 'engine-config'));

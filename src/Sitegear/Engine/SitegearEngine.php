@@ -13,7 +13,7 @@ use Sitegear\Info\ApplicationInfoProviderInterface;
 use Sitegear\User\Storage\UserStorageInterface;
 use Sitegear\User\Storage\JsonFileUserStorage;
 use Sitegear\View\Factory\ViewFactoryInterface;
-use Sitegear\View\StringsManager\SimpleStringsManager;
+use Sitegear\View\StringsManager\StringsManager;
 use Sitegear\Info\SitegearApplicationInfoProvider;
 use Sitegear\Info\SitegearEnvironmentInfoProvider;
 use Sitegear\Info\SitegearSiteInfoProvider;

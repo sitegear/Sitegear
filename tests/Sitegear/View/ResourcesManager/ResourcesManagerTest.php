@@ -10,15 +10,15 @@ namespace Sitegear\View\ResourcesManager;
 
 use Sitegear\AbstractSitegearTestCase;
 
-class SimpleResourcesManagerTest extends AbstractSitegearTestCase {
+class ResourcesManagerTest extends AbstractSitegearTestCase {
 
 	/**
-	 * @var SimpleResourcesManager
+	 * @var ResourcesManager
 	 */
 	private $manager;
 
 	public function setUp() {
-		$this->manager = new SimpleResourcesManager();
+		$this->manager = new ResourcesManager();
 	}
 
 	public function testRegisterType() {
