@@ -95,7 +95,7 @@ class FormRegistry {
 	 * @throws \DomainException
 	 */
 	public function registerFormDefinitionFilePath($formKey, ModuleInterface $module, $path) {
-		LoggerRegistry::debug(sprintf('FormRegistry::registerFormDefinitionFilePath(%s, %s)', $formKey, TypeUtilities::describe($path)));
+		LoggerRegistry::debug('FormRegistry::registerFormDefinitionFilePath({formKey}, {module}, {path})', array( 'formKey' => TypeUtilities::describe($formKey), 'module' => TypeUtilities::describe($module), 'path' => TypeUtilities::describe($path) ));
 		if (isset($this->forms[$formKey])) {
 			if (isset($this->forms[$formKey]['form'])) {
 				throw new \DomainException(sprintf('FormRegistry cannot add form definition path for form key "%s", form already generated', $formKey));
@@ -120,7 +120,7 @@ class FormRegistry {
 	 * @throws \DomainException
 	 */
 	public function registerFormGeneratorCallback($formKey, $callback) {
-		LoggerRegistry::debug(sprintf('FormRegistry::registerFormGeneratorCallback(%s, ...)', $formKey));
+		LoggerRegistry::debug('FormRegistry::registerFormGeneratorCallback({formKey}, [callback])', array( 'formKey' => TypeUtilities::describe($formKey) ));
 		if (isset($this->forms[$formKey])) {
 			throw new \DomainException(sprintf('FormRegistry cannot add form generator callback for form key "%s", form already registered', $formKey));
 		}
@@ -141,7 +141,7 @@ class FormRegistry {
 	 * @throws \DomainException
 	 */
 	public function registerForm($formKey, FormInterface $form) {
-		LoggerRegistry::debug(sprintf('FormRegistry::registerForm(%s)', $formKey));
+		LoggerRegistry::debug('FormRegistry::registerForm({formKey})', array( 'formKey' => TypeUtilities::describe($formKey) ));
 		if (isset($this->forms[$formKey])) {
 			throw new \DomainException(sprintf('FormRegistry cannot register form for form key "%s", form already registered', $formKey));
 		}
@@ -159,7 +159,7 @@ class FormRegistry {
 	 * @throws \InvalidArgumentException
 	 */
 	public function getForm($formKey, Request $request) {
-		LoggerRegistry::debug(sprintf('FormRegistry::getForm(%s)', $formKey));
+		LoggerRegistry::debug('FormRegistry::getForm({formKey})', array( 'formKey' => TypeUtilities::describe($formKey) ));
 		$formUrl = $request->getUri();
 		$siteInfo = $this->formsModule->getEngine()->getSiteInfo();
 		if (!isset($this->forms[$formKey])) {
@@ -262,7 +262,7 @@ class FormRegistry {
 	 *   of lists of violations per field with errors.
 	 */
 	public function validateForm($formKey, array $fields, array $values) {
-		LoggerRegistry::debug(sprintf('FormRegistry::validate(%s)', $formKey));
+		LoggerRegistry::debug('FormRegistry::validate({formKey}, {fields}, {values})', array( 'formKey' => TypeUtilities::describe($formKey), 'fields' => TypeUtilities::describe($fields), 'values' => TypeUtilities::describe($values) ));
 		$validator = Validation::createValidator();
 		$errors = array();
 		foreach ($validator->validateValue($values, $this->getConstraints($fields, $values)) as $violation) {
@@ -283,7 +283,7 @@ class FormRegistry {
 	 * @param string $formKey
 	 */
 	public function resetForm($formKey) {
-		LoggerRegistry::debug(sprintf('FormRegistry::resetForm(%s)', $formKey));
+		LoggerRegistry::debug('FormRegistry::resetForm({formKey})', array( 'formKey' => TypeUtilities::describe($formKey) ));
 		$this->clearProgress($formKey);
 		$this->clearValues($formKey);
 		$this->clearErrors($formKey);

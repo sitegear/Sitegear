@@ -36,7 +36,7 @@ class SitegearSiteInfoProvider implements SiteInfoProviderInterface {
 	//-- Constructor --------------------
 
 	public function __construct(SitegearEngine $engine, $siteRoot) {
-		LoggerRegistry::debug(sprintf('new SitegearSiteInfoProvider(%s, %s)', TypeUtilities::describe($engine), $siteRoot));
+		LoggerRegistry::debug('new SitegearSiteInfoProvider({engine}, {siteRoot})', array( 'engine' => TypeUtilities::describe($engine), 'siteRoot' => TypeUtilities::describe($siteRoot) ));
 		$this->engine = $engine;
 		$this->siteRoot = trim(rtrim($siteRoot, '/'));
 	}

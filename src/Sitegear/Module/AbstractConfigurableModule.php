@@ -49,7 +49,7 @@ abstract class AbstractConfigurableModule extends AbstractModule implements Conf
 	 * This implementation automatically adds a ConfigTokenProcessor and an EngineTokenProcessor.
 	 */
 	public function configure($overrides=null) {
-		LoggerRegistry::debug(sprintf('AbstractConfigurableModule::configure(%s)', TypeUtilities::describe($overrides)));
+		LoggerRegistry::debug('AbstractConfigurableModule::configure({overrides})', array( 'overrides' => TypeUtilities::describe($overrides) ));
 		$this->config = new Configuration($this->getConfigLoader());
 		$this->config->addProcessor(new EngineTokenProcessor($this->getEngine(), 'engine'));
 		$this->config->addProcessor(new ConfigTokenProcessor($this, 'config'));
@@ -112,7 +112,7 @@ abstract class AbstractConfigurableModule extends AbstractModule implements Conf
 	 * @param \Sitegear\View\ViewInterface $view
 	 */
 	protected function applyConfigToView($configKey, ViewInterface $view) {
-		LoggerRegistry::debug(sprintf('AbstractConfigurableModule::applyConfigToView(%s, [view])', $configKey));
+		LoggerRegistry::debug('AbstractConfigurableModule::applyConfigToView({configKey}, [view])', array( 'configKey' => TypeUtilities::describe($configKey) ));
 		if (is_array($config = $this->config($configKey))) {
 			foreach ($config as $key => $value) {
 				$view[$key] = $value;

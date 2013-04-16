@@ -71,7 +71,7 @@ class Configuration {
 	 * @return self
 	 */
 	public function addProcessor(ProcessorInterface $processor) {
-		LoggerRegistry::debug(sprintf('Configuration::addProcessor(%s)', TypeUtilities::describe($processor)));
+		LoggerRegistry::debug('Configuration::addProcessor({processor})', array( 'processor' => TypeUtilities::describe($processor) ));
 		$this->processors[] = $processor;
 	}
 
@@ -90,7 +90,7 @@ class Configuration {
 	 * @throws \InvalidArgumentException
 	 */
 	public function merge($config, $rootKey=null, $preferExisting=false) {
-		LoggerRegistry::debug(sprintf('Configuration::merge(%s, %s, %s)', TypeUtilities::describe($config), $rootKey, $preferExisting ? 'true' : 'false'));
+		LoggerRegistry::debug('Configuration::merge({config}, {rootKey}, {preferExisting})', array( 'config' => TypeUtilities::describe($config), 'rootKey' => TypeUtilities::describe($rootKey), 'preferExisting' => TypeUtilities::describe($preferExisting) ));
 		// Load using the container's ConfigLoader.
 		$data = $this->loader->load($config);
 		// Push the data down the hierarchy to the specified root key.

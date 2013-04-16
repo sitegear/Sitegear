@@ -92,7 +92,7 @@ abstract class AbstractView implements ViewInterface {
 	 * @inheritdoc
 	 */
 	public function pushTarget($target, array $arguments=null) {
-		LoggerRegistry::debug(sprintf('AbstractView::pushTarget(%s, %s)', $target, TypeUtilities::describe($arguments)));
+		LoggerRegistry::debug('AbstractView::pushTarget({target}, {arguments})', array( 'target' => TypeUtilities::describe($target), 'arguments' => TypeUtilities::describe($arguments) ));
 		array_push($this->targets, array(
 			'target' => $target,
 			'arguments' => $arguments ?: array()

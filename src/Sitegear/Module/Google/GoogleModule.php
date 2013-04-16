@@ -42,7 +42,7 @@ class GoogleModule extends AbstractSitegearModule {
 	 * @return boolean False to prevent output in analytics=disabled environments.
 	 */
 	public function analyticsComponent(ViewInterface $view, $apiKey=null, $additionalCalls=null) {
-		LoggerRegistry::debug(sprintf('GoogleModule::analyticsComponent([view], %s, %s)', $apiKey, TypeUtilities::describe($additionalCalls)));
+		LoggerRegistry::debug('GoogleModule::analyticsComponent([view], {apiKey}, {additionalCalls})', array( 'apiKey' => TypeUtilities::describe($apiKey), 'additionalCalls' => TypeUtilities::describe($additionalCalls) ));
 		if ($this->config('analytics.enabled')) {
 			$view['api-key'] = is_null($apiKey) ? $this->config('analytics.api.key') : $apiKey;
 			$view['additional-calls'] = is_null($additionalCalls) ? $this->config('analytics.additional-calls') : $additionalCalls;
@@ -66,7 +66,7 @@ class GoogleModule extends AbstractSitegearModule {
 	 * @return void
 	 */
 	public function mapComponent(ViewInterface $view, $selector, array $initialView, $apiKey=null, array $markers=null, $autoShowInfoWindow=false, $options=null) {
-		LoggerRegistry::debug(sprintf('GoogleModule::mapComponent([view], %s, %s, %s, %s, %s, %s)', $selector, $initialView, $apiKey, TypeUtilities::describe($markers), $autoShowInfoWindow ? 'true' : 'false', TypeUtilities::describe($options)));
+		LoggerRegistry::debug('GoogleModule::mapComponent([view], {selector}, {initialView}, {apiKey}, {markers}, {autoShowInfoWindow}, {options})', array( 'selector' => TypeUtilities::describe($selector), 'initialView' => TypeUtilities::describe($initialView), 'apiKey' => TypeUtilities::describe($apiKey), 'markers' => TypeUtilities::describe($markers), 'autoShowInfoWindow' => TypeUtilities::describe($autoShowInfoWindow), 'options' => TypeUtilities::describe($options) ));
 		$view['selector'] = $selector;
 		if (empty($apiKey)) {
 			$apiKey = $this->config('maps.api.key');
@@ -97,7 +97,7 @@ class GoogleModule extends AbstractSitegearModule {
 	 * @throws \RuntimeException If the address cannot be geo-coding due to missing response data.
 	 */
 	public function geocodeLocation($address) {
-		LoggerRegistry::debug(sprintf('GoogleModule::geocodeLocation(%s)', $address));
+		LoggerRegistry::debug('GoogleModule::geocodeLocation({address})', array( 'address' => TypeUtilities::describe($address) ));
 		$url = sprintf('http://%s/maps/api/geocode/json?address=%s&sensor=false', $this->config('maps.api.host'), urlencode($address));
 		$data = json_decode(file_get_contents($url), true);
 		if (!isset($data['status'])) {

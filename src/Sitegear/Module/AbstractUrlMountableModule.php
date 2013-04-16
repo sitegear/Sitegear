@@ -12,6 +12,7 @@ use Sitegear\Module\AbstractConfigurableModule;
 use Sitegear\Module\MountableModuleInterface;
 use Sitegear\Util\LoggerRegistry;
 
+use Sitegear\Util\TypeUtilities;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\Generator\UrlGenerator;
@@ -45,7 +46,7 @@ abstract class AbstractUrlMountableModule extends AbstractConfigurableModule imp
 	 * @inheritdoc
 	 */
 	public function mount($mountedUrl=null, RequestContext $context) {
-		LoggerRegistry::debug(sprintf('%s::mount(%s)', (new \ReflectionClass($this))->getShortName(), $mountedUrl));
+		LoggerRegistry::debug('{class}::mount({mountedUrl})', array( 'class' => (new \ReflectionClass($this))->getShortName(), 'mountedUrl' => TypeUtilities::describe($mountedUrl) ));
 		$this->mountedUrl = trim($mountedUrl, '/');
 		$this->routes = $this->buildRoutes();
 	}
@@ -54,7 +55,7 @@ abstract class AbstractUrlMountableModule extends AbstractConfigurableModule imp
 	 * @inheritdoc
 	 */
 	public function unmount() {
-		LoggerRegistry::debug(sprintf('%s::unmount()', (new \ReflectionClass($this))->getShortName()));
+		LoggerRegistry::debug('{class}::unmount()', array( 'class' => (new \ReflectionClass($this))->getShortName() ));
 		$this->mountedUrl = null;
 	}
 

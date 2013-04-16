@@ -69,7 +69,7 @@ class SwiftMailerModule extends AbstractSitegearModule {
 	 * @throws \InvalidArgumentException
 	 */
 	public function send($subject, $addresses, $body, $contentType=null, $charset=null) {
-		LoggerRegistry::debug(sprintf('SwiftMailerModule::send(%s, %s, body[%d characters], %s, %s', $subject, TypeUtilities::describe($addresses), strlen($body), $contentType, $charset));
+		LoggerRegistry::debug('SwiftMailerModule::send({subject}, {addresses}, body[{bodyCount} characters], {contentType}, {charset}', array( 'subject' => TypeUtilities::describe($subject), 'addresses' => TypeUtilities::describe($addresses), 'bodyCount' => strlen($body), 'contentType' => TypeUtilities::describe($contentType), 'charset' => TypeUtilities::describe($charset) ));
 		$message = \Swift_Message::newInstance($subject);
 		if (!isset($addresses['sender']) && !isset($addresses['from'])) {
 			throw new \DomainException('SwiftMailer module cannot send without specifying a sender or from address.');
@@ -123,7 +123,7 @@ class SwiftMailerModule extends AbstractSitegearModule {
 	 * @return boolean
 	 */
 	public function sendTemplate(Request $request, $subject, $addresses, $template, $data, $contentType=null, $charset=null) {
-		LoggerRegistry::debug(sprintf('SwiftMailerModule::sendTemplate([request], %s, %s, %s, %s, %s, %s', $subject, TypeUtilities::describe($addresses), $template, TypeUtilities::describe($data), $contentType, $charset));
+		LoggerRegistry::debug('SwiftMailerModule::sendTemplate([request], {subject}, {addresses}, {template}, {data}, {contentType}, {charset}', array( 'subject' => TypeUtilities::describe($subject), 'addresses' => TypeUtilities::describe($addresses), 'template' => TypeUtilities::describe($template), 'data' => TypeUtilities::describe($data), 'contentType' => TypeUtilities::describe($contentType), 'charset' => TypeUtilities::describe($charset) ));
 		$request->attributes->set('_module', $this->getEngine()->getDefaultContentModule());
 		$request->attributes->set('_view', $template);
 		$view = $this->getEngine()->getViewFactory()->buildView($request);
@@ -148,7 +148,7 @@ class SwiftMailerModule extends AbstractSitegearModule {
 	 * @return boolean
 	 */
 	public function sendTextNotification($subject, $addresses, $data, $intro=null, $outro=null, $charset=null) {
-		LoggerRegistry::debug(sprintf('SwiftMailerModule::sendTextNotification(%s, %s, %s, intro[%d characters], outro[%d characters], %s)', $subject, TypeUtilities::describe($addresses), TypeUtilities::describe($data), strlen($intro), strlen($outro), $charset));
+		LoggerRegistry::debug('SwiftMailerModule::sendTextNotification({subject}, {addresses}, {data}, intro[{introCount} characters], outro[{outroCount} characters], {charset})', array( 'subject' => TypeUtilities::describe($subject), 'addresses' => TypeUtilities::describe($addresses), 'data' => TypeUtilities::describe($data), 'introCount' => strlen($intro), 'outroCount' => strlen($outro), 'charset' => TypeUtilities::describe($charset) ));
 		$nl = "\r\n";
 		$body = sprintf('** %s **', $subject) . $nl . $nl;
 		$body .= ($intro ?: 'The following data was submitted:') . $nl . $nl;

@@ -9,6 +9,7 @@
 namespace Sitegear\Module\Content;
 
 use Sitegear\Info\ResourceLocations;
+use Sitegear\Util\TypeUtilities;
 use Sitegear\View\ViewInterface;
 use Sitegear\Module\AbstractSitegearModule;
 use Sitegear\Util\LoggerRegistry;
@@ -58,7 +59,7 @@ class ContentModule extends AbstractSitegearModule {
 	 * @param boolean $xml
 	 */
 	public function doctypeComponent(ViewInterface $view, $html, $xml=false) {
-		LoggerRegistry::debug(sprintf('ContentModule::doctypeComponent([view], %s, %s)', $html, $xml ? 'true' : 'false'));
+		LoggerRegistry::debug('ContentModule::doctypeComponent([view], {html}, {xml})', array( 'html' => TypeUtilities::describe($html), 'xml' => TypeUtilities::describe($xml) ));
 		$view['doctype-spec'] = $this->doctypeSpec($html);
 		$view['xml-spec'] = $this->xmlSpec($xml);
 	}
@@ -75,7 +76,7 @@ class ContentModule extends AbstractSitegearModule {
 	 *   "foo foo-bar foo-bar-baz", but if $maxDepth is 2, then it will return "foo foo-bar".
 	 */
 	public function bodyClassesComponent(ViewInterface $view, Request $request, $maxElements=null) {
-		LoggerRegistry::debug(sprintf('ContentModule::bodyClassesComponent([view], [request], %s)', $maxElements));
+		LoggerRegistry::debug('ContentModule::bodyClassesComponent([view], [request], {maxElements})', array( 'maxElements' => TypeUtilities::describe($maxElements) ));
 		$url = ltrim($request->getPathInfo(), '/');
 		$path = !empty($url) ? explode('/', $url) : array( $this->config('body-classes.index') );
 		$maxElements = $maxElements ?: sizeof($path);

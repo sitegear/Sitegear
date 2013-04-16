@@ -10,6 +10,7 @@ namespace Sitegear\View\ResourcesManager;
 
 use Sitegear\Util\LoggerRegistry;
 use Sitegear\Util\NameUtilities;
+use Sitegear\Util\TypeUtilities;
 
 /**
  * Provides a simple implementation of ResourcesManagerInterface, which activates all passed-in requirements
@@ -42,7 +43,7 @@ class ResourcesManager implements ResourcesManagerInterface {
 	 * @inheritdoc
 	 */
 	public function registerType($type, $format) {
-		LoggerRegistry::debug(sprintf('ResourcesManager::registerType(%s, %s)', $type, $format));
+		LoggerRegistry::debug('ResourcesManager::registerType({type}, {format})', array( 'type' => TypeUtilities::describe($type), 'format' => TypeUtilities::describe($format) ));
 		if ($this->isTypeRegistered($type)) {
 			throw new \LogicException(sprintf('Could not register resource type "%s" because the type has already been registered.', $type));
 		}
@@ -86,11 +87,11 @@ class ResourcesManager implements ResourcesManagerInterface {
 	 * @inheritdoc
 	 */
 	public function register($key, $type, $url, $active=false, $requires=array()) {
+		LoggerRegistry::debug('ResourcesManager::register({key}, {type}, {url}, {active}, {requires})', array( 'key' => TypeUtilities::describe($key), 'type' => TypeUtilities::describe($type), 'url' => TypeUtilities::describe($url), 'active' => TypeUtilities::describe($active), 'requires' => TypeUtilities::describe($requires) ));
 		if (!$this->isTypeRegistered($type)) {
 			throw new \DomainException(sprintf('Could not add resource "%s" of type "%s" because the type has not been registered.', $key, $type));
 		}
 		if (!$this->isRegistered($key)) {
-			LoggerRegistry::debug(sprintf('ResourcesManager registering resource "%s" with type "%s" and "%s"', $key, $type, $url));
 			$this->resources[] = array(
 				'key' => $key,
 				'type' => $type,
@@ -187,7 +188,7 @@ class ResourcesManager implements ResourcesManagerInterface {
 	 * @inheritdoc
 	 */
 	public function activate($key) {
-		LoggerRegistry::debug(sprintf('ResourcesManager::activate(%s)', $key));
+		LoggerRegistry::debug('ResourcesManager::activate({key})', array( 'key' => TypeUtilities::describe($key) ));
 		foreach ($this->resources as $index => $resource) {
 			if ($key === $resource['key']) {
 				foreach ($resource['requires'] as $require) {
@@ -202,7 +203,7 @@ class ResourcesManager implements ResourcesManagerInterface {
 	 * @inheritdoc
 	 */
 	public function render($type) {
-		LoggerRegistry::debug(sprintf('ResourcesManager::render(%s)', $type));
+		LoggerRegistry::debug('ResourcesManager::render({type})', array( 'type' => TypeUtilities::describe($type) ));
 		// Check for unknown type
 		if (!$this->isTypeRegistered($type)) {
 			throw new \DomainException(sprintf('Could not render resources of type "%s" because the type has not been registered.', $type));

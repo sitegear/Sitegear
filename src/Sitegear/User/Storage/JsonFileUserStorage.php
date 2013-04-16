@@ -10,6 +10,7 @@ namespace Sitegear\User\Storage;
 
 use Sitegear\Util\JsonFormatter;
 use Sitegear\Util\LoggerRegistry;
+use Sitegear\Util\TypeUtilities;
 
 /**
  * Storage implementation backed by a single JSON file.
@@ -59,7 +60,7 @@ class JsonFileUserStorage implements UserStorageInterface {
 	 * @inheritdoc
 	 */
 	public function createUser($email, array $data) {
-		LoggerRegistry::debug(sprintf('JsonFileUserStorage::createUser(%s, %s)', $email, $data));
+		LoggerRegistry::debug('JsonFileUserStorage::createUser({email}, {data})', array( 'email' => TypeUtilities::describe($email), 'data' => TypeUtilities::describe($data) ));
 		if (array_key_exists($email, $this->users)) {
 			throw new \InvalidArgumentException(sprintf('JsonFileUserStorage cannot create user with email address "%s", that email address is already registered.', $email));
 		}
@@ -75,7 +76,7 @@ class JsonFileUserStorage implements UserStorageInterface {
 	 * @inheritdoc
 	 */
 	public function deleteUser($email) {
-		LoggerRegistry::debug(sprintf('JsonFileUserStorage::deleteUser(%s)', $email));
+		LoggerRegistry::debug('JsonFileUserStorage::deleteUser({email})', array( 'email' => TypeUtilities::describe($email) ));
 		if (!array_key_exists($email, $this->users)) {
 			throw new \InvalidArgumentException(sprintf('JsonFileUserStorage cannot delete user with email address "%s", that email address is not registered.', $email));
 		}

@@ -66,7 +66,7 @@ class Trolley {
 	 * @throws \DomainException
 	 */
 	public function addItem($moduleName, $type, $itemId, array $attributeValues=null, $quantity=null) {
-		LoggerRegistry::debug(sprintf('Trolley::addItem(%s, %s, %s, %s, %d)', $moduleName, $type, $itemId, TypeUtilities::describe($attributeValues), $quantity));
+		LoggerRegistry::debug('Trolley::addItem({moduleName, {type}, {itemId}, {attributeValues}, {quantity})', array( 'moduleName' => TypeUtilities::describe($moduleName), 'type' => TypeUtilities::describe($type), 'itemId' => TypeUtilities::describe($itemId), 'attributeValues' => TypeUtilities::describe($attributeValues), 'quantity' => TypeUtilities::describe($quantity) ));
 		if ($quantity < 1) {
 			throw new \DomainException('Trolley cannot modify trolley item to a zero or negative quantity; use removeTrolleyItem instead.');
 		}
@@ -131,7 +131,7 @@ class Trolley {
 	 * @throws \OutOfBoundsException
 	 */
 	public function removeItem($index) {
-		LoggerRegistry::debug(sprintf('Trolley::removeItem(%d)', $index));
+		LoggerRegistry::debug('Trolley::removeItem({index})', array( 'index' => TypeUtilities::describe($index) ));
 		$data = $this->getData();
 		if ($index < 0 || $index >= sizeof($data)) {
 			throw new \OutOfBoundsException(sprintf('Trolley cannot remove trolley item with index (%d) out-of-bounds', $index));
@@ -156,7 +156,7 @@ class Trolley {
 	 * @throws \OutOfBoundsException
 	 */
 	public function modifyItem($index, $quantity) {
-		LoggerRegistry::debug(sprintf('Trolley::modifyItem(%d, %d)', $index, $quantity));
+		LoggerRegistry::debug('Trolley::modifyItem({index}, {quantity})', array( 'index' => TypeUtilities::describe($index), 'quantity' => TypeUtilities::describe($quantity) ));
 		if ($quantity < 1) {
 			throw new \DomainException('Trolley cannot modify trolley item to a zero or negative quantity; use removeTrolleyItem instead.');
 		}

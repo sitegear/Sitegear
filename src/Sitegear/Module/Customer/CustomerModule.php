@@ -10,6 +10,7 @@ namespace Sitegear\Module\Customer;
 
 use Sitegear\Form\FormInterface;
 use Sitegear\Module\PurchaseAdjustmentProviderModuleInterface;
+use Sitegear\Util\TypeUtilities;
 use Sitegear\View\ViewInterface;
 use Sitegear\Module\AbstractSitegearModule;
 use Sitegear\Module\Customer\Form\Builder\AddTrolleyItemFormBuilder;
@@ -219,7 +220,7 @@ class CustomerModule extends AbstractSitegearModule {
 	 * @param $id
 	 */
 	public function addTrolleyItemFormComponent(ViewInterface $view, Request $request, $moduleName, $type, $id) {
-		LoggerRegistry::debug(sprintf('CustomerModule::addTrolleyItemFormComponent([view], [request], %s, %s, %s)', $moduleName, $type, $id));
+		LoggerRegistry::debug('CustomerModule::addTrolleyItemFormComponent([view], [request], {moduleName}, {type}, {id})', array( 'moduleName' => $moduleName, 'type' => $type, 'id' => $id ));
 		$formKey = $view['form-key'] = $this->config('add-trolley-item.form-key');
 		$this->getEngine()->forms()->registry()->registerForm($formKey, $this->buildAddTrolleyItemForm($moduleName, $type, $id, $request->getUri()));
 	}
@@ -260,7 +261,7 @@ class CustomerModule extends AbstractSitegearModule {
 	 * @return \Sitegear\Form\FormInterface
 	 */
 	public function buildAddTrolleyItemForm($moduleName, $type, $id, $formUrl) {
-		LoggerRegistry::debug(sprintf('CustomerModule::buildAddTrolleyItemForm(%s, %s, %s, %s)', $moduleName, $type, $id, $formUrl));
+		LoggerRegistry::debug('CustomerModule::buildAddTrolleyItemForm({moduleName}, {type}, {id}, {formUrl})', array( 'moduleName' => TypeUtilities::describe($moduleName), 'type' => TypeUtilities::describe($type), 'id' => TypeUtilities::describe($id), 'formUrl' => TypeUtilities::describe($formUrl) ));
 		$submitUrl = $this->getRouteUrl('add-trolley-item');
 		$submitUrl = UrlUtilities::generateLinkWithReturnUrl($submitUrl, $formUrl, 'form-url');
 		$formBuilder = new AddTrolleyItemFormBuilder($this->getEngine()->forms(), $this->config('add-trolley-item.form-key'));

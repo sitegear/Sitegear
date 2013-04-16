@@ -9,6 +9,7 @@
 namespace Sitegear\Module\UserIntegration;
 
 use Sitegear\Info\ResourceLocations;
+use Sitegear\Util\TypeUtilities;
 use Sitegear\View\ViewInterface;
 use Sitegear\Module\AbstractSitegearModule;
 use Sitegear\Util\TokenUtilities;
@@ -209,7 +210,7 @@ class UserIntegrationModule extends AbstractSitegearModule {
 	 * @throws \RuntimeException
 	 */
 	public function login($email, array $credentials) {
-		LoggerRegistry::debug(sprintf('UserIntegrationModule::login(%s, [credentials])', $email));
+		LoggerRegistry::debug('UserIntegrationModule::login({email}, [credentials])', array( 'email' => TypeUtilities::describe($email) ));
 		if ($this->getEngine()->getUserManager()->login($email, $credentials)) {
 			$this->getEngine()->pageMessages()->add($this->config('login.messages.success'), 'success');
 		} else {
@@ -238,7 +239,7 @@ class UserIntegrationModule extends AbstractSitegearModule {
 	 * @param array $credentials
 	 */
 	public function signUp($email, $credentials) {
-		LoggerRegistry::debug(sprintf('UserIntegrationModule::signUp(%s, [credentials])', $email));
+		LoggerRegistry::debug('UserIntegrationModule::signUp({email}, [credentials])', array( 'email' => TypeUtilities::describe($email) ));
 		// Remove confirmation credentials and captcha.
 		unset($credentials['captcha']);
 		foreach ($credentials as $key => $value) {
@@ -266,7 +267,7 @@ class UserIntegrationModule extends AbstractSitegearModule {
 	 * @throws \InvalidArgumentException
 	 */
 	public function recoverLogin($email) {
-		LoggerRegistry::debug(sprintf('UserIntegrationModule::recoverLogin(%s)', $email));
+		LoggerRegistry::debug('UserIntegrationModule::recoverLogin({email})', array( 'email' => TypeUtilities::describe($email) ));
 		$url = 'http://URL-TODO/'; // TODO
 		$siteInfo = $this->getEngine()->getSiteInfo();
 		$subject = sprintf('Login Recovery from %s', $siteInfo->getDisplayName());

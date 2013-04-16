@@ -38,7 +38,7 @@ class ConfigLoader {
 	 * @param boolean $registerDefaultFileLoaders Whether or not to register the default file loaders, true by default.
 	 */
 	public function __construct(EnvironmentInfoProviderInterface $environmentInfo, $registerDefaultFileLoaders=true) {
-		LoggerRegistry::debug(sprintf('new ConfigLoader(%s, %s)', TypeUtilities::describe($environmentInfo), $registerDefaultFileLoaders ? 'true' : 'false'));
+		LoggerRegistry::debug('new ConfigLoader({environment}, {registerDefault})', array( 'environment' => TypeUtilities::describe($environmentInfo), 'registerDefault' => TypeUtilities::describe($registerDefaultFileLoaders) ));
 		$this->environmentInfo = $environmentInfo;
 		if ($registerDefaultFileLoaders) {
 			foreach ($this->defaultFileLoaders() as $fileLoader) {
@@ -58,7 +58,7 @@ class ConfigLoader {
 	 * @throws \InvalidArgumentException If the class does not exist or is not a FileLoaderInterface implementation.
 	 */
 	public function registerFileLoader($fileLoader) {
-		LoggerRegistry::debug(sprintf('ConfigLoader::registerFileLoader(%s)', TypeUtilities::describe($fileLoader)));
+		LoggerRegistry::debug('ConfigLoader::registerFileLoader({loader})', array( 'loader' => TypeUtilities::describe($fileLoader) ));
 		$this->fileLoaders[TypeUtilities::getClassName($fileLoader)] = TypeUtilities::buildTypeCheckedObject(
 			$fileLoader,
 			'config file loader',
@@ -74,7 +74,7 @@ class ConfigLoader {
 	 *   deregister, or a class implementing FileLoaderInterface.
 	 */
 	public function deregisterFileLoader($fileLoader) {
-		LoggerRegistry::debug(sprintf('ConfigLoader::deregisterFileLoader(%s)', TypeUtilities::describe($fileLoader)));
+		LoggerRegistry::debug('ConfigLoader::deregisterFileLoader({loader})', array( 'loader' => TypeUtilities::describe($fileLoader) ));
 		unset($this->fileLoaders[TypeUtilities::getClassName($fileLoader)]);
 	}
 
@@ -105,7 +105,7 @@ class ConfigLoader {
 	 * @throws \InvalidArgumentException If the given argument is not a string or an array.
 	 */
 	public function load($config) {
-		LoggerRegistry::debug(sprintf('ConfigLoader::load(%s)', TypeUtilities::describe($config)));
+		LoggerRegistry::debug('ConfigLoader::load({config})', array( 'config' => TypeUtilities::describe($config) ));
 		$result = $this->normalise($config);
 		if (is_string($config) && !is_null($this->environmentInfo) && !is_null($this->environmentInfo->getEnvironment())) {
 			$pathinfo = pathinfo($config);

@@ -9,6 +9,7 @@
 namespace Sitegear\Config\FileLoader;
 
 use Sitegear\Util\LoggerRegistry;
+use Sitegear\Util\TypeUtilities;
 
 /**
  * LoaderInterface implementation which loads configuration data from PHP files.  The PHP files must return an
@@ -30,7 +31,7 @@ class PhpFileLoader implements FileLoaderInterface {
 	 * @inheritdoc
 	 */
 	public function load($args) {
-		LoggerRegistry::debug(sprintf('PhpFileLoader::load(%s)', $args));
+		LoggerRegistry::debug('PhpFileLoader::load({args})', array( 'args' => TypeUtilities::describe($args) ));
 		if (!$this->supports($args)) {
 			throw new \InvalidArgumentException(sprintf('PhpFileLoader attempting to load unsupported config file "%s".', $args));
 		}

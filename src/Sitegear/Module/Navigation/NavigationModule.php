@@ -9,6 +9,7 @@
 namespace Sitegear\Module\Navigation;
 
 use Sitegear\Module\MountableModuleInterface;
+use Sitegear\Util\TypeUtilities;
 use Sitegear\View\ViewInterface;
 use Sitegear\Module\AbstractSitegearModule;
 use Sitegear\Util\LoggerRegistry;
@@ -72,7 +73,7 @@ class NavigationModule extends AbstractSitegearModule {
 	 * @return null|boolean
 	 */
 	public function breadcrumbsComponent(ViewInterface $view, Request $request, $url=null) {
-		LoggerRegistry::debug(sprintf('NavigationModule::breadcrumbsComponent([view], [request], %s)', $url));
+		LoggerRegistry::debug('NavigationModule::breadcrumbsComponent([view], [request], {url})', array( 'url' => TypeUtilities::describe($url) ));
 		$url = trim(!is_null($url) ? $url : $request->getPathInfo(), '/');
 		if (empty($url) && !$this->config('components.breadcrumbs.show-on-homepage')) {
 			// This is the home page, and we are configured not to show the breadcrumbs here.

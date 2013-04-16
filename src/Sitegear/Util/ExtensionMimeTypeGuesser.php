@@ -33,7 +33,7 @@ class ExtensionMimeTypeGuesser implements MimeTypeGuesserInterface {
 	 * @param $dataFile
 	 */
 	public function __construct($dataFile) {
-		LoggerRegistry::debug(sprintf('new ExtensionMimeTypeGuesser(%s)', $dataFile));
+		LoggerRegistry::debug('new ExtensionMimeTypeGuesser({dataFile})', array( 'dataFile' => TypeUtilities::describe($dataFile) ));
 		$this->data = array();
 		if (is_file($dataFile) && is_readable($dataFile)) {
 			$regex = self::lineRegex();
@@ -55,7 +55,7 @@ class ExtensionMimeTypeGuesser implements MimeTypeGuesserInterface {
 	 * @inheritdoc
 	 */
 	public function guess($path) {
-		LoggerRegistry::debug(sprintf('ExtensionMimeTypeGuesser::guess(%s)', $path));
+		LoggerRegistry::debug('ExtensionMimeTypeGuesser::guess({path})', array( 'path' => TypeUtilities::describe($path) ));
 		if (!is_file($path)) {
 			throw new FileNotFoundException($path);
 		}

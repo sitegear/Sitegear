@@ -156,7 +156,7 @@ class LocationsModule extends AbstractSitegearModule {
 	 * @param string|null $radius Previous radius selection, to populate the selected option.
 	 */
 	public function searchFormComponent(ViewInterface $view, $query=null, $radius=null) {
-		LoggerRegistry::debug(sprintf('LocationsModule::searchFormComponent([view], %s, %s)', $query, $radius));
+		LoggerRegistry::debug('LocationsModule::searchFormComponent([view], {query}, {radius})', array( 'query' => TypeUtilities::describe($query), 'radius' => TypeUtilities::describe($radius) ));
 		$view['action-url'] = $this->getRouteUrl('search');
 		if (!is_null($query)) {
 			$view['query'] = $query;

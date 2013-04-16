@@ -46,7 +46,7 @@ class EngineBootstrapListener extends AbstractEngineKernelListener {
 			$this->getEngine()->instrumentResponse($response);
 			$event->setResponse($response);
 			$event->stopPropagation();
-			LoggerRegistry::debug(sprintf('EngineBootstrapListener received Response [%s] from bootstrap', TypeUtilities::describe($response)));
+			LoggerRegistry::debug('EngineBootstrapListener received Response from bootstrap');
 		}
 	}
 

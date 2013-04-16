@@ -10,6 +10,7 @@ namespace Sitegear\Info;
 
 use Sitegear\Info\EnvironmentInfoProviderInterface;
 use Sitegear\Util\LoggerRegistry;
+use Sitegear\Util\TypeUtilities;
 
 /**
  * Default implementation of EnvironmentInfoProviderInterface, which sets "dev mode" if the environment is "dev",
@@ -31,7 +32,7 @@ class SitegearEnvironmentInfoProvider implements EnvironmentInfoProviderInterfac
 	 * @param string|null $environment
 	 */
 	public function __construct($environment=null) {
-		LoggerRegistry::debug(sprintf('new SitegearEnvironmentInfoProvider(%s)', $environment));
+		LoggerRegistry::debug('new SitegearEnvironmentInfoProvider({environment})', array( 'environment' => TypeUtilities::describe($environment) ));
 		$this->environment = $environment;
 	}
 

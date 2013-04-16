@@ -30,7 +30,7 @@ class RendererRegistry implements RendererRegistryInterface {
 	 * @inheritdoc
 	 */
 	public function register($renderers) {
-		LoggerRegistry::debug(sprintf('RendererRegistry::register(%s)', TypeUtilities::describe($renderers)));
+		LoggerRegistry::debug('RendererRegistry::register({renderers})', array( 'renderers' => TypeUtilities::describe($renderers) ));
 		if (!is_array($renderers)) {
 			$renderers = array( $renderers );
 		}
@@ -50,7 +50,7 @@ class RendererRegistry implements RendererRegistryInterface {
 	 * @inheritdoc
 	 */
 	public function deregister($renderers) {
-		LoggerRegistry::debug(sprintf('RendererRegistry::deregister(%s)', TypeUtilities::describe($renderers)));
+		LoggerRegistry::debug('RendererRegistry::deregister({renderers})', array( 'renderers' => TypeUtilities::describe($renderers) ));
 		if (!is_array($renderers)) {
 			$renderers = array( $renderers );
 		}
@@ -86,7 +86,7 @@ class RendererRegistry implements RendererRegistryInterface {
 	 * @inheritdoc
 	 */
 	public function render($path, ViewInterface $view) {
-		LoggerRegistry::debug(sprintf('RendererRegistry::render(%s, [view])', $path));
+		LoggerRegistry::debug('RendererRegistry::render({path}, [view])', array( 'path' => TypeUtilities::describe($path) ));
 		$result = null;
 		foreach ($this->registry as $renderer) { /** @var \Sitegear\View\Renderer\RendererInterface $renderer */
 			if (is_null($result) && $renderer->supports($path)) {

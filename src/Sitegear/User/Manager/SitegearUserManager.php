@@ -15,6 +15,7 @@ use Sitegear\User\Auth\PasswordAuthenticator;
 use Sitegear\User\Manager\AbstractUserManager;
 use Sitegear\User\Storage\UserStorageInterface;
 use Sitegear\Util\LoggerRegistry;
+use Sitegear\Util\TypeUtilities;
 
 /**
  * Provides a centralised point of managing user information.
@@ -84,10 +85,9 @@ class SitegearUserManager extends AbstractUserManager {
 	 * @inheritdoc
 	 */
 	public function login($email, array $credentials) {
-		LoggerRegistry::debug(sprintf('SitegearUserManager::login(%s, [credentials])', $email));
+		LoggerRegistry::debug('SitegearUserManager::login({email}, [credentials])', array( TypeUtilities::describe($email) ));
 		$result = false;
 		if (!is_null($this->getAuthenticator()->checkCredentials($email, $credentials))) {
-			LoggerRegistry::debug(sprintf('SitegearUserManager login successful for %s', $email));
 			$this->session->set(self::SESSION_KEY_USER_EMAIL, $email);
 			$this->session->remove(self::SESSION_KEY_USER_IS_GUEST);
 			$result = true;

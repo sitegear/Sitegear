@@ -43,7 +43,7 @@ class SignOffDecorator implements DecoratorInterface {
 			$version,
 			$this->formatNow()
 		);
-		LoggerRegistry::log($this->logLevel(), sprintf('%s %s by %s', $request->getPathInfo(), $renderTime, $version));
+		LoggerRegistry::log($this->logLevel(), '{pathInfo} {renderTime} by {version}', array( 'pathInfo' => $request->getPathInfo(), 'renderTime' => $renderTime, 'version' => $version ));
 		return $content . $comment . PHP_EOL;
 	}
 

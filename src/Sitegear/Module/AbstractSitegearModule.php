@@ -11,6 +11,7 @@ namespace Sitegear\Module;
 use Sitegear\Module\AbstractUrlMountableModule;
 use Sitegear\Config\Configuration;
 use Sitegear\Info\ResourceLocations;
+use Sitegear\Util\TypeUtilities;
 use Sitegear\View\ViewInterface;
 use Sitegear\Module\Doctrine\DoctrineModule;
 use Sitegear\Util\LoggerRegistry;
@@ -63,14 +64,14 @@ abstract class AbstractSitegearModule extends AbstractUrlMountableModule {
 	 * @inheritdoc
 	 */
 	public function start() {
-		LoggerRegistry::debug(sprintf('%s::start()', (new \ReflectionClass($this))->getShortName()));
+		LoggerRegistry::debug('{class}::start()', array( 'class' => (new \ReflectionClass($this))->getShortName() ));
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	public function stop() {
-		LoggerRegistry::debug(sprintf('%s::stop()', (new \ReflectionClass($this))->getShortName()));
+		LoggerRegistry::debug('{class}::stop()', array( 'class' => (new \ReflectionClass($this))->getShortName() ));
 	}
 
 	/**
@@ -91,7 +92,7 @@ abstract class AbstractSitegearModule extends AbstractUrlMountableModule {
 	 * @inheritdoc
 	 */
 	public function applyViewDefaults(ViewInterface $view, $viewType, $viewName) {
-		LoggerRegistry::debug(sprintf('%s::applyViewDefaults([view], %s, %s)', (new \ReflectionClass($this))->getShortName(), $viewType, $viewName));
+		LoggerRegistry::debug('{class}::applyViewDefaults([view], {viewType}, {viewName})', array( 'class' => (new \ReflectionClass($this))->getShortName(), 'viewType' => TypeUtilities::describe($viewType), 'viewName' => TypeUtilities::describe($viewName) ));
 		$this->applyConfigToView('common', $view);
 		$this->applyConfigToView(sprintf('%s.%s', NameUtilities::convertToDashedLower($viewType), NameUtilities::convertToDashedLower($viewName)), $view);
 	}
@@ -147,11 +148,10 @@ abstract class AbstractSitegearModule extends AbstractUrlMountableModule {
 	 * @inheritdoc
 	 */
 	protected function buildRoutes() {
-		LoggerRegistry::debug(sprintf('%s::buildRoutes(), mounted to "%s"', (new \ReflectionClass($this))->getShortName(), $this->getMountedUrl()));
+		LoggerRegistry::debug('{class}::buildRoutes(), mounted to "{mountedUrl}"', array( 'class' => (new \ReflectionClass($this))->getShortName(), 'mountedUrl' => $this->getMountedUrl() ));
 		$routes = new RouteCollection();
 		// Check for an index controller and add a route for the module root.
 		if ((new \ReflectionObject($this))->hasMethod('indexController')) {
-			LoggerRegistry::debug('Adding index route');
 			$routes->add('index', new Route($this->getMountedUrl()));
 		}
 		// Load routes from file.
@@ -177,7 +177,6 @@ abstract class AbstractSitegearModule extends AbstractUrlMountableModule {
 					$options[$parameterName] = $parameter['options'];
 				}
 			}
-			LoggerRegistry::debug(sprintf('Adding route "%s" with path "%s", defaults [ %s ], requirements [ %s ], options [ %s ]', $name, $path, preg_replace('/\\s+/', ' ', print_r($defaults, true)), preg_replace('/\\s+/', ' ', print_r($requirements, true)), preg_replace('/\\s+/', ' ', print_r($options, true))));
 			$routes->add($name, new Route($path, $defaults, $requirements, $options));
 		}
 		return $routes;

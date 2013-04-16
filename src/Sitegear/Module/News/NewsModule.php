@@ -116,7 +116,7 @@ class NewsModule extends AbstractSitegearModule {
 	 * @param string|null $readMore Text to use for "read more" links
 	 */
 	public function latestHeadlinesComponent(ViewInterface $view, $itemLimit=null, $excerptLength=null, $readMore=null) {
-		LoggerRegistry::debug(sprintf('NewsModule::latestHeadlinesComponent([view], %d, %d, %s)', $itemLimit, $excerptLength, $readMore ? 'true' : 'false'));
+		LoggerRegistry::debug('NewsModule::latestHeadlinesComponent([view], %d, %d, %s)', array( 'itemLimit' => TypeUtilities::describe($itemLimit), 'excerptLength' => TypeUtilities::describe($excerptLength), 'readMore' => TypeUtilities::describe($readMore) ));
 		$itemLimit = intval(!is_null($itemLimit) ? $itemLimit : $this->config('component.latest-headlines.item-limit'));
 		$view['items'] = $this->getRepository('Item')->findLatestItems($itemLimit);
 		$view['date-format'] = $this->config('component.latest-headlines.date-format');

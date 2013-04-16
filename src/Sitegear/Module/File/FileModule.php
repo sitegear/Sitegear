@@ -59,7 +59,7 @@ class FileModule extends AbstractSitegearModule implements BootstrapModuleInterf
 	 * @inheritdoc
 	 */
 	public function load($selector) {
-		LoggerRegistry::debug(sprintf('FileModule::load(%s)', $selector));
+		LoggerRegistry::debug('FileModule::load({selector})', array( 'selector' => TypeUtilities::describe($selector) ));
 		$filename = sprintf('%s/%s', $this->getEngine()->getSiteInfo()->getSiteRoot(), ltrim($selector, '/'));
 		return file_exists($filename) ? file_get_contents($filename) : null;
 	}
@@ -68,7 +68,7 @@ class FileModule extends AbstractSitegearModule implements BootstrapModuleInterf
 	 * @inheritdoc
 	 */
 	public function save($selector, $value) {
-		LoggerRegistry::debug(sprintf('FileModule::save(%s, %s)', $selector, TypeUtilities::describe($value)));
+		LoggerRegistry::debug('FileModule::save({selector}, {value})', array( 'selector' => TypeUtilities::describe($selector), 'value' => TypeUtilities::describe($value) ));
 		$filename = sprintf('%s/%s', $this->getEngine()->getSiteInfo()->getSiteRoot(), ltrim($selector, '/'));
 		mkdir(dirname($filename), 0777, true);
 		return file_put_contents($filename, $value) !== false;
@@ -78,7 +78,7 @@ class FileModule extends AbstractSitegearModule implements BootstrapModuleInterf
 	 * @inheritdoc
 	 */
 	public function upload($selector) {
-		LoggerRegistry::debug(sprintf('FileModule::upload(%s)', $selector));
+		LoggerRegistry::debug('FileModule::upload({selector})', array( 'selector' => TypeUtilities::describe($selector) ));
 		$filename = sprintf('%s/%s', $this->getEngine()->getSiteInfo()->getSiteRoot(), ltrim($selector, '/'));
 		mkdir(dirname($filename), 0777, true);
 		// TODO Implement me

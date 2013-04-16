@@ -370,7 +370,7 @@ abstract class AbstractEngine implements EngineInterface {
 	 * @throws \DomainException If the named module does not implement ModuleInterface.
 	 */
 	protected function createModule($name) {
-		LoggerRegistry::debug(sprintf('AbstractEngine::createModule(%s)', $name));
+		LoggerRegistry::debug('AbstractEngine::createModule({name})', array( 'name' => TypeUtilities::describe($name) ));
 		try {
 			return TypeUtilities::buildTypeCheckedObject(
 				$this->getModuleClassName($name) ?: '',

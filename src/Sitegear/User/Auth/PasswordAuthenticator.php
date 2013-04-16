@@ -9,6 +9,7 @@
 namespace Sitegear\User\Auth;
 
 use Sitegear\Util\LoggerRegistry;
+use Sitegear\Util\TypeUtilities;
 
 /**
  * Authenticator which uses standard single-password authentication.
@@ -19,7 +20,7 @@ class PasswordAuthenticator extends AbstractStorageBackedAuthenticator {
 	 * @inheritdoc
 	 */
 	public function checkCredentials($email, array $credentials) {
-		LoggerRegistry::debug(sprintf('PasswordAuthenticator::checkCredentials(%s, [credentials])', $email));
+		LoggerRegistry::debug('PasswordAuthenticator::checkCredentials({email}, [credentials])', array( 'email' => TypeUtilities::describe($email) ));
 		if (!isset($credentials['password'])) {
 			throw new \InvalidArgumentException('PasswordAuthenticator expects "password" credential key, insufficient credentials supplied.');
 		}

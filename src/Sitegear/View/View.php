@@ -266,7 +266,7 @@ class View extends AbstractView {
 	 * TODO Move this to the SitegearViewFactory class
 	 */
 	protected function createContext() {
-		LoggerRegistry::debug(sprintf('View::createContext()'));
+		LoggerRegistry::debug('View::createContext()');
 		// Check for special targets at the module level
 		switch ($this->getTarget(self::TARGET_LEVEL_MODULE)) {
 			// $view->template()->{templateName}()

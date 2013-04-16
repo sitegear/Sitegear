@@ -159,7 +159,7 @@ class SitegearEngine extends AbstractConfigurableEngine {
 	 * @inheritdoc
 	 */
 	public function createFileResponse(Request $request, $filename, $conditional=true) {
-		LoggerRegistry::debug(sprintf('SitegearEngine::createFileResponse([request], %s, %s)', $filename, $conditional ? 'true' : 'false'));
+		LoggerRegistry::debug('SitegearEngine::createFileResponse([request], {filename}, {conditional})', array( 'filename' => TypeUtilities::describe($filename), 'conditional' => TypeUtilities::describe($conditional) ));
 		$response = null;
 		if (!$conditional || is_file($filename)) {
 			// Determine whether to use the header method.
