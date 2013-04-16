@@ -22,6 +22,16 @@ namespace Sitegear\User\Auth;
 interface AuthenticatorInterface {
 
 	/**
+	 * Modify the credentials being stored for a new user or when updating a user.  For example, the password stored in
+	 * the backend might be encrypted.
+	 *
+	 * @param array $credentials
+	 *
+	 * @return array Modified credentials.
+	 */
+	public function modifyCredentials(array $credentials);
+
+	/**
 	 * Check the given credentials.
 	 *
 	 * @param string $email Email address.

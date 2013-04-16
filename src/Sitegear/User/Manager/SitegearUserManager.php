@@ -11,7 +11,7 @@ namespace Sitegear\User\Manager;
 use Sitegear\User\Acl\AccessControllerInterface;
 use Sitegear\User\Acl\StorageBackedAccessController;
 use Sitegear\User\Auth\AuthenticatorInterface;
-use Sitegear\User\Auth\PasswordAuthenticator;
+use Sitegear\User\Auth\PlainTextPasswordAuthenticator;
 use Sitegear\User\Manager\AbstractUserManager;
 use Sitegear\User\Storage\UserStorageInterface;
 use Sitegear\Util\LoggerRegistry;
@@ -46,7 +46,7 @@ class SitegearUserManager extends AbstractUserManager {
 	public function __construct(UserStorageInterface $storage, AuthenticatorInterface $authenticator=null, AccessControllerInterface $accessController=null) {
 		parent::__construct(
 			$storage,
-			$authenticator ?: new PasswordAuthenticator($storage),
+			$authenticator ?: new PlainTextPasswordAuthenticator($storage),
 			$accessController ?: new StorageBackedAccessController($storage)
 		);
 	}

@@ -14,7 +14,7 @@ namespace Sitegear\User\Manager;
 interface UserManagerInterface {
 
 	/**
-	 * @return \Sitegear\User\Auth\PasswordAuthenticator
+	 * @return \Sitegear\User\Auth\PlainTextPasswordAuthenticator
 	 */
 	public function getAuthenticator();
 
