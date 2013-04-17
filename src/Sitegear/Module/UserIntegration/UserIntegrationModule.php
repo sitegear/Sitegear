@@ -138,6 +138,15 @@ class UserIntegrationModule extends AbstractSitegearModule {
 		return null;
 	}
 
+	/**
+	 * Handle the action of the recover login token link, which is supplied in the notification email.
+	 *
+	 * @param Request $request
+	 */
+	public function recoverLoginTokenController(Request $request) {
+		// TODO Check token, send to change password page if successful
+	}
+
 	//-- Component Target Controller Methods --------------------
 
 	/**
@@ -268,8 +277,9 @@ class UserIntegrationModule extends AbstractSitegearModule {
 	 */
 	public function recoverLogin($email) {
 		LoggerRegistry::debug('UserIntegrationModule::recoverLogin({email})', array( 'email' => TypeUtilities::describe($email) ));
-		// TODO Implement me
-		$url = 'http://URL-TODO/';
+		// TODO Implement token generation and storage
+		$token = 'abcd1234%^&*';
+		$url = $this->getRouteUrl('recover-login-token', array( 'token' => $token ));
 		$siteInfo = $this->getEngine()->getSiteInfo();
 		$subject = sprintf('Login Recovery from %s', $siteInfo->getDisplayName());
 		$addresses = array(

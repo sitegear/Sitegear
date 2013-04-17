@@ -14,5 +14,8 @@ return array(
 	'logout' => array(),
 	'sign-up' => array(),
 	'guest-login' => array(),
-	'recover-login' => array()
+	'recover-login' => array(),
+	'recover-login-token' => array(
+		array( 'name' => 'token' )
+	)
 );
