@@ -13,9 +13,9 @@ use Sitegear\AbstractSitegearTestCase;
 class TypeUtilitiesTest extends AbstractSitegearTestCase {
 
 	public function testDescribe() {
-		$this->assertEquals('Type: "string"; Value: "string value"', TypeUtilities::describe('string value'));
-		$this->assertEquals('Type: "integer"; Value: "42"', TypeUtilities::describe(42));
-		$this->assertEquals('Type: "double"; Value: "3.1415926535898"', TypeUtilities::describe(M_PI));
+		$this->assertEquals('string(string value)', TypeUtilities::describe('string value'));
+		$this->assertEquals('integer(42)', TypeUtilities::describe(42));
+		$this->assertEquals('double(3.1415926535898)', TypeUtilities::describe(M_PI));
 	}
 
 	public function testTypeCheckedObjectString() {
