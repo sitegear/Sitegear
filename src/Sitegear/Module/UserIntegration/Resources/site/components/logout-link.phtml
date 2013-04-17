@@ -3,14 +3,14 @@
  * @var \Sitegear\View\View $view
  */
 if (is_null($view['user-email'])) {
-	echo \Sitegear\Util\TokenUtilities::replaceTokens(
+	echo \Sitegear\Util\StringUtilities::replaceTokens(
 		$view['link-format-guest'],
 		array(
 			'logoutUrl' => $view['logout-url']
 		)
 	);
 } else {
-	echo \Sitegear\Util\TokenUtilities::replaceTokens(
+	echo \Sitegear\Util\StringUtilities::replaceTokens(
 		$view['link-format'],
 		array(
 			'customerProfileUrl' => $view['customer-profile-url'],

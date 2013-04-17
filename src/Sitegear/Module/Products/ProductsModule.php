@@ -187,7 +187,7 @@ class ProductsModule extends AbstractSitegearModule implements PurchaseItemProvi
 		$result = array();
 		foreach ($this->getRepository('Category')->findByParent($parent) as $category) {
 			/** @var \Sitegear\Module\Products\Model\Category $category */
-			$tooltip = \Sitegear\Util\TokenUtilities::replaceTokens(
+			$tooltip = \Sitegear\Util\StringUtilities::replaceTokens(
 				$this->config('navigation.tooltip'),
 				array(
 					'categoryName' => $category->getName()

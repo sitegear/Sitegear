@@ -10,7 +10,7 @@ namespace Sitegear\Module\UserIntegration;
 
 use Sitegear\Module\AbstractSitegearModule;
 use Sitegear\View\ViewInterface;
-use Sitegear\Util\TokenUtilities;
+use Sitegear\Util\StringUtilities;
 use Sitegear\Util\UrlUtilities;
 use Sitegear\Util\TypeUtilities;
 use Sitegear\Util\LoggerRegistry;
@@ -298,7 +298,7 @@ class UserIntegrationModule extends AbstractSitegearModule {
 		$content = $this->config('recover-login.notification.content');
 		switch ($type) {
 			case 'tokens':
-				$body = TokenUtilities::replaceTokens($content, $data);
+				$body = StringUtilities::replaceTokens($content, $data);
 				$this->getEngine()->swiftMailer()->send($subject, $addresses, $body, $contentType);
 				break;
 			case 'template':

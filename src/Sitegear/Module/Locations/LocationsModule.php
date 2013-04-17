@@ -13,7 +13,7 @@ use Sitegear\Util\TypeUtilities;
 use Sitegear\View\ViewInterface;
 use Sitegear\Module\AbstractSitegearModule;
 use Sitegear\Module\Locations\Repository\ItemRepository;
-use Sitegear\Util\TokenUtilities;
+use Sitegear\Util\StringUtilities;
 use Sitegear\Util\LoggerRegistry;
 
 use Symfony\Component\HttpFoundation\Request;
@@ -135,13 +135,13 @@ class LocationsModule extends AbstractSitegearModule {
 		if (!is_numeric($radius)) {
 			throw new \InvalidArgumentException(sprintf('LocationsModule received invalid radius in search; must be numeric, "%s" received', $radius));
 		}
-		$view['query'] = $query = TokenUtilities::replaceTokens($this->config('search.query-mask'), array( 'query' => $query ));
+		$view['query'] = $query = StringUtilities::replaceTokens($this->config('search.query-mask'), array( 'query' => $query ));
 		$view['radius'] = $radius = intval($radius);
 		$location = $this->getEngine()->google()->geocodeLocation($query);
 		/** @var ItemRepository $itemRepository */
 		$itemRepository = $this->getRepository('Item');
 		$view['items'] = new ArrayCollection($radius > 0 ? $itemRepository->findInRadius($location, $radius) : array());
-		$view['results-description'] = TokenUtilities::replaceTokens($view['results-description-format'], array( 'query' => $query, 'radius' => number_format($radius) ));
+		$view['results-description'] = StringUtilities::replaceTokens($view['results-description-format'], array( 'query' => $query, 'radius' => number_format($radius) ));
 		$view['no-items'] = 'no-items-search';
 		return null;
 	}
@@ -181,7 +181,7 @@ class LocationsModule extends AbstractSitegearModule {
 		$result = array();
 		foreach ($this->getRepository('Region')->findByParent($parent) as $region) {
 			/** @var \Sitegear\Module\Locations\Model\Region $region */
-			$tooltip = TokenUtilities::replaceTokens(
+			$tooltip = StringUtilities::replaceTokens(
 				$this->config('navigation.tooltip-format'),
 				array(
 					'regionName' => $region->getName()

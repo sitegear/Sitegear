@@ -13,7 +13,7 @@ namespace Sitegear\Util;
  *
  * "This is a %foo% with 2 %bar%."
  */
-class TokenUtilities {
+class StringUtilities {
 
 	/**
 	 * Find the tokens present in the given text.  For the example given in the class docs, the result of this would

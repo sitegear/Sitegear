@@ -22,7 +22,7 @@ foreach ($data as $index => $navigationItem) {
 			$navigationItem['url-class-suffix'] :
 			(($itemUrl === '.' || $itemUrl === '') ? $view['classes']['index'] : preg_replace('/\//', '-', trim($itemUrl, '/')));
 	$tooltip = $view['display-tooltips'] && isset($navigationItem['tooltip']) ? sprintf(' title="%s"', htmlentities($navigationItem['tooltip'])) : '';
-	$label = \Sitegear\Util\TokenUtilities::replaceTokens(
+	$label = \Sitegear\Util\StringUtilities::replaceTokens(
 		$linkFormat,
 		array(
 			'label' => isset($navigationItem['label']) ? $navigationItem['label'] : $navigationItem['url']

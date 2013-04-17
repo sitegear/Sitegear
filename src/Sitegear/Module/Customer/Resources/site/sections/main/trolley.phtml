@@ -10,7 +10,7 @@ $view->getStringsManager()->prepend('title', $view['title'])
 if (!isset($view['trolley-data']) || empty($view['trolley-data'])) {
 	echo $view['text']['no-items'];
 } else {
-	echo \Sitegear\Util\TokenUtilities::replaceTokens(
+	echo \Sitegear\Util\StringUtilities::replaceTokens(
 		$view['text']['items-count'][sizeof($view['trolley-data']) === 1 ? 0 : 1],
 		array(
 			'count' => sizeof($view['trolley-data'])

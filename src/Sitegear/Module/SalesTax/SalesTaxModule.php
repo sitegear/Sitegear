@@ -10,7 +10,7 @@ namespace Sitegear\Module\SalesTax;
 
 use Sitegear\Module\PurchaseAdjustmentProviderModuleInterface;
 use Sitegear\Module\AbstractSitegearModule;
-use Sitegear\Util\TokenUtilities;
+use Sitegear\Util\StringUtilities;
 
 /**
  * Provides sales tax calculation and management tools for sales tax.
@@ -40,7 +40,7 @@ class SalesTaxModule extends AbstractSitegearModule implements PurchaseAdjustmen
 	 */
 	public function getAdjustmentLabel() {
 		$rateLabel = sprintf('%s%%', $this->config('rate'));
-		return TokenUtilities::replaceTokens($this->config('label'), array( 'rate' => $rateLabel ));
+		return StringUtilities::replaceTokens($this->config('label'), array( 'rate' => $rateLabel ));
 	}
 
 	/**

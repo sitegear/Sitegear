@@ -7,13 +7,13 @@
 $module = $view['module'];
 $item = $view['item'];
 $view->getStringsManager()->prepend('title', $view['title'])->prepend('title', $item->getHeadline());
-$published = \Sitegear\Util\TokenUtilities::replaceTokens(
+$published = \Sitegear\Util\StringUtilities::replaceTokens(
 	$view['published'],
 	array(
 		'publishedDate' => $item->getDatePublished()->format($view['date-format'])
 	)
 );
-$backLink = \Sitegear\Util\TokenUtilities::replaceTokens(
+$backLink = \Sitegear\Util\StringUtilities::replaceTokens(
 	$view['back-link'],
 	array(
 		'indexUrl' => $module->getRouteUrl('index')

@@ -11,7 +11,7 @@ namespace Sitegear\Module\Customer;
 use Sitegear\Module\PurchaseItemProviderModuleInterface;
 use Sitegear\Module\Customer\Model\TransactionItem;
 use Sitegear\Util\LoggerRegistry;
-use Sitegear\Util\TokenUtilities;
+use Sitegear\Util\StringUtilities;
 use Sitegear\Util\TypeUtilities;
 
 /**
@@ -117,9 +117,9 @@ class Trolley {
 		$this->setData($data);
 
 		// Notify on next page load
-		$this->customerModule->getEngine()->pageMessages()->add(TokenUtilities::replaceTokens($this->messages['item-added'], array( 'label' => $item->getLabel(), 'quantity' => $quantity )), 'success');
+		$this->customerModule->getEngine()->pageMessages()->add(StringUtilities::replaceTokens($this->messages['item-added'], array( 'label' => $item->getLabel(), 'quantity' => $quantity )), 'success');
 		if ($item->getQuantity() > $quantity) {
-			$this->customerModule->getEngine()->pageMessages()->add(TokenUtilities::replaceTokens($this->messages['item-total'], array( 'label' => $item->getLabel(), 'quantity' => $item->getQuantity() )), 'success');
+			$this->customerModule->getEngine()->pageMessages()->add(StringUtilities::replaceTokens($this->messages['item-total'], array( 'label' => $item->getLabel(), 'quantity' => $item->getQuantity() )), 'success');
 		}
 	}
 
@@ -143,7 +143,7 @@ class Trolley {
 		$this->setData($data);
 
 		// Notify on next page load.
-		$this->customerModule->getEngine()->pageMessages()->add(TokenUtilities::replaceTokens($this->messages['item-removed'], array( 'label' => $item->getLabel() )), 'success');
+		$this->customerModule->getEngine()->pageMessages()->add(StringUtilities::replaceTokens($this->messages['item-removed'], array( 'label' => $item->getLabel() )), 'success');
 	}
 
 	/**
@@ -172,7 +172,7 @@ class Trolley {
 		$this->setData($data);
 
 		// Notify on next page load.
-		$this->customerModule->getEngine()->pageMessages()->add(TokenUtilities::replaceTokens($this->messages['item-modified'], array( 'label' => $item->getLabel(), 'quantity' => $quantity )), 'success');
+		$this->customerModule->getEngine()->pageMessages()->add(StringUtilities::replaceTokens($this->messages['item-modified'], array( 'label' => $item->getLabel(), 'quantity' => $quantity )), 'success');
 	}
 
 	/**

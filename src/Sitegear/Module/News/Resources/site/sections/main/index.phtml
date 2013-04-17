@@ -22,7 +22,7 @@ if (empty($view['items'])) {
 	<section>
 <?php
 		if (isset($view['date-format'])) {
-			$published = \Sitegear\Util\TokenUtilities::replaceTokens(
+			$published = \Sitegear\Util\StringUtilities::replaceTokens(
 				$view['published'],
 				array(
 					'publishedDate' => $item->getDatePublished()->format($view['date-format'])

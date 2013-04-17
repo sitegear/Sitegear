@@ -6,7 +6,7 @@ $trolleyEmpty = !isset($view['trolley-data']) || empty($view['trolley-data']);
 if ($trolleyEmpty) {
 	echo $view['text']['no-items'];
 } else {
-	echo \Sitegear\Util\TokenUtilities::replaceTokens(
+	echo \Sitegear\Util\StringUtilities::replaceTokens(
 		$view['text']['items-count'][sizeof($view['trolley-data']) === 1 ? 0 : 1],
 		array(
 			'count' => sizeof($view['trolley-data'])
@@ -21,7 +21,7 @@ if ($showDetailsLink || $showCheckoutLink) {
 		echo sprintf('<%s%s>', $linkWrapper, \Sitegear\Util\HtmlUtilities::attributes($view['links']['wrapper']['attributes']));
 	}
 	if ($showDetailsLink) {
-		echo \Sitegear\Util\TokenUtilities::replaceTokens(
+		echo \Sitegear\Util\StringUtilities::replaceTokens(
 			$view['text']['details-link'],
 			array(
 				'detailsUrl' => $view['details-url']
@@ -30,7 +30,7 @@ if ($showDetailsLink || $showCheckoutLink) {
 	}
 	echo $view['links']['separator'];
 	if ($showCheckoutLink) {
-		echo \Sitegear\Util\TokenUtilities::replaceTokens(
+		echo \Sitegear\Util\StringUtilities::replaceTokens(
 			$view['text']['checkout-link'],
 			array(
 				'checkoutUrl' => $view['checkout-url']

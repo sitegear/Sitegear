@@ -11,7 +11,7 @@ namespace Sitegear\Module\News;
 use Sitegear\Util\TypeUtilities;
 use Sitegear\View\ViewInterface;
 use Sitegear\Module\AbstractSitegearModule;
-use Sitegear\Util\TokenUtilities;
+use Sitegear\Util\StringUtilities;
 use Sitegear\Util\LoggerRegistry;
 
 use Symfony\Component\HttpFoundation\Request;
@@ -51,8 +51,8 @@ class NewsModule extends AbstractSitegearModule {
 			);
 			$result[] = array(
 				'url' => $this->getRouteUrl('item', $item->getUrlPath()),
-				'label' => TokenUtilities::replaceTokens($this->config('navigation.item-link.label'), $values),
-				'tooltip' => TokenUtilities::replaceTokens($this->config('navigation.item-link.tooltip'), $values)
+				'label' => StringUtilities::replaceTokens($this->config('navigation.item-link.label'), $values),
+				'tooltip' => StringUtilities::replaceTokens($this->config('navigation.item-link.tooltip'), $values)
 			);
 		}
 		if ($this->config('navigation.all-news-link.display')) {

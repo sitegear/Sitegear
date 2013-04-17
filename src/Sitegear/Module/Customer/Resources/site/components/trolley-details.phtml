@@ -77,7 +77,7 @@ foreach ($view['trolley-data'] as $index => $item) {
 		</td>
 		<td  class="<?php echo $view['table-classes']['columns']['checkout-link-container']; ?>" rowspan="<?php echo 2 + sizeof($view['adjustments']); ?>">
 			<?php /** TODO Allow this to be hidden */ ?>
-			<?php echo \Sitegear\Util\TokenUtilities::replaceTokens($view['text']['checkout-link'], array( 'checkoutUrl' => $view['checkout-url'] )); ?>
+			<?php echo \Sitegear\Util\StringUtilities::replaceTokens($view['text']['checkout-link'], array( 'checkoutUrl' => $view['checkout-url'] )); ?>
 		</td>
 	</tr>
 <?php

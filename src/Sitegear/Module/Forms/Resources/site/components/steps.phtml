@@ -12,7 +12,7 @@ $jumpUrlFormat = $view['jump-url-format'];
 echo sprintf('<%s%s>', $view['outer-container']['element'], \Sitegear\Util\HtmlUtilities::attributes($view['outer-container']['attributes'] ?: array())), PHP_EOL;
 for ($step=0, $count=$form->getStepsCount(); $step<$count; $step++) {
 	$stepType = $step < $currentStep ? 'earlier' : ($step > $currentStep ? 'later' : 'current');
-	$label = \Sitegear\Util\TokenUtilities::replaceTokens($view['steps'][$stepType]['label-format'], array( 'heading' => $form->getStep($step)->getHeading() ));
+	$label = \Sitegear\Util\StringUtilities::replaceTokens($view['steps'][$stepType]['label-format'], array( 'heading' => $form->getStep($step)->getHeading() ));
 	$containerAttributes = array_merge(
 		$view['item-container']['attributes'] ?: array(),
 		$view['steps'][$stepType]['container-attributes'] ?: array()

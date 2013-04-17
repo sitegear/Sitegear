@@ -17,7 +17,7 @@ use Sitegear\Form\Field\SelectField;
 use Sitegear\Form\Constraint\ConditionalConstraint;
 use Sitegear\Module\PurchaseItemProviderModuleInterface;
 use Sitegear\Module\Forms\Form\Builder\AbstractFormsModuleFormBuilder;
-use Sitegear\Util\TokenUtilities;
+use Sitegear\Util\StringUtilities;
 
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Range;
@@ -119,7 +119,7 @@ class AddTrolleyItemFormBuilder extends AbstractFormsModuleFormBuilder {
 		}
 		// Add the other values.
 		foreach ($attribute['values'] as $value) {
-			$label = TokenUtilities::replaceTokens(
+			$label = StringUtilities::replaceTokens(
 				$valueFormat,
 				array(
 					'value' => sprintf('$%s', number_format($value['value'] / 100, 2)),

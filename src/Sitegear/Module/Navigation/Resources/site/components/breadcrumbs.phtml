@@ -4,7 +4,7 @@
  */
 $trail = array();
 foreach (array_slice($view['trail'], 0, -1) as $crumb) {
-	$trail[] = \Sitegear\Util\TokenUtilities::replaceTokens(
+	$trail[] = \Sitegear\Util\StringUtilities::replaceTokens(
 		$view['formats']['link'],
 		array(
 			'url' => $crumb['url'],
@@ -16,7 +16,7 @@ foreach (array_slice($view['trail'], 0, -1) as $crumb) {
 $currentPageCrumb = $view['trail'][max(0, sizeof($view['trail']) - 1)];
 switch ($view['current-page-style']) {
 	case 'link':
-		$trail[] = \Sitegear\Util\TokenUtilities::replaceTokens(
+		$trail[] = \Sitegear\Util\StringUtilities::replaceTokens(
 			$view['formats']['link'],
 			array(
 				'url' => $currentPageCrumb['url'],
@@ -26,7 +26,7 @@ switch ($view['current-page-style']) {
 		);
 		break;
 	case 'label':
-		$trail[] = \Sitegear\Util\TokenUtilities::replaceTokens(
+		$trail[] = \Sitegear\Util\StringUtilities::replaceTokens(
 			$view['formats']['label'],
 			array(
 				'class' => $view['classes']['link'],
