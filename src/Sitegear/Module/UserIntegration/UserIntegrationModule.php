@@ -9,6 +9,7 @@
 namespace Sitegear\Module\UserIntegration;
 
 use Sitegear\Module\AbstractSitegearModule;
+use Sitegear\Util\TokenGenerator;
 use Sitegear\View\ViewInterface;
 use Sitegear\Util\StringUtilities;
 use Sitegear\Util\UrlUtilities;
@@ -277,8 +278,8 @@ class UserIntegrationModule extends AbstractSitegearModule {
 	 */
 	public function recoverLogin($email) {
 		LoggerRegistry::debug('UserIntegrationModule::recoverLogin({email})', array( 'email' => TypeUtilities::describe($email) ));
-		// TODO Implement token generation and storage
-		$token = 'abcd1234%^&*';
+		// TODO Implement token storage
+		$token = TokenGenerator::generateToken();
 		$url = $this->getRouteUrl('recover-login-token', array( 'token' => $token ));
 		$siteInfo = $this->getEngine()->getSiteInfo();
 		$subject = sprintf('Login Recovery from %s', $siteInfo->getDisplayName());
