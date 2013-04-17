@@ -64,12 +64,4 @@ class LoggerRegistryTest extends AbstractSitegearTestCase {
 		LoggerRegistry::thisMethodDoesNotExist('foo', 'bar');
 	}
 
-	/**
-	 * @expectedException \BadMethodCallException
-	 */
-	public function test__callStaticNoArguments() {
-		/** @noinspection PhpParamsInspection */
-		LoggerRegistry::debug();
-	}
-
 }
