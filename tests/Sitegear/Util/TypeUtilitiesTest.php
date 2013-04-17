@@ -18,7 +18,6 @@ class TypeUtilitiesTest extends AbstractSitegearTestCase {
 		$this->assertEquals('Type: "double"; Value: "3.1415926535898"', TypeUtilities::describe(M_PI));
 	}
 
-
 	public function testTypeCheckedObjectString() {
 		$className = '\\Sitegear\\Util\\TestClass';
 		$this->assertInstanceOf('\\Sitegear\\Util\\TestClass', TypeUtilities::buildTypeCheckedObject($className, '[test]', '\\Sitegear\\Util\\BaseClass', '\\Sitegear\Util\\SomeInterface'));
